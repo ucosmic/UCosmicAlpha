@@ -13,7 +13,6 @@ namespace UCosmic.Domain.Home
     {
         public UpdateHomePhoto(Int32 homeSectionId)
         {
-            //if (homeSectionId == null) throw new ArgumentNullException("homeSectionId");
             HomeSectionId = homeSectionId;
         }
         public Int32 HomeSectionId { get; private set; }
@@ -29,14 +28,6 @@ namespace UCosmic.Domain.Home
         public ValidateUpdateHomePhotoCommand(IQueryEntities entities)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
-
-            //RuleFor(x => x.Principal)
-            //    .NotNull()
-            //        .WithMessage(MustNotHaveNullPrincipal.FailMessage)
-            //    .MustNotHaveEmptyIdentityName()
-            //        .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
-            //    .MustFindUserByPrincipal(entities)
-            //;
 
             RuleFor(x => x.Content)
                 .NotNull().WithMessage(MustHaveFileContent.FailMessage)
@@ -84,11 +75,9 @@ namespace UCosmic.Domain.Home
                     x => x.Photo,
                 })
                 .ById(command.HomeSectionId);
-            //.Where(x => x.Id == command.HomeSectionId);
             if (homeSection == null)
             {
                 throw new Exception("HomeSection is null, cannot add photo.");
-                return;
             }
 
             // delete previous file
@@ -109,25 +98,9 @@ namespace UCosmic.Domain.Home
             homeSection.Photo = externalFile;
             _binaryData.Put(path, command.Content);
 
-            // log audit
-            //var audit = new CommandEvent
-            //{
-            //    RaisedBy = command.Principal.Identity.Name,
-            //    Name = command.GetType().FullName,
-            //    Value = JsonConvert.SerializeObject(new
-            //    {
-            //        User = command.Principal.Identity.Name,
-            //        command.Content,
-            //        command.Name,
-            //        command.MimeType,
-            //    }),
-            //    NewState = externalFile.ToJsonAudit(),
-            //};
-
             // push to database
             _entities.Create(externalFile);
             _entities.Update(homeSection);
-            //_entities.Create(audit);
             if (!command.NoCommit)
             {
                 _unitOfWork.SaveChanges();

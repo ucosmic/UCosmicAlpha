@@ -37,10 +37,8 @@ namespace UCosmic.Domain.Home
             context.MessageFormatter.AppendArgument("PrincipalName", principal.Identity.Name);
 
             // make sure user owns the homeSection id
-            //var ownedTenantIds = _queryProcessor.Execute(new MyOwnedTenantIds(principal));
-            var homeLinks = _queryProcessor.Execute(new HomeLinksByHomeSectionId(principal, homeSectionId)).Count() > 0;//.Any(x => x.IsO.Where(x => x.IsOwner);
+            var homeLinks = _queryProcessor.Execute(new HomeLinksByHomeSectionId(principal, homeSectionId)).Count() > 0;
             return homeLinks;
-            //return owningHomeLinks.Any(x => ownedTenantIds.Contains(x.EstablishmentId));
         }
     }
 
