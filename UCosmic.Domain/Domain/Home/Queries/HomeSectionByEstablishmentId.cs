@@ -26,17 +26,8 @@ namespace UCosmic.Domain.Home
         public HomeSection[] Handle(HomeSectionByEstablishmentId query)
         {
             if (query == null) throw new ArgumentNullException("query");
-
-            //var result = _entities.Query<HomeSection>()
-            //    .EagerLoad(_entities, query.EagerLoad)
-            //    .ByEstablishmentId(query.EstablishmentId)
-            //    //.SingleOrDefault(x => x.Id == query.Id)
-            //;
             IQueryable<HomeSection> results = _entities.Query<HomeSection>()
                                                              .Where(a => a.EstablishmentId == query.EstablishmentId);
-                                                             //.OrderBy(a => (a.LanguageId != null) ?
-                                                             //    a.Language.Names.FirstOrDefault().Text :
-                                                             //    a.Other);
 
             return results.ToArray();
         }

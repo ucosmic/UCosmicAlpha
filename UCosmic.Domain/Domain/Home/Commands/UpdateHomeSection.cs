@@ -23,7 +23,6 @@ namespace UCosmic.Domain.Home
         public int HomeSectionId { get; private set; }
         internal HomeSection HomeSection { get; set; }
         public HomeLink[] HomeLinks { get; set; }
-        //public IEnumerable<CreateHomeLink> HomeLinks { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
 
@@ -39,7 +38,6 @@ namespace UCosmic.Domain.Home
 
             // when homeSectionId is null, update the principal's homeSection
             // principal must match user (which guarantees homeSection)
-            //RuleFor(x => x.Principal).MustFindUserByPrincipal(queryProcessor);
             // principal must be authorized to perform this action
             RuleFor(x => x.Principal)
                 .NotNull()
@@ -58,15 +56,6 @@ namespace UCosmic.Domain.Home
                 .MustBeOwnedByPrincipal(queryProcessor, x => x.Principal)
                     .WithMessage(MustBeOwnedByPrincipal<object>.FailMessageFormat, x => x.HomeSectionId, x => x.Principal.Identity.Name)
                 ;
-
-            //});
-
-            // when first and last name are not provided, display name cannot be empty
-            //When(x => string.IsNullOrWhiteSpace(x.Title) || string.IsNullOrWhiteSpace(x.Description), () =>
-            //    RuleFor(x => x.DisplayName)
-            //        // display name cannot be empty
-            //        .NotEmpty().WithMessage(MustNotHaveEmptyDisplayName.FailMessageImpossibleToGeneate)
-            //);
         }
     }
 
@@ -93,12 +82,8 @@ namespace UCosmic.Domain.Home
 
             var entity = _entities.Get<HomeSection>().Single(x => x.Id == command.HomeSectionId);
 
-
-            //var entity = new HomeSection
-            //{
             entity.Title = command.Title;
             entity.Description = command.Description;
-            //};
 
             //first delete all links
 
@@ -107,7 +92,6 @@ namespace UCosmic.Domain.Home
                 _createHomeLink.Handle(new CreateHomeLink(command.Principal, entity.Id, homeLink)
                 {
                     NoCommit = true,
-                    //IsOwner = participant.IsOwner,
                 });
 
             _entities.Update(entity);

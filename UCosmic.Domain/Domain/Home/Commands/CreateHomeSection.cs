@@ -21,7 +21,6 @@ namespace UCosmic.Domain.Home
         public int EstablishmentId { get; set; }
         internal HomeSection HomeSection { get; set; }
         public ICollection<HomeLink> Links { get; set; }
-        //public IEnumerable<CreateHomeLink> HomeLinks { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
 
@@ -46,25 +45,9 @@ namespace UCosmic.Domain.Home
                     .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
                 .MustBeInAnyRole(RoleName.SecurityAdministrator)
             ;
-
-            //When(x => x.HomeSectionId, () =>
-            //{
             RuleFor(x => x.EstablishmentId)
                 .MustFindEstablishmentById(queryProcessor)
                     .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.EstablishmentId);
-
-                // make sure user is authorized to update this homeSection
-                //RuleFor(x => x.Principal)
-                //    .MustBeAgentForHomeSection(queryProcessor, x => x.HomeSectionId.HasValue ? x.HomeSectionId.Value : 0)
-                //;
-            //});
-
-            // when first and last name are not provided, display name cannot be empty
-            //When(x => string.IsNullOrWhiteSpace(x.Title) || string.IsNullOrWhiteSpace(x.Description), () =>
-            //    RuleFor(x => x.DisplayName)
-            //        // display name cannot be empty
-            //        .NotEmpty().WithMessage(MustNotHaveEmptyDisplayName.FailMessageImpossibleToGeneate)
-            //);
         }
     }
 
@@ -103,7 +86,6 @@ namespace UCosmic.Domain.Home
                 _createHomeLink.Handle(new CreateHomeLink(command.Principal, entity.Id, homeLink)
                 {
                     NoCommit = true,
-                    //IsOwner = participant.IsOwner,
                 });
 
             _entities.Create(entity);
