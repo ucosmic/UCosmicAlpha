@@ -21,12 +21,6 @@ namespace UCosmic.Web.Mvc.Controllers
             _queryProcessor = queryProcessor;
         }
 
-        //[GET("")]
-        //public virtual ActionResult Index()
-        //{
-        //    return View();
-        //}
-
         [GET("")]
         public virtual ActionResult Index()
         {
@@ -97,68 +91,12 @@ namespace UCosmic.Web.Mvc.Controllers
                 ViewBag.alertIsDisabled = true;
                 ViewBag.alert = "You do not have any flasher text.";
             }
-            //var person = _queryProcessor.Execute(new MyPerson(User));
-            ////if person is null redirect or bypass to noDomain.
-            //List<HomeSectionApiModelReturn> homeSectionModelList = new List<HomeSectionApiModelReturn>();
-            //if (person != null)
-            //{
-            //    var establishmentId = person.Affiliations.First(x => x.IsDefault).EstablishmentId;
-            //    //var estblishmentId = 3306;
-            //    var homeSections = _queryProcessor.Execute(new HomeSectionByEstablishmentId(establishmentId));
-            //    var homeAlert = _queryProcessor.Execute(new HomeAlertByEstablishmentId(establishmentId));
-            //    if (homeSections != null)
-            //    {
-            //        foreach (HomeSection homeSection in homeSections)
-            //        {
-
-            //            List<HomeLinksApiModel> homeLinks = new List<HomeLinksApiModel>();
-            //            HomeSectionApiModelReturn homeSectionModel = new HomeSectionApiModelReturn()
-            //            {
-            //                Description = homeSection.Description,
-            //                Title = homeSection.Title,
-            //                EstablishmentId = 0,
-            //                Links = new List<HomeLinksApiModel>(),
-            //                Id = homeSection.Id
-            //            };
-            //            if (homeSection.Photo == null)
-            //            {
-            //                homeSectionModel.HasPhoto = false;
-            //            }
-            //            else
-            //            {
-            //                homeSectionModel.HasPhoto = true;
-            //            }
-            //            foreach (HomeLink homeLink in homeSection.Links)
-            //            {
-            //                homeLinks.Add(new HomeLinksApiModel() { Text = homeLink.Text, Url = homeLink.Url });
-            //            }
-            //            homeSectionModel.Links = homeLinks;
-            //            homeSectionModelList.Add(homeSectionModel);
-            //        }
-            //    }
-            //    if (homeAlert != null)
-            //    {
-            //        ViewBag.alertIsDisabled = homeAlert.IsDisabled;
-            //        ViewBag.alert = homeAlert.Text;
-            //    }
-            //    else
-            //    {
-            //        ViewBag.alertIsDisabled = true;
-            //        ViewBag.alert = "You do not have any flasher text.";
-            //    }
-
-            //}
-            //else
-            //{
-            //    ViewBag.alertIsDisabled = true;
-            //    ViewBag.alert = "You do not have any flasher text.";
-            //}
+            
             return View("index", "_Layout2", homeSectionModelList);
         }
         [GET("editHomePage")]
         public virtual ActionResult EditHomePage()
         {
-            //var person = _queryProcessor.Execute(new MyPerson(User));
             var tenancy = Request.Tenancy() ?? new Tenancy();
             Establishment establishment = null;
             List<HomeSectionApiModelReturn> homeSectionModelList = new List<HomeSectionApiModelReturn>();
@@ -226,60 +164,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 ViewBag.alertIsDisabled = true;
                 ViewBag.alert = "You do not have any flasher text.";
             }
-            //if person is null redirect or bypass to noDomain.
-            //List<HomeSectionApiModelReturn> homeSectionModelList = new List<HomeSectionApiModelReturn>();
-            //if (person != null)
-            //{
-            //    var establishmentId = person.Affiliations.First(x => x.IsDefault).EstablishmentId;
-            //    var homeSections = _queryProcessor.Execute(new HomeSectionByEstablishmentId(establishmentId));
-            //    var homeAlert = _queryProcessor.Execute(new HomeAlertByEstablishmentId(establishmentId));
-            //    if (homeSections != null)
-            //    {
-            //        foreach (HomeSection homeSection in homeSections)
-            //        {
-
-            //            List<HomeLinksApiModel> homeLinks = new List<HomeLinksApiModel>();
-            //            HomeSectionApiModelReturn homeSectionModel = new HomeSectionApiModelReturn()
-            //            {
-            //                Description = homeSection.Description,
-            //                Title = homeSection.Title,
-            //                EstablishmentId = 0,
-            //                Links = new List<HomeLinksApiModel>(),
-            //                Id = homeSection.Id
-            //            };
-            //            if (homeSection.Photo == null)
-            //            {
-            //                homeSectionModel.HasPhoto = false;
-            //            }
-            //            else
-            //            {
-            //                homeSectionModel.HasPhoto = true;
-            //            }
-            //            foreach (HomeLink homeLink in homeSection.Links)
-            //            {
-            //                homeLinks.Add(new HomeLinksApiModel() { Text = homeLink.Text, Url = homeLink.Url });
-            //            }
-            //            homeSectionModel.Links = homeLinks;
-            //            homeSectionModelList.Add(homeSectionModel);
-            //        }
-            //    }
-            //    if (homeAlert != null)
-            //    {
-            //        ViewBag.alertIsDisabled = homeAlert.IsDisabled;
-            //        ViewBag.alert = homeAlert.Text;
-            //    }
-            //    else
-            //    {
-            //        ViewBag.alertIsDisabled = true;
-            //        ViewBag.alert = "You do not have any flasher text.";
-            //    }
-
-            //}
-            //else
-            //{
-            //    ViewBag.alertIsDisabled = true;
-            //    ViewBag.alert = "You do not have any flasher text.";
-            //}
+            
             
             return View("editHomePage", "_Layout2", homeSectionModelList);
         }
@@ -330,7 +215,6 @@ namespace UCosmic.Web.Mvc.Controllers
         [UserVoiceForum(UserVoiceForum.GlobalPress)]
         public virtual ActionResult GlobalPress()
         {
-            //TempData.Flash("This is the global press page.");
             return View();
         }
     }
