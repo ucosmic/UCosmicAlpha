@@ -50,8 +50,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [POST("")]
-        //public HttpResponseMessage Post(string homeAlert, string test, string test2)
-        //public HttpResponseMessage Post(string homeAlert)
         public HttpResponseMessage Post(HomeAlertApiModel homeAlert)
         {
 
@@ -72,22 +70,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 EstablishmentId = homeAlert.EstablishmentId
             };
 
-            //var command = new CreateHomeAlert(User);
-            //Mapper.Map(homeAlert, command);
             _alertCreateHandler.Handle(command);
 
             var response = Request.CreateResponse(HttpStatusCode.Created, "Home alert was successfully created.");
-            //var url = Url.Link(null, new
-            //{
-            //    controller = "Agreements",
-            //    action = "Get",
-            //    homeAlertId = command.CreatedHomeAlertId,
-            //});
-            //Debug.Assert(url != null);
             response.Headers.Location = new Uri("http://ucosmic.com?alertid="+command.CreatedHomeAlertId);
             return response;
             
-            //return Request.CreateResponse(HttpStatusCode.OK, "Your alert was created successfully.");
         }
 
 
