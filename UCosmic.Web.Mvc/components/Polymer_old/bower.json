@@ -1,0 +1,24 @@
+{
+  "name": "polymer_koa",
+  "version": "0.0.2",
+  "authors": [
+    "Tim Willis <timtwillis@gmail.com>"
+  ],
+  "description": "framework for future projects",
+  "main": "index.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer",
+    "core-elements": "Polymer/core-elements",
+    "polymer-elements": "Polymer/polymer-elements",
+    "polymer-ui-elements": "Polymer/polymer-ui-elements"
+  }
+}

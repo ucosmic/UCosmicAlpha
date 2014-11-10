@@ -1,0 +1,17 @@
+{
+  "name": "ace-element",
+  "private": true,
+  "dependencies": {
+    "polymer": "Polymer/polymer#master"
+  },
+  "homepage": "https://github.com/Polymer/ace-element",
+  "_release": "2001aa599a",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "2001aa599a994243e1cfa7235d761ba1a1d69d24"
+  },
+  "_source": "git://github.com/Polymer/ace-element.git",
+  "_target": "master",
+  "_originalSource": "Polymer/ace-element"
+}

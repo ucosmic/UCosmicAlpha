@@ -1,0 +1,27 @@
+{
+  "name": "more-elements",
+  "private": true,
+  "dependencies": {
+    "ace-element": "Polymer/ace-element#master",
+    "chart-js": "Polymer/chart-js#master",
+    "code-mirror": "Polymer/code-mirror#master",
+    "cool-clock": "Polymer/cool-clock#master",
+    "flatiron-director": "Polymer/flatiron-director#master",
+    "google-map": "GoogleWebComponents/google-map#master",
+    "smoothie-chart": "Polymer/smoothie-chart#master",
+    "speech-mic": "Polymer/speech-mic#master",
+    "x-meta": "Polymer/x-meta#master",
+    "yt-video": "Polymer/yt-video#master",
+    "notification-elements": "PolymerLabs/notification-elements#master"
+  },
+  "homepage": "https://github.com/Polymer/more-elements",
+  "_release": "7a6c37d9e0",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "7a6c37d9e038b6714bc7650be81f5b6dd39b737c"
+  },
+  "_source": "git://github.com/Polymer/more-elements.git",
+  "_target": "master",
+  "_originalSource": "Polymer/more-elements"
+}
