@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using MoreLinq;
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
@@ -14,6 +15,7 @@ using UCosmic.Domain.Degrees;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Places;
+using UCosmic.Repositories;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
@@ -118,107 +120,122 @@ namespace UCosmic.Web.Mvc.ApiControllers
         /* Returns activity type counts for given place.*/
         [GET("activity-count/{establishmentId?}/{placeId?}")]
         //[CacheHttpGet(Duration = 3600)]
-        public FacultyStaffSummaryModel GetActivityCount(int? establishmentId, int? placeId)
+        public List<ActivityLocationsApiModel> GetActivityCount(int? establishmentId, int? placeId)
         {
-            var model = new FacultyStaffSummaryModel();
+            IList<ActivityLocationsApiModel> returnModel = new List<ActivityLocationsApiModel>();
+            IList<ActivityLocationsApiQueryResultModel> model = new List<ActivityLocationsApiQueryResultModel>();
 
             var tenancy = Request.Tenancy();
-            Establishment establishment = null;
 
-            if (establishmentId.HasValue && (establishmentId.Value != 0))
-            {
-                establishment = _queryProcessor.Execute(new EstablishmentById(establishmentId.Value));
-            }
-            else
+            if (!(establishmentId.HasValue && (establishmentId.Value != 0)))
             {
                 if (tenancy.TenantId.HasValue)
                 {
-                    establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                    establishmentId = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value)).RevisionId;
                 }
                 else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
                 {
-                    establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+                    establishmentId = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain)).RevisionId;
                 }
             }
 
-            if (establishment != null)
+            if (establishmentId != null)
             {
                 if (placeId.HasValue)
                 {
-                    int[] placeIds = GetPlaceIds(placeId.Value);
+                    LocationsRepository locationsRepository = new LocationsRepository();
+                    EmployeeActivityTypesRepository employeeActivityTypesRepository = new EmployeeActivityTypesRepository();
+                    model = locationsRepository.LocationsByEstablishment_Place(establishmentId, placeId);
+                    var modelDistinct = model.DistinctBy(x => x.id);
 
-                    //var view = new ActivityPlaceActivityCountView(_queryProcessor, _entities,
-                    //                                               establishment.RevisionId,
-                    //                                               placeIds);
-
-                    //model.PlaceId = view.PlaceIds[0];
-                    //model.Count = view.Count;
-                    //model.CountOfPlaces = 1;
-
-                    //model.PlaceCounts = null;
-
-                    //if ((view.TypeCounts != null) && (view.TypeCounts.Count > 0))
-                    //{
-                    //    foreach (var type in view.TypeCounts)
-                    //    {
-                    //        model.TypeCounts.Add(new FacultyStaffTypeCountModel
-                    //        {
-                    //            TypeId = type.TypeId,
-                    //            Type = type.Type,
-                    //            Count = type.Count
-                    //        });
-                    //    }
-
-                    //    model.TypeCounts = model.TypeCounts.OrderBy(t => t.Rank).ToList();
-                    //}
+                    var establishmentTypes = employeeActivityTypesRepository.EmployeeActivityTypes_By_establishmentId(establishmentId);
+                    foreach (var type in establishmentTypes)
+                    {
+                        var typeCount = modelDistinct.Where(x => x.type == type).Count();
+                        var locationCount = model.Where(x => x.type == type).Count();
+                        returnModel.Add(new ActivityLocationsApiModel{LocationCount = locationCount, TypeCount = typeCount, Type = type});
+                    }
                 }
-                //else
-                //{
-                //    try
-                //    {
-                //        GlobalActivityCountView view =
-                //            _activityProjector.BeginReadActivityCountsView(establishment.RevisionId);
-
-                //        if (view != null)
-                //        {
-                //            model.Count = view.Count;
-                //            model.CountOfPlaces = view.CountOfPlaces;
-
-                //            foreach (var placeCount in view.PlaceCounts)
-                //            {
-                //                model.PlaceCounts.Add(new FacultyStaffPlaceCountModel
-                //                {
-                //                    PlaceId = placeCount.PlaceId,
-                //                    CountryCode = placeCount.CountryCode,
-                //                    OfficialName = placeCount.OfficialName,
-                //                    Count = placeCount.Count,
-                //                    Lat = placeCount.Lat,
-                //                    Lng = placeCount.Lng
-                //                });
-                //            }
-
-                //            foreach (var type in view.TypeCounts)
-                //            {
-                //                model.TypeCounts.Add(new FacultyStaffTypeCountModel
-                //                {
-                //                    TypeId = type.TypeId,
-                //                    Type = type.Type,
-                //                    Count = type.Count
-                //                });
-                //            }
-
-                //            model.TypeCounts = model.TypeCounts.OrderBy(t => t.Rank).ToList();
-                //        }
-                //    }
-                //    finally
-                //    {
-                //        _activityProjector.EndReadActivityCountsView();
-                //    }
-                //}
             }
 
+            //if (establishment != null)
+            //{
+            //    if (placeId.HasValue)
+            //    {
+            //        int[] placeIds = GetPlaceIds(placeId.Value);
 
-            return model;
+            //        //var view = new ActivityPlaceActivityCountView(_queryProcessor, _entities,
+            //        //                                               establishment.RevisionId,
+            //        //                                               placeIds);
+
+            //        model.PlaceId = view.PlaceIds[0];
+            //        model.Count = view.Count;
+            //        model.CountOfPlaces = 1;
+
+            //        model.PlaceCounts = null;
+
+            //        if ((view.TypeCounts != null) && (view.TypeCounts.Count > 0))
+            //        {
+            //            foreach (var type in view.TypeCounts)
+            //            {
+            //                model.TypeCounts.Add(new FacultyStaffTypeCountModel
+            //                {
+            //                    TypeId = type.TypeId,
+            //                    Type = type.Type,
+            //                    Count = type.Count
+            //                });
+            //            }
+
+            //            model.TypeCounts = model.TypeCounts.OrderBy(t => t.Rank).ToList();
+            //        }
+            //    }
+            //    else
+            //    {
+            //        try
+            //        {
+            //            //GlobalActivityCountView view =
+            //            //    _activityProjector.BeginReadActivityCountsView(establishment.RevisionId);
+
+            //            if (view != null)
+            //            {
+            //                model.Count = view.Count;
+            //                model.CountOfPlaces = view.CountOfPlaces;
+
+            //                foreach (var placeCount in view.PlaceCounts)
+            //                {
+            //                    model.PlaceCounts.Add(new FacultyStaffPlaceCountModel
+            //                    {
+            //                        PlaceId = placeCount.PlaceId,
+            //                        CountryCode = placeCount.CountryCode,
+            //                        OfficialName = placeCount.OfficialName,
+            //                        Count = placeCount.Count,
+            //                        Lat = placeCount.Lat,
+            //                        Lng = placeCount.Lng
+            //                    });
+            //                }
+
+            //                foreach (var type in view.TypeCounts)
+            //                {
+            //                    model.TypeCounts.Add(new FacultyStaffTypeCountModel
+            //                    {
+            //                        TypeId = type.TypeId,
+            //                        Type = type.Type,
+            //                        Count = type.Count
+            //                    });
+            //                }
+
+            //                model.TypeCounts = model.TypeCounts.OrderBy(t => t.Rank).ToList();
+            //            }
+            //        }
+            //        finally
+            //        {
+            //            _activityProjector.EndReadActivityCountsView();
+            //        }
+            //    }
+            //}
+
+
+            return returnModel.ToList();
         }
 
         /* Returns people counts for given place. */
