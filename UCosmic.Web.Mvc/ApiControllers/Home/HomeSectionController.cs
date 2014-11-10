@@ -50,8 +50,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [POST("")]
-        //public HttpResponseMessage Post(string homeSection, string test, string test2)
-        //public HttpResponseMessage Post(string homeSection)
         public HttpResponseMessage Post(HomeSectionApiModel homeSection)
         {
 
@@ -67,22 +65,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 EstablishmentId = homeSection.EstablishmentId
             };
 
-            //var command = new CreateHomeSection(User);
-            //Mapper.Map(homeSection, command);
             _sectionCreateHandler.Handle(command);
 
             var response = Request.CreateResponse(HttpStatusCode.Created, "Home section was successfully created.");
-            //var url = Url.Link(null, new
-            //{
-            //    controller = "Agreements",
-            //    action = "Get",
-            //    homeSectionId = command.CreatedHomeSectionId,
-            //});
-            //Debug.Assert(url != null);
             response.Headers.Location = new Uri("http://ucosmic.com?sectionid="+command.CreatedHomeSectionId);
             return response;
             
-            //return Request.CreateResponse(HttpStatusCode.OK, "Your section was created successfully.");
         }
 
 
