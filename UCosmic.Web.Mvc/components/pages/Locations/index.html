@@ -1,0 +1,42 @@
+﻿
+<link rel="import" href="../../Polymer/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../Polymer/bower_components/paper-item/paper-item.html">
+<polymer-element name="is-page-locations-index" attributes="styledomain">
+    <template>
+        <link href="index.css" rel="stylesheet" />
+        <!--</form>-->
+        <paper-dropdown-menu selected="[all countries]" label="[all countries]" valueattr="label">
+            <template repeat="{{country, countryI in countries}}">
+                <paper-item label="{{country.name}}"></paper-item>
+            </template>
+        </paper-dropdown-menu>
+
+        <core-ajax url="/api/home/section"
+                   params='{"Description":"{{description}}",
+                            "Links":"{{links}}",
+                            "Title":"{{title}}"}'
+                   handleas="json"
+                   method="post"
+                   on-core-response="{{addSectionResponse}}"
+                   on-core-error="{{ajaxError}}"
+                   id="ajax_addSection">
+        </core-ajax>
+        <core-ajax url="/api/countries/"
+                   handleas="json" auto
+                   on-core-response="{{countriesResponse}}"
+                   on-core-error="{{ajaxError}}"
+                   id="ajax_countries">
+        </core-ajax>
+        <core-ajax url="/api/faculty-staff/activity-count/3306/0/"
+                   handleas="json" auto
+                   on-core-response="{{activitiesResponse}}"
+                   on-core-error="{{ajaxError}}"
+                   id="ajax_activities">
+        </core-ajax>
+        
+    </template>
+    <script src="index.js"></script>
+
+</polymer-element>
+
+
