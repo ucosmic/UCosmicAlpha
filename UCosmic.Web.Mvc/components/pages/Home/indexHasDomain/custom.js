@@ -19,12 +19,10 @@
             return;
         }
         this.isAjaxing = true;
-
         this.currentlySelectedSection = event.target.templateInstance.model.section;
         this.currentlySelectedSection.isArchive = 'true';
 
         this.$.ajax_deleteSection.method = 'DELETE';
-
         this.$.ajax_deleteSection.url = '/api/home/section?homeSectionId=' + this.currentlySelectedSection.id;
 
         this.$.ajax_deleteSection.go();

@@ -20,7 +20,6 @@
                 this.isAjaxing = true;
                 this.$.ajax_addSection.method = 'POST';
                 this.$.ajax_addSection.contentType = "application/json;charset=UTF-8";
-
                 this.$.ajax_addSection.body = JSON.stringify({
                     Title: this.title,
                     Description: this.description,
@@ -52,7 +51,6 @@
     },
     deleteLink: function (event, someNumber, element) {
         var myLink = event.target.templateInstance.model.link;
-
         this.links = $.grep(this.links, function (value) {
             return value != myLink;
         });
@@ -139,7 +137,6 @@
                 var homeSectionId = sectionId;
                 this.$.ajax_addPhoto.url = "/api/home/photo?homeSectionId=" + homeSectionId;
                 this.sectionAdded.id = homeSectionId;
-
                 this.$.ajax_addPhoto.go();
             } else {
                 this.$.linkMessage.style.display = "none";

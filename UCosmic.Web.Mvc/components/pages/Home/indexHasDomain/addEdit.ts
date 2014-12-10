@@ -82,7 +82,7 @@ Polymer('polymer-content-home-has-domain-edit', {
         var oFReader = new FileReader();
         oFReader.readAsDataURL(this.$.image.files[0]);
 
-        oFReader.onload = (oFREvent) => {
+        oFReader.onload = (oFREvent: any) => {
             this.$.picture.style.display = "block";
             this.imageSrc = oFREvent.target.result;
         };

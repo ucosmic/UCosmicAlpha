@@ -47,7 +47,6 @@
             this.isAjaxing = true;
             this.$.ajax_updateFlasher.method = 'POST';
             this.$.ajax_updateFlasher.contentType = "application/json;charset=UTF-8";
-
             this.flashertext = this.flashertext.replace(/\r?\n|\r/, " ");
             this.$.ajax_updateFlasher.body = JSON.stringify({
                 Text: this.flashertext,
