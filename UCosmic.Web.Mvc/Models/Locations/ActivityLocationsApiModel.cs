@@ -14,6 +14,7 @@ namespace UCosmic.Web.Mvc.Models
         public int LocationCount { get; set; }
         public int TypeCount { get; set; }
         public string Type { get; set; }
+        public int TypeId { get; set; }
 
         //public ActivityLocationsApiModel(int locationCount, int typeCount, string type)//cannot use a constructor because it creates an error with the JSON return...
         //{
