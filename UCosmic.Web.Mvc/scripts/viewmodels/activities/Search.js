@@ -429,6 +429,15 @@ var Activities;
                 this.orderBy.subscribe(function (newValue) {
                     _this._submitForm();
                 });
+                var myThis = this;
+                setTimeout(function () {
+                    $('input[name="placeNames"]').bind("change keyup input", function () {
+                        if (this.value == "") {
+                            $('input[name="placeIds"]')[0].value = '';
+                            myThis._submitForm();
+                        }
+                    });
+                }, 500);
             };
 
             Search.prototype._submitForm = function () {

@@ -1,5 +1,8 @@
 module Activities.ViewModels {
 
+    interface HTMLElement {
+        value: any;
+    }
 
     export interface SearchSettings {
         input: ApiModels.SearchInput;
@@ -41,6 +44,7 @@ module Activities.ViewModels {
         $until: JQuery;
         $placeIds: JQuery;
         loadingSpinner = new App.Spinner();
+        //placeNames = ko.observable("");
 
 
         hasTenancyData = ko.observable<boolean>(false);
@@ -286,7 +290,12 @@ module Activities.ViewModels {
         stopAutocompleteInfiniteLoop: boolean;
         private _applyKendo(): void {
             //#region DatePickers
-
+            //if (this.settings.input.placeNames) {
+            //    this.settings.input.placeNames.forEach((value) => {
+            //        this.placeNames(this.placeNames() + value);
+            //    });
+            //}
+            //this.placeNames = this.settings.input.placeNames;
             var kendoSince = this.$since.data('kendoDatePicker');
             kendoSince.element.val(this.settings.input.since);
             var kendoUntil = this.$until.data('kendoDatePicker');
@@ -459,6 +468,23 @@ module Activities.ViewModels {
             var searchOptions = this.serializeObject($('form'));
             searchOptions.placeFilter = 'continents';
             sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
+
+            //$('input[name="placeNames"]').bind("click", function () {
+            //    if (this.value == "") {
+            //        myThis._submitForm();
+            //    }
+            //})
+            //comboBox.bind("change keyup input", function () {
+            //    if (this.value == "") {
+            //        myThis._submitForm();
+            //    }
+            //});
+            
+            //this.placeNames.subscribe((newValue: string): void => {
+            //    if (newValue == "") {
+            //        this._submitForm();
+            //    }
+            //});
             //#endregion
         }
 
@@ -466,6 +492,16 @@ module Activities.ViewModels {
             this.pager.input.pageSizeText.subscribe((newValue: string): void => { this._submitForm(); });
             this.pager.input.pageNumberText.subscribe((newValue: string): void => { this._submitForm(); });
             this.orderBy.subscribe((newValue: string): void => { this._submitForm(); });
+            var myThis = this;
+            setTimeout(function () {
+                $('input[name="placeNames"]').bind("change keyup input", function () {
+                    if (this.value == "") {
+                        $('input[name="placeIds"]')[0].value = '';
+                        myThis._submitForm();
+                    }
+                });
+            }, 500);
+            
         }
 
         //#endregion
