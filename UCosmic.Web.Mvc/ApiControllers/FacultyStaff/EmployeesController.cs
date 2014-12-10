@@ -290,10 +290,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 Output.Add(new ActivityMapCountsApiQueryResultModel { id = 55949070, name = "Oceana", latitude = -30.941031F, longitude = 140.810654F, code = "OC", isContinent = true });
                 Output.Add(new ActivityMapCountsApiQueryResultModel { id = 55949070, name = "South America", latitude = -23.030081F, longitude = -67.903702F, code = "SA", isContinent = true });
                 //need to add for other continents as well
+                var waterCount = Output.Where(x => x.isWater).Count();
                 var grouped = Output.GroupBy(g => g.code).Select(g => new ActivitySearchResultPlacesCounted
                 {
                     ActivityCount = null,
-                    Count = g.Count() - 1,//take off one for adding the default above
+                    Count = g.First().code == "WATER" ? waterCount : g.First().code != "GLOBAL" ? g.Count() - 1 : g.Count(),//take off one for adding the default above
                     PlaceType = g.First().code == "WATER" ? "water" : g.First().code == "GLOBAL" ? "global" : "continent",
                     Name = g.First().code == "WATER" ? "Bodies Of Water" : g.First().code == "GLOBAL" ? "Global" : g.First().name,
                     Id = g.First().id,
