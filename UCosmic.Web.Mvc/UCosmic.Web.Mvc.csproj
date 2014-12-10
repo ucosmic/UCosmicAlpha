@@ -370,6 +370,7 @@
     <Compile Include="Models\Home\HomeSectionApiModel.cs" />
     <Compile Include="Models\Home\HomeSectionModel.cs" />
     <Compile Include="Models\Home\HomeModel.cs" />
+    <Compile Include="Models\Locations\AgreementLocationsApiModel.cs" />
     <Compile Include="Models\Locations\ActivityLocationsApiModel.cs" />
     <Compile Include="Models\People\PersonUrlViewModel.cs" />
     <Compile Include="Models\People\PersonUrlApiModel.cs" />
@@ -1946,9 +1947,6 @@
     <Content Include="components\Polymer\bower_components\speech-mic\speech-mic.css" />
     <Content Include="components\Polymer\bower_components\speech-mic\speech-mic.html" />
     <Content Include="components\Polymer\bower_components\web-animations-js\test\bootstrap.js" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\test\img\error.png" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\test\img\success.png" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\test\img\unknown.png" />
     <Content Include="components\Polymer\bower_components\web-animations-js\test\perf\balls-add-compositing.html" />
     <Content Include="components\Polymer\bower_components\web-animations-js\test\perf\balls-replace-compositing.html" />
     <Content Include="components\Polymer\bower_components\web-animations-js\test\perf\perf.js" />
@@ -2111,7 +2109,6 @@
     <Content Include="components\Polymer\bower_components\web-animations-js\test\testcases\unit-test-testharness.html" />
     <Content Include="components\Polymer\bower_components\web-animations-js\test\testcases\unit-test-unpause.html" />
     <Content Include="components\Polymer\bower_components\web-animations-js\test\testharness_timing.css" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\tools\python\requirements.txt" />
     <Content Include="components\Polymer\bower_components\web-animations-js\tutorial\basic-animations\basic-animation-exercise-1.html" />
     <Content Include="components\Polymer\bower_components\web-animations-js\tutorial\basic-animations\basic-animation.html" />
     <Content Include="components\Polymer\bower_components\web-animations-js\tutorial\iframe-contents.html" />
@@ -2607,12 +2604,6 @@
     <Content Include="components\Polymer\bower_components\web-animations-js\run-tests.sh" />
     <Content Include="components\Polymer\bower_components\web-animations-js\test\testcases\small.webm" />
     <Content Include="components\Polymer\bower_components\web-animations-js\test\update-testcases.py" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\tools\.keepme" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\tools\android\config.sh" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\tools\android\setup.sh" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\tools\android\stop.sh" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\tools\python\run-tests.py" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\tools\python\setup.sh" />
     <Content Include="components\Polymer\bower_components\webcomponentsjs\.bower.json" />
     <Content Include="components\Polymer\bower_components\webcomponentsjs\bower.json" />
     <Content Include="components\Polymer\bower_components\webcomponentsjs\README.md" />
@@ -3848,6 +3839,7 @@
     <TypeScriptCompile Include="scripts\typings\knockout\knockout.d.ts" />
     <TypeScriptCompile Include="scripts\typings\modernizr\modernizr.d.ts" />
     <TypeScriptCompile Include="scripts\typings\moment\moment.d.ts" />
+    <TypeScriptCompile Include="scripts\typings\myTypes.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\Map.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\MapOld.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\SearchMap.ts" />
@@ -5136,7 +5128,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>3014</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

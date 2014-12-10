@@ -13,7 +13,7 @@ interface KnockoutBindingHandlers {
 ko.bindingHandlers.element = {
     update: function (element: Element, valueAccessor: () => any,
         allBindingsAccessor: () => any, viewModel: any): void {
-        var name = ko.utils.unwrapObservable(valueAccessor());
+        var name: any = ko.utils.unwrapObservable(valueAccessor());
         viewModel[name] = element;
     }
 };
@@ -21,7 +21,7 @@ ko.bindingHandlers.element = {
 ko.bindingHandlers.jqElement = { // TODO: deprecate this, replaced by jQuery binding handler
     update: function (element: Element, valueAccessor: () => any,
         allBindingsAccessor: () => any, viewModel: any): void {
-        var name = ko.utils.unwrapObservable(valueAccessor());
+        var name: any = ko.utils.unwrapObservable(valueAccessor());
         viewModel[name] = $(element);
     }
 };
@@ -29,7 +29,7 @@ ko.bindingHandlers.jqElement = { // TODO: deprecate this, replaced by jQuery bin
 ko.bindingHandlers.jQuery = {
     update: function (element: Element, valueAccessor: () => any,
         allBindingsAccessor: () => any, viewModel: any): void {
-        var name = ko.utils.unwrapObservable(valueAccessor());
+        var name: any = ko.utils.unwrapObservable(valueAccessor());
         viewModel[name] = $(element);
     }
 };
@@ -37,7 +37,7 @@ ko.bindingHandlers.jQuery = {
 ko.bindingHandlers.jqObservableElement = {
     update: function (element: Element, valueAccessor: () => any,
         allBindingsAccessor: () => any, viewModel: any): void {
-        var name = ko.utils.unwrapObservable(valueAccessor());
+        var name: any = ko.utils.unwrapObservable(valueAccessor());
         viewModel[name]($(element));
     }
 };
@@ -45,7 +45,7 @@ ko.bindingHandlers.jqObservableElement = {
 ko.bindingHandlers.jQueryObservable = {
     update: function (element: Element, valueAccessor: () => any,
         allBindingsAccessor: () => any, viewModel: any): void {
-        var name = ko.utils.unwrapObservable(valueAccessor());
+        var name: any = ko.utils.unwrapObservable(valueAccessor());
         viewModel[name]($(element));
     }
 };
