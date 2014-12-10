@@ -124,6 +124,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             IList<ActivityLocationsApiModel> returnModel = new List<ActivityLocationsApiModel>();
             IList<ActivityLocationsApiQueryResultModel> model = new List<ActivityLocationsApiQueryResultModel>();
+            IList<ActivityTypesApiReturn> establishmentTypes = new List<ActivityTypesApiReturn>();
 
             var tenancy = Request.Tenancy();
 
@@ -146,14 +147,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     LocationsRepository locationsRepository = new LocationsRepository();
                     EmployeeActivityTypesRepository employeeActivityTypesRepository = new EmployeeActivityTypesRepository();
                     model = locationsRepository.LocationsByEstablishment_Place(establishmentId, placeId);
-                    var modelDistinct = model.DistinctBy(x => x.id);
-
-                    var establishmentTypes = employeeActivityTypesRepository.EmployeeActivityTypes_By_establishmentId(establishmentId);
+                    //var modelDistinct = model.DistinctBy(x => x.id);
+                    var modelDistinct = model.DistinctBy(x => new { x.id, x.type });
+                    establishmentTypes = employeeActivityTypesRepository.EmployeeActivityTypes_By_establishmentId(establishmentId);
                     foreach (var type in establishmentTypes)
                     {
-                        var typeCount = modelDistinct.Where(x => x.type == type).Count();
-                        var locationCount = model.Where(x => x.type == type).Count();
-                        returnModel.Add(new ActivityLocationsApiModel{LocationCount = locationCount, TypeCount = typeCount, Type = type});
+                        var typeCount = modelDistinct.Where(x => x.type == type.Type).Count();
+                        var locationCount = model.Where(x => x.type == type.Type).Count();
+                        returnModel.Add(new ActivityLocationsApiModel{LocationCount = locationCount, TypeCount = typeCount, Type = type.Type, TypeId = type.TypeId});
                     }
                 }
             }
