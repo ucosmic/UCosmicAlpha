@@ -15,11 +15,11 @@
     "notification-elements": "PolymerLabs/notification-elements#master"
   },
   "homepage": "https://github.com/Polymer/more-elements",
-  "_release": "7a6c37d9e0",
+  "_release": "90332ee913",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "7a6c37d9e038b6714bc7650be81f5b6dd39b737c"
+    "commit": "90332ee91301355eaf1656f3feceb4d15524b0e5"
   },
   "_source": "git://github.com/Polymer/more-elements.git",
   "_target": "master",

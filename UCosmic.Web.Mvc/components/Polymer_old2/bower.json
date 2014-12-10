@@ -1,0 +1,31 @@
+{
+  "name": "polymer_paper",
+  "version": "0.0.2",
+  "authors": [
+    "Tim Willis <timtwillis@gmail.com>"
+  ],
+  "description": "framework for future projects",
+  "main": "index.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer",
+    "core-elements": "Polymer/core-elements",
+    "paper-elements": "Polymer/paper-elements",
+    "more-elements": "Polymer/more-elements#master"
+  },
+  "resolutions": {
+    "polymer": ">=0.4.0",
+    "core-component-page": ">=0.4.0",
+    "platform": ">=0.4.0",
+    "core-ajax": ">=0.4.0",
+    "google-apis": "master"
+  }
+}

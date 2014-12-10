@@ -1,0 +1,17 @@
+{
+  "name": "cool-clock",
+  "private": true,
+  "dependencies": {
+    "polymer": "Polymer/polymer#master"
+  },
+  "homepage": "https://github.com/Polymer/cool-clock",
+  "_release": "769b618d1a",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "769b618d1a92184b120cb02923010b23d8d3c2c7"
+  },
+  "_source": "git://github.com/Polymer/cool-clock.git",
+  "_target": "master",
+  "_originalSource": "Polymer/cool-clock"
+}

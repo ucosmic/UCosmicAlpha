@@ -22,10 +22,10 @@
     "more-elements": "Polymer/more-elements#master"
   },
   "resolutions": {
-    "polymer": ">=0.4.0",
-    "core-component-page": ">=0.4.0",
-    "platform": ">=0.4.0",
-    "core-ajax": ">=0.4.0",
-    "google-apis": "master"
+    "polymer": ">=0.5.1",
+    "core-component-page": ">=0.5.1",
+    "core-ajax": ">=0.5.1",
+    "google-apis": "master",
+    "webcomponentsjs": "^0.5.1"
   }
 }
