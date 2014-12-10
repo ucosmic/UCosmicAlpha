@@ -1,4 +1,7 @@
 
+interface HTMLElement {
+    value: any;
+}
 module Activities.ViewModels {
 
     export interface SearchTestSettings {
@@ -304,8 +307,10 @@ module Activities.ViewModels {
             //this.$form.submit((event) => {
             //    this.loadingSpinner.start();
             //});
-            $('a').click(() => {
-                this.loadingSpinner.start();
+            $('a').click((e:any) => {
+                if (e.target.href) {
+                    this.loadingSpinner.start();
+                }
             });
         }
 
@@ -497,6 +502,19 @@ module Activities.ViewModels {
             //this.pager.input.pageSizeText.subscribe((newValue: string): void => { this._submitForm(); });
             //this.pager.input.pageNumberText.subscribe((newValue: string): void => { this._submitForm(); });
             this.orderBy.subscribe((newValue: string): void => { this._submitForm(); });
+
+            //this.placeNames.subscribe((newValue: string): void => {
+            //    if (newValue == "") {
+            //        this._submitForm();
+            //    }
+            //});
+            var myThis = this;
+            $('input[name="placeNames"]').bind("change keyup input", function () {
+                if(this.value == ""){
+                    myThis._submitForm();
+                }
+            })
+
         }
 
         //#endregion
@@ -508,7 +526,13 @@ module Activities.ViewModels {
             this.placeNames("");
             this.since("");
             this.until("");
+            this.selectedEstablishment(this.settings.tenantId);
+            $('input[name="placeNames"]')[0].value = '';
+            $('input[name="placeIds"]')[0].value = '';
+            this.searchMap.clearFilter();
+            //this.loadingSpinner.start();
             this._submitForm();
+            //this.searchMap.reloadData($('form'), true);
         }
 
         private _submitForm(): void {

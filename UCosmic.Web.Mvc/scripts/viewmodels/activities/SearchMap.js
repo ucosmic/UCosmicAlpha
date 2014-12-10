@@ -242,8 +242,10 @@ var Activities;
                 this._applyKendo();
                 this._applySubscriptions();
 
-                $('a').click(function () {
-                    _this.loadingSpinner.start();
+                $('a').click(function (e) {
+                    if (e.target.href) {
+                        _this.loadingSpinner.start();
+                    }
                 });
             };
 
@@ -408,6 +410,13 @@ var Activities;
                 this.orderBy.subscribe(function (newValue) {
                     _this._submitForm();
                 });
+
+                var myThis = this;
+                $('input[name="placeNames"]').bind("change keyup input", function () {
+                    if (this.value == "") {
+                        myThis._submitForm();
+                    }
+                });
             };
 
             MapSearch.prototype.resetSearch = function () {
@@ -416,6 +425,11 @@ var Activities;
                 this.placeNames("");
                 this.since("");
                 this.until("");
+                this.selectedEstablishment(this.settings.tenantId);
+                $('input[name="placeNames"]')[0].value = '';
+                $('input[name="placeIds"]')[0].value = '';
+                this.searchMap.clearFilter();
+
                 this._submitForm();
             };
 
