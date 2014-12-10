@@ -18,6 +18,7 @@ namespace UCosmic.Domain.Employees
             var activities = _entities.Query<Activity>()
                 .Where(x =>
                     x.Original == null && x.ModeText == publishedText && // published, non-work-copy
+                    x.Person.User != null &&
                     x.Person.Affiliations.Any(y => y.IsDefault) // make sure person's default affiliation is not null
                     &&
                     (   // person must be affiliated with this establishment or one of its offspring under the default affiliation
