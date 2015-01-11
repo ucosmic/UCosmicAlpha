@@ -251,6 +251,7 @@ namespace UCosmic.Domain.Activities
                 //        || x.Types.Any(y => y.Type.Type.Contains(Keyword));
                 //    }
                 //);
+                query.Keyword = query.Keyword.Replace("+", "+ ");
                 var keywords2 = query.Keyword.Split(null);
 
                 string[] keywords = Regex
@@ -265,176 +266,172 @@ namespace UCosmic.Domain.Activities
 
                 List<List<ActivityValues>> queryList = new List<List<ActivityValues>>();
 
+                string[] negativeKeywords = keywords.Where(x => x.IndexOf("-") == 0).ToArray();
 
+                keywords = keywords.Where(x => x.IndexOf("-") != 0).ToArray();
+                foreach (var keyword in keywords.Select((x, i) => new { Value = x, Index = i }))
+                {
+
+                    if (keyword.Index != 0 && keywords[keyword.Index - 1] == "+" && keywords[keyword.Index] != "+")
+                    {
+                        queryable = queryable.Where(x =>
+                            (x.Title != null && x.Title.Contains(keyword.Value) && x.Title.Contains(keyword.Value))
+                            || (x.ContentSearchable != null && x.ContentSearchable.ToLower().Contains(keyword.Value))
+                            || (x.Title != null && x.Title.ToLower().Contains(keyword.Value))
+                            || (x.Activity.Person.DisplayName.ToLower().Contains(keyword.Value))
+                            || (x.Tags.Any(z => z.Text.ToLower().Contains(keyword.Value)))
+                            || (x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword.Value)))
+                            || (x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword.Value)))
+                            || (x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword.Value))))
+                            );
+                    }
+                }
 
                 foreach (var keyword in keywords.Select((x, i) => new { Value = x, Index = i }))
                 {
-                    if (keywords.Count() >= keyword.Index + 2 && keywords[keyword.Index + 1] == "+")
+
+                    if ((keywords[keyword.Index] != "+") && (keyword.Index == 0 || keywords[keyword.Index - 1] != "+"))
                     {
-                        var keyword3 = keywords[keyword.Index + 2];
-                        if (keyword.Value.Contains("-"))
-                        {
-                            var keyword2 = keyword.Value.Replace("-", "");
-                            var tempQuery = queryable.Where(x =>
-                                (x.Title != null && !x.Title.Contains(keyword2))
-                                    //var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
-                                && (x.ContentSearchable != null && !x.ContentSearchable.ToLower().Contains(keyword2))
-                                && (x.Title != null && !x.Title.ToLower().Contains(keyword2))
-                                && (!x.Activity.Person.DisplayName.ToLower().Contains(keyword2))
-                                && (!x.Tags.Any(z => z.Text.ToLower().Contains(keyword2)))
-                                && (!x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword2)))
-                                && (!x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword2)))
-                                && (!x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword2))))
-                            );
+                        var tempQuery = queryable.Where(x =>
+                            (x.Title != null && x.Title.Contains(keyword.Value) && x.Title.Contains(keyword.Value))
+                            || (x.ContentSearchable != null && x.ContentSearchable.ToLower().Contains(keyword.Value))
+                            || (x.Title != null && x.Title.ToLower().Contains(keyword.Value))
+                            || (x.Activity.Person.DisplayName.ToLower().Contains(keyword.Value))
+                            || (x.Tags.Any(z => z.Text.ToLower().Contains(keyword.Value)))
+                            || (x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword.Value)))
+                            || (x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword.Value)))
+                            || (x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword.Value))))
+                        );
+                        queryList.Add(tempQuery.ToList());
+                    }
 
-                            if (keyword3.Contains("-"))
-                            {
-                                keyword3 = keyword3.Replace("-", "");
-                                tempQuery = tempQuery.Where(x =>
-                                    (x.Title != null && !x.Title.Contains(keyword3))
-                                        //var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
-                                    && (x.ContentSearchable != null && !x.ContentSearchable.ToLower().Contains(keyword3))
-                                    && (x.Title != null && !x.Title.ToLower().Contains(keyword3))
-                                    && (!x.Activity.Person.DisplayName.ToLower().Contains(keyword3))
-                                    && (!x.Tags.Any(z => z.Text.ToLower().Contains(keyword3)))
-                                    && (!x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword3)))
-                                    && (!x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword3)))
-                                    && (!x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword3))))
-                                );
-                            }
-                            else
-                            {
-                                tempQuery = tempQuery.Where(x =>
-                                    (x.Title != null && x.Title.Contains(keyword.Value) && x.Title.Contains(keyword3))
-                                        //var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
-                                    || (x.ContentSearchable != null && x.ContentSearchable.ToLower().Contains(keyword3))
-                                    || (x.Title != null && x.Title.ToLower().Contains(keyword3))
-                                    || (x.Activity.Person.DisplayName.ToLower().Contains(keyword3))
-                                    || (x.Tags.Any(z => z.Text.ToLower().Contains(keyword3)))
-                                    || (x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword3)))
-                                    || (x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword3)))
-                                    || (x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword3))))
-                                    //|| keyword.Values.Any(y => x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(y)) || x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(y))))
-                                    //|| keyword.Values.Any(y => x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(y))))
-                                );
-                            }
+                    //if (keywords.Count() >= keyword.Index + 2 && keywords[keyword.Index + 1] == "+")
+                    //{
+                    //    var keyword3 = keywords[keyword.Index + 2];
+                    //    if (keyword.Value.Contains("-"))
+                    //    {
+                    //        var keyword2 = keyword.Value.Replace("-", "");
+                    //        var tempQuery = queryable.Where(x =>
+                    //            (x.Title != null && !x.Title.Contains(keyword2))
+                    //            && (x.ContentSearchable != null && !x.ContentSearchable.ToLower().Contains(keyword2))
+                    //            && (x.Title != null && !x.Title.ToLower().Contains(keyword2))
+                    //            && (!x.Activity.Person.DisplayName.ToLower().Contains(keyword2))
+                    //            && (!x.Tags.Any(z => z.Text.ToLower().Contains(keyword2)))
+                    //            && (!x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword2)))
+                    //            && (!x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword2)))
+                    //            && (!x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword2))))
+                    //        );
 
-                            queryList.Add(tempQuery.ToList());
-                            //queryable = queryable.Where(x =>
+                    //        if (keyword3.Contains("-"))
+                    //        {
+                    //            keyword3 = keyword3.Replace("-", "");
+                    //            tempQuery = tempQuery.Where(x =>
+                    //                (x.Title != null && !x.Title.Contains(keyword3))
+                    //                && (x.ContentSearchable != null && !x.ContentSearchable.ToLower().Contains(keyword3))
+                    //                && (x.Title != null && !x.Title.ToLower().Contains(keyword3))
+                    //                && (!x.Activity.Person.DisplayName.ToLower().Contains(keyword3))
+                    //                && (!x.Tags.Any(z => z.Text.ToLower().Contains(keyword3)))
+                    //                && (!x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword3)))
+                    //                && (!x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword3)))
+                    //                && (!x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword3))))
+                    //            );
+                    //        }
+                    //        else
+                    //        {
+                    //            tempQuery = tempQuery.Where(x =>
+                    //                (x.Title != null && x.Title.Contains(keyword.Value) && x.Title.Contains(keyword3))
+                    //                || (x.ContentSearchable != null && x.ContentSearchable.ToLower().Contains(keyword3))
+                    //                || (x.Title != null && x.Title.ToLower().Contains(keyword3))
+                    //                || (x.Activity.Person.DisplayName.ToLower().Contains(keyword3))
+                    //                || (x.Tags.Any(z => z.Text.ToLower().Contains(keyword3)))
+                    //                || (x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword3)))
+                    //                || (x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword3)))
+                    //                || (x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword3))))
+                    //            );
+                    //        }
 
-                            //    (x.Title != null && !x.Title.Contains(keyword.Value))
-                            //        //var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
-                            //    && (x.ContentSearchable != null && !x.ContentSearchable.ToLower().Contains(keyword.Value))
-                            //    && (x.Title != null && !x.Title.ToLower().Contains(keyword.Value))
-                            //    && !x.Activity.Person.DisplayName.ToLower().Contains(keyword.Value)
-                            //    && !x.Tags.Any(z => z.Text.ToLower().Contains(keyword.Value))
-                            //    && !x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword.Value))
-                            //    && !x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword.Value))
-                            //    && !x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword.Value)))
-                            //);
-                        }
-                        else
-                        {
-                            var tempQuery = queryable.Where(x =>
-                                (x.Title != null && x.Title.Contains(keyword.Value) && x.Title.Contains(keyword3))
-                                    //var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
-                                || (x.ContentSearchable != null && x.ContentSearchable.ToLower().Contains(keyword.Value) )
-                                || (x.Title != null && x.Title.ToLower().Contains(keyword.Value) )
-                                || (x.Activity.Person.DisplayName.ToLower().Contains(keyword.Value) )
-                                || (x.Tags.Any(z => z.Text.ToLower().Contains(keyword.Value)))
-                                || (x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword.Value)))
-                                || (x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword.Value)))
-                                || (x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword.Value))))
-                                //|| keyword.Values.Any(y => x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(y)) || x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(y))))
-                                //|| keyword.Values.Any(y => x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(y))))
-                            );
-                            if (keyword3.Contains("-"))
-                            {
-                                keyword3 = keyword3.Replace("-", "");
-                                tempQuery = tempQuery.Where(x =>
-                                    (x.Title != null && !x.Title.Contains(keyword3))
-                                        //var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
-                                    && (x.ContentSearchable != null && !x.ContentSearchable.ToLower().Contains(keyword3))
-                                    && (x.Title != null && !x.Title.ToLower().Contains(keyword3))
-                                    && (!x.Activity.Person.DisplayName.ToLower().Contains(keyword3))
-                                    && (!x.Tags.Any(z => z.Text.ToLower().Contains(keyword3)))
-                                    && (!x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword3)))
-                                    && (!x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword3)))
-                                    && (!x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword3))))
-                                );
-                            }
-                            else
-                            {
-                                tempQuery = tempQuery.Where(x =>
-                                    (x.Title != null && x.Title.Contains(keyword.Value) && x.Title.Contains(keyword3))
-                                        //var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
-                                    || (x.ContentSearchable != null && x.ContentSearchable.ToLower().Contains(keyword3))
-                                    || (x.Title != null && x.Title.ToLower().Contains(keyword3))
-                                    || (x.Activity.Person.DisplayName.ToLower().Contains(keyword3))
-                                    || (x.Tags.Any(z => z.Text.ToLower().Contains(keyword3)))
-                                    || (x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword3)))
-                                    || (x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword3)))
-                                    || (x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword3))))
-                                    //|| keyword.Values.Any(y => x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(y)) || x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(y))))
-                                    //|| keyword.Values.Any(y => x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(y))))
-                                );
-                            }
+                    //        queryList.Add(tempQuery.ToList());
+                    //    }
+                    //    else
+                    //    {
+                    //        var tempQuery = queryable.Where(x =>
+                    //            (x.Title != null && x.Title.Contains(keyword.Value) && x.Title.Contains(keyword3))
+                    //            || (x.ContentSearchable != null && x.ContentSearchable.ToLower().Contains(keyword.Value) )
+                    //            || (x.Title != null && x.Title.ToLower().Contains(keyword.Value) )
+                    //            || (x.Activity.Person.DisplayName.ToLower().Contains(keyword.Value) )
+                    //            || (x.Tags.Any(z => z.Text.ToLower().Contains(keyword.Value)))
+                    //            || (x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword.Value)))
+                    //            || (x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword.Value)))
+                    //            || (x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword.Value))))
+                    //        );
+                    //        if (keyword3.Contains("-"))
+                    //        {
+                    //            keyword3 = keyword3.Replace("-", "");
+                    //            tempQuery = tempQuery.Where(x =>
+                    //                (x.Title != null && !x.Title.Contains(keyword3))
+                    //                && (x.ContentSearchable != null && !x.ContentSearchable.ToLower().Contains(keyword3))
+                    //                && (x.Title != null && !x.Title.ToLower().Contains(keyword3))
+                    //                && (!x.Activity.Person.DisplayName.ToLower().Contains(keyword3))
+                    //                && (!x.Tags.Any(z => z.Text.ToLower().Contains(keyword3)))
+                    //                && (!x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword3)))
+                    //                && (!x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword3)))
+                    //                && (!x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword3))))
+                    //            );
+                    //        }
+                    //        else
+                    //        {
+                    //            tempQuery = tempQuery.Where(x =>
+                    //                (x.Title != null && x.Title.Contains(keyword.Value) && x.Title.Contains(keyword3))
+                    //                || (x.ContentSearchable != null && x.ContentSearchable.ToLower().Contains(keyword3))
+                    //                || (x.Title != null && x.Title.ToLower().Contains(keyword3))
+                    //                || (x.Activity.Person.DisplayName.ToLower().Contains(keyword3))
+                    //                || (x.Tags.Any(z => z.Text.ToLower().Contains(keyword3)))
+                    //                || (x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword3)))
+                    //                || (x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword3)))
+                    //                || (x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword3))))
+                    //            );
+                    //        }
                             
-                            queryList.Add(tempQuery.ToList());
-                        }
-                    }
-                    else if(keyword.Index == 0 || (keywords[keyword.Index - 1] != "+" && keyword.Value != "+"))
-                    {
-                        if (keyword.Value.Contains("-"))
-                        {
-                            var keyword2 = keyword.Value.Replace("-", "");
-                            queryList.Add(queryable.Where(x =>
-                                (x.Title != null && !x.Title.Contains(keyword2))
-                                    //var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
-                                && (x.ContentSearchable != null && !x.ContentSearchable.ToLower().Contains(keyword2))
-                                && (x.Title != null && !x.Title.ToLower().Contains(keyword2))
-                                && !x.Activity.Person.DisplayName.ToLower().Contains(keyword2)
-                                && !x.Tags.Any(z => z.Text.ToLower().Contains(keyword2))
-                                && !x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword2))
-                                && !x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword2))
-                                && !x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword2)))
-                            ).ToList());
-                            //queryable = queryable.Where(x =>
-
-                            //    (x.Title != null && !x.Title.Contains(keyword.Value))
-                            //        //var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
-                            //    && (x.ContentSearchable != null && !x.ContentSearchable.ToLower().Contains(keyword.Value))
-                            //    && (x.Title != null && !x.Title.ToLower().Contains(keyword.Value))
-                            //    && !x.Activity.Person.DisplayName.ToLower().Contains(keyword.Value)
-                            //    && !x.Tags.Any(z => z.Text.ToLower().Contains(keyword.Value))
-                            //    && !x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword.Value))
-                            //    && !x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword.Value))
-                            //    && !x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword.Value)))
-                            //);
-                        }
-                        else
-                        {
-                            queryList.Add(queryable.Where(x =>
-                                (x.Title != null && x.Title.Contains(keyword.Value))
-                                    //var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
-                                || (x.ContentSearchable != null && x.ContentSearchable.ToLower().Contains(keyword.Value))
-                                || (x.Title != null && x.Title.ToLower().Contains(keyword.Value))
-                                || x.Activity.Person.DisplayName.ToLower().Contains(keyword.Value)
-                                || x.Tags.Any(z => z.Text.ToLower().Contains(keyword.Value))
-                                || x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword.Value))
-                                || x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword.Value))
-                                || x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword.Value)))
-                                //|| keyword.Values.Any(y => x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(y)) || x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(y))))
-                                //|| keyword.Values.Any(y => x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(y))))
-                            ).ToList());
-                        }
-                    }
+                    //        queryList.Add(tempQuery.ToList());
+                    //    }
+                    //}
+                    //else if(keyword.Index == 0 || (keywords[keyword.Index - 1] != "+" && keyword.Value != "+"))
+                    //{
+                    //    if (keyword.Value.Contains("-"))
+                    //    {
+                    //        var keyword2 = keyword.Value.Replace("-", "");
+                    //        queryList.Add(queryable.Where(x =>
+                    //            (x.Title != null && !x.Title.Contains(keyword2))
+                    //            && (x.ContentSearchable != null && !x.ContentSearchable.ToLower().Contains(keyword2))
+                    //            && (x.Title != null && !x.Title.ToLower().Contains(keyword2))
+                    //            && !x.Activity.Person.DisplayName.ToLower().Contains(keyword2)
+                    //            && !x.Tags.Any(z => z.Text.ToLower().Contains(keyword2))
+                    //            && !x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword2))
+                    //            && !x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword2))
+                    //            && !x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword2)))
+                    //        ).ToList());
+                    //    }
+                    //    else
+                    //    {
+                    //        queryList.Add(queryable.Where(x =>
+                    //            (x.Title != null && x.Title.Contains(keyword.Value))
+                    //            || (x.ContentSearchable != null && x.ContentSearchable.ToLower().Contains(keyword.Value))
+                    //            || (x.Title != null && x.Title.ToLower().Contains(keyword.Value))
+                    //            || x.Activity.Person.DisplayName.ToLower().Contains(keyword.Value)
+                    //            || x.Tags.Any(z => z.Text.ToLower().Contains(keyword.Value))
+                    //            || x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword.Value))
+                    //            || x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword.Value))
+                    //            || x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword.Value)))
+                    //        ).ToList());
+                    //    }
+                    //}
                     
                 }
+                
 
                 List<ActivityValues> myQueryable = null;
                 List<ActivityValues> myQueryableLast = null;
-                foreach (var myQuery in queryList)
+                foreach (var myQuery in queryList.ToArray())
                 {
                     
                     if(myQueryableLast != null){
@@ -447,9 +444,37 @@ namespace UCosmic.Domain.Activities
                     }
                     myQueryableLast = myQuery;
                 }
-                
+                //myQueryableLast = queryable.ToList();
+                //queryable = myQueryableLast.Union(myQueryable).AsQueryable();
+
                 queryable = myQueryable.AsQueryable();
 
+                
+                foreach (var keyword in negativeKeywords.Select((x, i) => new { Value = x, Index = i }))
+                {
+                    //var keyword3 = keyword.Replace("-", "");
+                    //queryable = queryable.Where(x =>
+                    //    (x.Title != null && !x.Title.Contains(keyword3))
+                    //    && (x.ContentSearchable != null && !x.ContentSearchable.ToLower().Contains(keyword3))
+                    //    && (x.Title != null && !x.Title.ToLower().Contains(keyword3))
+                    //    && (!x.Activity.Person.DisplayName.ToLower().Contains(keyword3))
+                    //    && (!x.Tags.Any(z => z.Text.ToLower().Contains(keyword3)))
+                    //    && (!x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword3)))
+                    //    && (!x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword3)))
+                    //    && (!x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword3))))
+                    //);
+                    var keyword2 = keyword.Value.Replace("-", "");
+                    queryable = queryable.Where(x =>
+                        (x.Title != null && !x.Title.Contains(keyword2))
+                        && (x.ContentSearchable != null && !x.ContentSearchable.ToLower().Contains(keyword2))
+                        && (x.Title != null && !x.Title.ToLower().Contains(keyword2))
+                        && !x.Activity.Person.DisplayName.ToLower().Contains(keyword2)
+                        && !x.Tags.Any(z => z.Text.ToLower().Contains(keyword2))
+                        && !x.Types.Any(z => z.Type.Type.ToLower().Contains(keyword2))
+                        && !x.Locations.Any(z => z.Place.OfficialName.ToLower().Contains(keyword2))
+                        && !x.Locations.Any(l => l.Place.Ancestors.Any(z => z.Ancestor.OfficialName.ToLower().Contains(keyword2)))
+                    );
+                };
 
                     //queryable = queryable.Where(x => 
                 //    (x.Title != null && keywords.Any(y => x.Title.Contains(y)))
