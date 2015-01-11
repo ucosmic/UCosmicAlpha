@@ -22,6 +22,7 @@ namespace UCosmic.Domain.Agreements
         public int PageNumber { get; set; }
 
         public string CountryCode { get; set; }
+        public string TypeCode { get; set; }
         public string Keyword { get; set; }
     }
 
@@ -45,6 +46,11 @@ namespace UCosmic.Domain.Agreements
                 .ByOwnerDomain(query.OwnerDomain)
                 .VisibleTo(query.Principal, _queryProcessor)
             ;
+
+            if (query.TypeCode != null && query.TypeCode != "any" && query.TypeCode != "")
+            {
+                queryable = queryable.Where(x => x.Type == query.TypeCode);
+            }
 
             //// when the query's country code is empty string, match all agreements regardless of country.
             //// when the query's country code is null, match agreements with partners that have no known country
