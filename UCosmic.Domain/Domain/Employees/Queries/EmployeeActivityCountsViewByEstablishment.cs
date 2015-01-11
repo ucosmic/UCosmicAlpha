@@ -34,11 +34,11 @@ namespace UCosmic.Domain.Employees
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            var view = query.EstablishmentId.HasValue
-                ? _projector.Get(query.EstablishmentId.Value)
-                : _projector.Get(query.Domain);
+            //var view = query.EstablishmentId.HasValue
+            //    ? _projector.Get(query.EstablishmentId.Value)
+            //    : _projector.Get(query.Domain);
 
-            if (view != null) return view;
+            //if (view != null) return view;
 
             var emptyView = new EmployeeActivityCountsView();
             if (query.EstablishmentId.HasValue)
