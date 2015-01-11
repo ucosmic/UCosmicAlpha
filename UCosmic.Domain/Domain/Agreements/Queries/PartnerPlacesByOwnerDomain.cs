@@ -28,10 +28,12 @@ namespace UCosmic.Domain.Agreements
         {
             AgreementIds = new int[0];
             PartnerIds = new int[0];
+            AgreementTypes = new string[0];
         }
 
         public int[] AgreementIds { get; internal set; }
         public int[] PartnerIds { get; internal set; }
+        public string[] AgreementTypes { get; internal set; }
         public int AgreementCount
         {
             get { return AgreementIds == null ? 0 : AgreementIds.Count(); }
@@ -66,6 +68,9 @@ namespace UCosmic.Domain.Agreements
             var agreementIdPartnerIds = agreements.ToDictionary(x => x.Id,
                 x => x.Participants.Where(y => !y.IsOwner).Select(y => y.EstablishmentId).ToArray());
             var uniqiePartnerIds = agreementIdPartnerIds.SelectMany(x => x.Value).Distinct();
+
+            var agreementTypes = agreements.ToDictionary(x => x.Id,
+                x => x.Type);
 
             var candidateLocations = _entities.Query<EstablishmentLocation>()
                 .Where(x => uniqiePartnerIds.Contains(x.RevisionId));
@@ -108,6 +113,9 @@ namespace UCosmic.Domain.Agreements
                 var agreementIds = agreementIdPartnerIds
                     .Where(x => x.Value.Any(partnerIds.Contains))
                     .Select(x => x.Key).Distinct().ToArray();
+                partnerPlace.AgreementTypes = agreementTypes
+                    .Where(x => agreementIds.Contains(x.Key))
+                    .Select(x => x.Value).ToArray();
                 partnerPlace.AgreementIds = agreementIds;
                 partnerPlace.PartnerIds = partnerIds;
 
