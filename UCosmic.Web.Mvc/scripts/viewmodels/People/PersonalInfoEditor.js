@@ -1,5 +1,6 @@
 var People;
 (function (People) {
+    var ViewModels;
     (function (ViewModels) {
         var PersonalInfoEditor = (function () {
             function PersonalInfoEditor(model) {
@@ -28,7 +29,7 @@ var People;
                 this.$nameSuffix = $("#suffix");
                 this.$edit_personal_info_dialog = $("#edit_personal_info_dialog");
                 this.isEditMode = ko.observable(false);
-                this.saveSpinner = new App.Spinner({ delay: 200 });
+                this.saveSpinner = new App.Spinner({ delay: 200, });
                 this.startInEdit = ko.observable(false);
                 this.startTabName = ko.observable("Activities");
                 this.personId2 = model.personId;
@@ -37,18 +38,16 @@ var People;
             }
             PersonalInfoEditor.prototype.load = function (startTab) {
                 var _this = this;
-                if (typeof startTab === "undefined") { startTab = ''; }
+                if (startTab === void 0) { startTab = ''; }
                 if (this._loadPromise)
                     return this._loadPromise;
                 this._loadPromise = $.Deferred();
-
                 var viewModelPact = $.Deferred();
                 $.get('/api/user/person').done(function (data, textStatus, jqXHR) {
                     viewModelPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     viewModelPact.reject(jqXHR, textStatus, errorThrown);
                 });
-
                 viewModelPact.done(function (viewModel) {
                     ko.mapping.fromJS(viewModel, { ignore: "id" }, _this);
                     _this.personId = viewModel.id;
@@ -62,42 +61,35 @@ var People;
                 }).fail(function (xhr, textStatus, errorThrown) {
                     _this._loadPromise.reject(xhr, textStatus, errorThrown);
                 });
-
                 return this._loadPromise;
             };
-
             PersonalInfoEditor.prototype.startEditing = function () {
                 if (this.kendoHasLoaded()) {
                     this.isEditMode(true);
                     this.$edit_personal_info_dialog.data("kendoWindow").open().title("Personal Information");
                 }
             };
-
             PersonalInfoEditor.prototype.stopEditing = function () {
                 this.isEditMode(false);
             };
-
             PersonalInfoEditor.prototype.cancelEditing = function () {
                 this.$edit_personal_info_dialog.data("kendoWindow").close();
                 ko.mapping.fromJS(this._originalValues, {}, this);
                 this.preferredTitle(this.model.jobTitles);
                 this.stopEditing();
             };
-
             PersonalInfoEditor.prototype.saveInfo = function () {
                 var _this = this;
                 if (!this.isValid()) {
                     this.errors.showAllMessages();
-                } else {
+                }
+                else {
                     var apiModel = ko.mapping.toJS(this);
-
                     this.saveSpinner.start();
-
                     var affiliationPutModel = {
-                        jobTitles: this.preferredTitle()
+                        jobTitles: this.preferredTitle(),
                     };
                     People.Servers.PutAffiliation(affiliationPutModel, this.DefaultAffiliationEstablishmentId);
-
                     $.ajax({
                         url: '/api/user/person',
                         type: 'PUT',
@@ -112,7 +104,6 @@ var People;
                     });
                 }
             };
-
             PersonalInfoEditor.prototype.startDeletingPhoto = function () {
                 var _this = this;
                 if (this.$confirmPurgeDialog && this.$confirmPurgeDialog.length) {
@@ -140,11 +131,11 @@ var People;
                         ],
                         zIndex: 10004
                     });
-                } else if (confirm('Are you sure you want to delete your profile photo?')) {
+                }
+                else if (confirm('Are you sure you want to delete your profile photo?')) {
                     this._deletePhoto();
                 }
             };
-
             PersonalInfoEditor.prototype._deletePhoto = function () {
                 var _this = this;
                 this.photoDeleteSpinner.start();
@@ -163,7 +154,6 @@ var People;
                     _this.photoUploadError(PersonalInfoEditor.photoUploadUnexpectedErrorMessage);
                 });
             };
-
             PersonalInfoEditor.prototype._setupValidation = function () {
                 this.displayName.extend({
                     required: {
@@ -171,30 +161,23 @@ var People;
                     },
                     maxLength: 200
                 });
-
                 this.salutation.extend({
                     maxLength: 50
                 });
-
                 this.firstName.extend({
                     maxLength: 100
                 });
-
                 this.middleName.extend({
                     maxLength: 100
                 });
-
                 this.lastName.extend({
                     maxLength: 100
                 });
-
                 this.suffix.extend({
                     maxLength: 50
                 });
-
                 ko.validation.group(this);
             };
-
             PersonalInfoEditor.prototype._setupKendoWidgets = function () {
                 var _this = this;
                 this.$nameSalutation.kendoComboBox({
@@ -213,7 +196,6 @@ var People;
                         }
                     }
                 });
-
                 this.$nameSuffix.kendoComboBox({
                     dataTextField: "text",
                     dataValueField: "value",
@@ -230,7 +212,6 @@ var People;
                         }
                     }
                 });
-
                 this.$photo.kendoUpload({
                     multiple: false,
                     showFileList: false,
@@ -273,7 +254,8 @@ var People;
                     error: function (e) {
                         if (e.XMLHttpRequest.responseText && e.XMLHttpRequest.responseText.length < 1000) {
                             _this.photoUploadError(e.XMLHttpRequest.responseText);
-                        } else {
+                        }
+                        else {
                             _this.photoUploadError(PersonalInfoEditor.photoUploadUnexpectedErrorMessage);
                         }
                     }
@@ -300,16 +282,13 @@ var People;
                     margin: 'auto',
                     top: '20px'
                 });
-
                 var dialog = this.$edit_personal_info_dialog.data("kendoWindow");
                 dialog.center();
                 this.kendoHasLoaded(true);
-
                 $(window).resize(function () {
                     dialog.center();
                 });
             };
-
             PersonalInfoEditor.prototype._setupDisplayNameDerivation = function () {
                 var _this = this;
                 this.displayName.subscribe(function (newValue) {
@@ -317,7 +296,6 @@ var People;
                         _this._userDisplayName = newValue;
                     }
                 });
-
                 ko.computed(function () {
                     if (_this.isDisplayNameDerived()) {
                         var mapSource = {
@@ -331,24 +309,22 @@ var People;
                             suffix: _this.suffix()
                         };
                         var data = ko.mapping.toJS(mapSource);
-
                         $.ajax({
                             url: App.Routes.WebApi.People.Names.DeriveDisplayName.get(),
                             type: 'GET',
                             cache: false,
-                            data: data
+                            data: data,
                         }).done(function (result) {
                             _this.displayName(result);
                         });
-                    } else {
+                    }
+                    else {
                         if (!_this._userDisplayName)
                             _this._userDisplayName = _this.displayName();
-
                         _this.displayName(_this._userDisplayName);
                     }
                 }).extend({ throttle: 400 });
             };
-
             PersonalInfoEditor.prototype._setupCardComputeds = function () {
                 var _this = this;
                 this.genderText = ko.computed(function () {
@@ -361,12 +337,10 @@ var People;
                         return 'Gender Undisclosed';
                     return 'Gender Unknown';
                 });
-
                 this.isActiveText = ko.computed(function () {
                     return _this.isActive() ? 'Active' : 'Inactive';
                 });
             };
-
             PersonalInfoEditor.prototype.deleteProfile = function (data, event) {
                 var me = this;
                 $("#confirmProfileDeleteDialog").dialog({
@@ -402,6 +376,5 @@ var People;
             return PersonalInfoEditor;
         })();
         ViewModels.PersonalInfoEditor = PersonalInfoEditor;
-    })(People.ViewModels || (People.ViewModels = {}));
-    var ViewModels = People.ViewModels;
+    })(ViewModels = People.ViewModels || (People.ViewModels = {}));
 })(People || (People = {}));

@@ -21,7 +21,6 @@ var App;
         ImageSwapper.prototype.onMouseEnter = function (self, e) {
             this._state('hover');
         };
-
         ImageSwapper.prototype.onMouseLeave = function (self, e) {
             this._state('none');
         };

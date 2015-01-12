@@ -8,16 +8,14 @@ var App;
                 loadingText: '[Loading...]',
                 options: [],
                 textColor: '#000',
-                captionTextColor: '#666'
+                captionTextColor: '#666',
             };
             this.settings = $.extend({}, this.defaultSettings, this.settings);
             this._initKendoOptions();
             var initialOptions = this._getInitialOptions();
-
             this.options = ko.observableArray(initialOptions);
             this.value = ko.observable(this.settings.value);
             this.caption = ko.observable(this.settings.optionsCaption);
-
             this.options.subscribe(function (newValue) {
                 _this._onOptionsChanged(newValue);
             });
@@ -31,13 +29,12 @@ var App;
             if (!options.length && this.settings.loadingText) {
                 var loadingOption = {
                     text: this.settings.loadingText,
-                    value: value
+                    value: value,
                 };
                 options.push(loadingOption);
             }
             return options;
         };
-
         FormSelect.prototype._onValueChanged = function (value) {
             var options = this.options().slice(0);
             if (options && options.length && options[0].text == this.settings.loadingText && options[0].value != value) {
@@ -45,11 +42,9 @@ var App;
                 options.unshift({ text: this.settings.loadingText, value: value });
                 this.options(options);
             }
-
             this._ensureKendoTextColor();
             this._ensureKendoSelection();
         };
-
         FormSelect.prototype._onOptionsChanged = function (options) {
             var caption = this.caption();
             options = options || [];
@@ -58,26 +53,24 @@ var App;
                 if (!option || typeof option.value !== 'undefined') {
                     options.unshift({
                         text: caption,
-                        value: undefined
+                        value: undefined,
                     });
                 }
-            } else {
+            }
+            else {
                 var option = options.length ? options[0] : undefined;
                 if (option && typeof option.value === 'undefined') {
                     options.shift();
                 }
             }
         };
-
         FormSelect.prototype.applyKendo = function () {
             var $select = this.$select;
             if (!$select || !this.settings.kendoOptions)
                 return;
-
             $select.kendoDropDownList(this.settings.kendoOptions);
             this._ensureKendoTextColor();
         };
-
         FormSelect.prototype._initKendoOptions = function () {
             var _this = this;
             if (this.settings.kendoOptions) {
@@ -90,11 +83,9 @@ var App;
                 };
             }
         };
-
         FormSelect.prototype._getKendoDropDownList = function () {
             return this.$select ? this.$select.data('kendoDropDownList') : undefined;
         };
-
         FormSelect.prototype._ensureKendoTextColor = function () {
             var value = this.value();
             var $select = this.$select;
@@ -103,12 +94,11 @@ var App;
                 if (kendoDropDown) {
                     var color = value ? this.settings.textColor : this.settings.captionTextColor;
                     kendoDropDown.span.css({
-                        color: color
+                        color: color,
                     });
                 }
             }
         };
-
         FormSelect.prototype._ensureKendoSelection = function () {
             var value = this.value();
             var kendoDropDown = this._getKendoDropDownList();
@@ -118,7 +108,6 @@ var App;
                 });
             }
         };
-
         FormSelect.prototype._maximizeKendoPopup = function (e) {
             setTimeout(function () {
                 var $ul = e.sender.ul;
@@ -135,7 +124,7 @@ var App;
             }, 0);
         };
         FormSelect.defaultKendoOptions = {
-            animation: false
+            animation: false,
         };
         return FormSelect;
     })();

@@ -12,7 +12,7 @@ var App;
             this.items = ko.observableArray();
             this.orderBy = ko.observable();
             this.keyword = ko.observable($('input[type=hidden][data-bind="value: keyword"]').val());
-            this.spinner = new App.Spinner({ delay: 400, runImmediately: true });
+            this.spinner = new App.Spinner({ delay: 400, runImmediately: true, });
             this.pageCount = ko.computed(function () {
                 return Math.ceil(_this.itemTotal() / _this.pageSize());
             });
@@ -39,12 +39,10 @@ var App;
             this.prevEnabled = ko.computed(function () {
                 return _this.pageNumber() > 1 && !_this.prevForceDisabled();
             });
-
             this.pageCount.subscribe(function (newValue) {
                 if (_this.pageNumber() && _this.pageNumber() > newValue)
                     _this.pageNumber(1);
             });
-
             this.hasItems = ko.computed(function () {
                 return _this.items() && _this.items().length > 0;
             });
@@ -60,7 +58,6 @@ var App;
             this.showStatus = ko.computed(function () {
                 return _this.hasItems() && !_this.spinner.isVisible();
             });
-
             this.throttledKeyword = ko.computed(this.keyword).extend({ throttle: 400 });
         }
         PagedSearch.prototype.nextPage = function () {

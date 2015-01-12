@@ -1,5 +1,6 @@
 var Activities;
 (function (Activities) {
+    var ViewModels;
     (function (ViewModels) {
         var PublicView = (function () {
             function PublicView(activityData, imagePimpleUrl) {
@@ -13,9 +14,9 @@ var Activities;
                     panControl: false,
                     draggable: false,
                     zoomControl: false,
-                    disableDefaultUI: true
+                    disableDefaultUI: true,
                 }, {
-                    maxPrecision: 8
+                    maxPrecision: 8,
                 });
                 this.activityData = activityData;
                 this.addMarkers();
@@ -38,7 +39,7 @@ var Activities;
                             icon: image,
                             shape: shape,
                             title: place.placeName,
-                            zIndex: 200
+                            zIndex: 200,
                         };
                         var marker = new google.maps.Marker(options);
                         markers.push(marker);
@@ -49,6 +50,5 @@ var Activities;
             return PublicView;
         })();
         ViewModels.PublicView = PublicView;
-    })(Activities.ViewModels || (Activities.ViewModels = {}));
-    var ViewModels = Activities.ViewModels;
+    })(ViewModels = Activities.ViewModels || (Activities.ViewModels = {}));
 })(Activities || (Activities = {}));

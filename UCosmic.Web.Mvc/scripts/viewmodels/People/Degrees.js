@@ -1,5 +1,6 @@
 var People;
 (function (People) {
+    var ViewModels;
     (function (ViewModels) {
         var DegreeViewModel = (function () {
             function DegreeViewModel() {
@@ -36,30 +37,31 @@ var People;
                                     _this.$confirmDeleteDegree.dialog('close');
                                     _this.purgeSpinner.start(true);
                                     _this._purge(expertiseId);
-
                                     if ($(event.target).closest("ul").children().length == 2) {
                                         $("#degrees_no_results").css("display", "block");
                                     }
                                     $(event.target).closest("li").remove();
                                 },
-                                'data-confirm-delete-link': true
+                                'data-confirm-delete-link': true,
                             },
                             {
                                 text: 'No, cancel delete',
                                 click: function () {
                                     _this.$confirmDeleteDegree.dialog('close');
                                 },
-                                'data-css-link': true
+                                'data-css-link': true,
                             }
                         ],
                         close: function () {
                             _this.purgeSpinner.stop();
-                        }
+                        },
                     });
-                } else {
+                }
+                else {
                     if (confirm('Are you sure you want to delete this formal education?')) {
                         this._purge(expertiseId);
-                    } else {
+                    }
+                    else {
                         this.purgeSpinner.stop();
                     }
                 }
@@ -73,6 +75,5 @@ var People;
             return DegreeViewModel;
         })();
         ViewModels.DegreeViewModel = DegreeViewModel;
-    })(People.ViewModels || (People.ViewModels = {}));
-    var ViewModels = People.ViewModels;
+    })(ViewModels = People.ViewModels || (People.ViewModels = {}));
 })(People || (People = {}));

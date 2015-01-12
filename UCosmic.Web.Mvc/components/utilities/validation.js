@@ -1,4 +1,3 @@
-﻿
 var pValidation = (function () {
     function pValidation(options) {
         this.message = "";
@@ -8,13 +7,11 @@ var pValidation = (function () {
         this.name = options.name;
         this.nameCompared = options.nameCompared;
         this.isRequired = options.isRequired;
-
         this.pattern = options.pattern;
         this.correctformat = options.correctformat;
     }
     pValidation.prototype.validate = function () {
         var isValid = true;
-
         if (this.valueCompared && this.value != this.valueCompared && this.value.length > 0) {
             if (!isValid) {
                 this.message += ", and ";
@@ -29,7 +26,6 @@ var pValidation = (function () {
             this.message += this.name + " must be at least " + this.min + " characters long";
             isValid = false;
         }
-
         if (this.pattern != null && !(new RegExp(this.pattern).test(this.value)) && this.value.length > 0) {
             if (!isValid) {
                 this.message += ", and ";
@@ -43,7 +39,8 @@ var pValidation = (function () {
         }
         if (!isValid) {
             this.message += ". ";
-        } else {
+        }
+        else {
             this.message = "Ok";
         }
         return capitaliseFirstLetter(this.message);

@@ -74,6 +74,7 @@ declare module Agreements.ApiModels {
         countryCode?: string;
         name?: string;
         type?: string;
+        agreementTypes: string[];
         agreementIds?: number[]
         agreementCount?: number;
         partnerIds?: number[]

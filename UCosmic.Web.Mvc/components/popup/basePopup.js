@@ -1,4 +1,4 @@
-﻿Polymer('polymer-basePopup', {
+Polymer('polymer-basePopup', {
     closeIt: false,
     closeItChanged: function (oldValue, newValue) {
         if (newValue == true) {
@@ -7,7 +7,8 @@
             setTimeout(function () {
                 that.hide = true;
             }, 500);
-        } else {
+        }
+        else {
             this.hide = false;
             this.showHide = "show";
         }
@@ -17,16 +18,15 @@
             var contentHeight = $("window").height();
             if (contentHeight < height) {
                 element.style.height = (contentHeight - 5) + "px";
-            } else {
+            }
+            else {
                 element.style.height = '';
             }
         };
-
         onWindowResized();
-
         $(window).on("resize", function (e) {
             onWindowResized();
             return true;
         });
-    }
+    },
 });

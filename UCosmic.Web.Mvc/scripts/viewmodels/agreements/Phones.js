@@ -33,7 +33,6 @@ var Agreements;
             e.preventDefault();
             e.stopPropagation();
         };
-
         Phones.prototype.addPhone = function (me, e) {
             if (this.contactPhoneTextValue().length > 0) {
                 this.contactPhones.push({ type: '', contactId: '', value: this.contactPhoneTextValue() });
@@ -47,19 +46,15 @@ var Agreements;
                 });
             }
         };
-
         Phones.prototype._bindJquery = function () {
             var _this = this;
             var self = this;
-
             this.contactPhoneTextValue.subscribe(function (me) {
                 if (_this.contactPhoneTextValue().length > 0) {
                     if (_this.contactId()) {
                         var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(_this.agreementId, _this.contactId()), data = { id: "0", type: '', contactId: _this.contactId(), value: _this.contactPhoneTextValue() };
-
                         $.post(url, data).done(function (response, statusText, xhr) {
                             var myUrl = xhr.getResponseHeader('Location');
-
                             data.id = myUrl.substring(myUrl.lastIndexOf("/") + 1);
                             _this.contactPhones.push(data);
                             _this.contactPhoneTextValue("");
@@ -87,7 +82,8 @@ var Agreements;
                                 });
                             }
                         });
-                    } else {
+                    }
+                    else {
                         _this.contactPhones.push({ id: '', type: '', contactId: '', value: _this.contactPhoneTextValue() });
                         _this.contactPhoneTextValue("");
                         $(".phoneTypes").kendoDropDownList({

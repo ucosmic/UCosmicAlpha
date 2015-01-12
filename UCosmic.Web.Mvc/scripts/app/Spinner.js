@@ -1,21 +1,18 @@
 var App;
 (function (App) {
-    
-
     var Spinner = (function () {
         function Spinner(settings) {
-            if (typeof settings === "undefined") { settings = {}; }
+            if (settings === void 0) { settings = {}; }
             this.settings = settings;
             this.isRunning = ko.observable(true);
             this.isVisible = ko.observable(false);
             this.settings = $.extend({}, Spinner.defaultSettings, this.settings);
-
             this.isRunning(this.settings.runImmediately);
             this.isVisible(this.settings.runImmediately);
         }
         Spinner.prototype.start = function (immediately) {
             var _this = this;
-            if (typeof immediately === "undefined") { immediately = false; }
+            if (immediately === void 0) { immediately = false; }
             this.isRunning(true);
             if (this.settings.delay < 1 || immediately)
                 this.isVisible(true);
@@ -31,7 +28,7 @@ var App;
         };
         Spinner.defaultSettings = {
             delay: 0,
-            runImmediately: false
+            runImmediately: false,
         };
         return Spinner;
     })();

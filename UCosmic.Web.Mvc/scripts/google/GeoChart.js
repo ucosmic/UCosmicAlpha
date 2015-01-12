@@ -1,12 +1,14 @@
 var App;
 (function (App) {
+    var Google;
     (function (Google) {
         var GeoChart = (function () {
             function GeoChart(elementOrId) {
                 this._promise = $.Deferred();
                 if (typeof elementOrId === 'string') {
                     this.element = document.getElementById(elementOrId);
-                } else {
+                }
+                else {
                     this.element = elementOrId;
                 }
             }
@@ -15,24 +17,20 @@ var App;
                 if (!this.geoChart) {
                     this.geoChart = new google.visualization.GeoChart(this.element);
                 }
-
                 this.geoChart.draw(data, options);
-
                 google.visualization.events.addListener(this.geoChart, GeoChart.eventName.ready, function () {
                     _this._promise.resolve();
                 });
-
                 return this._promise;
             };
             GeoChart.eventName = {
                 error: 'error',
                 ready: 'ready',
                 regionClick: 'regionClick',
-                select: 'select'
+                select: 'select',
             };
             return GeoChart;
         })();
         Google.GeoChart = GeoChart;
-    })(App.Google || (App.Google = {}));
-    var Google = App.Google;
+    })(Google = App.Google || (App.Google = {}));
 })(App || (App = {}));

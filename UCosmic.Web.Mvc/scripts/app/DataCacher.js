@@ -19,7 +19,6 @@ var App;
             }
             return this._promise;
         };
-
         DataCacher.prototype.reload = function () {
             this._promise = $.Deferred();
             this.cached = undefined;

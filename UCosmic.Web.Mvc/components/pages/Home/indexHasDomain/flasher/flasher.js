@@ -1,4 +1,4 @@
-﻿Polymer('polymer-content-home-has-domain-flasher', {
+Polymer('polymer-content-home-has-domain-flasher', {
     linkAdded: { url: "", text: "" },
     isAjaxing: false,
     isEditing: false,
@@ -52,13 +52,14 @@
                 Text: this.flashertext,
                 IsDisabled: this.flasherisdisabled
             });
-
             this.$.ajax_updateFlasher.go();
-        } else {
+        }
+        else {
             this.$.description.inputChange();
             if (this.links.length == 0) {
                 this.$.linkMessage.style.display = "block";
-            } else {
+            }
+            else {
                 this.$.linkMessage.style.display = "none";
             }
         }
@@ -76,7 +77,8 @@
             polymerNotification.setAttribute('id', 'myAlert' + Date.now());
             document.body.appendChild(polymerNotification);
             this.flasherUpdated += 1;
-        } else {
+        }
+        else {
             var polymerNotification = document.createElement('polymer-notification');
             polymerNotification.message = response.detail.response.error;
             polymerNotification.type = 'warning';

@@ -4,10 +4,10 @@ var ScrollBody;
         function Scroll(iScrollBody) {
             this.scrollMyBody = function (position) {
                 var $body;
-
                 if (!$("body").scrollTop()) {
                     $("html, body").scrollTop(position);
-                } else {
+                }
+                else {
                     $("body").scrollTop(position);
                 }
             };
@@ -48,7 +48,6 @@ var ScrollBody;
         Scroll.prototype.bindJquery = function () {
             var _this = this;
             var self = this;
-
             $(window).scroll(function () {
                 if (_this.kendoWindowBug.val != 0) {
                     _this.scrollMyBody(_this.kendoWindowBug.val);
@@ -61,54 +60,63 @@ var ScrollBody;
                 _this.section6Top = _this.mySection6.offset();
                 if (!$("body").scrollTop()) {
                     _this.$body = $("html, body").scrollTop() + 100;
-                } else {
+                }
+                else {
                     _this.$body = $("body").scrollTop() + 100;
                 }
                 var aside = _this.$bindTo.find("aside");
                 if (_this.$body <= _this.section1Top.top + _this.mySection1.height() + 40) {
                     aside.find("li").removeClass("current");
                     _this.navSection1.addClass("current");
-                } else if (_this.$body >= _this.section2Top.top && (_this.$body <= _this.section2Top.top + _this.mySection2.height() + 40 || _this.section3 === "")) {
+                }
+                else if (_this.$body >= _this.section2Top.top && (_this.$body <= _this.section2Top.top + _this.mySection2.height() + 40 || _this.section3 === "")) {
                     aside.find("li").removeClass("current");
                     _this.navSection2.addClass("current");
-                } else if (_this.$body >= _this.section3Top.top && (_this.$body <= _this.section3Top.top + _this.mySection3.height() + 40 || _this.section4 === "")) {
+                }
+                else if (_this.$body >= _this.section3Top.top && (_this.$body <= _this.section3Top.top + _this.mySection3.height() + 40 || _this.section4 === "")) {
                     aside.find("li").removeClass("current");
                     _this.navSection3.addClass("current");
-                } else if (_this.$body >= _this.section4Top.top && (_this.$body <= _this.section4Top.top + _this.mySection4.height() + 40 || _this.section5 === "")) {
+                }
+                else if (_this.$body >= _this.section4Top.top && (_this.$body <= _this.section4Top.top + _this.mySection4.height() + 40 || _this.section5 === "")) {
                     aside.find("li").removeClass("current");
                     _this.navSection4.addClass("current");
-                } else if (_this.$body >= _this.section5Top.top && (_this.$body <= _this.section5Top.top + _this.mySection5.height() + 40 || _this.section6 === "")) {
+                }
+                else if (_this.$body >= _this.section5Top.top && (_this.$body <= _this.section5Top.top + _this.mySection5.height() + 40 || _this.section6 === "")) {
                     aside.find("li").removeClass("current");
                     _this.navSection5.addClass("current");
-                } else if (_this.$body >= _this.section6Top.top && (_this.$body <= _this.section6Top.top + _this.mySection6.height() + 40 || _this.section7 === "")) {
+                }
+                else if (_this.$body >= _this.section6Top.top && (_this.$body <= _this.section6Top.top + _this.mySection6.height() + 40 || _this.section7 === "")) {
                     aside.find("li").removeClass("current");
                     _this.navSection6.addClass("current");
-                } else if (_this.$body >= _this.section7Top.top && (_this.$body <= _this.section7Top.top + _this.mySection7.height() + 40 || _this.section8 === "")) {
+                }
+                else if (_this.$body >= _this.section7Top.top && (_this.$body <= _this.section7Top.top + _this.mySection7.height() + 40 || _this.section8 === "")) {
                     aside.find("li").removeClass("current");
                     _this.navSection7.addClass("current");
-                } else if (_this.$body >= _this.section8Top.top && (_this.$body <= _this.section8Top.top + _this.mySection8.height() + 40 || _this.section9 === "")) {
+                }
+                else if (_this.$body >= _this.section8Top.top && (_this.$body <= _this.section8Top.top + _this.mySection8.height() + 40 || _this.section9 === "")) {
                     aside.find("li").removeClass("current");
                     _this.navSection8.addClass("current");
-                } else if (_this.$body >= _this.section9Top.top && (_this.$body <= _this.section9Top.top + _this.mySection8.height() + 40 || _this.section10 === "")) {
+                }
+                else if (_this.$body >= _this.section9Top.top && (_this.$body <= _this.section9Top.top + _this.mySection8.height() + 40 || _this.section10 === "")) {
                     aside.find("li").removeClass("current");
                     _this.navSection9.addClass("current");
-                } else if (_this.$body >= _this.section10Top.top) {
+                }
+                else if (_this.$body >= _this.section10Top.top) {
                     aside.find("li").removeClass("current");
                     _this.navSection10.closest("li").addClass("current");
                 }
             });
-
             this.$bindTo.find(".side").find("a").click(function (event) {
                 var $body = $("body");
                 var location = $(this).parent().attr("id").substring(4);
                 var offset = $("#" + location).offset();
                 if (!$body.scrollTop()) {
                     $("html, body").scrollTop(offset.top - 20);
-                } else {
+                }
+                else {
                     $body.scrollTop(offset.top - 20);
                 }
                 $(event.target).closest("ul").find("li").removeClass("current");
-
                 $(event.target).closest("li").addClass("current");
                 event.preventDefault();
                 event.stopPropagation();

@@ -18,8 +18,9 @@ module Agreements.ViewModels {
 
         table: SearchTable;
         map: SearchMap;
+        defaultLense: string = 'map';
         lens: KnockoutObservable<string> = ko.observable(
-            sessionStorage.getItem(SearchLenses.LensSessionKey) || 'table');
+            sessionStorage.getItem(SearchLenses.LensSessionKey) || this.defaultLense);
 
         static LensSessionKey = 'AgreementSearchLens';
 
@@ -41,6 +42,7 @@ module Agreements.ViewModels {
                 activationRoute: '#/table/',
                 detailUrl: this.settings.detailUrl,
                 sammy: this.sammy,
+                summaryApi: this.settings.summaryApi,
             });
             this.map = new SearchMap({
                 element: undefined,

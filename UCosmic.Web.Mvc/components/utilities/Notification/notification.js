@@ -1,4 +1,4 @@
-﻿Polymer('polymer-notification', {
+Polymer('polymer-notification', {
     ready: function () {
     },
     domReady: function () {
@@ -11,7 +11,8 @@
                 });
             }, this.fadeOutDelay);
             this.$.closeHeader.style.display = "none";
-        } else {
+        }
+        else {
             this.$.closeHeader.style.display = "block";
             ElRelativeToEl($(this.bindToElement), $(this.$.pop_text_container_alert));
             this.$.pop_text_container_alert.style.top = "200px";
@@ -23,5 +24,5 @@
         this.hide = true;
         this.closeIt = false;
     },
-    hide: false
+    hide: false,
 });

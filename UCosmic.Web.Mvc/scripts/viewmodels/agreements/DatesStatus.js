@@ -17,7 +17,8 @@ var Agreements;
                 validator: function (val, otherVal) {
                     if (otherVal() == undefined) {
                         return true;
-                    } else {
+                    }
+                    else {
                         return Globalize.parseDate(val) > Globalize.parseDate(otherVal());
                     }
                 },
@@ -55,7 +56,6 @@ var Agreements;
                 })
             });
         };
-
         DatesStatus.prototype.bindJquery = function () {
             if (this.isCustomStatusAllowed()) {
                 $("#status_options").kendoComboBox({
@@ -65,7 +65,8 @@ var Agreements;
                         data: this.statusOptions()
                     })
                 });
-            } else {
+            }
+            else {
                 $("#status_options").kendoDropDownList({
                     dataTextField: "name",
                     dataValueField: "id",

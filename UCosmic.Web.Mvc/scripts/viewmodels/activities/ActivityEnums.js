@@ -1,5 +1,6 @@
 var Activities;
 (function (Activities) {
+    var ViewModels;
     (function (ViewModels) {
         (function (ActivityMode) {
             ActivityMode[ActivityMode["draft"] = 1] = "draft";
@@ -12,6 +13,5 @@ var Activities;
             ActivityTagDomainType[ActivityTagDomainType["establishment"] = 3] = "establishment";
         })(ViewModels.ActivityTagDomainType || (ViewModels.ActivityTagDomainType = {}));
         var ActivityTagDomainType = ViewModels.ActivityTagDomainType;
-    })(Activities.ViewModels || (Activities.ViewModels = {}));
-    var ViewModels = Activities.ViewModels;
+    })(ViewModels = Activities.ViewModels || (Activities.ViewModels = {}));
 })(Activities || (Activities = {}));

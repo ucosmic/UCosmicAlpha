@@ -8,17 +8,16 @@ if (!String.prototype.format) {
         return formatted;
     };
 }
-
 var App;
 (function (App) {
+    var Failures;
     (function (Failures) {
         function message(xhr, reason, autoAlert) {
-            if (typeof reason === "undefined") { reason = ''; }
-            if (typeof autoAlert === "undefined") { autoAlert = false; }
+            if (reason === void 0) { reason = ''; }
+            if (autoAlert === void 0) { autoAlert = false; }
             if (xhr)
                 if (xhr.readyState === 0 || xhr.status === 0)
                     return null;
-
             if (reason !== '')
                 reason = ' ' + reason;
             var format = 'UCosmic experienced an unexpected error{0}. If this continues to happen, ' + 'please use the Feedback & Support link on this page to report it.';
@@ -28,14 +27,11 @@ var App;
             return message;
         }
         Failures.message = message;
-    })(App.Failures || (App.Failures = {}));
-    var Failures = App.Failures;
-
+    })(Failures = App.Failures || (App.Failures = {}));
+    var Constants;
     (function (Constants) {
         Constants.int32Max = 2147483647;
-    })(App.Constants || (App.Constants = {}));
-    var Constants = App.Constants;
-
+    })(Constants = App.Constants || (App.Constants = {}));
     var WindowScroller = (function () {
         function WindowScroller() {
         }
@@ -47,15 +43,12 @@ var App;
             $(window).off('scroll', trackTop);
             $(window).on('scroll', trackTop);
         };
-
         WindowScroller.getTop = function () {
             return $(window).scrollTop();
         };
-
         WindowScroller.setTop = function (value) {
             $(window).scrollTop(value);
         };
-
         WindowScroller.restoreTop = function () {
             $(window).scrollTop($(WindowScroller.scrollTopTrackerId).val());
         };
@@ -66,7 +59,6 @@ var App;
     $(function () {
         App.WindowScroller.init();
     });
-
     var SidebarFixedScroller = (function () {
         function SidebarFixedScroller() {
         }
@@ -78,7 +70,7 @@ var App;
                     if (windowScrollTop > anchorOffsetTop) {
                         $content.css({
                             position: 'fixed',
-                            width: contentWidth
+                            width: contentWidth,
                         });
                         if ($content.height() > $window.height())
                             $content.css({
@@ -90,7 +82,8 @@ var App;
                                 top: '0px',
                                 bottom: ''
                             });
-                    } else if (windowScrollTop <= anchorOffsetTop) {
+                    }
+                    else if (windowScrollTop <= anchorOffsetTop) {
                         $content.css({
                             position: 'relative',
                             top: '',
@@ -107,7 +100,7 @@ var App;
     $(function () {
         SidebarFixedScroller.init();
     });
-
+    var Obtruders;
     (function (Obtruders) {
         function autosize(selector) {
             if ($.fn.autosize)
@@ -135,9 +128,7 @@ var App;
             $('nav.bib').removeClass('hide');
         }
         Obtruders.bibNav = bibNav;
-    })(App.Obtruders || (App.Obtruders = {}));
-    var Obtruders = App.Obtruders;
-
+    })(Obtruders = App.Obtruders || (App.Obtruders = {}));
     var Obtruder = (function () {
         function Obtruder() {
         }
@@ -149,7 +140,6 @@ var App;
                     if (typeof obtruders[obtruder] === 'function') {
                         obtruders[obtruder].apply(this, Array.prototype.slice.call(arguments, 0, 1) || document);
                     }
-
                     if (typeof obtruders[obtruder] === 'object') {
                         App.Obtruder.obtrude(selector, obtruders[obtruder]);
                     }
@@ -162,51 +152,47 @@ var App;
     $(function () {
         App.Obtruder.obtrude(document);
     });
-
     function deparam(params, coerce) {
-        if (typeof coerce === "undefined") { coerce = false; }
+        if (coerce === void 0) { coerce = false; }
         var obj = {}, coerce_types = { 'true': !0, 'false': !1, 'null': null };
         var decode = decodeURIComponent;
-
         $.each(params.replace(/\+/g, ' ').split('&'), function (j, v) {
             var param = v.split('='), key = decode(param[0]), val, cur = obj, i = 0, keys = key.split(']['), keys_last = keys.length - 1;
-
             if (/\[/.test(keys[0]) && /\]$/.test(keys[keys_last])) {
                 keys[keys_last] = keys[keys_last].replace(/\]$/, '');
-
                 keys = keys.shift().split('[').concat(keys);
-
                 keys_last = keys.length - 1;
-            } else {
+            }
+            else {
                 keys_last = 0;
             }
-
             if (param.length === 2) {
                 val = decode(param[1]);
-
                 if (coerce) {
                     val = val && !isNaN(val) ? +val : val === 'undefined' ? undefined : coerce_types[val] !== undefined ? coerce_types[val] : val;
                 }
-
                 if (keys_last) {
                     for (; i <= keys_last; i++) {
                         key = keys[i] === '' ? cur.length : keys[i];
                         cur = cur[key] = i < keys_last ? cur[key] || (keys[i + 1] && isNaN(Number(keys[i + 1])) ? {} : []) : val;
                     }
-                } else {
+                }
+                else {
                     if ($.isArray(obj[key])) {
                         obj[key].push(val);
-                    } else if (obj[key] !== undefined) {
+                    }
+                    else if (obj[key] !== undefined) {
                         obj[key] = [obj[key], val];
-                    } else {
+                    }
+                    else {
                         obj[key] = val;
                     }
                 }
-            } else if (key) {
+            }
+            else if (key) {
                 obj[key] = coerce ? undefined : '';
             }
         });
-
         return obj;
     }
     App.deparam = deparam;

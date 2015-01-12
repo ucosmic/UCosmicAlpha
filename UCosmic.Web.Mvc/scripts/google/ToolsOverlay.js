@@ -6,9 +6,9 @@ var __extends = this.__extends || function (d, b) {
 };
 var App;
 (function (App) {
+    var GoogleMaps;
     (function (GoogleMaps) {
         var gm = google.maps;
-
         var ToolsOverlayOptions = (function () {
             function ToolsOverlayOptions() {
                 this.position = gm.ControlPosition.TOP_LEFT;
@@ -17,56 +17,45 @@ var App;
             return ToolsOverlayOptions;
         })();
         GoogleMaps.ToolsOverlayOptions = ToolsOverlayOptions;
-
         var ToolsOverlay = (function (_super) {
             __extends(ToolsOverlay, _super);
             function ToolsOverlay(map, options) {
-                if (typeof options === "undefined") { options = new ToolsOverlayOptions(); }
+                if (options === void 0) { options = new ToolsOverlayOptions(); }
                 _super.call(this);
                 this.markerLatLng = ko.observable();
-
                 this.position = options.position;
                 this.elementId = options.elementId;
-
                 this.$element = $('#' + this.elementId);
                 this.element = this.$element[0];
                 this.$markerAddButton = this.$element.find('.marker img.add-button');
                 this.$markerRemoveButton = this.$element.find('.marker img.remove-button');
                 this.$markerButtonsContainer = this.$element.find('.marker');
-
                 this.setMap(map);
             }
             ToolsOverlay.prototype.onAdd = function () {
                 var _this = this;
                 this.getMap().controls[this.position].push(this.element);
-
                 if (this.markerLatLng())
                     this.$markerAddButton.hide();
                 else
                     this.$markerRemoveButton.hide();
-
                 this.$markerAddButton.on('click', undefined, this, function (e) {
                     _this.createMarker(e);
                 });
                 this.$markerRemoveButton.on('click', undefined, this, function (e) {
                     _this.removeMarker(e);
                 });
-
                 this.$element.show();
             };
-
             ToolsOverlay.prototype.onRemove = function () {
                 this.element.parentNode.removeChild(this.element);
             };
-
             ToolsOverlay.prototype.draw = function () {
             };
-
             ToolsOverlay.prototype.updateMarkerLatLng = function (latLng) {
                 var newLatLng = latLng ? new gm.LatLng(latLng.lat(), latLng.lng()) : null;
                 this.markerLatLng(newLatLng);
             };
-
             ToolsOverlay.prototype.placeMarker = function (latLng) {
                 var _this = this;
                 var isDraggable = this.$markerButtonsContainer.is(':visible');
@@ -76,7 +65,6 @@ var App;
                     draggable: isDraggable
                 });
                 this.updateMarkerLatLng(latLng);
-
                 gm.event.addListener(this.marker, 'dragstart', function (e) {
                     _this.updateMarkerLatLng(e.latLng);
                     $(_this.getMap().getDiv()).trigger('marker_dragstart', _this);
@@ -90,14 +78,11 @@ var App;
                     $(_this.getMap().getDiv()).trigger('marker_dragend', _this);
                 });
             };
-
             ToolsOverlay.prototype.createMarker = function (e) {
                 var _this = this;
                 this.getMap().setOptions({ draggableCursor: 'pointer' });
-
                 var pointX = this.$element.position().left + this.$markerAddButton.position().left + (this.$markerAddButton.outerWidth() / 2);
                 var pointY = this.$markerAddButton.outerHeight();
-
                 var $dragIcon = this.$element.find('.marker img.drag-icon');
                 var dragAnchor = new gm.Point(0, 0);
                 var dragAnchorData = $dragIcon.data('anchor');
@@ -107,7 +92,6 @@ var App;
                 var dragOriginData = $dragIcon.data('origin');
                 if (dragOriginData && dragOriginData.indexOf(','))
                     dragOrigin = new gm.Point(parseInt(dragOriginData.split(',')[0]), parseInt(dragOriginData.split(',')[1]));
-
                 this.marker = new gm.Marker({
                     map: this.getMap(),
                     position: this.getProjection().fromContainerPixelToLatLng(new gm.Point(pointX, pointY)),
@@ -125,18 +109,15 @@ var App;
                     gm.event.removeListener(_this.markerDropListener);
                     _this.getMap().setOptions({ draggableCursor: undefined });
                     _this.marker.setMap(null);
-
                     var overlayView = new gm.OverlayView();
                     overlayView.draw = function () {
                     };
                     overlayView.setMap(_this.getMap());
                     var pixels = overlayView.getProjection().fromLatLngToContainerPixel(e.latLng);
-
                     var dragOffset = new gm.Point(0, 0);
                     var dragOffsetData = $dragIcon.data('offset');
                     if (dragOffsetData && dragOffsetData.indexOf(','))
                         dragOffset = new gm.Point(parseInt(dragOffsetData.split(',')[0]), parseInt(dragOffsetData.split(',')[1]));
-
                     pixels.y += dragOffset.y;
                     pixels.x += dragOffset.x;
                     e.latLng = overlayView.getProjection().fromContainerPixelToLatLng(pixels);
@@ -144,7 +125,6 @@ var App;
                     $(_this.getMap().getDiv()).trigger('marker_created', _this);
                 });
             };
-
             ToolsOverlay.prototype.removeMarker = function (e) {
                 var _this = this;
                 if (!this.$destroyMarkerConfirmDialog)
@@ -172,11 +152,11 @@ var App;
                             }
                         ]
                     });
-                } else if (confirm('Are you sure you want to remove this placemark?')) {
+                }
+                else if (confirm('Are you sure you want to remove this placemark?')) {
                     this.destroyMarker();
                 }
             };
-
             ToolsOverlay.prototype.destroyMarker = function () {
                 this.getMap().setOptions({ draggableCursor: undefined });
                 if (this.markerMoveListener) {
@@ -195,14 +175,12 @@ var App;
                 this.$markerAddButton.show();
                 $(this.getMap().getDiv()).trigger('marker_destroyed', this);
             };
-
             ToolsOverlay.prototype.hideMarkerTools = function () {
                 if (this.$markerButtonsContainer && this.$markerButtonsContainer.length)
                     this.$markerButtonsContainer.hide();
                 if (this.marker)
                     this.marker.setDraggable(false);
             };
-
             ToolsOverlay.prototype.showMarkerTools = function () {
                 if (this.$markerButtonsContainer && this.$markerButtonsContainer.length)
                     this.$markerButtonsContainer.show();
@@ -212,6 +190,5 @@ var App;
             return ToolsOverlay;
         })(google.maps.OverlayView);
         GoogleMaps.ToolsOverlay = ToolsOverlay;
-    })(App.GoogleMaps || (App.GoogleMaps = {}));
-    var GoogleMaps = App.GoogleMaps;
+    })(GoogleMaps = App.GoogleMaps || (App.GoogleMaps = {}));
 })(App || (App = {}));

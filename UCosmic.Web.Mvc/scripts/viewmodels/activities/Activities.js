@@ -1,5 +1,6 @@
 var Activities;
 (function (Activities) {
+    var ViewModels;
     (function (ViewModels) {
         var ActivityList = (function () {
             function ActivityList() {
@@ -7,14 +8,12 @@ var Activities;
             ActivityList.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
-
                 var itemsUrl = $('#activities_api').text();
-                var params = { pageSize: 500, pageNumber: 1 };
+                var params = { pageSize: 500, pageNumber: 1, };
                 itemsUrl = '{0}?{1}'.format(itemsUrl, $.param(params));
-
                 $.ajax({
                     url: itemsUrl,
-                    cache: false
+                    cache: false,
                 }).done(function (data) {
                     var mapping = {
                         items: {
@@ -23,19 +22,15 @@ var Activities;
                             }
                         }
                     };
-
                     ko.mapping.fromJS(data, mapping, _this);
-
                     deferred.resolve();
                 });
-
                 return deferred;
             };
             ActivityList.iconMaxSide = 64;
             return ActivityList;
         })();
         ViewModels.ActivityList = ActivityList;
-
         var ActivityListItem = (function () {
             function ActivityListItem(data, owner) {
                 var _this = this;
@@ -64,12 +59,10 @@ var Activities;
                     return _this._computeDatesText();
                 });
                 this._owner = owner;
-
                 if (data.types && data.types.length)
                     data.types = Enumerable.From(data.types).OrderBy(function (x) {
                         return x.rank;
                     }).ToArray();
-
                 var mapping = {};
                 ko.mapping.fromJS(data, mapping, this);
             }
@@ -80,7 +73,6 @@ var Activities;
                     typeText = "{0}; ".format(typeText);
                 return typeText;
             };
-
             ActivityListItem.prototype.placeText = function (index) {
                 var places = this.places();
                 var placeText = places[index].placeName();
@@ -88,18 +80,15 @@ var Activities;
                     placeText = "{0}, ".format(placeText);
                 return placeText;
             };
-
             ActivityListItem.prototype.typeIcon = function (typeId) {
                 var src = $('#type_icon_api').text().format(typeId);
                 return src;
             };
-
             ActivityListItem.prototype.documentIcon = function (documentId) {
                 var src = $('#document_icon_api').text().format(this.activityId(), documentId);
                 var params = { maxSide: ActivityList.iconMaxSide };
                 return '{0}?{1}'.format(src, $.param(params));
             };
-
             ActivityListItem.prototype._computeDatesText = function () {
                 var startsOnIso = this.startsOn();
                 var endsOnIso = this.endsOn();
@@ -109,25 +98,25 @@ var Activities;
                 endsFormat = endsFormat.toUpperCase();
                 var onGoing = this.onGoing();
                 var datesText;
-
                 if (!startsOnIso) {
                     if (endsOnIso) {
                         datesText = moment(endsOnIso).format(endsFormat);
-                    } else if (onGoing) {
+                    }
+                    else if (onGoing) {
                         datesText = '(Ongoing)';
                     }
-                } else {
+                }
+                else {
                     datesText = moment(startsOnIso).format(startsFormat);
                     if (onGoing) {
                         datesText = '{0} (Ongoing)'.format(datesText);
-                    } else if (endsOnIso) {
+                    }
+                    else if (endsOnIso) {
                         datesText = '{0} - {1}'.format(datesText, moment(endsOnIso).format(endsFormat));
                     }
                 }
-
                 return datesText;
             };
-
             ActivityListItem.prototype.purge = function () {
                 var _this = this;
                 var $dialog = $('#confirmActivityDeleteDialog');
@@ -146,10 +135,9 @@ var Activities;
                                     $(this).attr('disabled', 'disabled');
                                 });
                                 $dialog.find('.spinner').css('visibility', '');
-
                                 $.ajax({
                                     type: 'DELETE',
-                                    url: $('#activity_api').text().format(_this.activityId())
+                                    url: $('#activity_api').text().format(_this.activityId()),
                                 }).done(function () {
                                     $dialog.dialog('close');
                                     _this._owner.items.remove(_this);
@@ -169,12 +157,12 @@ var Activities;
                                 $dialog.dialog('close');
                             },
                             'data-css-link': true
-                        }]
+                        }
+                    ]
                 });
             };
             return ActivityListItem;
         })();
         ViewModels.ActivityListItem = ActivityListItem;
-    })(Activities.ViewModels || (Activities.ViewModels = {}));
-    var ViewModels = Activities.ViewModels;
+    })(ViewModels = Activities.ViewModels || (Activities.ViewModels = {}));
 })(Activities || (Activities = {}));

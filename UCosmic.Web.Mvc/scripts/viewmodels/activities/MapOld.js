@@ -1,5 +1,6 @@
 var Activities;
 (function (Activities) {
+    var ViewModels;
     (function (ViewModels) {
         var Map = (function () {
             function Map(settings) {
@@ -43,37 +44,35 @@ var Activities;
                 this._applyKendo();
                 this._applySubscriptions();
             };
-
             Map.prototype._applyKendo = function () {
                 var _this = this;
                 var kendoSince = this.$since.data('kendoDatePicker');
                 kendoSince.element.val(this.settings.input.since);
                 var kendoUntil = this.$until.data('kendoDatePicker');
                 kendoUntil.element.val(this.settings.input.until);
-
                 var inputInitialized = false;
                 var emptyDataItem = {
                     officialName: '[Begin typing to see options]',
-                    placeId: undefined
+                    placeId: undefined,
                 };
-                var emptyDataSource = new kendo.data.DataSource({ data: [emptyDataItem] });
+                var emptyDataSource = new kendo.data.DataSource({ data: [emptyDataItem], });
                 var serverDataSource = new kendo.data.DataSource({
                     serverFiltering: true,
                     transport: {
                         read: {
-                            url: Routes.Api.Places.Names.autocomplete()
+                            url: Routes.Api.Places.Names.autocomplete(),
                         },
                         parameterMap: function (data, action) {
                             if (action == 'read' && data && data.filter && data.filter.filters && data.filter.filters.length) {
                                 return {
                                     terms: data.filter.filters[0].value,
                                     maxResults: 20,
-                                    granularity: 2
+                                    granularity: 2,
                                 };
                             }
                             return data;
                         }
-                    }
+                    },
                 });
                 var hasPlace = (this.settings.input.placeIds && this.settings.input.placeIds.length && this.settings.input.placeNames && this.settings.input.placeNames.length && this.settings.input.placeIds[0] && this.settings.input.placeNames[0]) ? true : false;
                 var dataSource = hasPlace ? 'server' : 'empty';
@@ -88,7 +87,8 @@ var Activities;
                         widget.value('');
                         _this.$placeIds.val('');
                         if (_this.settings.input.placeIds && _this.settings.input.placeIds.length) {
-                        } else {
+                        }
+                        else {
                             widget.setDataSource(emptyDataSource);
                         }
                         return;
@@ -109,7 +109,6 @@ var Activities;
                     dataSource: hasPlace ? serverDataSource : emptyDataSource,
                     select: function (e) {
                         var dataItem = e.sender.dataItem(e.item.index());
-
                         if (dataItem.placeId == -1) {
                             e.sender.value('');
                             e.sender.input.val('');
@@ -118,13 +117,11 @@ var Activities;
                             _this._submitForm();
                             return;
                         }
-
                         if (dataItem.officialName == emptyDataItem.officialName) {
                             _this.$placeIds.val('');
                             e.preventDefault();
                             return;
                         }
-
                         if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length || _this.settings.input.placeIds[0] != dataItem.placeId) {
                             e.sender.input.val(dataItem.officialName);
                             _this.$location.val(dataItem.officialName);
@@ -138,7 +135,8 @@ var Activities;
                             _this.$placeIds.val('');
                             e.sender.value('');
                             checkDataSource(e.sender);
-                        } else {
+                        }
+                        else {
                             e.sender.input.val(dataItem.officialName);
                             _this.$location.val(dataItem.officialName);
                             _this.$placeIds.val(dataItem.placeId);
@@ -151,7 +149,6 @@ var Activities;
                         var widget = e.sender;
                         var input = widget.input;
                         var inputVal = $.trim(input.val());
-
                         if (!inputInitialized) {
                             input.attr('name', 'placeNames');
                             _this.$location.attr('name', '');
@@ -165,7 +162,8 @@ var Activities;
                                 widget.close();
                             }
                             inputInitialized = true;
-                        } else if (hasPlace) {
+                        }
+                        else if (hasPlace) {
                             widget.select(function (dataItem) {
                                 return dataItem.placeId == this.settings.input.placeIds[0];
                             });
@@ -173,7 +171,6 @@ var Activities;
                             input.blur();
                             hasPlace = false;
                         }
-
                         var value = e.sender.value();
                         if (value) {
                             var dataSource = e.sender.dataSource;
@@ -189,52 +186,43 @@ var Activities;
                 var comboBox = this.$location.data('kendoComboBox');
                 comboBox.list.addClass('k-ucosmic');
             };
-
             Map.prototype._applySubscriptions = function () {
                 var _this = this;
                 this.orderBy.subscribe(function (newValue) {
                     _this._submitForm();
                 });
             };
-
             Map.prototype._submitForm = function () {
                 if (this.loadingSpinner.isVisible())
                     return;
                 this.loadingSpinner.start();
                 this.search();
             };
-
             Map.prototype.search = function () {
                 $("#activityTypesSearch").val("1").change();
             };
-
             Map.prototype.onKeywordInputSearchEvent = function (viewModel, e) {
                 if ($.trim(this.keyword()) && !$.trim($(e.target).val()) && this.$form)
                     this.search();
             };
-
             Map.prototype.checkAllActivityTypes = function () {
                 Enumerable.From(this.activityTypeCheckBoxes()).ForEach(function (x) {
                     x.isChecked(true);
                 });
             };
-
             Map.prototype.uncheckAllActivityTypes = function () {
                 Enumerable.From(this.activityTypeCheckBoxes()).ForEach(function (x) {
                     x.isChecked(false);
                 });
             };
-
             Map.prototype.clearSince = function () {
                 this.since('');
             };
-
             Map.prototype.clearUntil = function () {
                 this.until('');
             };
             return Map;
         })();
         ViewModels.Map = Map;
-    })(Activities.ViewModels || (Activities.ViewModels = {}));
-    var ViewModels = Activities.ViewModels;
+    })(ViewModels = Activities.ViewModels || (Activities.ViewModels = {}));
 })(Activities || (Activities = {}));

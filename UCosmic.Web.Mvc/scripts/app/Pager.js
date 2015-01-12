@@ -14,7 +14,6 @@ var App;
         return Pager;
     })();
     App.Pager = Pager;
-
     var PagerStatus = (function () {
         function PagerStatus(pageNumber, pageSize) {
             var _this = this;
@@ -50,7 +49,6 @@ var App;
             this._pageNumberChanged = ko.computed(function () {
                 var pageNumber = _this.pageNumber();
                 var options = _this.pageNumberOptions();
-
                 if (options.length == 1 && options[0] != pageNumber)
                     options[0] = pageNumber;
             });
@@ -100,12 +98,10 @@ var App;
             this.itemTotal(page.itemTotal);
             this.itemCount(page.items.length);
         };
-
         PagerStatus.prototype.next = function () {
             var pageNumber = this.pageNumber() + 1;
             this.pageNumberText(pageNumber.toString());
         };
-
         PagerStatus.prototype.prev = function () {
             var pageNumber = this.pageNumber() - 1;
             this.pageNumberText(pageNumber.toString());

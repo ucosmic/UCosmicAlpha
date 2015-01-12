@@ -15,10 +15,8 @@ var Agreements;
             this.dfdPopParticipants = dfdPopParticipants;
             this.hasBoundSearch = hasBoundSearch;
             this.establishmentSearchViewModel = establishmentSearchViewModel;
-
             this.participantsShowErrorMsg = ko.computed(function () {
                 var validateParticipantsHasOwner = false;
-
                 $.each(_this.participants(), function (i, item) {
                     if (item.isOwner() == true) {
                         validateParticipantsHasOwner = true;
@@ -27,7 +25,8 @@ var Agreements;
                 if (validateParticipantsHasOwner == false) {
                     _this.participantsErrorMsg("Home participant is required.");
                     return true;
-                } else {
+                }
+                else {
                     return false;
                 }
             });
@@ -51,11 +50,9 @@ var Agreements;
                             return false;
                         }
                     }
-
                     if (this.deletingParticipant == false) {
                         this.deletingParticipant = true;
                         var url = App.Routes.WebApi.Agreements.Participants.del(this.agreementId, ko.dataFor(e.target).establishmentId());
-
                         $.ajax({
                             url: url,
                             type: 'DELETE',
@@ -76,7 +73,8 @@ var Agreements;
                             }
                         });
                     }
-                } else {
+                }
+                else {
                     self.participants.remove(function (item) {
                         if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
                             $(item.participantEl).slideUp('fast', function () {
@@ -91,21 +89,20 @@ var Agreements;
             e.stopPropagation();
             return false;
         };
-
         Participants.prototype.receiveParticipants = function (js) {
             if (!js) {
                 ko.mapping.fromJS({
                     items: [],
                     itemTotal: 0
                 }, this.participants);
-            } else {
+            }
+            else {
                 var mappingOptions = {
                     create: function (options) {
                         return (new (function () {
                             this.officialNameDoesNotMatchTranslation = ko.computed(function () {
                                 return !(options.data.establishmentOfficialName === options.data.establishmentTranslatedName || !options.data.establishmentOfficialName);
                             });
-
                             ko.mapping.fromJS(options.data, {}, this);
                         })());
                     }
@@ -113,7 +110,6 @@ var Agreements;
                 ko.mapping.fromJS(js, mappingOptions, this.participants);
             }
         };
-
         Participants.prototype.populateParticipants = function () {
             var _this = this;
             $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId)).done(function (response) {
@@ -121,7 +117,6 @@ var Agreements;
                 _this.dfdPopParticipants.resolve();
             });
         };
-
         Participants.prototype.addParticipant = function (establishmentResultViewModel) {
             this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
             this.hasBoundSearch.does = true;

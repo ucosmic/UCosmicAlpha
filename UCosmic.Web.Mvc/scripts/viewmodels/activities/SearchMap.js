@@ -1,12 +1,12 @@
 var Activities;
 (function (Activities) {
+    var ViewModels;
     (function (ViewModels) {
         (function (DataGraphPivotTest) {
             DataGraphPivotTest[DataGraphPivotTest["activities"] = 1] = "activities";
             DataGraphPivotTest[DataGraphPivotTest["people"] = 2] = "people";
         })(ViewModels.DataGraphPivotTest || (ViewModels.DataGraphPivotTest = {}));
         var DataGraphPivotTest = ViewModels.DataGraphPivotTest;
-
         var ActivityTypeSearchTestCheckBox = (function () {
             function ActivityTypeSearchTestCheckBox(activityType, settings) {
                 this.activityType = activityType;
@@ -16,7 +16,6 @@ var Activities;
             return ActivityTypeSearchTestCheckBox;
         })();
         ViewModels.ActivityTypeSearchTestCheckBox = ActivityTypeSearchTestCheckBox;
-
         var MapSearch = (function () {
             function MapSearch(settings, searchMapData) {
                 var _this = this;
@@ -55,23 +54,23 @@ var Activities;
                 });
                 this.infoIsOpen = ko.observable(false);
                 var searchOptions = JSON.parse(sessionStorage.getItem(ViewModels.SearchMap.SearchOptions));
-
                 if (sessionStorage.getItem('isMapClick') == "1") {
                     if (searchOptions.placeNames.indexOf(" &") > 0) {
                         searchOptions.placeNames = searchOptions.placeNames.substring(0, searchOptions.placeNames.lastIndexOf(" &"));
                         searchOptions.placeIds.pop();
-                    } else {
+                    }
+                    else {
                         searchOptions.placeNames = "";
                         if (typeof searchOptions.placeIds == 'string') {
                             searchOptions.placeIds = "";
-                        } else {
+                        }
+                        else {
                             searchOptions.placeIds.pop();
                         }
                     }
                     sessionStorage.setItem(ViewModels.SearchMap.SearchOptions, JSON.stringify(searchOptions));
                 }
                 sessionStorage.setItem("isMapClick", "0");
-
                 if (searchOptions) {
                     this.settings.input.activityTypeIds = searchOptions.activityTypeIds;
                     this.settings.input.placeNames = searchOptions.placeNames;
@@ -86,20 +85,16 @@ var Activities;
                     }
                 }
                 this.keyword(this.settings.input.keyword);
-
                 this.since(this.settings.input.since);
                 this.until(this.settings.input.until);
-
                 this.activityTypeCheckBoxes = ko.observableArray(Enumerable.From(this.settings.activityTypes).Select(function (x) {
                     return new ActivityTypeSearchTestCheckBox(x, _this.settings);
                 }).ToArray());
-
                 this.isCheckAllActivityTypesDisabled = ko.computed(function () {
                     return Enumerable.From(_this.activityTypeCheckBoxes()).All(function (x) {
                         return x.isChecked();
                     });
                 });
-
                 this.isUncheckAllActivityTypesDisabled = ko.computed(function () {
                     return Enumerable.From(_this.activityTypeCheckBoxes()).All(function (x) {
                         return !x.isChecked();
@@ -108,10 +103,8 @@ var Activities;
                 this.ancestorId = settings.input.ancestorId;
                 this.oldAncestorId = settings.input.ancestorId;
                 this.oldKeyword = settings.input.keyword;
-
                 this.searchMap = new Activities.ViewModels.SearchMap(searchMapData, this);
                 this.searchMap.applyBindings(document.getElementById('searchMap'));
-
                 this._loadTenancyData();
             }
             MapSearch.prototype._createEstablishmentSelects = function (response) {
@@ -121,7 +114,6 @@ var Activities;
                 }
                 var previousParentId = 0;
                 this.affiliationsLoaded = true;
-
                 this.loadingSpinner.stop();
                 while (true) {
                     var options = Enumerable.From(response).Where("x => x.parentId==" + parentId).Select("x =>  {value: x.id, text: x.officialName}").OrderBy(function (x) {
@@ -129,13 +121,11 @@ var Activities;
                     }).ThenBy(function (x) {
                         return x.contextName || x.officialName;
                     }).ToArray();
-
                     for (var i = 0; i < options.length; i++) {
                         if (options[i].text.indexOf(',') > 0) {
                             options[i].text = options[i].text.substring(0, options[i].text.indexOf(','));
                         }
                     }
-
                     if (options.length > 0) {
                         options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
                         this.affiliations.unshift(ko.mapping.fromJS([{ options: options, value: previousParentId.toString() }])()[0]);
@@ -144,43 +134,39 @@ var Activities;
                     var parentCheck = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
                     if (parentCheck[0] != undefined) {
                         parentId = parentCheck[0].parentId;
-                    } else {
+                    }
+                    else {
                         this.hasEstablishmentSelects(true);
                         return;
                     }
                 }
             };
-
             MapSearch.prototype._loadEstablishmentData = function () {
                 var _this = this;
                 var promise = $.Deferred();
-
                 if (!this.mainCampus) {
                     this.mainCampus = this.settings.tenantId;
                 }
-
                 var temp = sessionStorage.getItem('campuses' + this.mainCampus);
                 if (temp) {
                     var response = $.parseJSON(temp);
                     this._createEstablishmentSelects(response);
-                } else {
+                }
+                else {
                     $.when(this.searchMap.dataDefered).done(function () {
                         var settings = settings || {};
                         settings.url = '/api/establishments/' + _this.mainCampus + '/offspring';
                         $.ajax(settings).done(function (response) {
                             promise.resolve(response);
                             sessionStorage.setItem('campuses' + _this.mainCampus, JSON.stringify(response));
-
                             _this._createEstablishmentSelects(response);
                         }).fail(function (xhr) {
                             promise.reject(xhr);
                         });
                     });
                 }
-
                 return promise;
             };
-
             MapSearch.prototype._loadTenancyData = function () {
                 var _this = this;
                 $.when(this.searchMap.dataDefered).done(function () {
@@ -190,21 +176,18 @@ var Activities;
                             return x.rank;
                         }).ToArray();
                         tenants.unshift(parentData);
-
                         _this.tenantOptions([]);
                         if (childData.length) {
                             var options = Enumerable.From(tenants).Select(function (x) {
                                 var option = {
                                     value: x.id,
-                                    text: x.contextName || x.officialName
+                                    text: x.contextName || x.officialName,
                                 };
                                 return option;
                             }).ToArray();
                             _this.tenantOptions(options);
                         }
-
                         _this.establishmentData.ready();
-
                         var myThis = _this;
                         _this.selectedTenant(_this.settings.input.ancestorId);
                         _this.selectedTenant.subscribe(function (newValue) {
@@ -214,19 +197,19 @@ var Activities;
                         $(".campusSelect").change(function () {
                             if (this.value != '') {
                                 myThis.selectedEstablishment(this.value);
-                            } else {
+                            }
+                            else {
                                 var prevCampusSelect = $(this).parent().parent().prev().find(".campusSelect");
                                 if (prevCampusSelect.length) {
                                     myThis.selectedEstablishment($(this).parent().parent().prev().find(".campusSelect").val());
-                                } else {
+                                }
+                                else {
                                     myThis.selectedEstablishment(myThis.settings.tenantId);
                                 }
                             }
                             sessionStorage.setItem('EmployeeSummaryEstablishmentId', myThis.selectedEstablishment().toString());
-
                             myThis._submitForm();
                         });
-
                         if (childData.length)
                             _this.hasTenancyData(true);
                     }).fail(function (xhr) {
@@ -234,51 +217,47 @@ var Activities;
                     });
                 });
             };
-
             MapSearch.prototype.applyBindings = function (element) {
                 var _this = this;
                 ko.applyBindings(this, element);
                 kendo.init($(element));
                 this._applyKendo();
                 this._applySubscriptions();
-
                 $('a').click(function (e) {
                     if (e.target.href) {
                         _this.loadingSpinner.start();
                     }
                 });
             };
-
             MapSearch.prototype._applyKendo = function () {
                 var _this = this;
                 var kendoSince = this.$since.data('kendoDatePicker');
                 kendoSince.element.val(this.settings.input.since);
                 var kendoUntil = this.$until.data('kendoDatePicker');
                 kendoUntil.element.val(this.settings.input.until);
-
                 var inputInitialized = false;
                 var emptyDataItem = {
                     officialName: '[Begin typing to see options]',
-                    placeId: undefined
+                    placeId: undefined,
                 };
-                var emptyDataSource = new kendo.data.DataSource({ data: [emptyDataItem] });
+                var emptyDataSource = new kendo.data.DataSource({ data: [emptyDataItem], });
                 var serverDataSource = new kendo.data.DataSource({
                     serverFiltering: true,
                     transport: {
                         read: {
-                            url: Routes.Api.Places.Names.autocomplete()
+                            url: Routes.Api.Places.Names.autocomplete(),
                         },
                         parameterMap: function (data, action) {
                             if (action == 'read' && data && data.filter && data.filter.filters && data.filter.filters.length) {
                                 return {
                                     terms: data.filter.filters[0].value,
                                     maxResults: 20,
-                                    granularity: 2
+                                    granularity: 2,
                                 };
                             }
                             return data;
                         }
-                    }
+                    },
                 });
                 var hasPlace = (this.settings.input.placeIds && this.settings.input.placeIds.length && this.settings.input.placeNames && this.settings.input.placeNames.length && this.settings.input.placeIds[0] && this.settings.input.placeNames[0]) ? true : false;
                 var dataSource = hasPlace ? 'server' : 'empty';
@@ -293,7 +272,8 @@ var Activities;
                         widget.value('');
                         _this.$placeIds.val('');
                         if (_this.settings.input.placeIds && _this.settings.input.placeIds.length) {
-                        } else {
+                        }
+                        else {
                             widget.setDataSource(emptyDataSource);
                         }
                         return;
@@ -314,7 +294,6 @@ var Activities;
                     dataSource: hasPlace ? serverDataSource : emptyDataSource,
                     select: function (e) {
                         var dataItem = e.sender.dataItem(e.item.index());
-
                         if (dataItem.placeId == -1) {
                             _this.placeNames("");
                             e.sender.value('');
@@ -324,13 +303,11 @@ var Activities;
                             _this._submitForm();
                             return;
                         }
-
                         if (dataItem.officialName == emptyDataItem.officialName) {
                             _this.$placeIds.val('');
                             e.preventDefault();
                             return;
                         }
-
                         if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length || _this.settings.input.placeIds[0] != dataItem.placeId) {
                             e.sender.input.val(dataItem.officialName);
                             _this.$location.val(dataItem.officialName);
@@ -345,7 +322,8 @@ var Activities;
                             _this.$placeIds.val('');
                             e.sender.value('');
                             checkDataSource(e.sender);
-                        } else {
+                        }
+                        else {
                             e.sender.input.val(dataItem.officialName);
                             _this.$location.val(dataItem.officialName);
                             _this.$placeIds.val(dataItem.placeId);
@@ -359,7 +337,6 @@ var Activities;
                             var widget = e.sender;
                             var input = widget.input;
                             var inputVal = $.trim(input.val());
-
                             if (!inputInitialized) {
                                 input.attr('name', 'placeNames');
                                 _this.$location.attr('name', '');
@@ -373,7 +350,8 @@ var Activities;
                                     widget.close();
                                 }
                                 inputInitialized = true;
-                            } else if (hasPlace) {
+                            }
+                            else if (hasPlace) {
                                 widget.select(function (dataItem) {
                                     return dataItem.placeId == this.settings.input.placeIds[0];
                                 });
@@ -381,7 +359,6 @@ var Activities;
                                 input.blur();
                                 hasPlace = false;
                             }
-
                             var value = e.sender.value();
                             if (value) {
                                 var dataSource = e.sender.dataSource;
@@ -394,23 +371,21 @@ var Activities;
                                     _this.stopAutocompleteInfiniteLoop = true;
                                 }
                             }
-                        } else {
+                        }
+                        else {
                             _this.stopAutocompleteInfiniteLoop = false;
                         }
                     }
                 });
                 var comboBox = this.$location.data('kendoComboBox');
                 comboBox.list.addClass('k-ucosmic');
-
                 this.$placeFilter.val("continents");
             };
-
             MapSearch.prototype._applySubscriptions = function () {
                 var _this = this;
                 this.orderBy.subscribe(function (newValue) {
                     _this._submitForm();
                 });
-
                 var myThis = this;
                 $('input[name="placeNames"]').bind("change keyup input", function () {
                     if (this.value == "") {
@@ -418,7 +393,6 @@ var Activities;
                     }
                 });
             };
-
             MapSearch.prototype.resetSearch = function () {
                 this.checkAllActivityTypes();
                 this.keyword("");
@@ -429,18 +403,16 @@ var Activities;
                 $('input[name="placeNames"]')[0].value = '';
                 $('input[name="placeIds"]')[0].value = '';
                 this.searchMap.clearFilter();
-
                 this._submitForm();
             };
-
             MapSearch.prototype._submitForm = function () {
                 if (this.oldAncestorId == this.selectedEstablishment()) {
                     this.searchMap.reloadData($('form'), false);
-                } else {
+                }
+                else {
                     this.searchMap.reloadData($('form'), true);
                 }
             };
-
             MapSearch.prototype.onKeywordInputSearchEvent = function (viewModel, e) {
                 if ($.trim(this.keyword()) && !$.trim($(e.target).val()) && this.$form) {
                     e.preventDefault();
@@ -448,37 +420,30 @@ var Activities;
                     this._submitForm();
                 }
             };
-
             MapSearch.prototype.checkAllActivityTypes = function () {
                 Enumerable.From(this.activityTypeCheckBoxes()).ForEach(function (x) {
                     x.isChecked(true);
                 });
             };
-
             MapSearch.prototype.uncheckAllActivityTypes = function () {
                 Enumerable.From(this.activityTypeCheckBoxes()).ForEach(function (x) {
                     x.isChecked(false);
                 });
             };
-
             MapSearch.prototype.clearSince = function () {
                 this.since('');
             };
-
             MapSearch.prototype.clearUntil = function () {
                 this.until('');
             };
-
             MapSearch.prototype.infoOpen = function () {
                 this.infoIsOpen(true);
             };
-
             MapSearch.prototype.infoClose = function () {
                 this.infoIsOpen(false);
             };
             return MapSearch;
         })();
         ViewModels.MapSearch = MapSearch;
-    })(Activities.ViewModels || (Activities.ViewModels = {}));
-    var ViewModels = Activities.ViewModels;
+    })(ViewModels = Activities.ViewModels || (Activities.ViewModels = {}));
 })(Activities || (Activities = {}));

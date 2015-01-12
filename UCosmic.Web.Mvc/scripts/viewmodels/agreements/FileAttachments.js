@@ -12,8 +12,8 @@ var Agreements;
             this.fileFileExtension = ko.observable();
             this.fileFileName = ko.observable();
             this.fileSrc = ko.observable();
-            this.fileUploadSpinner = new App.Spinner({ delay: 400 });
-            this.fileDeleteSpinner = new App.Spinner({ delay: 400 });
+            this.fileUploadSpinner = new App.Spinner({ delay: 400, });
+            this.fileDeleteSpinner = new App.Spinner({ delay: 400, });
             this.tempFileId = 0;
             this.agreementId = agreementId;
             this.files = files;
@@ -27,10 +27,10 @@ var Agreements;
         FileAttachments.prototype._$bindKendoFile = function () {
             var _this = this;
             var saveUrl = "";
-
             if (this.agreementIsEdit()) {
                 saveUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId);
-            } else {
+            }
+            else {
                 saveUrl = App.Routes.WebApi.Uploads.post();
             }
             $("#fileUpload").kendoUpload({
@@ -41,7 +41,6 @@ var Agreements;
                 },
                 select: function (e) {
                     var url, data;
-
                     for (var i = 0, j = e.files.length; i < j; i++) {
                         data = ko.mapping.toJS({
                             Name: e.files[i].name,
@@ -86,20 +85,20 @@ var Agreements;
                 success: function (e) {
                     if (e.operation == 'upload') {
                         var myId;
-
                         if (e.response && e.response.message) {
                             App.flasher.flash(e.response.message);
                         }
                         if (_this.agreementIsEdit()) {
                             var myUrl;
-
                             if (e.XMLHttpRequest != undefined) {
                                 myUrl = e.XMLHttpRequest.getResponseHeader('Location');
-                            } else {
+                            }
+                            else {
                                 myUrl = e.response.location;
                             }
                             myId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
-                        } else {
+                        }
+                        else {
                             _this.tempFileId = _this.tempFileId + .01;
                             myId = _this.tempFileId;
                         }
@@ -118,7 +117,6 @@ var Agreements;
                 },
                 error: function (e) {
                     var fileName, fileExtension;
-
                     if (e.files && e.files.length > 0) {
                         fileName = e.files[0].name;
                         fileExtension = e.files[0].extension;
@@ -127,7 +125,6 @@ var Agreements;
                         _this.fileFileName(fileName);
                     if (fileExtension)
                         _this.fileFileExtension(fileExtension);
-
                     if (e.XMLHttpRequest.status === 415)
                         _this.isFileExtensionInvalid(true);
                     else if (e.XMLHttpRequest.status === 413)
@@ -137,15 +134,14 @@ var Agreements;
                 }
             });
         };
-
         FileAttachments.prototype.removeFile = function (me, e) {
             var _this = this;
             if (confirm('Are you sure you want to remove this file from this agreement?')) {
                 var url = "";
-
                 if (this.agreementIsEdit()) {
                     url = App.Routes.WebApi.Agreements.Files.del(this.agreementId, me.id());
-                } else {
+                }
+                else {
                     url = App.Routes.WebApi.Uploads.del(me.guid());
                 }
                 $.ajax({
@@ -159,29 +155,26 @@ var Agreements;
             e.preventDefault();
             e.stopPropagation();
         };
-
         FileAttachments.prototype.editAFile = function (me, e) {
             me.isEdit(true);
         };
-
         FileAttachments.prototype.cancelEditAFile = function (me, e) {
             me.customNameFile(me.customName().substring(0, me.customName().lastIndexOf(".")));
             me.isEdit(false);
             e.stopImmediatePropagation();
             return false;
         };
-
         FileAttachments.prototype.updateFile = function (me, e) {
             var _this = this;
             if (me.customNameFile().length > 0) {
                 me.isNotValidated(false);
-            } else {
+            }
+            else {
                 me.isNotValidated(true);
                 return;
             }
             me.customName(me.customNameFile() + me.customNameExt());
             me.isEdit(false);
-
             if (this.agreementIsEdit()) {
                 var data = ko.mapping.toJS({
                     agreementId: me.agreementId,
@@ -191,7 +184,6 @@ var Agreements;
                     customName: me.customName,
                     visibility: me.visibility
                 }), url = App.Routes.WebApi.Agreements.Files.put(this.agreementId, me.id());
-
                 $.ajax({
                     type: 'PUT',
                     url: url,
@@ -219,7 +211,6 @@ var Agreements;
                 });
             }
         };
-
         FileAttachments.prototype.bindJquery = function () {
             this._$bindKendoFile();
             $("#helpExpDate").kendoTooltip({
@@ -230,12 +221,12 @@ var Agreements;
                 autoHide: false
             });
         };
-
         FileAttachments.prototype.fileVisibilityClicked = function (me, e) {
             var _this = this;
             if (me.customNameFile().length > 0) {
                 me.isNotValidated(false);
-            } else {
+            }
+            else {
                 me.isNotValidated(true);
                 return false;
             }
@@ -248,7 +239,6 @@ var Agreements;
                     customName: me.customName,
                     visibility: me.visibility
                 }), url = App.Routes.WebApi.Agreements.Files.put(this.agreementId, me.id());
-
                 $.ajax({
                     type: 'PUT',
                     url: url,
@@ -277,7 +267,6 @@ var Agreements;
             }
             return true;
         };
-
         FileAttachments.prototype.postMe = function (data, url) {
             var _this = this;
             $.ajax({
@@ -291,11 +280,9 @@ var Agreements;
                 }
             });
         };
-
         FileAttachments.prototype.agreementPostFiles = function (response, statusText, xhr, deferred) {
             var _this = this;
             var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId), data;
-
             $.each(this.files(), function (i, item) {
                 data = ko.mapping.toJS({
                     agreementId: item.agreementId,

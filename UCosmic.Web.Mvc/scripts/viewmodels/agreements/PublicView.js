@@ -1,5 +1,6 @@
 var Agreements;
 (function (Agreements) {
+    var ViewModels;
     (function (ViewModels) {
         var PublicView = (function () {
             function PublicView(agreementId, agreementVisibility) {
@@ -31,7 +32,8 @@ var Agreements;
                     var myDate = new Date(value);
                     if (myDate.getFullYear() < 1500) {
                         return "unknown";
-                    } else {
+                    }
+                    else {
                         return (moment(value)).format('M/D/YYYY');
                     }
                 });
@@ -60,11 +62,9 @@ var Agreements;
             PublicView.prototype.fileHref = function (parent, data) {
                 return '/api/agreements/' + parent.agreementId + '/files/' + data.id() + '/content/';
             };
-
             PublicView.prototype.fileDownloadHref = function (parent, data) {
                 return '/api/agreements/' + parent.agreementId + '/files/' + data.id() + '/download/';
             };
-
             PublicView.prototype._bindData = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -74,7 +74,7 @@ var Agreements;
                             create: function (options) {
                                 return options.data;
                             }
-                        }
+                        },
                     };
                     ko.mapping.fromJS(response, mapping, _this);
                     _this.participants(Enumerable.From(_this.participants()).OrderBy(function (x) {
@@ -87,7 +87,6 @@ var Agreements;
                 });
                 return deferred;
             };
-
             PublicView.prototype._createMap = function () {
                 google.maps.visualRefresh = true;
                 var options = {
@@ -99,8 +98,8 @@ var Agreements;
                     streetViewControl: false,
                     panControl: false,
                     zoomControlOptions: {
-                        style: google.maps.ZoomControlStyle.SMALL
-                    }
+                        style: google.maps.ZoomControlStyle.SMALL,
+                    },
                 };
                 this._googleMap = new google.maps.Map(document.getElementById("map-canvas"), options);
                 var deferred = $.Deferred();
@@ -109,13 +108,11 @@ var Agreements;
                 });
                 return deferred;
             };
-
             PublicView.prototype._bindMap = function () {
                 var _this = this;
                 var partners = Enumerable.From(this.participants()).Where(function (x) {
                     return !x.isOwner;
                 }).ToArray();
-
                 var centers = Enumerable.From(partners).Where(function (x) {
                     return x.center && x.center.hasValue;
                 }).Select(function (x) {
@@ -124,42 +121,39 @@ var Agreements;
                 var latLngs = Enumerable.From(centers).Select(function (x) {
                     return new google.maps.LatLng(x.latitude, x.longitude);
                 }).ToArray();
-
                 var bounds = new google.maps.LatLngBounds();
                 $.each(latLngs, function (index, latLng) {
                     var title = Enumerable.From(partners).Single(function (x) {
                         return x.center && x.center == centers[index];
                     }).establishmentTranslatedName;
-
                     var options = {
                         map: _this._googleMap,
                         position: latLng,
-                        title: title
+                        title: title,
                     };
                     var marker = new google.maps.Marker(options);
                     bounds.extend(latLng);
                     _this._googleMarkers.push(marker);
                 });
-
                 if (centers.length == 1) {
                     this._googleMap.setCenter(latLngs[0]);
-
                     var partner = Enumerable.From(partners).Single(function (x) {
                         return x.center && x.center == centers[0];
                     });
                     var zoom = partner.googleMapZoomLevel;
                     if (zoom) {
                         this._googleMap.setZoom(zoom);
-                    } else if (partner.boundingBox && partner.boundingBox.hasValue) {
+                    }
+                    else if (partner.boundingBox && partner.boundingBox.hasValue) {
                         bounds = new google.maps.LatLngBounds(new google.maps.LatLng(partner.boundingBox.southWest.latitude, partner.boundingBox.southWest.longitude), new google.maps.LatLng(partner.boundingBox.northEast.latitude, partner.boundingBox.northEast.longitude));
                         this._googleMap.fitBounds(bounds);
                         this._googleMap.setCenter(latLngs[0]);
                     }
-                } else if (centers.length > 0) {
+                }
+                else if (centers.length > 0) {
                     this._googleMap.fitBounds(bounds);
                 }
             };
-
             PublicView.prototype._animateMapZoom = function (zoom) {
                 var _this = this;
                 var currentZoom = this._googleMap.getZoom();
@@ -174,7 +168,6 @@ var Agreements;
                         _this._animateMapZoom(zoom);
                     }, 100);
             };
-
             PublicView.prototype.createMap = function () {
                 var self = this;
                 function initialize() {
@@ -185,22 +178,18 @@ var Agreements;
                     }).ToArray(), LatLngList = Enumerable.From(centers).Select(function (x) {
                         return new google.maps.LatLng(x.latitude, x.longitude);
                     }).ToArray(), map;
-
                     var bounds = new google.maps.LatLngBounds();
-
                     for (var i = 0, LtLgLen = LatLngList.length; i < LtLgLen; i++) {
                         bounds.extend(LatLngList[i]);
                     }
-
                     map = new google.maps.Map(document.getElementById("map-canvas"), {
                         mapTypeId: google.maps.MapTypeId.ROADMAP,
-                        mapMaker: true
+                        mapMaker: true,
                     });
                     map.fitBounds(bounds);
                 }
                 google.maps.event.addDomListener(window, 'load', initialize);
             };
-
             PublicView.prototype.populateContacts = function () {
                 var _this = this;
                 $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId)).done(function (response) {
@@ -210,6 +199,5 @@ var Agreements;
             return PublicView;
         })();
         ViewModels.PublicView = PublicView;
-    })(Agreements.ViewModels || (Agreements.ViewModels = {}));
-    var ViewModels = Agreements.ViewModels;
+    })(ViewModels = Agreements.ViewModels || (Agreements.ViewModels = {}));
 })(Agreements || (Agreements = {}));

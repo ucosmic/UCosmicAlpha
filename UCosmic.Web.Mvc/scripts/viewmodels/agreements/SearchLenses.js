@@ -1,14 +1,16 @@
 var Agreements;
 (function (Agreements) {
+    var ViewModels;
     (function (ViewModels) {
         var SearchLenses = (function () {
             function SearchLenses(settings) {
                 var _this = this;
                 this.settings = settings;
-                this.lens = ko.observable(sessionStorage.getItem(SearchLenses.LensSessionKey) || 'table');
+                this.defaultLense = 'map';
+                this.lens = ko.observable(sessionStorage.getItem(SearchLenses.LensSessionKey) || this.defaultLense);
                 this._inputChanged = ko.computed(function () {
                     sessionStorage.setItem(SearchLenses.LensSessionKey, _this.lens());
-                }).extend({ throttle: 0 });
+                }).extend({ throttle: 0, });
                 this.isTableLens = ko.computed(function () {
                     return _this.lens() == 'table';
                 });
@@ -25,7 +27,8 @@ var Agreements;
                     route: 'table',
                     activationRoute: '#/table/',
                     detailUrl: this.settings.detailUrl,
-                    sammy: this.sammy
+                    sammy: this.sammy,
+                    summaryApi: this.settings.summaryApi,
                 });
                 this.map = new ViewModels.SearchMap({
                     element: undefined,
@@ -38,9 +41,8 @@ var Agreements;
                     partnerPlacesApi: this.settings.partnerPlacesApi,
                     partnersApi: this.settings.partnersApi,
                     graphicsCircleApi: this.settings.graphicsCircleApi,
-                    summaryApi: this.settings.summaryApi
+                    summaryApi: this.settings.summaryApi,
                 });
-
                 this.sammy.run();
                 var initialLocation = this.sammy.getLocation();
                 var lensRoute = '#/{0}/'.format(this.lens());
@@ -54,7 +56,8 @@ var Agreements;
                     if (this.isTableLens()) {
                         this.table.setLocation();
                         this.table.activate();
-                    } else if (this.isMapLens()) {
+                    }
+                    else if (this.isMapLens()) {
                         this.map.setLocation();
                         this.map.activate();
                     }
@@ -62,21 +65,17 @@ var Agreements;
             }
             SearchLenses.prototype._runSammy = function () {
                 var viewModel = this;
-
                 this.sammy.before(/\#\/table\/(.*)\//, function () {
                     viewModel.viewTable();
                 });
-
                 this.sammy.before(/\#\/map\/(.*)\//, function () {
                     viewModel.viewMap();
                 });
-
                 this.sammy.get('#/:lens/', function () {
                     var e = this;
                     viewModel.lens(e.params['lens']);
                 });
             };
-
             SearchLenses.prototype.viewTable = function () {
                 if (!this.isTableLens()) {
                     this.map.deactivate();
@@ -85,7 +84,6 @@ var Agreements;
                     this.table.activate();
                 }
             };
-
             SearchLenses.prototype.viewMap = function () {
                 var _this = this;
                 if (!this.isMapLens()) {
@@ -96,7 +94,8 @@ var Agreements;
                     this.lens('map');
                     if (this._hasMapBeenResizedOnce) {
                         this.map.activate();
-                    } else {
+                    }
+                    else {
                         this.map.triggerMapResize().done(function () {
                             _this._hasMapBeenResizedOnce = true;
                             _this.map.activate();
@@ -104,7 +103,6 @@ var Agreements;
                     }
                 }
             };
-
             SearchLenses.prototype.resetFilters = function () {
                 this.table.keyword('');
                 this.table.countryCode('any');
@@ -120,6 +118,5 @@ var Agreements;
             return SearchLenses;
         })();
         ViewModels.SearchLenses = SearchLenses;
-    })(Agreements.ViewModels || (Agreements.ViewModels = {}));
-    var ViewModels = Agreements.ViewModels;
+    })(ViewModels = Agreements.ViewModels || (Agreements.ViewModels = {}));
 })(Agreements || (Agreements = {}));

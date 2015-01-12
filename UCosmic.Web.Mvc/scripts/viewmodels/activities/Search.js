@@ -1,12 +1,12 @@
 var Activities;
 (function (Activities) {
+    var ViewModels;
     (function (ViewModels) {
         (function (DataGraphPivot) {
             DataGraphPivot[DataGraphPivot["activities"] = 1] = "activities";
             DataGraphPivot[DataGraphPivot["people"] = 2] = "people";
         })(ViewModels.DataGraphPivot || (ViewModels.DataGraphPivot = {}));
         var DataGraphPivot = ViewModels.DataGraphPivot;
-
         var ActivityTypeSearchCheckBox = (function () {
             function ActivityTypeSearchCheckBox(activityType, settings) {
                 this.activityType = activityType;
@@ -16,7 +16,6 @@ var Activities;
             return ActivityTypeSearchCheckBox;
         })();
         ViewModels.ActivityTypeSearchCheckBox = ActivityTypeSearchCheckBox;
-
         var Search = (function () {
             function Search(settings) {
                 var _this = this;
@@ -73,32 +72,28 @@ var Activities;
                 var stringActivityMapDataSearch = sessionStorage.getItem('activityMapDataSearch');
                 var ancestorId = this.settings.input.ancestorId ? this.settings.input.ancestorId.toString() : "null";
                 var keyword = this.settings.input.keyword ? this.settings.input.keyword : "null";
-
                 if (stringActivityMapDataSearch == ancestorId + keyword) {
                     stringActivityMapData = sessionStorage.getItem('activityMapData');
                     activityMapData = $.parseJSON(stringActivityMapData);
                 }
-
                 if (!activityMapData || !activityMapData.length) {
                     var settings = settings || {};
-
                     var url = '/api/usf.edu/employees/map/?ancestorid=' + ancestorId;
                     if (this.settings.input.keyword) {
                         url += '&keyword=' + keyword;
                     }
                     settings.url = url;
-
                     this.ajaxMapData = $.ajax(settings).done(function (response) {
                         sessionStorage.setItem('activityMapData', JSON.stringify(response));
                         sessionStorage.setItem('activityMapDataSearch', ancestorId + keyword);
                         _this.MapDataIsLoading(false);
                     }).fail(function (xhr) {
                     });
-                } else {
+                }
+                else {
                     this.MapDataIsLoading(false);
                 }
             };
-
             Search.prototype._createEstablishmentSelects = function (response) {
                 var parentId = this.settings.input.ancestorId;
                 if (!parentId) {
@@ -111,13 +106,11 @@ var Activities;
                     }).ThenBy(function (x) {
                         return x.contextName || x.officialName;
                     }).ToArray();
-
                     for (var i = 0; i < options.length; i++) {
                         if (options[i].text.indexOf(',') > 0) {
                             options[i].text = options[i].text.substring(0, options[i].text.indexOf(','));
                         }
                     }
-
                     if (options.length > 0) {
                         options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
                         this.affiliations.unshift(ko.mapping.fromJS([{ options: options, value: previousParentId.toString() }])()[0]);
@@ -126,41 +119,37 @@ var Activities;
                     var parentCheck = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
                     if (parentCheck[0] != undefined) {
                         parentId = parentCheck[0].parentId;
-                    } else {
+                    }
+                    else {
                         this.hasEstablishmentSelects(true);
                         return;
                     }
                 }
             };
-
             Search.prototype._loadEstablishmentData = function () {
                 var _this = this;
                 var promise = $.Deferred();
-
                 if (!this.mainCampus) {
                     this.mainCampus = this.settings.tenantId;
                 }
-
                 var temp = sessionStorage.getItem('campuses' + this.mainCampus);
                 if (temp) {
                     var response = $.parseJSON(temp);
                     this._createEstablishmentSelects(response);
-                } else {
+                }
+                else {
                     var settings = settings || {};
                     settings.url = '/api/establishments/' + this.mainCampus + '/offspring';
                     $.ajax(settings).done(function (response) {
                         promise.resolve(response);
                         sessionStorage.setItem('campuses' + _this.mainCampus, JSON.stringify(response));
-
                         _this._createEstablishmentSelects(response);
                     }).fail(function (xhr) {
                         promise.reject(xhr);
                     });
                 }
-
                 return promise;
             };
-
             Search.prototype._loadTenancyData = function () {
                 var _this = this;
                 $.when(Activities.Servers.Single(this.settings.tenantId), Activities.Servers.GetChildren(this.settings.tenantId)).done(function (parentData, childData) {
@@ -169,21 +158,18 @@ var Activities;
                         return x.rank;
                     }).ToArray();
                     tenants.unshift(parentData);
-
                     _this.tenantOptions([]);
                     if (childData.length) {
                         var options = Enumerable.From(tenants).Select(function (x) {
                             var option = {
                                 value: x.id,
-                                text: x.contextName || x.officialName
+                                text: x.contextName || x.officialName,
                             };
                             return option;
                         }).ToArray();
                         _this.tenantOptions(options);
                     }
-
                     _this.establishmentData.ready();
-
                     var myThis = _this;
                     _this.selectedTenant(_this.settings.input.ancestorId);
                     _this.selectedTenant.subscribe(function (newValue) {
@@ -193,26 +179,25 @@ var Activities;
                     $(".campusSelect").change(function () {
                         if (this.value != '') {
                             myThis.selectedEstablishment(this.value);
-                        } else {
+                        }
+                        else {
                             var prevCampusSelect = $(this).parent().parent().prev().find(".campusSelect");
                             if (prevCampusSelect.length) {
                                 myThis.selectedEstablishment($(this).parent().parent().prev().find(".campusSelect").val());
-                            } else {
+                            }
+                            else {
                                 myThis.selectedEstablishment(myThis.settings.tenantId);
                             }
                         }
                         sessionStorage.setItem('EmployeeSummaryEstablishmentId', myThis.selectedEstablishment().toString());
-
                         myThis._submitForm();
                     });
-
                     if (childData.length)
                         _this.hasTenancyData(true);
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
                 });
             };
-
             Search.prototype.serializeObject = function (object) {
                 var o = {};
                 var a = object.serializeArray();
@@ -222,7 +207,8 @@ var Activities;
                             o[this.name] = [o[this.name]];
                         }
                         o[this.name].push(this.value || '');
-                    } else {
+                    }
+                    else {
                         o[this.name] = this.value || '';
                     }
                 });
@@ -238,7 +224,6 @@ var Activities;
                     var searchOptions = _this.serializeObject($('form'));
                     searchOptions.placeFilter = 'continents';
                     sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
-
                     if (_this.ajaxMapData) {
                         _this.ajaxMapData.abort();
                     }
@@ -253,37 +238,35 @@ var Activities;
                     _this.loadingSpinner.start();
                 });
             };
-
             Search.prototype._applyKendo = function () {
                 var _this = this;
                 var kendoSince = this.$since.data('kendoDatePicker');
                 kendoSince.element.val(this.settings.input.since);
                 var kendoUntil = this.$until.data('kendoDatePicker');
                 kendoUntil.element.val(this.settings.input.until);
-
                 var inputInitialized = false;
                 var emptyDataItem = {
                     officialName: '[Begin typing to see options]',
-                    placeId: undefined
+                    placeId: undefined,
                 };
-                var emptyDataSource = new kendo.data.DataSource({ data: [emptyDataItem] });
+                var emptyDataSource = new kendo.data.DataSource({ data: [emptyDataItem], });
                 var serverDataSource = new kendo.data.DataSource({
                     serverFiltering: true,
                     transport: {
                         read: {
-                            url: Routes.Api.Places.Names.autocomplete()
+                            url: Routes.Api.Places.Names.autocomplete(),
                         },
                         parameterMap: function (data, action) {
                             if (action == 'read' && data && data.filter && data.filter.filters && data.filter.filters.length) {
                                 return {
                                     terms: data.filter.filters[0].value,
                                     maxResults: 20,
-                                    granularity: 2
+                                    granularity: 2,
                                 };
                             }
                             return data;
                         }
-                    }
+                    },
                 });
                 var hasPlace = (this.settings.input.placeIds && this.settings.input.placeIds.length && this.settings.input.placeNames && this.settings.input.placeNames.length && this.settings.input.placeIds[0] && this.settings.input.placeNames[0]) ? true : false;
                 var dataSource = hasPlace ? 'server' : 'empty';
@@ -298,7 +281,8 @@ var Activities;
                         widget.value('');
                         _this.$placeIds.val('');
                         if (_this.settings.input.placeIds && _this.settings.input.placeIds.length) {
-                        } else {
+                        }
+                        else {
                             widget.setDataSource(emptyDataSource);
                         }
                         return;
@@ -320,7 +304,6 @@ var Activities;
                     select: function (e) {
                         $('.eraseMe').remove();
                         var dataItem = e.sender.dataItem(e.item.index());
-
                         if (dataItem.placeId == -1) {
                             e.sender.value('');
                             e.sender.input.val('');
@@ -329,13 +312,11 @@ var Activities;
                             _this._submitForm();
                             return;
                         }
-
                         if (dataItem.officialName == emptyDataItem.officialName) {
                             _this.$placeIds.val('');
                             e.preventDefault();
                             return;
                         }
-
                         if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length || _this.settings.input.placeIds[0] != dataItem.placeId) {
                             e.sender.input.val(dataItem.officialName);
                             _this.$location.val(dataItem.officialName);
@@ -349,7 +330,8 @@ var Activities;
                             _this.$placeIds.val('');
                             e.sender.value('');
                             checkDataSource(e.sender);
-                        } else {
+                        }
+                        else {
                             e.sender.input.val(dataItem.officialName);
                             _this.$location.val(dataItem.officialName);
                             _this.$placeIds.val(dataItem.placeId);
@@ -363,7 +345,6 @@ var Activities;
                             var widget = e.sender;
                             var input = widget.input;
                             var inputVal = $.trim(input.val());
-
                             if (!inputInitialized) {
                                 input.attr('name', 'placeNames');
                                 _this.$location.attr('name', '');
@@ -377,7 +358,8 @@ var Activities;
                                     widget.close();
                                 }
                                 inputInitialized = true;
-                            } else if (hasPlace) {
+                            }
+                            else if (hasPlace) {
                                 widget.select(function (dataItem) {
                                     return dataItem.placeId == this.settings.input.placeIds[0];
                                 });
@@ -385,7 +367,6 @@ var Activities;
                                 input.blur();
                                 hasPlace = false;
                             }
-
                             var value = e.sender.value();
                             if (value) {
                                 var dataSource = e.sender.dataSource;
@@ -398,14 +379,14 @@ var Activities;
                                     _this.stopAutocompleteInfiniteLoop = true;
                                 }
                             }
-                        } else {
+                        }
+                        else {
                             _this.stopAutocompleteInfiniteLoop = false;
                         }
                     }
                 });
                 var comboBox = this.$location.data('kendoComboBox');
                 comboBox.list.addClass('k-ucosmic');
-
                 if (this.settings.input.placeIds) {
                     $.each(this.settings.input.placeIds, function (index, value) {
                         if (index > 0) {
@@ -417,7 +398,6 @@ var Activities;
                 searchOptions.placeFilter = 'continents';
                 sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
             };
-
             Search.prototype._applySubscriptions = function () {
                 var _this = this;
                 this.pager.input.pageSizeText.subscribe(function (newValue) {
@@ -439,7 +419,6 @@ var Activities;
                     });
                 }, 500);
             };
-
             Search.prototype._submitForm = function () {
                 if (this.loadingSpinner.isVisible())
                     return;
@@ -447,28 +426,23 @@ var Activities;
                 sessionStorage.setItem("isMapClick", "0");
                 this.$form.submit();
             };
-
             Search.prototype.onKeywordInputSearchEvent = function (viewModel, e) {
                 if ($.trim(this.keyword()) && !$.trim($(e.target).val()) && this.$form)
                     this.$form.submit();
             };
-
             Search.prototype.checkAllActivityTypes = function () {
                 Enumerable.From(this.activityTypeCheckBoxes()).ForEach(function (x) {
                     x.isChecked(true);
                 });
             };
-
             Search.prototype.uncheckAllActivityTypes = function () {
                 Enumerable.From(this.activityTypeCheckBoxes()).ForEach(function (x) {
                     x.isChecked(false);
                 });
             };
-
             Search.prototype.clearSince = function () {
                 this.since('');
             };
-
             Search.prototype.clearUntil = function () {
                 this.until('');
             };
@@ -476,6 +450,5 @@ var Activities;
             return Search;
         })();
         ViewModels.Search = Search;
-    })(Activities.ViewModels || (Activities.ViewModels = {}));
-    var ViewModels = Activities.ViewModels;
+    })(ViewModels = Activities.ViewModels || (Activities.ViewModels = {}));
 })(Activities || (Activities = {}));

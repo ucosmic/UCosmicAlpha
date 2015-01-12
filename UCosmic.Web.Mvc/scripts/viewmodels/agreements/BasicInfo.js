@@ -35,7 +35,6 @@ var Agreements;
                 _this.deferredUAgreements.resolve();
             });
         };
-
         BasicInfo.prototype._setupValidation = function () {
             this.validateBasicInfo = ko.validatedObservable({
                 agreementType: this.typeOptionSelected.extend({
@@ -55,7 +54,6 @@ var Agreements;
                 })
             });
         };
-
         BasicInfo.prototype.bindJquery = function () {
             if (this.isCustomTypeAllowed()) {
                 $("#type_options").kendoComboBox({
@@ -65,7 +63,8 @@ var Agreements;
                         data: this.typeOptions()
                     })
                 });
-            } else {
+            }
+            else {
                 $("#type_options").kendoDropDownList({
                     dataTextField: "name",
                     dataValueField: "id",

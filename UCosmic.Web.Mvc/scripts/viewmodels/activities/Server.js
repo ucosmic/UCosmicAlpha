@@ -1,5 +1,6 @@
-﻿var Activities;
+var Activities;
 (function (Activities) {
+    var Servers;
     (function (Servers) {
         function Single(establishmentId, settings) {
             var deferred = $.Deferred();
@@ -13,7 +14,6 @@
             return deferred.promise();
         }
         Servers.Single = Single;
-
         function GetChildren(parentId, settings) {
             var deferred = $.Deferred();
             settings = settings || {};
@@ -26,6 +26,5 @@
             return deferred.promise();
         }
         Servers.GetChildren = GetChildren;
-    })(Activities.Servers || (Activities.Servers = {}));
-    var Servers = Activities.Servers;
+    })(Servers = Activities.Servers || (Activities.Servers = {}));
 })(Activities || (Activities = {}));

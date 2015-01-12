@@ -6,12 +6,13 @@ var __extends = this.__extends || function (d, b) {
 };
 var Agreements;
 (function (Agreements) {
+    var ViewModels;
     (function (ViewModels) {
         var Search = (function (_super) {
             __extends(Search, _super);
             function Search(domain, initDefaultPageRoute) {
-                if (typeof initDefaultPageRoute === "undefined") { initDefaultPageRoute = true; }
                 var _this = this;
+                if (initDefaultPageRoute === void 0) { initDefaultPageRoute = true; }
                 _super.call(this);
                 this.domain = domain;
                 this.initDefaultPageRoute = initDefaultPageRoute;
@@ -44,7 +45,6 @@ var Agreements;
                     },
                     ignore: ['pageSize', 'pageNumber']
                 };
-
                 this._init();
                 this.changeLens(this.lenses()[0]);
                 this._requestResults = this._requestResults.bind(this);
@@ -70,62 +70,51 @@ var Agreements;
                 this._setupSammy();
                 this._setupSessionStorage();
             };
-
             Search.prototype._setupCountryDropDown = function () {
                 var _this = this;
                 ko.computed(function () {
                     var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
-
                     $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
                         var emptyValue = {
                             code: '-1',
                             name: '[Without country]'
                         };
                         response.splice(response.length, 0, emptyValue);
-
                         _this.countries(response);
-
                         if (lastCountryCode && lastCountryCode !== _this.countryCode())
                             _this.countryCode(lastCountryCode);
                     });
                 }).extend({ throttle: 1 });
             };
-
             Search.prototype._setupPagingSubscriptions = function () {
                 var _this = this;
                 this.pageNumber.subscribe(function (newValue) {
                     _this._setLocation();
                 });
             };
-
             Search.prototype._setupLensing = function () {
                 var _this = this;
                 this.changeLens = function (lens) {
                     _this.lens(lens.value);
                 };
             };
-
             Search.prototype._setupSammy = function () {
                 var self = this;
                 self.sammy.before(self.sammyBeforeRoute, function () {
                     self._beforePage(this);
                 });
-
                 self.sammy.get(self.sammyGetPageRoute, function () {
                     self._getPage(this);
                 });
-
                 if (self.initDefaultPageRoute) {
                     self.sammy.get(self.sammyDefaultPageRoute, function () {
                         self._initPageHash(this);
                     });
                 }
-
                 ko.computed(function () {
                     self._requestResults();
                 }).extend({ throttle: 1 });
             };
-
             Search.prototype._getPage = function (sammyContext) {
                 var trail = this.trail(), clone;
                 if (trail.length > 0 && trail[trail.length - 1] === sammyContext.path)
@@ -133,33 +122,28 @@ var Agreements;
                 if (trail.length > 1 && trail[trail.length - 2] === sammyContext.path) {
                     trail.pop();
                     return;
-                } else if (trail.length > 0) {
+                }
+                else if (trail.length > 0) {
                 }
                 trail.push(sammyContext.path);
             };
-
             Search.prototype._beforePage = function (sammyContext) {
                 var pageNumber;
                 if (this.nextForceDisabled() || this.prevForceDisabled())
                     return false;
-
                 pageNumber = sammyContext.params['pageNumber'];
-
                 if (pageNumber && parseInt(pageNumber) !== Number(this.pageNumber()))
                     this.pageNumber(parseInt(pageNumber));
                 return true;
             };
-
             Search.prototype._initPageHash = function (sammyContext) {
                 sammyContext.app.setLocation('#/page/1/');
             };
-
             Search.prototype._setLocation = function () {
                 var location = '#/page/' + this.pageNumber() + '/';
                 if (this.sammy.getLocation() !== location)
                     this.sammy.setLocation(location);
             };
-
             Search.prototype.lockAnimation = function () {
                 this.nextForceDisabled(true);
                 this.prevForceDisabled(true);
@@ -168,21 +152,20 @@ var Agreements;
                 this.nextForceDisabled(false);
                 this.prevForceDisabled(false);
             };
-
             Search.prototype._receiveResults = function (js) {
                 if (!js) {
                     ko.mapping.fromJS({
                         items: [],
                         itemTotal: 0
                     }, this.resultsMapping, this);
-                } else {
+                }
+                else {
                     ko.mapping.fromJS(js, this.resultsMapping, this);
                 }
                 App.WindowScroller.restoreTop();
                 this.transitionedPageNumber(this.pageNumber());
                 this.deferredFadeInOut2.resolve();
             };
-
             Search.prototype._requestResults = function () {
                 var _this = this;
                 this.optionsEnabled(false);
@@ -204,7 +187,8 @@ var Agreements;
                     this.$searchResults.fadeOut(400, function () {
                         _this.deferredFadeInOut.resolve();
                     });
-                } else {
+                }
+                else {
                     this.deferredFadeInOut.resolve();
                 }
                 $.get(App.Routes.WebApi.Agreements.Search.get(this.domain), {
@@ -212,31 +196,26 @@ var Agreements;
                     pageNumber: this.pageNumber(),
                     countryCode: this.countryCode(),
                     keyword: this.throttledKeyword(),
-                    orderBy: this.orderBy()
+                    orderBy: this.orderBy(),
                 }).done(function (response) {
                     $.when(_this.deferredFadeInOut).done(function () {
                         _this._receiveResults(response);
                     });
                 });
             };
-
             Search.prototype.gotoAddNew = function () {
                 return true;
             };
-
             Search.prototype.clickAction = function (viewModel, e) {
                 return true;
             };
-
             Search.prototype.detailHref = function (id) {
                 return App.Routes.Mvc.Establishments.show(id);
             };
-
             Search.prototype._setupPagingDefaults = function () {
                 this.orderBy('country');
                 this.pageSize(10);
             };
-
             Search.prototype._setupSessionStorage = function () {
                 this.keyword.subscribe(function (newValue) {
                     sessionStorage.setItem(Search.KeywordSessionKey, newValue);
@@ -254,7 +233,6 @@ var Agreements;
                     sessionStorage.setItem(Search.PageNumberSessionKey, newValue.toString());
                 });
             };
-
             Search.prototype._applySession = function () {
                 this.keyword(sessionStorage.getItem(Search.KeywordSessionKey) || this.keyword());
                 this.pageSize(parseInt(sessionStorage.getItem(Search.PageSizeSessionKey)) || Number(this.pageSize()));
@@ -273,6 +251,5 @@ var Agreements;
             return Search;
         })(App.PagedSearch);
         ViewModels.Search = Search;
-    })(Agreements.ViewModels || (Agreements.ViewModels = {}));
-    var ViewModels = Agreements.ViewModels;
+    })(ViewModels = Agreements.ViewModels || (Agreements.ViewModels = {}));
 })(Agreements || (Agreements = {}));

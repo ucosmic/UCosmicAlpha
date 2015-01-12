@@ -1,5 +1,6 @@
 var People;
 (function (People) {
+    var ViewModels;
     (function (ViewModels) {
         var UrlViewModel = (function () {
             function UrlViewModel(model, personId) {
@@ -52,37 +53,37 @@ var People;
                                     _this.purgeSpinner.start(true);
                                     _this._purge(expertiseId);
                                 },
-                                'data-confirm-delete-link': true
+                                'data-confirm-delete-link': true,
                             },
                             {
                                 text: 'No, cancel delete',
                                 click: function () {
                                     _this.$confirmDeleteUrl.dialog('close');
                                 },
-                                'data-css-link': true
+                                'data-css-link': true,
                             }
                         ],
                         close: function () {
                             _this.purgeSpinner.stop();
-                        }
+                        },
                     });
-                } else {
+                }
+                else {
                     if (confirm('Are you sure you want to delete this url expertise?')) {
                         this._purge(expertiseId);
-                    } else {
+                    }
+                    else {
                         this.purgeSpinner.stop();
                     }
                 }
                 this.purgeSpinner.start();
             };
-
             UrlViewModel.prototype.edit = function (item, event) {
                 var context = ko.contextFor(event.target).$parent;
                 context.editLink(item.value());
                 context.editUrlId = item.urlId();
                 $("#edit_description").data("kendoComboBox").value(item.description());
                 context.editDescription(item.description());
-
                 context.$edit_urls_dialog.data("kendoWindow").open().title("Urls");
                 context.purgeSpinner.start();
                 context.editItem = item;
@@ -90,7 +91,6 @@ var People;
             UrlViewModel.prototype.isValidUrl = function (url) {
                 return url.match(/^(ht)tps?:\/\/[a-z0-9-\.]+\.[a-z]{2,4}\/?([^\s<>\#%"\,\{\}\\|\\\^\[\]`]+)?$/);
             };
-
             UrlViewModel.prototype.validateLinks = function (description, link, message) {
                 message('');
                 if (description.length == 0) {
@@ -98,12 +98,12 @@ var People;
                 }
                 if (link.length == 0) {
                     message(message() + 'External link is required. ');
-                } else if (!this.isValidUrl(link)) {
+                }
+                else if (!this.isValidUrl(link)) {
                     message(message() + 'External link is not a valid url.');
                 }
                 return message();
             };
-
             UrlViewModel.prototype.addUrl = function () {
                 var _this = this;
                 if (this.validateLinks(this.createDescription(), this.createLink(), this.createValidationMessage).length > 0) {
@@ -159,7 +159,6 @@ var People;
                     }
                 });
             };
-
             UrlViewModel.prototype.bindJquery = function () {
                 var _this = this;
                 $(".description").kendoComboBox({
@@ -188,7 +187,6 @@ var People;
                 this.$edit_urls_dialog.parent().addClass("url-kendo-window");
                 var dialog = this.$edit_urls_dialog.data("kendoWindow");
                 dialog.center();
-
                 $(window).resize(function () {
                     dialog.center();
                 });
@@ -196,6 +194,5 @@ var People;
             return UrlViewModel;
         })();
         ViewModels.UrlViewModel = UrlViewModel;
-    })(People.ViewModels || (People.ViewModels = {}));
-    var ViewModels = People.ViewModels;
+    })(ViewModels = People.ViewModels || (People.ViewModels = {}));
 })(People || (People = {}));

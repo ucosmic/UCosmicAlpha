@@ -70,7 +70,6 @@ var Agreements;
         Contacts.prototype.editAContact = function (me) {
             var _this = this;
             var dropdownlist, data;
-
             this.$addContactDialog.data("kendoWindow").open().title("Edit Contact");
             this.contactsIsEdit(true);
             this.contactEmail(me.emailAddress());
@@ -113,7 +112,8 @@ var Agreements;
                     dropdownlist.dataSource.add({ name: this.contactTypeOptionSelected() });
                     dropdownlist.select(dropdownlist.dataSource.length);
                 }
-            } else {
+            }
+            else {
                 dropdownlist = $("#contactTypeOptions").data("kendoDropDownList");
                 dropdownlist.select(function (dataItem) {
                     return dataItem.text === _this.contactTypeOptionSelected();
@@ -142,18 +142,17 @@ var Agreements;
                 });
             });
         };
-
         Contacts.prototype.editContact = function (me) {
             var _this = this;
             if (this.validateContact.isValid()) {
                 var data;
-
                 this.contactsIsEdit(false);
                 this.contacts()[this.contactIndex].emailAddress(this.contactEmail());
                 this.contacts()[this.contactIndex].title(this.contactJobTitle());
                 if (this.contactUserId() != null) {
                     this.contacts()[this.contactIndex].displayName(this.contactDisplayName());
-                } else {
+                }
+                else {
                     this.contacts()[this.contactIndex].displayName(this.contactFirstName() + " " + this.contactLastName());
                 }
                 this.contacts()[this.contactIndex].personId(this.contactPersonId());
@@ -178,7 +177,6 @@ var Agreements;
                 if (this.agreementIsEdit()) {
                     var data, url;
                     this.contacts()[this.contactIndex].agreementId(this.agreementId);
-
                     data = {
                         agreementId: this.contacts()[this.contactIndex].agreementId(),
                         Type: this.contacts()[this.contactIndex].type(),
@@ -219,7 +217,6 @@ var Agreements;
                     });
                     $.each(this.phones.deletedPhones, function (i, item) {
                         var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(_this.agreementId, _this.contactId(), item);
-
                         $.ajax({
                             url: url,
                             type: 'DELETE',
@@ -228,17 +225,16 @@ var Agreements;
                         });
                     });
                 }
-            } else {
+            }
+            else {
                 this.validateContact.errors.showAllMessages(true);
             }
             this.$addContactDialog.data("kendoWindow").close();
         };
-
         Contacts.prototype.addContact = function (me, e) {
             var _this = this;
             if (this.validateContact.isValid()) {
                 var data;
-
                 if (this.contactDisplayName() == undefined || this.contactDisplayName() == "") {
                     this.contactDisplayName(this.contactFirstName() + " " + this.contactLastName());
                 }
@@ -260,13 +256,10 @@ var Agreements;
                 };
                 this.$addContactDialog.data("kendoWindow").close();
                 $("#addAContact").fadeIn(500);
-
                 if (this.agreementIsEdit()) {
                     var url = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
-
                     $.post(url, data).done(function (response, statusText, xhr) {
                         var myUrl = xhr.getResponseHeader('Location');
-
                         data.id = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
                         _this.contacts.push(ko.mapping.fromJS(data));
                     }).fail(function (xhr, statusText, errorThrown) {
@@ -286,29 +279,27 @@ var Agreements;
                             });
                         }
                     });
-                } else {
+                }
+                else {
                     this.contacts.push(ko.mapping.fromJS(data));
                 }
-            } else {
+            }
+            else {
                 this.validateContact.errors.showAllMessages(true);
             }
         };
-
         Contacts.prototype.addAContact = function (me, e) {
             this.contactsIsEdit(false);
             this.clearContact();
             this.$addContactDialog.data("kendoWindow").open().title("Add Contact");
             $("#addAContact").fadeOut(500);
         };
-
         Contacts.prototype.cancelContact = function () {
             this.$addContactDialog.data("kendoWindow").close();
             $("#addAContact").fadeIn(500);
         };
-
         Contacts.prototype.clearContact = function () {
             var dropdownlist;
-
             this.$contactEmail.prop('disabled', '');
             this.$contactLastName.prop('disabled', '');
             this.$contactFirstName.prop('disabled', '');
@@ -330,7 +321,8 @@ var Agreements;
             this.contactTypeOptionSelected('');
             if (this.isCustomContactTypeAllowed) {
                 dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
-            } else {
+            }
+            else {
                 dropdownlist = $("#contactTypeOptions").data("kendoDropDownList");
             }
             dropdownlist.select(0);
@@ -340,15 +332,12 @@ var Agreements;
             dropdownlist.select(0);
             this.validateContact.errors.showAllMessages(false);
         };
-
         Contacts.prototype.removeContact = function (me, e) {
             var _this = this;
             if (confirm('Are you sure you want to remove "' + me.firstName() + " " + me.lastName() + '" as a contact from this agreement?')) {
                 var url = "";
-
                 if (this.agreementIsEdit()) {
                     url = App.Routes.WebApi.Agreements.Contacts.del(this.agreementId, me.id());
-
                     $.ajax({
                         url: url,
                         type: 'DELETE',
@@ -362,11 +351,9 @@ var Agreements;
             e.stopPropagation();
             return false;
         };
-
         Contacts.prototype.bindJquery = function () {
             var _this = this;
             var self = this, kacSelect;
-
             this.$addContactDialog.kendoWindow({
                 width: 950,
                 open: function () {
@@ -384,10 +371,8 @@ var Agreements;
                 resizable: false
             });
             this.$addContactDialog.parent().addClass("contactKendoWindow");
-
             kacSelect = function (me, e) {
                 var dataItem = me.dataItem(e.item.index());
-
                 _this.contactDisplayName(dataItem.displayName);
                 _this.contactFirstName(dataItem.firstName);
                 _this.contactLastName(dataItem.lastName);
@@ -487,17 +472,14 @@ var Agreements;
                     kacSelect(_this.$contactFirstName.data("kendoAutoComplete"), e);
                 }
             });
-
             $("#addContactDialog").on("change", ".phoneTypes", function () {
                 var _this = this;
                 var context = ko.dataFor(this);
-
                 if (context.type != $(this).val() && $(this).val() !== "") {
                     context.type = $(this).val();
                 }
                 if (context.id) {
                     var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId, context.contactId, context.id);
-
                     $.ajax({
                         type: 'PUT',
                         url: url,
@@ -527,13 +509,12 @@ var Agreements;
             $("#addContactDialog").on("change", ".phoneNumbers", function () {
                 var _this = this;
                 var context = ko.dataFor(this);
-
                 if (self.agreementIsEdit() && context.value == $(this).val()) {
                     if ($(this).val() == '') {
                         $("#phoneNumberValidate" + context.id).css("visibility", "visible");
-                    } else {
+                    }
+                    else {
                         var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId, context.contactId, context.id);
-
                         $("#phoneNumberValidate" + context.id).css("visibility", "hidden");
                         $.ajax({
                             type: 'PUT',
@@ -570,7 +551,8 @@ var Agreements;
                         data: this.contactTypeOptions()
                     })
                 });
-            } else {
+            }
+            else {
                 $("#contactTypeOptions").kendoDropDownList({
                     dataTextField: "name",
                     dataValueField: "id",
@@ -594,7 +576,6 @@ var Agreements;
                 })
             });
         };
-
         Contacts.prototype._setupValidation = function () {
             this.validateContact = ko.validatedObservable({
                 contactSalutation: this.contactSalutation.extend({
@@ -635,7 +616,6 @@ var Agreements;
                 })
             });
         };
-
         Contacts.prototype.populateContacts = function () {
             var _this = this;
             $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId)).done(function (response) {
@@ -643,7 +623,6 @@ var Agreements;
                 _this.deferredPopContacts.resolve();
             });
         };
-
         Contacts.prototype.postMe = function (data, url) {
             $.ajax({
                 type: 'POST',
@@ -655,11 +634,9 @@ var Agreements;
                 }
             });
         };
-
         Contacts.prototype.agreementPostContacts = function (response, statusText, xhr, deferred) {
             var _this = this;
             var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId), data;
-
             $.each(this.contacts(), function (i, item) {
                 data = {
                     agreementId: _this.agreementId,
