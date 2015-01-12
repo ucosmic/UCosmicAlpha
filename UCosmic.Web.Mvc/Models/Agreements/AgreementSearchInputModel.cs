@@ -12,6 +12,7 @@ namespace UCosmic.Web.Mvc.Models
     {
         public string Keyword { get; set; }
         public string CountryCode { get; set; }
+        public string TypeCode { get; set; }
         public string OrderBy { get; set; }
         public string Accept { get; set; }
     }
@@ -39,6 +40,16 @@ namespace UCosmic.Web.Mvc.Models
                             ? string.Empty : s.CountryCode;
                     }))
 
+                    // map the type code
+                    .ForMember(d => d.TypeCode, o => o.ResolveUsing(s =>
+                    {
+                        // a country code value of null implies finding results without a country code
+                        if (s.TypeCode == "-1" || "none".Equals(s.TypeCode, StringComparison.OrdinalIgnoreCase)) return null;
+
+                        // a country code value of "" implies finding all results regardless of country code
+                        return "any".Equals(s.TypeCode, StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(s.TypeCode)
+                            ? string.Empty : s.TypeCode;
+                    }))
                     // map the order by
                     .ForMember(d => d.OrderBy, o => o.ResolveUsing(s =>
                     {
