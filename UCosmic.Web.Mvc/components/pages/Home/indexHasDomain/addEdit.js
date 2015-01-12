@@ -1,4 +1,4 @@
-﻿Polymer('polymer-content-home-has-domain-edit', {
+Polymer('polymer-content-home-has-domain-edit', {
     isAjaxing: false,
     links: [],
     addedLink: "",
@@ -7,7 +7,8 @@
     ready: function () {
         if (this.isEditing) {
             this.buttonText = "Edit Section";
-        } else {
+        }
+        else {
             this.buttonText = "Add Section";
         }
     },
@@ -25,16 +26,18 @@
                     Description: this.description,
                     Links: this.links
                 });
-
                 this.$.ajax_addSection.go();
-            } else {
+            }
+            else {
                 this.$.linkMessage.style.display = "block";
             }
-        } else {
+        }
+        else {
             this.$.description.inputChange();
             if (this.links.length == 0) {
                 this.$.linkMessage.style.display = "block";
-            } else {
+            }
+            else {
                 this.$.linkMessage.style.display = "none";
             }
         }
@@ -62,32 +65,28 @@
             this.imageMessage = "The image is too large, " + (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB, please upload a smaller image. ';
             this.$.imageMessage.style.display = "block";
             return;
-        } else {
+        }
+        else {
             this.$.imageMessage.style.display = "none";
         }
         if (!(file.type == "image/jpeg" || file.type == "image/png" || file.type == "image/gif")) {
             this.imageMessage = "The image is not in the correct file type. Please use jpeg, png or gif.";
             this.$.imageMessage.style.display = "block";
             return;
-        } else {
+        }
+        else {
             this.$.imageMessage.style.display = "none";
         }
-
         var oFReader = new FileReader();
         oFReader.readAsDataURL(this.$.image.files[0]);
-
         oFReader.onload = function (oFREvent) {
             _this.$.picture.style.display = "block";
             _this.imageSrc = oFREvent.target.result;
         };
-
         var formData = new FormData();
-
         formData.append(sender.name, file, this.$.image.value || file.name);
-
         this.$.ajax_addPhoto.body = formData;
         this.$.ajax_addPhoto.method = 'POST';
-
         this.$.ajax_addPhoto.contentType = null;
     },
     addPhotoResponse: function (response) {
@@ -107,7 +106,6 @@
             this.$.title.$.input.value = "";
             this.$.picture.style.display = "none";
             this.$.ajax_addPhoto.body = null;
-
             var polymerNotification = document.createElement('polymer-notification');
             polymerNotification.message = "Your section was added succesfuly";
             polymerNotification.type = 'success';
@@ -118,7 +116,8 @@
             setTimeout(function () {
                 _this.cancel += 1;
             }, 200);
-        } else {
+        }
+        else {
             var polymerNotification = document.createElement('polymer-notification');
             polymerNotification.message = response.detail.response.error;
             polymerNotification.type = 'warning';
@@ -138,7 +137,8 @@
                 this.$.ajax_addPhoto.url = "/api/home/photo?homeSectionId=" + homeSectionId;
                 this.sectionAdded.id = homeSectionId;
                 this.$.ajax_addPhoto.go();
-            } else {
+            }
+            else {
                 this.$.linkMessage.style.display = "none";
                 this.sectionAdded.title = this.title;
                 this.sectionAdded.description = this.description;
@@ -149,7 +149,6 @@
                 this.title = "";
                 this.description = "";
                 this.links = [];
-
                 var polymerNotification = document.createElement('polymer-notification');
                 polymerNotification.message = response.detail.response;
                 polymerNotification.type = 'success';
@@ -162,7 +161,8 @@
                 }, 200);
                 this.isAjaxing = false;
             }
-        } else {
+        }
+        else {
             var polymerNotification = document.createElement('polymer-notification');
             polymerNotification.message = response.detail.response.error;
             polymerNotification.type = 'warning';

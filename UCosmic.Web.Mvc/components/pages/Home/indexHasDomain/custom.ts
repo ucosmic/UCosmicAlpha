@@ -16,18 +16,23 @@ Polymer('polymer-content-home-has-domain-custom', {
             }
         }
     },
-    deleteSection: function (event, someNumber, element) {
+    deleteSectionObject: {},
+    deleteSectionConfirm: function () {
         if (this.isAjaxing) {
             return;
         }
         this.isAjaxing = true;
-        this.currentlySelectedSection = event.target.templateInstance.model.section;
+        this.currentlySelectedSection = this.deleteSectionObject;
         this.currentlySelectedSection.isArchive = 'true';
 
         this.$.ajax_deleteSection.method = 'DELETE';
         this.$.ajax_deleteSection.url = '/api/home/section?homeSectionId=' + this.currentlySelectedSection.id;
 
         this.$.ajax_deleteSection.go();
+    },
+    deleteSection: function (event, someNumber, element) {
+        this.deleteSectionObject = event.target.templateInstance.model.section;
+        this.$.deleteConfirmDialog.opened = true;
     },
     deleteSectionResponse: function (response) {
 

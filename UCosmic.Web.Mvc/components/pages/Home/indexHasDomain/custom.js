@@ -1,4 +1,4 @@
-﻿Polymer('polymer-content-home-has-domain-custom', {
+Polymer('polymer-content-home-has-domain-custom', {
     currentlySelectedSection: null,
     ready: function () {
         if (this.homeSections && !this.homeSections.url) {
@@ -9,28 +9,33 @@
                 if (this.homeSections.length) {
                     this.homeSections = null;
                 }
-            } else {
+            }
+            else {
                 this.homeSections = homeSections;
             }
         }
     },
-    deleteSection: function (event, someNumber, element) {
+    deleteSectionObject: {},
+    deleteSectionConfirm: function () {
         if (this.isAjaxing) {
             return;
         }
         this.isAjaxing = true;
-        this.currentlySelectedSection = event.target.templateInstance.model.section;
+        this.currentlySelectedSection = this.deleteSectionObject;
         this.currentlySelectedSection.isArchive = 'true';
-
         this.$.ajax_deleteSection.method = 'DELETE';
         this.$.ajax_deleteSection.url = '/api/home/section?homeSectionId=' + this.currentlySelectedSection.id;
-
         this.$.ajax_deleteSection.go();
+    },
+    deleteSection: function (event, someNumber, element) {
+        this.deleteSectionObject = event.target.templateInstance.model.section;
+        this.$.deleteConfirmDialog.opened = true;
     },
     deleteSectionResponse: function (response) {
         if (!response.detail.response.error) {
             this.homeSections.splice(this.currentlySelectedSection, 1);
-        } else {
+        }
+        else {
             var polymerNotification = document.createElement('polymer-notification');
             polymerNotification.message = response.detail.response.error;
             polymerNotification.type = 'warning';
@@ -50,5 +55,5 @@
         polymerNotification.setAttribute('id', 'myAlert' + Date.now());
         document.body.appendChild(polymerNotification);
         this.isAjaxing = false;
-    }
+    },
 });

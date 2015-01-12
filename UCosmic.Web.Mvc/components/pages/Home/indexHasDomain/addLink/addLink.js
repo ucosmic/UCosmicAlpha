@@ -1,4 +1,4 @@
-﻿Polymer('polymer-content-home-has-domain-edit-add-link', {
+Polymer('polymer-content-home-has-domain-edit-add-link', {
     linkAdded: { url: "", text: "" },
     addedLink: false,
     addLink: function () {
@@ -8,7 +8,8 @@
             this.linkText = "";
             this.url = "";
             this.addedLink = true;
-        } else {
+        }
+        else {
             this.$.linkText.inputChange();
             this.$.url.inputChange();
         }
