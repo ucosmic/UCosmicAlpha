@@ -15,7 +15,7 @@ namespace UCosmic.Repositories
         public int TypeId;
         public string Type;
     }
-    public class EmployeeActivityTypesRepository// : ILocationsRepository
+    public class EmployeeActivityTypesRepository// : ISummaryRepository
 	{
 
         public IList<ActivityTypesApiReturn> EmployeeActivityTypes_By_establishmentId(int? EstablishmentId)

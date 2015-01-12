@@ -35,11 +35,11 @@ public static class MVC
     public static UCosmic.Web.Mvc.Controllers.HomeController Home = new UCosmic.Web.Mvc.Controllers.T4MVC_HomeController();
     public static UCosmic.Web.Mvc.Controllers.IdentityController Identity = new UCosmic.Web.Mvc.Controllers.T4MVC_IdentityController();
     public static UCosmic.Web.Mvc.Controllers.JavaScriptRoutesController JavaScriptRoutes = new UCosmic.Web.Mvc.Controllers.T4MVC_JavaScriptRoutesController();
-    public static UCosmic.Web.Mvc.Controllers.LocationsController Locations = new UCosmic.Web.Mvc.Controllers.T4MVC_LocationsController();
     public static UCosmic.Web.Mvc.Controllers.MyProfileController MyProfile = new UCosmic.Web.Mvc.Controllers.T4MVC_MyProfileController();
     public static UCosmic.Web.Mvc.Controllers.PeopleController People = new UCosmic.Web.Mvc.Controllers.T4MVC_PeopleController();
     public static UCosmic.Web.Mvc.Controllers.RepsController Reps = new UCosmic.Web.Mvc.Controllers.T4MVC_RepsController();
     public static UCosmic.Web.Mvc.Controllers.SamlMetadataController SamlMetadata = new UCosmic.Web.Mvc.Controllers.T4MVC_SamlMetadataController();
+    public static UCosmic.Web.Mvc.Controllers.SummaryController Summary = new UCosmic.Web.Mvc.Controllers.T4MVC_SummaryController();
     public static UCosmic.Web.Mvc.Controllers.TenancyController Tenancy = new UCosmic.Web.Mvc.Controllers.T4MVC_TenancyController();
     public static UCosmic.Web.Mvc.Controllers.UsersController Users = new UCosmic.Web.Mvc.Controllers.T4MVC_UsersController();
     public static T4MVC.SharedController Shared = new T4MVC.SharedController();
@@ -2811,6 +2811,7 @@ namespace Links
                 public static readonly string moment_d_ts = Url("moment.d.ts");
             }
         
+            public static readonly string myTypes_d_ts = Url("myTypes.d.ts");
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class sammyjs {
                 private const string URLPATH = "~/scripts/typings/sammyjs";

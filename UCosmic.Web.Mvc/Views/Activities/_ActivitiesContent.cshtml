@@ -99,7 +99,16 @@
                         <span style="display: inline-block; width: 32px; text-align: center;">
                             <img height="20" src="@Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "GetThumbnail", documentId = document.DocumentId, model = new UCosmic.Web.Mvc.Models.ImageResizeRequestModel { MaxHeight = 20, MaxWidth = 30 } })" alt="" />
                         </span>
-                        <a href="@Url.RouteUrl("DefaultApi", new { httproute = "", controller = "ActivityDocuments", id = document.DocumentId })" title="@document.Title">@document.Title</a>
+                        <a href="@Url.HttpRouteUrl(null, new
+                                {
+                                    controller = "ActivityDocuments",
+                                    action = "Get",
+                                    activityId = Model.ActivityId,
+                                    documentId = document.DocumentId,
+                                    httproute = "/api/activities/",
+                                })"
+                           title="@document.Title">@document.Title</a>
+                        @*<a href="@Url.RouteUrl("DefaultApi", new { httproute = "", controller = "ActivityDocuments", id = document.DocumentId })" title="@document.Title">@document.Title</a>*@
                     </li>
                 }
             </ul>
