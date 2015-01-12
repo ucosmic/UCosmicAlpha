@@ -1,13 +1,20 @@
-﻿Polymer('polymer-inputs-required', {
+Polymer('polymer-inputs-required', {
     errorMessage: "",
     myValue: "",
     ValidationClass: pValidation,
     isValidated: true,
     inputChange: function () {
         var options = {
-            value: this.myValue, name: this.name, isRequired: this.isRequired,
-            valueCompared: this.comparedValue, nameCompared: this.nameCompared, min: this.min, isAlphaNumeric: this.isAlphaNumeric,
-            max: this.mymaxlength, pattern: this.mypattern, correctformat: this.correctformat
+            value: this.myValue,
+            name: this.name,
+            isRequired: this.isRequired,
+            valueCompared: this.comparedValue,
+            nameCompared: this.nameCompared,
+            min: this.min,
+            isAlphaNumeric: this.isAlphaNumeric,
+            max: this.mymaxlength,
+            pattern: this.mypattern,
+            correctformat: this.correctformat
         }, validation = new this.ValidationClass(options), message = validation.validate();
         if (message == "Ok") {
             this.$.input.style.border = "";
@@ -15,7 +22,8 @@
             this.$.inputMessage.style.display = "none";
             this.inputMessage = "";
             return true;
-        } else {
+        }
+        else {
             this.$.input.style.border = "2px solid #fa4930";
             this.$.input2.style.border = "2px solid #fa4930";
             this.$.inputMessage.style.display = "block";
@@ -35,5 +43,5 @@
             this.$.input.required = true;
             this.$.input2.required = true;
         }
-    }
+    },
 });

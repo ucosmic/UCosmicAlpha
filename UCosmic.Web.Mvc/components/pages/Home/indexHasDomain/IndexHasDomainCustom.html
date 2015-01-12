@@ -1,44 +1,51 @@
 ﻿
 <link rel="import" href="../../../form/inputs/button/button.html">
+<link rel="import" href="../../../Polymer/bower_components/paper-dialog/paper-action-dialog.html">
 <polymer-element name="polymer-content-home-has-domain-custom" attributes="canedit, homeSections">
     <template>
         <link href="base.css" rel="stylesheet" />
+        <paper-action-dialog heading="Delete Section?" style="" id="deleteConfirmDialog">
+            <p>Are you sure you want to delete this section?</p>
+            <paper-button dismissive>No</paper-button>
+            <paper-button affirmative on-click="{{deleteSectionConfirm}}">Yes</paper-button>
+        </paper-action-dialog>
         <template repeat="{{section in homeSections}}">
-            <hr style="height: 10px; border: 0;" />
-            <div class="group" style="padding: 10px 0;width: 700px;margin-bottom: 10px;">
-                <table>
-                    <tr>
-                        <td>
-                            <template bind if="{{section.hasPhoto}}">
-                                <div style="width:160px; height:160px;" class="on-left">
-                                    <img alt="" src="/api/home/photo/{{section.id}}/photo" style="max-height: 160px; max-width: 160px; margin-bottom:10px;" />
+                <hr style="height: 10px; border: 0;" />
+                <div class="group" style="padding: 10px 0;width: 700px;margin-bottom: 10px;">
+                    <table>
+                        <tr>
+                            <td>
+                                <template bind if="{{section.hasPhoto}}">
+                                    <div style="width:160px; height:160px;" class="on-left">
+                                        <img alt="" src="/api/home/photo/{{section.id}}/photo" style="max-height: 160px; max-width: 160px; margin-bottom:10px;" />
+                                    </div>
+                                </template>
+                            </td>
+                            <td>
+                                <div class="on-left" style="margin-left: 20px;">
+                                    <header>
+                                        <h2>{{section.title}}</h2>
+                                    </header>
+                                    <p style="margin-bottom: 5px;">
+                                        {{section.description}}
+                                    </p>
+                                    <ul style="list-style-type: disc; margin-left: 20px; ">
+                                        <template repeat="{{link in section.links}}">
+                                            <li style="line-height: 30px;">
+                                                <a href="{{link.url}}" target="_blank">{{link.text}}</a>
+                                            </li>
+                                        </template>
+                                    </ul>
                                 </div>
-                            </template>
-                        </td>
-                        <td>
-                            <div class="on-left" style="margin-left: 20px;">
-                                <header>
-                                    <h2>{{section.title}}</h2>
-                                </header>
-                                <p style="margin-bottom: 5px;">
-                                    {{section.description}}
-                                </p>
-                                <ul style="list-style-type: disc; margin-left: 20px; ">
-                                    <template repeat="{{link in section.links}}">
-                                        <li style="line-height: 30px;">
-                                            <a href="{{link.url}}" target="_blank">{{link.text}}</a>
-                                        </li>
-                                    </template>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <template bind if="{{canedit != 'false'}}">
-                <polymer-button style="margin-top:10px;" id="deleteSection" text="Delete Section" color="" on-click="{{deleteSection}}"></polymer-button>
-            </template>
-        </template>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <template bind if="{{canedit != 'false'}}">
+                    <polymer-button style="margin-top:10px;" id="deleteSection" text="Delete Section" color="" on-click="{{deleteSection}}"></polymer-button>
+                </template>
+</template>
+
         <core-ajax url=""
                       handleas="json"
                       on-core-response="{{deleteSectionResponse}}"

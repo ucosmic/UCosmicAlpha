@@ -1,4 +1,4 @@
-﻿Polymer('polymer-content-edit-home-page', {
+Polymer('polymer-content-edit-home-page', {
     cancel: 0,
     flasherUpdated: 0,
     addedSection: "",
@@ -43,7 +43,8 @@
                 if (this.homeSections.length) {
                     this.homeSections = null;
                 }
-            } else {
+            }
+            else {
                 this.homeSections = homeSections;
             }
         }
@@ -58,7 +59,8 @@
             if (!this.homeSections || this.homeSections.length == 0) {
                 this.homeSections = [];
                 this.homeSections[0] = { title: this.sectionAdded.title, description: this.sectionAdded.description, links: this.sectionAdded.links, id: this.sectionAdded.id, hasPhoto: this.sectionAdded.hasPhoto };
-            } else {
+            }
+            else {
                 this.homeSections.push({ title: this.sectionAdded.title, description: this.sectionAdded.description, links: this.sectionAdded.links, id: this.sectionAdded.id, hasPhoto: this.sectionAdded.hasPhoto });
             }
         }
@@ -66,5 +68,5 @@
     cancelChanged: function (oldValue, newValue) {
         this.$.sectionEditor.style.display = 'none';
         this.$.addNewSection.style.display = 'block';
-    }
+    },
 });

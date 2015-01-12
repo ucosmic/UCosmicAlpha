@@ -1,0 +1,21 @@
+﻿@using UCosmic.Web.Mvc.Models
+
+@{
+    ViewBag.Title = "Find an Expert";
+}
+
+@section bib
+{
+    <nav class="bib">
+        @Html.Partial(MVC.Employees.Views._Bib, new EmployeesBibNavModel { FindAnExpert = true })
+    </nav>
+}
+
+<div class="fixed content" data-current-module="employees">
+    <header>
+        <h1>@ViewBag.Title</h1>
+    </header>
+    <div>
+        <img src="~/images/placeholders/ExpertiseMock.png" alt="Feature wireframe" />
+    </div>
+</div>

@@ -1,19 +1,18 @@
-﻿Polymer('polymer-inputs-rtf', {
+Polymer('polymer-inputs-rtf', {
     errorMessage: "",
     isRTF: false,
     myValue: null,
     ValidationClass: pValidation,
     isValidated: true,
     inputChange: function () {
-        var options = {
-            isEmail: this.isEmail, value: this.$.input.value, name: this.name, isRequired: this.isRequired,
-            valueCompared: this.comparedValue, nameCompared: this.nameCompared, min: this.min }, validation = new this.ValidationClass(options), message = validation.validate();
+        var options = { isEmail: this.isEmail, value: this.$.input.value, name: this.name, isRequired: this.isRequired, valueCompared: this.comparedValue, nameCompared: this.nameCompared, min: this.min }, validation = new this.ValidationClass(options), message = validation.validate();
         if (message == "Ok") {
             this.$.input.style.border = "";
             this.$.inputMessage.style.display = "none";
             this.inputMessage = "";
             return true;
-        } else {
+        }
+        else {
             this.$.input.style.border = "2px solid #fa4930";
             this.$.inputMessage.style.display = "block";
             this.inputMessage = message;
@@ -36,7 +35,6 @@
         $.getScript(url, function () {
             $.getScript("components/form/inputs/rtf/rtf/rtf.image.js");
             $.getScript("components/form/inputs/rtf/rtf/rtf.link.js");
-
             _this.initTinymce();
         });
         url = url.replace(".js", ".css");
@@ -62,10 +60,10 @@
                 code: { visible: false },
                 increaseFontSize: { visible: true },
                 decreaseFontSize: { visible: true },
-                insertTable: { visible: false }
-            }
+                insertTable: { visible: false },
+            },
         }).change(function () {
             _this.myValue = $(_this.$.input).wysiwyg("getContent");
         });
-    }
+    },
 });
