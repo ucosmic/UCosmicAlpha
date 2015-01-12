@@ -35,7 +35,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _binaryData = binaryData;
         }
 
-        [CacheHttpGet(Duration = 60)]
+        //[CacheHttpGet(Duration = 60)]
         [GET("{domain}/employees/places")]
         public IEnumerable<EmployeesPlaceApiModel> GetPlaces(string domain, [FromUri] EmployeesPlacesInputModel input)
         {
@@ -71,7 +71,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [CacheHttpGet(Duration = 60)]
+        //[CacheHttpGet(Duration = 60)]
         [GET("{domain}/employees/activities/counts")]
         public EmployeeActivityCountsModel GetActivityCounts(string domain)
         {
@@ -97,30 +97,50 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        [CacheHttpGet(Duration = 60)]
+        //[CacheHttpGet(Duration = 60)]
         [GET("{establishmentId:int}/employees/activities/counts", ActionPrecedence = 1)]
         public EmployeeActivityCountsModel GetActivityCounts(int establishmentId)
         {
             //throw new Exception();
             //System.Threading.Thread.Sleep(5000);
 
-            var view = _queryProcessor.Execute(new EmployeeActivityCountsViewByEstablishment(establishmentId));
-            if (view == null)
+            //var view = _queryProcessor.Execute(new EmployeeActivityCountsViewByEstablishment(establishmentId));
+            //if (view == null)
+            //{
+            //    view = new EmployeeActivityCountsView();
+            //    var establishment = _queryProcessor.Execute(new EstablishmentById(establishmentId));
+            //    if (establishment != null)
+            //        view.EstablishmentId = establishment.RevisionId;
+            //}
+
+
+            IList<ActivitySnapshotApiQueryResultModel> model = new List<ActivitySnapshotApiQueryResultModel>();
+            IList<ActivityTypesApiReturn> establishmentTypes = new List<ActivityTypesApiReturn>();
+
+            var tenancy = Request.Tenancy();
+            var activityCount = 0;
+            var personCount = 0;
+            var locationCount = 0;
+
+            if (establishmentId != 0)
             {
-                view = new EmployeeActivityCountsView();
-                var establishment = _queryProcessor.Execute(new EstablishmentById(establishmentId));
-                if (establishment != null)
-                    view.EstablishmentId = establishment.RevisionId;
+                ActivitySnapshotRepository activitySnapshotRepository = new ActivitySnapshotRepository();
+                    model = activitySnapshotRepository.LocationsByEstablishment_Place(establishmentId);
+                    locationCount = model.DistinctBy(x => new { x.placeId }).Count();
+                    activityCount = model.DistinctBy(x => new { x.id }).Count();
+                    personCount = model.DistinctBy(x => new { x.personId }).Count();
             }
 
-            var model = new EmployeeActivityCountsModel
+
+
+            var model2 = new EmployeeActivityCountsModel
             {
-                ActivityCount = view.ActivityCount,
-                PersonCount = view.PersonCount,
-                LocationCount = view.LocationCount,
+                ActivityCount = activityCount,
+                PersonCount = personCount,
+                LocationCount = locationCount,
             };
 
-            return model;
+            return model2;
         }
 
         [CacheHttpGet(Duration = 3600)]
