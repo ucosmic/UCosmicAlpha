@@ -75,6 +75,18 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
+
+        //[GET("{agreementId:int}/files/{fileId:int}/download")]
+        //public HttpResponseMessage GetDownload(int agreementId, int fileId)
+        //{
+        //    var response = GetContent(agreementId, fileId);
+        //    response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+        //    {
+        //        FileName = response.Content.Headers.ContentDisposition.FileName,
+        //    };
+        //    return response;
+        //}
+
         [CacheHttpGet(Duration = 3600)]
         [GET(ThumbnailUrl)]
         public HttpResponseMessage GetThumbnail(int activityId, int documentId, [FromUri] ImageResizeRequestModel model)

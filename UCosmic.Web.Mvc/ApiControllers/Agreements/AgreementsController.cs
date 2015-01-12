@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using MoreLinq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -13,6 +14,8 @@ using AutoMapper;
 using FluentValidation;
 using UCosmic.Domain.Agreements;
 using UCosmic.Web.Mvc.Models;
+using UCosmic.Repositories;
+using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
@@ -97,10 +100,26 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return visibility.AsSentenceFragment();
         }
 
+        [GET("{domain}/agreements/summaryTable/{countryCode}/{typeCode}/{keyword}")]
+        public AgreementsSummary GetSummaryTable(string domain, string countryCode, string typeCode, string keyword)
+        {
+            var query = new MyAgreementsSummary(User, domain, countryCode, typeCode, keyword, null);
+            var summary = _queryProcessor.Execute(query);
+            return summary;
+        }
+        [GET("{domain}/agreements/summaryMap/{countryCode}/{typeCode}/{continentCode}")]
+        public AgreementsSummary GetSummaryMap(string domain, string countryCode, string typeCode, string continentCode)
+        {
+            var query = new MyAgreementsSummary(User, domain, countryCode, typeCode,null, continentCode);
+            var summary = _queryProcessor.Execute(query);
+            return summary;
+        }
+
         [GET("{domain}/agreements/summary")]
         public AgreementsSummary GetSummary(string domain)
         {
-            var query = new MyAgreementsSummary(User, domain);
+            
+            var query = new MyAgreementsSummary(User, domain, "", "", "", "");
             var summary = _queryProcessor.Execute(query);
             return summary;
         }
@@ -193,6 +212,89 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement was successfully deleted.");
             return response;
+        }
+
+
+        /* Returns agreement type counts for given place.*/
+        [GET("agreements/agreement-count/{establishmentId?}/{placeId?}")]
+        //[CacheHttpGet(Duration = 3600)]
+        public List<AgreementSummaryApiModel> GetAgreementCount(int? establishmentId, int? placeId)
+        {
+            IList<AgreementSummaryApiModel> returnModel = new List<AgreementSummaryApiModel>();
+            IList<AgreementSummaryApiQueryResultModel> model = new List<AgreementSummaryApiQueryResultModel>();
+            //IList<AgreementTypesApiReturn> agreementTypes = new List<AgreementTypesApiReturn>();
+
+            var tenancy = Request.Tenancy();
+
+            if (!(establishmentId.HasValue && (establishmentId.Value != 0)))
+            {
+                if (tenancy.TenantId.HasValue)
+                {
+                    establishmentId = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value)).RevisionId;
+                }
+                else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+                {
+                    establishmentId = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain)).RevisionId;
+                }
+            }
+
+            if (establishmentId != null)
+            {
+                if (placeId.HasValue)
+                {
+                    SummaryRepository summaryRepository = new SummaryRepository();
+                    AgreementTypesRepository AgreementTypesRepository = new AgreementTypesRepository();
+                    model = summaryRepository.AgreementSummaryByEstablishment_Place(establishmentId, placeId);
+                    var modelDistinct = model.DistinctBy(x => new { x.id, x.type } );
+                    //agreementTypes = AgreementTypesRepository.AgreementTypes_By_establishmentId(establishmentId);
+                    var agreementTypes = modelDistinct.DistinctBy(x => x.type );
+                    foreach (var type in agreementTypes)
+                    {
+                        var typeCount = modelDistinct.Where(x => x.type == type.type).Count();
+                        var locationCount = model.Where(x => x.type == type.type).Count();
+                        returnModel.Add(new AgreementSummaryApiModel { LocationCount = locationCount, TypeCount = typeCount, Type = type.type, TypeId = type.id });
+                    }
+                }
+            }
+            return returnModel.ToList();
+        }
+
+
+
+        /* Returns agreement type counts for given place.*/
+        [GET("agreements/agreement-types/{establishmentId?}/")]
+        //[CacheHttpGet(Duration = 3600)]
+        public List<AgreementTypesApiReturn> GetAgreementTypes(int? establishmentId)
+        {
+            //IList<AgreementSummaryApiModel> returnModel = new List<AgreementSummaryApiModel>();
+            //IList<AgreementSummaryApiQueryResultModel> model = new List<AgreementSummaryApiQueryResultModel>();
+            IList<AgreementTypesApiReturn> agreementTypes = new List<AgreementTypesApiReturn>();
+
+            var tenancy = Request.Tenancy();
+
+            if (!(establishmentId.HasValue && (establishmentId.Value != 0)))
+            {
+                if (tenancy.TenantId.HasValue)
+                {
+                    establishmentId = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value)).RevisionId;
+                }
+                else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+                {
+                    establishmentId = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain)).RevisionId;
+                }
+            }
+
+            if (establishmentId != null)
+            {
+
+                    //SummaryRepository summaryRepository = new SummaryRepository();
+                    AgreementTypesRepository agreementTypesRepository = new AgreementTypesRepository();
+                    //model = summaryRepository.AgreementLocationsByEstablishment_Place(establishmentId, placeId);
+                    //var modelDistinct = model.DistinctBy(x => new { x.id, x.type });
+                agreementTypes = agreementTypesRepository.AgreementTypes_By_establishmentId(establishmentId);
+                    //var agreementTypes = modelDistinct.DistinctBy(x => x.type);
+            }
+            return agreementTypes.ToList();
         }
     }
 }
