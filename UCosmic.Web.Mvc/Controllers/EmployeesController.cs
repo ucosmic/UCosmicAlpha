@@ -296,8 +296,8 @@ namespace UCosmic.Web.Mvc.Controllers
                 Items = results.Items.Select( x => new LanguageExpertiseSearchResultModel(){
                     Dialect = x.Dialect,
                     LanguageExpertiseId = x.RevisionId,
-                    ListeningProficiency = x.ListeningProficiency == 1 ? "and elementary listening" : x.ListeningProficiency == 2 ? "and limited listening" : x.ListeningProficiency == 3 ? "and general listening" : x.ListeningProficiency == 4 ? "and advanced listening" : x.ListeningProficiency == 5 ? "and fluent listening" : "and no known listening",
-                    Name = x.Language.Names.FirstOrDefault().Text,
+                    ListeningProficiency = x.ListeningProficiency == 1 ? "elementary listening" : x.ListeningProficiency == 2 ? "limited listening" : x.ListeningProficiency == 3 ? "general listening" : x.ListeningProficiency == 4 ? "advanced listening" : x.ListeningProficiency == 5 ? "fluent listening" : "no known listening",
+                    Name = x.Language != null ? x.Language.Names.FirstOrDefault().Text : x.Other,
                     Other = x.Other,
                     Owner = new LanguageExpertiseSearchResultModel.LanguageExpertiseSearchResultOwnerModel(){
                         PersonId = x.Person.RevisionId,
@@ -306,7 +306,7 @@ namespace UCosmic.Web.Mvc.Controllers
                     },
                     ReadingProficiency = x.ReadingProficiency == 1 ? "and elementary reading." : x.ReadingProficiency == 2 ? "and limited reading." : x.ReadingProficiency == 3 ? "and general reading." : x.ReadingProficiency == 4 ? "and advanced reading." : x.ReadingProficiency == 5 ? "and fluent reading." : "and no known reading.",
                     SpeakingProficiency = x.SpeakingProficiency == 1 ? "Elementary speaking" : x.SpeakingProficiency == 2 ? "Limited speaking" : x.SpeakingProficiency == 3 ? "General speaking" : x.SpeakingProficiency == 4 ? "Advanced speaking" : x.SpeakingProficiency == 5 ? "Fluent speaking" : "No known speaking",
-                    WritingProficiency = x.WritingProficiency == 1 ? "and elementary writing" : x.WritingProficiency == 2 ? "and limited writing" : x.WritingProficiency == 3 ? "and general writing" : x.WritingProficiency == 4 ? "and advanced writing" : x.WritingProficiency == 5 ? "and fluent writing" : "and no known writing",
+                    WritingProficiency = x.WritingProficiency == 1 ? "elementary writing" : x.WritingProficiency == 2 ? "limited writing" : x.WritingProficiency == 3 ? "general writing" : x.WritingProficiency == 4 ? "advanced writing" : x.WritingProficiency == 5 ? "fluent writing" : "no known writing",
                 }),
                 ItemTotal = results.ItemTotal,
             };
@@ -349,6 +349,13 @@ namespace UCosmic.Web.Mvc.Controllers
             return View(model);
         }
 
+        [CurrentModuleTab(ModuleTab.Employees)]
+        [GET("{domain}/employees/experts2")]
+        public virtual ActionResult Experts2(string domain)
+        {
+            Session.LastEmployeeLens(Request);
+            return View();
+        }
         [CurrentModuleTab(ModuleTab.Employees)]
         [GET("{domain}/employees/experts")]
         public virtual ActionResult Experts(string domain)
