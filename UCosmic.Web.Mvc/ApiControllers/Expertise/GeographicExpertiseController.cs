@@ -1,19 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using MoreLinq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
+using UCosmic.Domain.Establishments;
 using UCosmic.Domain.GeographicExpertise;
+using UCosmic.Repositories;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [Authorize]
     [RoutePrefix("api/geographic-expertise")]
     public class GeographicExpertiseController : ApiController
     {
@@ -38,6 +41,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get a page of expertises
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [GET("")]
         public PageOfGeographicExpertiseApiModel Get([FromUri] GeographicExpertiseSearchInputModel input)
         {
@@ -59,6 +63,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get an expertise
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [GET("{expertiseId:int}", ControllerPrecedence = 1)]
         public GeographicExpertiseApiModel Get(int expertiseId)
         {
@@ -77,6 +82,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Create an expertise
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [POST("")]
         public HttpResponseMessage Post(GeographicExpertiseApiModel model)
         {
@@ -111,6 +117,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Update an expertise
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [PUT("{expertiseId:int}")]
         public HttpResponseMessage Put(int expertiseId, GeographicExpertiseApiModel model)
         {
@@ -143,6 +150,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Delete an expertise
         */
         // --------------------------------------------------------------------------------
+        [Authorize]
         [DELETE("{expertiseId:int}")]
         public HttpResponseMessage Delete(int expertiseId)
         {
@@ -164,5 +172,47 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }
+
+        /* Returns Affiliation type counts for given place.*/
+        [GET("Expertise-count/{establishmentId?}/{placeId?}")]
+        //[CacheHttpGet(Duration = 3600)]
+        public List<ExpertiseSummaryApiModel> GetExpertiseCount(int? establishmentId, int? placeId)
+        {
+            IList<ExpertiseSummaryApiModel> returnModel = new List<ExpertiseSummaryApiModel>();
+            IList<ExpertiseSummaryApiQueryResultModel> model = new List<ExpertiseSummaryApiQueryResultModel>();
+
+            var tenancy = Request.Tenancy();
+
+            if (!(establishmentId.HasValue && (establishmentId.Value != 0)))
+            {
+                if (tenancy.TenantId.HasValue)
+                {
+                    establishmentId = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value)).RevisionId;
+                }
+                else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+                {
+                    establishmentId = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain)).RevisionId;
+                }
+            }
+
+            if (establishmentId != null)
+            {
+                if (placeId.HasValue)
+                {
+                    SummaryRepository summaryRepository = new SummaryRepository();
+
+                    model = summaryRepository.ExpertiseSummaryByEstablishment_Place(establishmentId, placeId);
+                    var modelDistinct = model.DistinctBy(x => new { x.ExpertiseId });
+
+                    //ExpertiseTypes = ExpertiseTypesRepository.ExpertiseTypes_By_establishmentId(establishmentId);
+                    var ExpertiseCount = modelDistinct.ToList().Count();
+                    var locationCount = modelDistinct.DistinctBy(x => x.description).ToList().Count();
+                    var personCount = modelDistinct.DistinctBy(x => x.personId).ToList().Count();
+                    returnModel.Add(new ExpertiseSummaryApiModel { ExpertiseCount = ExpertiseCount, LocationCount = locationCount, PersonCount = personCount });
+                }
+            }
+            return returnModel.ToList();
+        }
+
     }
 }
