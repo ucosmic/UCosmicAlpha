@@ -120,11 +120,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
         /* Returns activity type counts for given place.*/
         [GET("activity-count/{establishmentId?}/{placeId?}")]
         //[CacheHttpGet(Duration = 3600)]
-        public List<ActivityLocationsApiModel> GetActivityCount(int? establishmentId, int? placeId)
+        public List<ActivitySummaryApiModel> GetActivityCount(int? establishmentId, int? placeId)
         {
-            IList<ActivityLocationsApiModel> returnModel = new List<ActivityLocationsApiModel>();
-            IList<ActivityLocationsApiQueryResultModel> model = new List<ActivityLocationsApiQueryResultModel>();
-            IList<ActivityTypesApiReturn> establishmentTypes = new List<ActivityTypesApiReturn>();
+            IList<ActivitySummaryApiModel> returnModel = new List<ActivitySummaryApiModel>();
+            IList<ActivitySummaryApiQueryResultModel> model = new List<ActivitySummaryApiQueryResultModel>();
+            //IList<ActivityTypesApiReturn> establishmentTypes = new List<ActivityTypesApiReturn>();
 
             var tenancy = Request.Tenancy();
 
@@ -144,17 +144,18 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 if (placeId.HasValue)
                 {
-                    LocationsRepository locationsRepository = new LocationsRepository();
+                    SummaryRepository summaryRepository = new SummaryRepository();
                     EmployeeActivityTypesRepository employeeActivityTypesRepository = new EmployeeActivityTypesRepository();
-                    model = locationsRepository.LocationsByEstablishment_Place(establishmentId, placeId);
+                    model = summaryRepository.ActivitySummaryByEstablishment_Place(establishmentId, placeId);
                     //var modelDistinct = model.DistinctBy(x => x.id);
                     var modelDistinct = model.DistinctBy(x => new { x.id, x.type });
-                    establishmentTypes = employeeActivityTypesRepository.EmployeeActivityTypes_By_establishmentId(establishmentId);
+                    //establishmentTypes = employeeActivityTypesRepository.EmployeeActivityTypes_By_establishmentId(establishmentId);
+                    var establishmentTypes = modelDistinct.DistinctBy(x => x.type);
                     foreach (var type in establishmentTypes)
                     {
-                        var typeCount = modelDistinct.Where(x => x.type == type.Type).Count();
-                        var locationCount = model.Where(x => x.type == type.Type).Count();
-                        returnModel.Add(new ActivityLocationsApiModel{LocationCount = locationCount, TypeCount = typeCount, Type = type.Type, TypeId = type.TypeId});
+                        var typeCount = modelDistinct.Where(x => x.type == type.type).Count();
+                        var locationCount = model.Where(x => x.type == type.type).Count();
+                        returnModel.Add(new ActivitySummaryApiModel{LocationCount = locationCount, TypeCount = typeCount, Type = type.type, TypeId = type.id});
                     }
                 }
             }
