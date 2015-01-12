@@ -13,6 +13,7 @@ namespace UCosmic.Web.Mvc.Models
         public string CountryCode { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
+        public string[] AgreementTypes { get; set; }
         public int[] AgreementIds { get; set; }
         public int[] PartnerIds { get; set; }
         public bool IsEarth { get; set; }
@@ -37,6 +38,7 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<AgreementPartnerPlaceResult, AgreementPlaceApiModel>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.Place.RevisionId))
                     .ForMember(d => d.Name, o => o.MapFrom(s => s.Place.OfficialName))
+                    //.ForMember(d => d.AgreementType, o => o.MapFrom(s => s.AgreementType))
                     .ForMember(d => d.Type, o => o.MapFrom(s => s.Place.GeoPlanetPlace != null ? s.Place.GeoPlanetPlace.Type.EnglishName : null))
                     //.ForMember(d => d.Ancestors, o => o.MapFrom(s => s.Place.Ancestors
                     //    .OrderByDescending(x => x.Separation)
