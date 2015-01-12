@@ -99,8 +99,8 @@
                     <input type="search" placeholder="Find an agreement by name, partner, country, or keyword" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
                 </div>
             </div>
-            @* MAP LENS GLOBAL TOTALS SUMMARY *@
-            <div data-bind="visible: isTableLens, with: map" style="margin: .5em 0 0 0;">
+            @* TABLE LENS GLOBAL TOTALS SUMMARY *@
+            <div data-bind="visible: isTableLens, with: table" style="margin: .5em 0 0 0;">
                 <div class="group" style="height: 30px;">
                     <div class="on-left" data-bind="with: summary" style="font-size: 20px;">
                         <strong data-bind="text: agreementCount" style="font-size: 24px;">?</strong>
@@ -386,6 +386,13 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="content" data-bind="visible: isTableLens, with: table" style="display: none;">
+                                <div class="field">
+                                    <select class="side" data-bind="value: typeCode, options: typeOptions, optionsText: 'name', optionsValue: 'code'">
+                                        <option value="any">[Loading...]</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="content" data-bind="visible: isMapLens, with: map">
                                 <div class="field">
                                     <select class="side" data-bind="value: continentCode, options: continentOptions, optionsText: 'name', optionsValue: 'code', event: { change: continentSelected }">
@@ -394,6 +401,11 @@
                                 </div>
                                 <div class="field">
                                     <select class="side" data-bind="value: countryCode, options: countryOptions, optionsText: 'name', optionsValue: 'code', event: { change: countrySelected }">
+                                        <option value="any">[Loading...]</option>
+                                    </select>
+                                </div>
+                                <div class="field">
+                                    <select class="side" data-bind="value: typeCode, options: typeOptions, optionsText: 'name', optionsValue: 'code'">
                                         <option value="any">[Loading...]</option>
                                     </select>
                                 </div>
