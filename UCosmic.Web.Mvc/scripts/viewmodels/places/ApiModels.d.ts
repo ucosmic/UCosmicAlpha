@@ -34,4 +34,8 @@ declare module Places.ApiModels {
         center?: Point;
         box?: Box;
     }
+    export interface AgreementType {
+        code: string;
+        name: string;
+    }
 }

@@ -1,5 +1,6 @@
 var ViewModels;
 (function (ViewModels) {
+    var Representatives;
     (function (Representatives) {
         var RepModuleSettings = (function () {
             function RepModuleSettings(welcomeMessage, emailMessage) {
@@ -9,6 +10,5 @@ var ViewModels;
             return RepModuleSettings;
         })();
         Representatives.RepModuleSettings = RepModuleSettings;
-    })(ViewModels.Representatives || (ViewModels.Representatives = {}));
-    var Representatives = ViewModels.Representatives;
+    })(Representatives = ViewModels.Representatives || (ViewModels.Representatives = {}));
 })(ViewModels || (ViewModels = {}));

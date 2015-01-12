@@ -6,12 +6,13 @@ var __extends = this.__extends || function (d, b) {
 };
 var Establishments;
 (function (Establishments) {
+    var ViewModels;
     (function (ViewModels) {
         var Search = (function (_super) {
             __extends(Search, _super);
             function Search(initDefaultPageRoute) {
-                if (typeof initDefaultPageRoute === "undefined") { initDefaultPageRoute = true; }
                 var _this = this;
+                if (initDefaultPageRoute === void 0) { initDefaultPageRoute = true; }
                 _super.call(this);
                 this.initDefaultPageRoute = initDefaultPageRoute;
                 this.header = ko.observable();
@@ -44,12 +45,10 @@ var Establishments;
                     },
                     ignore: ['pageSize', 'pageNumber']
                 };
-
                 this._setupCountryDropDown();
                 this._setupPagingSubscriptions();
                 this._setupLensing();
                 this._setupSammy();
-
                 ko.computed(function () {
                     _this.requestResults();
                 }).extend({ throttle: 1 });
@@ -58,53 +57,44 @@ var Establishments;
                 var _this = this;
                 ko.computed(function () {
                     var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
-
                     $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
                         var emptyValue = {
                             code: '-1',
                             name: '[Without country]'
                         };
                         response.splice(response.length, 0, emptyValue);
-
                         _this.countries(response);
-
                         if (lastCountryCode && lastCountryCode !== _this.countryCode())
                             _this.countryCode(lastCountryCode);
                     });
                 }).extend({ throttle: 1 });
             };
-
             Search.prototype._setupPagingSubscriptions = function () {
                 var _this = this;
                 this.pageNumber.subscribe(function (newValue) {
                     _this.setLocation();
                 });
             };
-
             Search.prototype._setupLensing = function () {
                 var _this = this;
                 this.changeLens = function (lens) {
                     _this.lens(lens.value);
                 };
             };
-
             Search.prototype._setupSammy = function () {
                 var self = this;
                 self.sammy.before(self.sammyBeforeRoute, function () {
                     self.beforePage(this);
                 });
-
                 self.sammy.get(self.sammyGetPageRoute, function () {
                     self.getPage(this);
                 });
-
                 if (self.initDefaultPageRoute) {
                     self.sammy.get(self.sammyDefaultPageRoute, function () {
                         self.initPageHash(this);
                     });
                 }
             };
-
             Search.prototype.getPage = function (sammyContext) {
                 var _this = this;
                 var trail = this.trail(), clone;
@@ -124,7 +114,8 @@ var Establishments;
                         });
                     };
                     return;
-                } else if (trail.length > 0) {
+                }
+                else if (trail.length > 0) {
                     this.swipeCallback = function () {
                         clone = _this.$itemsPage.clone(true).removeAttr('data-bind').data('bind', undefined).removeAttr('id');
                         clone.insertBefore(_this.$itemsPage);
@@ -138,28 +129,22 @@ var Establishments;
                 }
                 trail.push(sammyContext.path);
             };
-
             Search.prototype.beforePage = function (sammyContext) {
                 if (this.nextForceDisabled() || this.prevForceDisabled())
                     return false;
-
                 var pageNumber = sammyContext.params['pageNumber'];
-
                 if (pageNumber && parseInt(pageNumber) !== Number(this.pageNumber()))
                     this.pageNumber(parseInt(pageNumber));
                 return true;
             };
-
             Search.prototype.initPageHash = function (sammyContext) {
                 sammyContext.app.setLocation('#/page/1/');
             };
-
             Search.prototype.setLocation = function () {
                 var location = '#/page/' + this.pageNumber() + '/';
                 if (this.sammy.getLocation() !== location)
                     this.sammy.setLocation(location);
             };
-
             Search.prototype.lockAnimation = function () {
                 this.nextForceDisabled(true);
                 this.prevForceDisabled(true);
@@ -168,7 +153,6 @@ var Establishments;
                 this.nextForceDisabled(false);
                 this.prevForceDisabled(false);
             };
-
             Search.prototype.swipeCallback = function () {
             };
             Search.prototype.receiveResults = function (js) {
@@ -177,7 +161,8 @@ var Establishments;
                         items: [],
                         itemTotal: 0
                     }, this.resultsMapping, this);
-                } else {
+                }
+                else {
                     ko.mapping.fromJS(js, this.resultsMapping, this);
                 }
                 App.WindowScroller.restoreTop();
@@ -185,13 +170,11 @@ var Establishments;
                 this.swipeCallback();
                 this.transitionedPageNumber(this.pageNumber());
             };
-
             Search.prototype.requestResults = function () {
                 var _this = this;
                 if (this.pageSize() === undefined || this.orderBy() === undefined)
                     return;
                 this.spinner.start();
-
                 $.get(App.Routes.WebApi.Establishments.get(), {
                     pageSize: this.pageSize(),
                     pageNumber: this.pageNumber(),
@@ -202,25 +185,20 @@ var Establishments;
                     _this.receiveResults(response);
                 });
             };
-
             Search.prototype.gotoAddNew = function () {
                 return true;
             };
-
             Search.prototype.clickAction = function (viewModel, e) {
                 return true;
             };
-
             Search.prototype.detailHref = function (id) {
                 return App.Routes.Mvc.Establishments.show(id);
             };
-
             Search.prototype.detailTooltip = function () {
                 return 'View & edit this establishment\'s details';
             };
             return Search;
         })(App.PagedSearch);
         ViewModels.Search = Search;
-    })(Establishments.ViewModels || (Establishments.ViewModels = {}));
-    var ViewModels = Establishments.ViewModels;
+    })(ViewModels = Establishments.ViewModels || (Establishments.ViewModels = {}));
 })(Establishments || (Establishments = {}));

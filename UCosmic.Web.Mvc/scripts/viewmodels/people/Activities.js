@@ -1,5 +1,6 @@
-﻿var People;
+var People;
 (function (People) {
+    var ViewModels;
     (function (ViewModels) {
         var ActivityInputModel = (function () {
             function ActivityInputModel(modelData) {
@@ -66,37 +67,30 @@
                 this.pageNumber((parseInt(this.pageNumber()) + 1).toString());
                 this.search();
             };
-
             ActivityInputModel.prototype.prevPage = function (model, event) {
                 event.preventDefault();
                 this.pageNumber((parseInt(this.pageNumber()) - 1).toString());
                 this.search();
             };
-
             ActivityInputModel.prototype.search = function () {
                 this.$form.submit();
             };
-
             ActivityInputModel.prototype._setupCountryDropDown = function () {
                 var _this = this;
                 ko.computed(function () {
                     var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
-
                     $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
                         var emptyValue = {
                             code: '-1',
                             name: '[Without country]'
                         };
                         response.splice(response.length, 0, emptyValue);
-
                         _this.countries(response);
-
                         _this.countryCode(_this.modelData.countryCode);
                         _this.hasInitialized = true;
                     });
                 }).extend({ throttle: 1 });
             };
-
             ActivityInputModel.prototype._purge = function (expertiseId) {
                 var _this = this;
                 $.ajax({
@@ -130,24 +124,26 @@
                                     _this._purge(expertiseId);
                                     window.location.href = App.Routes.Mvc.People.Activities.get(personId);
                                 },
-                                'data-confirm-delete-link': true
+                                'data-confirm-delete-link': true,
                             },
                             {
                                 text: 'No, cancel delete',
                                 click: function () {
                                     _this.$confirmDeleteActivity.dialog('close');
                                 },
-                                'data-css-link': true
+                                'data-css-link': true,
                             }
                         ],
                         close: function () {
                             _this.purgeSpinner.stop();
-                        }
+                        },
                     });
-                } else {
+                }
+                else {
                     if (confirm('Are you sure you want to delete this activity?')) {
                         this._purge(expertiseId);
-                    } else {
+                    }
+                    else {
                         this.purgeSpinner.stop();
                     }
                 }
@@ -161,6 +157,5 @@
             return ActivityInputModel;
         })();
         ViewModels.ActivityInputModel = ActivityInputModel;
-    })(People.ViewModels || (People.ViewModels = {}));
-    var ViewModels = People.ViewModels;
+    })(ViewModels = People.ViewModels || (People.ViewModels = {}));
 })(People || (People = {}));

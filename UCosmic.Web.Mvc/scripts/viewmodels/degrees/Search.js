@@ -1,5 +1,6 @@
 var Degrees;
 (function (Degrees) {
+    var ViewModels;
     (function (ViewModels) {
         var Search = (function () {
             function Search(settings, establishmentId) {
@@ -33,7 +34,6 @@ var Degrees;
                     var establishmentId = _this.establishmentId();
                     if (!hasTenancyData || !selectedTenant || selectedTenant == establishmentId)
                         return;
-
                     _this.establishmentId(selectedTenant);
                 });
                 this.tenantOptions = ko.observableArray();
@@ -43,7 +43,8 @@ var Degrees;
                 if (settings.input.ancestorId) {
                     this.selectedTenant(settings.input.ancestorId);
                     this.tenantId = settings.input.ancestorId;
-                } else {
+                }
+                else {
                     this.selectedTenant(establishmentId);
                     this.tenantId = establishmentId;
                 }
@@ -62,7 +63,6 @@ var Degrees;
                 kendo.init($(element));
                 this._applySubscriptions();
             };
-
             Search.prototype._applySubscriptions = function () {
                 var _this = this;
                 this.pager.input.pageSizeText.subscribe(function (newValue) {
@@ -78,22 +78,18 @@ var Degrees;
                     _this._submitForm();
                 });
             };
-
             Search.prototype._submitForm = function () {
                 if (this.loadingSpinner.isVisible())
                     return;
                 this.loadingSpinner.start();
                 this.$form.submit();
             };
-
             Search.prototype.onKeywordInputSearchEvent = function (viewModel, e) {
                 if ($.trim(this.keyword()) && !$.trim($(e.target).val()) && this.$form)
                     this.$form.submit();
             };
-
             Search.prototype._createEstablishmentSelects = function (response) {
                 this.establishmentId();
-
                 if (this.selectedTenant() == 0) {
                     this.selectedTenant(this.establishmentId());
                 }
@@ -115,7 +111,6 @@ var Degrees;
                             options[i].text = options[i].text.substring(0, options[i].text.indexOf(','));
                         }
                     }
-
                     if (options.length > 0) {
                         options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
                         this.affiliations.unshift(ko.mapping.fromJS([{ options: options, value: previousParentId.toString() }])()[0]);
@@ -124,14 +119,14 @@ var Degrees;
                     var parentCheck = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
                     if (parentCheck[0] != undefined) {
                         parentId = parentCheck[0].parentId;
-                    } else {
+                    }
+                    else {
                         this.isCreatingSelectEstablishments = false;
                         this.hasEstablishmentSelects(true);
                         return;
                     }
                 }
             };
-
             Search.prototype._loadEstablishmentData = function () {
                 var _this = this;
                 var promise = $.Deferred();
@@ -142,28 +137,24 @@ var Degrees;
                         this.mainCampus = this.tenantId;
                     }
                 }
-
                 var temp = sessionStorage.getItem('campuses' + this.mainCampus);
                 if (temp) {
                     var response = $.parseJSON(temp);
-
                     this._createEstablishmentSelects(response);
-                } else {
+                }
+                else {
                     var settings = settings || {};
                     settings.url = '/api/establishments/' + this.mainCampus + '/offspring';
                     $.ajax(settings).done(function (response) {
                         promise.resolve(response);
                         sessionStorage.setItem('campuses' + _this.mainCampus, JSON.stringify(response));
-
                         _this._createEstablishmentSelects(response);
                     }).fail(function (xhr) {
                         promise.reject(xhr);
                     });
                 }
-
                 return promise;
             };
-
             Search.prototype._loadTenancyData = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -173,25 +164,20 @@ var Degrees;
                         return x.rank;
                     }).ToArray();
                     tenants.unshift(parentData);
-
                     _this.tenantOptions([]);
                     if (childData.length) {
                         var options = Enumerable.From(tenants).Select(function (x) {
                             var option = {
                                 value: x.id,
-                                text: x.contextName || x.officialName
+                                text: x.contextName || x.officialName,
                             };
                             return option;
                         }).ToArray();
                         _this.tenantOptions(options);
                     }
-
                     deferred.resolve(tenants);
-
                     _this.establishmentData.ready();
-
                     var myThis = _this;
-
                     _this.selectedTenant(_this.establishmentId());
                     _this.selectedTenant.subscribe(function (newValue) {
                         _this.selectedEstablishment(_this.selectedTenant());
@@ -201,12 +187,14 @@ var Degrees;
                             if (this.value != '') {
                                 myThis.selectedTenant(this.value);
                                 myThis._loadEstablishmentData();
-                            } else {
+                            }
+                            else {
                                 var prevCampusSelect = $(this).parent().parent().prev().find("select");
                                 if (prevCampusSelect.length) {
                                     myThis.selectedTenant(prevCampusSelect.val());
                                     myThis._loadEstablishmentData();
-                                } else {
+                                }
+                                else {
                                     myThis.selectedTenant(myThis.rootEstablishment);
                                     myThis._loadEstablishmentData();
                                 }
@@ -226,6 +214,5 @@ var Degrees;
             return Search;
         })();
         ViewModels.Search = Search;
-    })(Degrees.ViewModels || (Degrees.ViewModels = {}));
-    var ViewModels = Degrees.ViewModels;
+    })(ViewModels = Degrees.ViewModels || (Degrees.ViewModels = {}));
 })(Degrees || (Degrees = {}));

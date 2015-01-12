@@ -1,8 +1,9 @@
-﻿var People;
+var People;
 (function (People) {
+    var Servers;
     (function (Servers) {
         function GetAffiliationsByPerson(personId, settings) {
-            if (typeof personId === "undefined") { personId = 0; }
+            if (personId === void 0) { personId = 0; }
             var promise = $.Deferred();
             settings = settings || {};
             settings.url = Routes.Api.People.Affiliations.plural(personId);
@@ -14,9 +15,8 @@
             return promise;
         }
         Servers.GetAffiliationsByPerson = GetAffiliationsByPerson;
-
         function PutAffiliation(data, establishmentId, personId, settings) {
-            if (typeof personId === "undefined") { personId = 0; }
+            if (personId === void 0) { personId = 0; }
             var promise = $.Deferred();
             settings = settings || {};
             settings.type = 'PUT';
@@ -30,9 +30,8 @@
             return promise;
         }
         Servers.PutAffiliation = PutAffiliation;
-
         function DeleteAffiliation(establishmentId, personId, settings) {
-            if (typeof personId === "undefined") { personId = 0; }
+            if (personId === void 0) { personId = 0; }
             var promise = $.Deferred();
             settings = settings || {};
             settings.type = 'DELETE';
@@ -45,6 +44,5 @@
             return promise;
         }
         Servers.DeleteAffiliation = DeleteAffiliation;
-    })(People.Servers || (People.Servers = {}));
-    var Servers = People.Servers;
+    })(Servers = People.Servers || (People.Servers = {}));
 })(People || (People = {}));

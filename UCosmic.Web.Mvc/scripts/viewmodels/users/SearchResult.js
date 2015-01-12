@@ -1,5 +1,6 @@
 var ViewModels;
 (function (ViewModels) {
+    var Users;
     (function (Users) {
         var RoleGrantValidator = (function () {
             function RoleGrantValidator() {
@@ -31,7 +32,6 @@ var ViewModels;
             return RoleGrantValidator;
         })();
         new RoleGrantValidator();
-
         var RoleRevokeValidator = (function () {
             function RoleRevokeValidator() {
                 this._ruleName = 'validRoleRevoke';
@@ -62,7 +62,6 @@ var ViewModels;
             return RoleRevokeValidator;
         })();
         new RoleRevokeValidator();
-
         var SearchResult = (function () {
             function SearchResult(values, owner) {
                 var _this = this;
@@ -80,7 +79,6 @@ var ViewModels;
                 this.$menu = ko.observable();
                 this.isEditingRoles = ko.observable(false);
                 this._owner = owner;
-
                 var userMapping = {
                     roles: {
                         create: function (options) {
@@ -89,7 +87,6 @@ var ViewModels;
                     }
                 };
                 ko.mapping.fromJS(values, userMapping, this);
-
                 this._setupPhotoComputeds();
                 this._setupNamingComputeds();
                 this._setupRoleGrantComputeds();
@@ -102,14 +99,12 @@ var ViewModels;
                     return App.Routes.WebApi.People.Photo.get(_this.personId(), { maxSide: 100 });
                 });
             };
-
             SearchResult.prototype._setupNamingComputeds = function () {
                 var _this = this;
                 this.hasUniqueDisplayName = ko.computed(function () {
                     return _this.name() !== _this.personDisplayName();
                 });
             };
-
             SearchResult.prototype._setupRoleGrantComputeds = function () {
                 var _this = this;
                 this.hasGrants = ko.computed(function () {
@@ -127,7 +122,6 @@ var ViewModels;
                     }
                 });
             };
-
             SearchResult.prototype._setupMenuSubscription = function () {
                 this.$menu.subscribe(function (newValue) {
                     if (newValue && newValue.length) {
@@ -135,28 +129,22 @@ var ViewModels;
                     }
                 });
             };
-
             SearchResult.prototype._setupValidation = function () {
                 var _this = this;
                 this.selectedRoleOption.extend({
                     validRoleGrant: this
                 });
-
                 this.roleToRevoke.extend({
                     validRoleRevoke: this
                 });
-
                 this.isValidating = ko.computed(function () {
                     return _this.selectedRoleOption.isValidating() || _this.roleToRevoke.isValidating();
                 });
-
                 this.selectedRoleOption.subscribe(function (newValue) {
                     _this.roleToRevoke(undefined);
                 });
-
                 ko.validation.group(this);
             };
-
             SearchResult.prototype._pullRoleOptions = function () {
                 var _this = this;
                 this.selectedRoleOption(undefined);
@@ -175,7 +163,6 @@ var ViewModels;
                 });
                 return deferred;
             };
-
             SearchResult.prototype._loadRoleOptions = function (results) {
                 ko.mapping.fromJS(results.items, {}, this.roleOptions);
                 this.roleOptionsCaption('[Select access to grant...]');
@@ -202,7 +189,6 @@ var ViewModels;
                     });
                 }
             };
-
             SearchResult.prototype._syncRoleOptions = function () {
                 for (var i = 0; i < this.roleOptions().length; i++) {
                     var option = this.roleOptions()[i];
@@ -211,9 +197,11 @@ var ViewModels;
                         if (option.id() == grant.id()) {
                             if (i === 0) {
                                 this.roleOptions.shift();
-                            } else if (i == this.roleOptions().length) {
+                            }
+                            else if (i == this.roleOptions().length) {
                                 this.roleOptions.pop();
-                            } else {
+                            }
+                            else {
                                 this.roleOptions.splice(i, 1);
                             }
                             i = -1;
@@ -221,7 +209,6 @@ var ViewModels;
                     }
                 }
             };
-
             SearchResult.prototype.pullRoleGrants = function () {
                 var _this = this;
                 this.roleSpinner.start();
@@ -235,7 +222,6 @@ var ViewModels;
                 });
                 return deferred;
             };
-
             SearchResult.prototype.loadRoleGrants = function (results) {
                 var _this = this;
                 var grantMapping = {
@@ -245,7 +231,6 @@ var ViewModels;
                 };
                 ko.mapping.fromJS(results, grantMapping, this.roles);
             };
-
             SearchResult.prototype.impersonate = function () {
                 var form = this._owner.impersonateForm;
                 if (form) {
@@ -253,7 +238,6 @@ var ViewModels;
                     $(form).submit();
                 }
             };
-
             SearchResult.prototype.showRoleEditor = function () {
                 var _this = this;
                 this.isEditingRoles(true);
@@ -265,25 +249,21 @@ var ViewModels;
                 this.roleToRevoke(undefined);
                 this.isEditingRoles(false);
             };
-
             SearchResult.prototype.grantRole = function () {
                 var _this = this;
                 this.roleSpinner.start();
                 this.roleToRevoke(undefined);
-
                 if (this.isValidating()) {
                     setTimeout(function () {
                         _this.grantRole();
                     }, 50);
                     return;
                 }
-
                 if (!this.isValid()) {
                     this.errors.showAllMessages();
                     this.roleSpinner.stop();
                     return;
                 }
-
                 var url = App.Routes.WebApi.Identity.Users.Roles.put(this.id(), this.selectedRoleOption());
                 $.ajax({
                     url: url,
@@ -305,26 +285,21 @@ var ViewModels;
                     _this.roleSpinner.stop();
                 });
             };
-
             SearchResult.prototype.revokeRole = function (roleId) {
                 var _this = this;
                 this.roleSpinner.start();
-
                 this.roleToRevoke(roleId);
-
                 if (this.isValidating()) {
                     setTimeout(function () {
                         _this.revokeRole(roleId);
                     }, 50);
                     return;
                 }
-
                 if (!this.isValid()) {
                     this.errors.showAllMessages();
                     this.roleSpinner.stop();
                     return;
                 }
-
                 var url = App.Routes.WebApi.Identity.Users.Roles.del(this.id(), roleId);
                 $.ajax({
                     url: url,
@@ -344,25 +319,23 @@ var ViewModels;
                     _this.roleSpinner.stop();
                 });
             };
-
             SearchResult.prototype.dismissError = function () {
                 this.isRevokeError(false);
                 this.revokeErrorText(undefined);
                 this.isGrantError(false);
                 this.grantErrorText(undefined);
             };
-
             SearchResult.prototype.deleteUser = function () {
                 var _this = this;
                 var disableButtons = function (disable) {
-                    if (typeof disable === "undefined") { disable = true; }
+                    if (disable === void 0) { disable = true; }
                     if (disable) {
                         _this.$confirmPurgeDialog.parents('.ui-dialog').find('button').attr('disabled', 'disabled');
-                    } else {
+                    }
+                    else {
                         _this.$confirmPurgeDialog.parents('.ui-dialog').find('button').removeAttr('disabled');
                     }
                 };
-
                 this.$confirmPurgeDialog.dialog({
                     dialogClass: 'jquery-ui',
                     width: 'auto',
@@ -376,7 +349,7 @@ var ViewModels;
                                 disableButtons();
                                 $.ajax({
                                     type: "DELETE",
-                                    url: App.Routes.WebApi.Identity.Users.del(_this.id())
+                                    url: App.Routes.WebApi.Identity.Users.del(_this.id()),
                                 }).done(function () {
                                     _this._owner._pullResults().done(function (response) {
                                         _this._owner._loadResults(response);
@@ -396,18 +369,16 @@ var ViewModels;
                                 _this.$confirmPurgeDialog.dialog('close');
                             },
                             'data-css-link': true
-                        }
-                    ]
+                        },
+                    ],
                 });
             };
             return SearchResult;
         })();
         Users.SearchResult = SearchResult;
-
         var RoleGrant = (function () {
             function RoleGrant(values, owner) {
                 this._owner = owner;
-
                 ko.mapping.fromJS(values, {}, this);
             }
             RoleGrant.prototype.revokeRole = function () {
@@ -438,6 +409,5 @@ var ViewModels;
             return RoleGrant;
         })();
         Users.RoleGrant = RoleGrant;
-    })(ViewModels.Users || (ViewModels.Users = {}));
-    var Users = ViewModels.Users;
+    })(Users = ViewModels.Users || (ViewModels.Users = {}));
 })(ViewModels || (ViewModels = {}));

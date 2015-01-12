@@ -1,5 +1,6 @@
 var Agreements;
 (function (Agreements) {
+    var ViewModels;
     (function (ViewModels) {
         var SelectConstructor = (function () {
             function SelectConstructor(name, id) {
@@ -44,7 +45,7 @@ var Agreements;
                     bindTo: "[data-current-module=agreements]",
                     section1: "agreement_types",
                     section2: "current_statuses",
-                    section3: "contact_types"
+                    section3: "contact_types",
                 }).bindJquery();
             }
             Settings.prototype.kendoBindCustomType = function () {
@@ -98,35 +99,28 @@ var Agreements;
                     optionLabel: "[None]"
                 });
             };
-
             Settings.prototype.processSettings = function (result) {
                 var _this = this;
                 var self = this;
-
                 this.isCustomTypeAllowed(result.isCustomTypeAllowed.toString());
                 this.isCustomStatusAllowed(result.isCustomStatusAllowed.toString());
                 this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed.toString());
                 this.id = result.id;
-
                 for (var i = 0, j = result.statusOptions.length; i < j; i++) {
                     this.statusOptions.push(new Agreements.ViewModels.SelectConstructor(result.statusOptions[i], result.statusOptions[i]));
                 }
                 ;
-
                 for (var i = 0, j = result.contactTypeOptions.length; i < j; i++) {
                     this.contactTypeOptions.push(new Agreements.ViewModels.SelectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
                 }
                 ;
-
                 for (var i = 0, j = result.typeOptions.length; i < j; i++) {
                     this.typeOptions.push(new Agreements.ViewModels.SelectConstructor(result.typeOptions[i], result.typeOptions[i]));
                 }
                 ;
-
                 this.kendoBindContactType();
                 this.kendoBindStatus();
                 this.kendoBindCustomType();
-
                 this.isCustomTypeAllowed.subscribe(function () {
                     _this.kendoBindCustomType();
                 });
@@ -136,14 +130,11 @@ var Agreements;
                 this.isCustomContactTypeAllowed.subscribe(function () {
                     _this.kendoBindContactType();
                 });
-
                 this.isLoading(false);
             };
-
             Settings.prototype._getSettings = function () {
                 var _this = this;
                 var url = 'App.Routes.WebApi.Agreements.Settings.get()', agreementSettingsGet;
-
                 $.ajax({
                     url: eval(url),
                     type: 'GET'
@@ -153,43 +144,36 @@ var Agreements;
                     App.Failures.message(xhr, xhr.responseText, true);
                 });
             };
-
             Settings.prototype.removeTypeOption = function (me, e) {
                 this.typeOptions.remove(me);
                 this.kendoBindCustomType();
                 e.preventDefault();
                 e.stopPropagation();
             };
-
             Settings.prototype.removeStatusOption = function (me, e) {
                 this.statusOptions.remove(me);
                 this.kendoBindStatus();
                 e.preventDefault();
                 e.stopPropagation();
             };
-
             Settings.prototype.removeContactTypeOption = function (me, e) {
                 this.contactTypeOptions.remove(me);
                 this.kendoBindContactType();
                 e.preventDefault();
                 e.stopPropagation();
             };
-
             Settings.prototype.addTypeOption = function (me, e) {
                 this.typeOptions.push(new Agreements.ViewModels.SelectConstructor(this.typeOption(), this.typeOption()));
                 this.kendoBindCustomType();
             };
-
             Settings.prototype.addStatusOption = function (me, e) {
                 this.statusOptions.push(new Agreements.ViewModels.SelectConstructor(this.statusOption(), this.statusOption()));
                 this.kendoBindStatus();
             };
-
             Settings.prototype.addContactTypeOption = function (me, e) {
                 this.contactTypeOptions.push(new Agreements.ViewModels.SelectConstructor(this.contactTypeOption(), this.contactTypeOption()));
                 this.kendoBindContactType();
             };
-
             Settings.prototype.updateAgreementSettings = function (me, e) {
                 var _this = this;
                 if (this.isUpdating()) {
@@ -233,6 +217,5 @@ var Agreements;
             return Settings;
         })();
         ViewModels.Settings = Settings;
-    })(Agreements.ViewModels || (Agreements.ViewModels = {}));
-    var ViewModels = Agreements.ViewModels;
+    })(ViewModels = Agreements.ViewModels || (Agreements.ViewModels = {}));
 })(Agreements || (Agreements = {}));

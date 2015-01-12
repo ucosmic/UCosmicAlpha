@@ -1,5 +1,6 @@
 var Establishments;
 (function (Establishments) {
+    var Servers;
     (function (Servers) {
         function Single(establishmentId, settings) {
             var deferred = $.Deferred();
@@ -13,7 +14,6 @@ var Establishments;
             return deferred.promise();
         }
         Servers.Single = Single;
-
         function GetChildren(parentId, settings) {
             var deferred = $.Deferred();
             settings = settings || {};
@@ -26,7 +26,6 @@ var Establishments;
             return deferred.promise();
         }
         Servers.GetChildren = GetChildren;
-
         function GetOffspring(ancestorId, settings) {
             var promise = $.Deferred();
             settings = settings || {};
@@ -39,6 +38,5 @@ var Establishments;
             return promise;
         }
         Servers.GetOffspring = GetOffspring;
-    })(Establishments.Servers || (Establishments.Servers = {}));
-    var Servers = Establishments.Servers;
+    })(Servers = Establishments.Servers || (Establishments.Servers = {}));
 })(Establishments || (Establishments = {}));

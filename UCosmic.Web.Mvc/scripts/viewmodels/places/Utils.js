@@ -1,7 +1,7 @@
 var gm = google.maps;
-
 var Places;
 (function (Places) {
+    var Utils;
     (function (Utils) {
         function getPlaceById(places, id) {
             if (places && places.length > 0) {
@@ -14,7 +14,6 @@ var Places;
             return null;
         }
         Utils.getPlaceById = getPlaceById;
-
         function getContinent(places) {
             if (places && places.length > 0) {
                 for (var i = 0; i < places.length; i++) {
@@ -26,7 +25,6 @@ var Places;
             return null;
         }
         Utils.getContinent = getContinent;
-
         function getCountry(places) {
             if (places && places.length > 0) {
                 for (var i = 0; i < places.length; i++) {
@@ -38,7 +36,6 @@ var Places;
             return null;
         }
         Utils.getCountry = getCountry;
-
         function getAdmin1(places) {
             if (places && places.length > 0) {
                 for (var i = 0; i < places.length; i++) {
@@ -50,7 +47,6 @@ var Places;
             return null;
         }
         Utils.getAdmin1 = getAdmin1;
-
         function getAdmin2(places) {
             if (places && places.length > 0) {
                 for (var i = 0; i < places.length; i++) {
@@ -62,7 +58,6 @@ var Places;
             return null;
         }
         Utils.getAdmin2 = getAdmin2;
-
         function getAdmin3(places) {
             if (places && places.length > 0) {
                 for (var i = 0; i < places.length; i++) {
@@ -74,7 +69,6 @@ var Places;
             return null;
         }
         Utils.getAdmin3 = getAdmin3;
-
         function getSubAdmins(places) {
             var subAdmins = [];
             if (places && places.length > 0) {
@@ -87,16 +81,13 @@ var Places;
             return subAdmins;
         }
         Utils.getSubAdmins = getSubAdmins;
-
         function convertToLatLng(point) {
             return new gm.LatLng(point.latitude, point.longitude);
         }
         Utils.convertToLatLng = convertToLatLng;
-
         function convertToLatLngBounds(box) {
             return new gm.LatLngBounds(convertToLatLng(box.southWest), convertToLatLng(box.northEast));
         }
         Utils.convertToLatLngBounds = convertToLatLngBounds;
-    })(Places.Utils || (Places.Utils = {}));
-    var Utils = Places.Utils;
+    })(Utils = Places.Utils || (Places.Utils = {}));
 })(Places || (Places = {}));

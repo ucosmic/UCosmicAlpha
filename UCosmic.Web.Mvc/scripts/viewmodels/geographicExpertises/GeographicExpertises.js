@@ -1,5 +1,6 @@
 var ViewModels;
 (function (ViewModels) {
+    var GeographicExpertises;
     (function (GeographicExpertises) {
         var GeographicExpertiseSearchInput = (function () {
             function GeographicExpertiseSearchInput() {
@@ -7,7 +8,6 @@ var ViewModels;
             return GeographicExpertiseSearchInput;
         })();
         GeographicExpertises.GeographicExpertiseSearchInput = GeographicExpertiseSearchInput;
-
         var GeographicExpertiseList = (function () {
             function GeographicExpertiseList(personId) {
                 this.personId = personId;
@@ -16,26 +16,22 @@ var ViewModels;
                 var _this = this;
                 var deferred = $.Deferred();
                 var expertiseSearchInput = new GeographicExpertiseSearchInput();
-
                 expertiseSearchInput.personId = this.personId;
                 expertiseSearchInput.orderBy = "";
                 expertiseSearchInput.pageNumber = 1;
                 expertiseSearchInput.pageSize = App.Constants.int32Max;
-
                 $.get(App.Routes.WebApi.GeographicExpertise.get(), expertiseSearchInput).done(function (data, textStatus, jqXHR) {
-                     {
+                    {
                         ko.mapping.fromJS(data, {}, _this);
                         deferred.resolve();
                     }
                 }).fail(function (jqXhr, textStatus, errorThrown) {
-                     {
+                    {
                         deferred.reject(jqXhr, textStatus, errorThrown);
                     }
                 });
-
                 return deferred;
             };
-
             GeographicExpertiseList.prototype.deleteExpertiseById = function (expertiseId) {
                 $.ajax({
                     async: false,
@@ -48,7 +44,6 @@ var ViewModels;
                     }
                 });
             };
-
             GeographicExpertiseList.prototype.deleteExpertise = function (data, event, viewModel) {
                 $("#confirmGeographicExpertiseDeleteDialog").dialog({
                     dialogClass: 'jquery-ui',
@@ -57,41 +52,37 @@ var ViewModels;
                     modal: true,
                     buttons: [
                         {
-                            text: "Yes, confirm delete", click: function () {
+                            text: "Yes, confirm delete",
+                            click: function () {
                                 viewModel.deleteExpertiseById(data.id());
                                 $(this).dialog("close");
-
                                 location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
                             }
                         },
                         {
-                            text: "No, cancel delete", click: function () {
+                            text: "No, cancel delete",
+                            click: function () {
                                 $(this).dialog("close");
                             }
-                        }
+                        },
                     ]
                 });
             };
-
             GeographicExpertiseList.prototype.editExpertiseUrl = function (expertiseId) {
                 return App.Routes.Mvc.My.GeographicExpertise.edit(expertiseId);
             };
-
             GeographicExpertiseList.prototype.formatLocations = function (locations) {
                 var formattedLocations = "";
-
                 for (var i = 0; i < locations.length; i += 1) {
                     if (i > 0) {
                         formattedLocations += ", ";
                     }
                     formattedLocations += locations[i].placeOfficialName();
                 }
-
                 return formattedLocations;
             };
             return GeographicExpertiseList;
         })();
         GeographicExpertises.GeographicExpertiseList = GeographicExpertiseList;
-    })(ViewModels.GeographicExpertises || (ViewModels.GeographicExpertises = {}));
-    var GeographicExpertises = ViewModels.GeographicExpertises;
+    })(GeographicExpertises = ViewModels.GeographicExpertises || (ViewModels.GeographicExpertises = {}));
 })(ViewModels || (ViewModels = {}));

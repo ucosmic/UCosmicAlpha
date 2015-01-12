@@ -1,5 +1,6 @@
 var Establishments;
 (function (Establishments) {
+    var ServerModels;
     (function (ServerModels) {
         var Url = (function () {
             function Url(ownerId) {
@@ -13,12 +14,11 @@ var Establishments;
             return Url;
         })();
         ServerModels.Url = Url;
-    })(Establishments.ServerModels || (Establishments.ServerModels = {}));
-    var ServerModels = Establishments.ServerModels;
+    })(ServerModels = Establishments.ServerModels || (Establishments.ServerModels = {}));
 })(Establishments || (Establishments = {}));
-
 var Establishments;
 (function (Establishments) {
+    var ViewModels;
     (function (ViewModels) {
         var EstablishmentUrlValueValidator = (function () {
             function EstablishmentUrlValueValidator() {
@@ -33,7 +33,8 @@ var Establishments;
                 var _this = this;
                 if (!vm.isValueValidatableAsync()) {
                     callback(true);
-                } else if (!this._isAwaitingResponse && vm.value()) {
+                }
+                else if (!this._isAwaitingResponse && vm.value()) {
                     var route = App.Routes.WebApi.Establishments.Urls.validateValue(vm.ownerId(), vm.id());
                     this._isAwaitingResponse = true;
                     $.post(route, vm.serializeData()).always(function () {
@@ -48,7 +49,6 @@ var Establishments;
             return EstablishmentUrlValueValidator;
         })();
         new EstablishmentUrlValueValidator();
-
         var Url = (function () {
             function Url(js, owner) {
                 var _this = this;
@@ -65,20 +65,15 @@ var Establishments;
                 this.valueValidationSpinner = new App.Spinner();
                 this.saveEditorClicked = false;
                 this.owner = owner;
-
                 if (!js)
                     js = new Establishments.ServerModels.Url(this.owner.id);
                 if (js.id === 0)
                     js.ownerId = this.owner.id;
-
                 this.originalValues = js;
-
                 ko.mapping.fromJS(js, {}, this);
-
                 this.isOfficialUrlEnabled = ko.computed(function () {
                     return !_this.originalValues.isOfficialUrl;
                 });
-
                 this.isValueValidatableAsync = ko.computed(function () {
                     return _this.value() !== _this.originalValues.value;
                 });
@@ -90,31 +85,29 @@ var Establishments;
                     this.value.extend({
                         required: {
                             message: 'Establishment URL is required.'
-                        }
+                        },
                     });
                 }
                 this.value.isValidating.subscribe(function (isValidating) {
                     if (isValidating) {
                         _this.valueValidationSpinner.start();
-                    } else {
+                    }
+                    else {
                         _this.valueValidationSpinner.stop();
                         if (_this.saveEditorClicked)
                             _this.saveEditor();
                     }
                 });
-
                 this.isOfficialUrl.subscribe(function (newValue) {
                     if (newValue)
                         _this.isFormerUrl(false);
                 });
-
                 this.valueHref = ko.computed(function () {
                     var url = _this.value();
                     if (!url)
                         return url;
                     return 'http://' + url;
                 });
-
                 this.isDeletable = ko.computed(function () {
                     if (_this.owner.editingUrl())
                         return false;
@@ -122,7 +115,6 @@ var Establishments;
                         return true;
                     return !_this.isOfficialUrl();
                 });
-
                 this.mutationSuccess = function (response) {
                     _this.owner.requestUrls(function () {
                         _this.owner.editingUrl(0);
@@ -132,7 +124,6 @@ var Establishments;
                         App.flasher.flash(response);
                     });
                 };
-
                 this.mutationError = function (xhr) {
                     if (xhr.status === 400) {
                         _this.owner.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
@@ -152,14 +143,12 @@ var Establishments;
                     _this.saveSpinner.stop();
                     _this.purgeSpinner.stop();
                 };
-
                 ko.validation.group(this);
             }
             Url.prototype.clickLink = function (vm, e) {
                 e.stopPropagation();
                 return true;
             };
-
             Url.prototype.clickOfficialUrlCheckbox = function () {
                 var _this = this;
                 if (this.originalValues.isOfficialUrl) {
@@ -179,7 +168,6 @@ var Establishments;
                 }
                 return true;
             };
-
             Url.prototype.showEditor = function () {
                 var editingUrl = this.owner.editingUrl();
                 if (!editingUrl) {
@@ -189,23 +177,23 @@ var Establishments;
                     this.$valueElement.focus();
                 }
             };
-
             Url.prototype.saveEditor = function () {
                 this.saveEditorClicked = true;
                 if (!this.isValid()) {
                     this.saveEditorClicked = false;
                     this.errors.showAllMessages();
-                } else if (!this.value.isValidating()) {
+                }
+                else if (!this.value.isValidating()) {
                     this.saveEditorClicked = false;
                     this.saveSpinner.start();
-
                     if (this.id()) {
                         $.ajax({
                             url: App.Routes.WebApi.Establishments.Urls.put(this.owner.id, this.id()),
                             type: 'PUT',
                             data: this.serializeData()
                         }).done(this.mutationSuccess).fail(this.mutationError);
-                    } else if (this.owner.id) {
+                    }
+                    else if (this.owner.id) {
                         $.ajax({
                             url: App.Routes.WebApi.Establishments.Urls.post(this.owner.id),
                             type: 'POST',
@@ -215,23 +203,21 @@ var Establishments;
                 }
                 return false;
             };
-
             Url.prototype.cancelEditor = function () {
                 this.owner.editingUrl(0);
                 if (this.id()) {
                     ko.mapping.fromJS(this.originalValues, {}, this);
                     this.editMode(false);
-                } else {
+                }
+                else {
                     this.owner.urls.shift();
                 }
             };
-
             Url.prototype.purge = function (vm, e) {
                 var _this = this;
                 e.stopPropagation();
                 if (this.owner.editingUrl())
                     return;
-
                 if (this.isOfficialUrl() && this.owner.urls().length > 1) {
                     this.owner.$genericAlertDialog.find('p.content').html('You cannot delete an establishment\'s official URL.<br />To delete this URL, first assign another URL as official.');
                     this.owner.$genericAlertDialog.dialog({
@@ -282,19 +268,17 @@ var Establishments;
                     ]
                 });
             };
-
             Url.prototype.serializeData = function () {
                 return {
                     id: this.id(),
                     ownerId: this.ownerId(),
                     value: $.trim(this.value()),
                     isOfficialUrl: this.isOfficialUrl(),
-                    isFormerUrl: this.isFormerUrl()
+                    isFormerUrl: this.isFormerUrl(),
                 };
             };
             return Url;
         })();
         ViewModels.Url = Url;
-    })(Establishments.ViewModels || (Establishments.ViewModels = {}));
-    var ViewModels = Establishments.ViewModels;
+    })(ViewModels = Establishments.ViewModels || (Establishments.ViewModels = {}));
 })(Establishments || (Establishments = {}));

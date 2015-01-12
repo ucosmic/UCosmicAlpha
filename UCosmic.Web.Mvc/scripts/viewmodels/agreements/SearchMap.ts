@@ -16,19 +16,14 @@ module Agreements.ViewModels {
     export interface SearchMapScope {
         continentCode: string;
         countryCode: string;
+        typeCode: string;
         placeId: number;
     }
 
     export class SearchMap {
         //#region Search Filter Inputs
 
-        // instead of throttling, both this and the options are observed
-        continentCode = ko.observable<string>(
-            sessionStorage.getItem(SearchMap.ContinentSessionKey) || 'any');
-        countryCode: KnockoutObservable<string> = ko.observable(
-            sessionStorage.getItem(SearchMap.CountrySessionKey) || 'any');
-        placeId: KnockoutObservable<number> = ko.observable(
-            parseInt(sessionStorage.getItem(SearchMap.PlaceIdSessionKey) || 0));
+
 
         static defaultMapCenter = new google.maps.LatLng(0, 17)
 
@@ -50,20 +45,37 @@ module Agreements.ViewModels {
 
         static ContinentSessionKey = 'AgreementSearchContinent';
         static CountrySessionKey = 'AgreementSearchCountry2';
+        static TypeSessionKey = 'AgreementTypeSearchCountry2';
         static PlaceIdSessionKey = 'AgreementMapSearchPlaceId';
         static ZoomSessionKey = 'AgreementSearchZoom';
         static LatSessionKey = 'AgreementSearchLat';
         static LngSessionKey = 'AgreementSearchLng';
         static DetailPrefSessionKey = 'AgreementSearchMapDetailPreference';
 
+        // instead of throttling, both this and the options are observed
+        continentCode = ko.observable<string>(
+            sessionStorage.getItem(SearchMap.ContinentSessionKey) || 'any');
+        countryCode: KnockoutObservable<string> = ko.observable(
+            sessionStorage.getItem(SearchMap.CountrySessionKey) || 'any');
+        placeId: KnockoutObservable<number> = ko.observable(
+            parseInt(sessionStorage.getItem(SearchMap.PlaceIdSessionKey) || 0));
+        typeCode: KnockoutObservable<string> = ko.observable(
+            sessionStorage.getItem(SearchMap.TypeSessionKey) || 'any');
+        initSessionTypeCode: string = sessionStorage.getItem(SearchMap.TypeSessionKey) || 'any'
+
         // automatically save the search inputs to session when they change
         private _inputChanged: KnockoutComputed<void> = ko.computed((): void => {
 
             if (this.countryCode() == undefined) this.countryCode('any');
             if (this.continentCode() == undefined) this.continentCode('any');
+            if (this.typeCode() == undefined) this.typeCode('any');
+            if (this.typeCode() != 'any' && this.typeCode() != undefined) {
+                this._loadSummary(this.typeCode());
+            }
 
             sessionStorage.setItem(SearchMap.ContinentSessionKey, this.continentCode());
             sessionStorage.setItem(SearchMap.CountrySessionKey, this.countryCode());
+            sessionStorage.setItem(SearchMap.TypeSessionKey, this.typeCode());
             sessionStorage.setItem(SearchMap.PlaceIdSessionKey, this.placeId().toString());
             sessionStorage.setItem(SearchMap.ZoomSessionKey, this.zoom().toString());
             sessionStorage.setItem(SearchMap.LatSessionKey, this.lat().toString());
@@ -75,8 +87,9 @@ module Agreements.ViewModels {
         //#region Construction & Initialization
 
         constructor(public settings: SearchMapSettings) {
-            this._loadSummary();
+            this._loadSummary(this.typeCode());
             this._loadCountryOptions();
+            this._loadAgreementTypes();
             this.sammy = this.settings.sammy || Sammy();
             this._runSammy();
 
@@ -141,8 +154,14 @@ module Agreements.ViewModels {
             partnerCount: ko.observable('?'),
             countryCount: ko.observable('?'),
         };
-        private _loadSummary(): void {
-            $.get(this.settings.summaryApi)
+        private _loadSummary(typeCode?: string): void {
+            var url = this.settings.summaryApi;
+            if (typeCode) {
+                var keyword = "!none!";
+                var countryCode = 'any';
+                url = url += "Table/" + countryCode + "/" + typeCode + "/" + keyword
+            }
+            $.get(url)
                 .done((response: ApiModels.Summary): void => {
                     ko.mapping.fromJS(response, {}, this.summary);
                 });
@@ -164,6 +183,35 @@ module Agreements.ViewModels {
         continentOptions = ko.computed((): any[]=> {
             return this._computeContinentOptions();
         });
+
+        //typeCodeChange = ko.computed((): any=> {
+        //    this.setLocation();
+        //    return false;
+        //});
+
+        typeOptions: KnockoutObservableArray<Places.ApiModels.AgreementType> = ko.observableArray(
+            [{ code: 'any', name: '[Loading...]' }]);
+
+        //private _typeChanged: KnockoutComputed<void> = ko.computed((): void => {
+        //    if (this.spinner) {
+        //        this._continentsResponse = undefined;
+        //        this._countriesResponse = undefined;
+        //        this._placesResponse = undefined;
+        //        this._onTypeChanged();
+        //    }
+        //});
+        //private _onTypeChanged(): void {
+        //    // changes when applyBindings happens and after options data is loaded
+        //    var typeCode = this.typeCode();
+        //    var options = this.typeOptions();
+        //    // keep typeCode as an option so that we don't lose it when options change
+        //    if (options.length == 1 && options[0].code != typeCode)
+        //        options[0].code = typeCode;
+
+        //    if (this.spinner) {
+        //        this._load();
+        //    }
+        //}
 
         private _computeCountryOptions(): Places.ApiModels.Country[] {
             var options: Places.ApiModels.Country[] = [{
@@ -246,6 +294,29 @@ module Agreements.ViewModels {
             return deferred;
         }
 
+        private _loadAgreementTypes(): JQueryDeferred<void> {
+            // this will run once during construction
+            // this will run before sammy and applyBindings...
+            var deferred = $.Deferred();
+            $.get("/api/agreements/agreement-types/0/")
+                .done((response: Places.ApiModels.AgreementType[]): void => {
+                    // ...but this will run after sammy and applyBindings
+                    var options = response.slice(0);
+                    // customize options
+                    var any: Places.ApiModels.AgreementType = {
+                        code: 'any',
+                        name: '[All types]'
+                    };
+                    options = Enumerable.From([any]).Concat(options).ToArray();
+
+                    this.typeOptions(options); // push into observable array
+                    this.typeCode(this.initSessionTypeCode);
+                    deferred.resolve();
+
+                });
+            return deferred;
+        }
+
         continentSelected(): void {
             this.countryCode('any');
             this.placeId(0);
@@ -259,8 +330,9 @@ module Agreements.ViewModels {
         //#region Sammy Routing
 
         sammy: Sammy.Application;
-        routeFormat: string = '#/{0}/continent/{6}/country/{1}/place/{2}/zoom/{3}/latitude/{4}/longitude/{5}/'
-            .format(this.settings.route).replace('{6}', '{0}');
+        routeFormat: string = '#/{0}/continent/{7}/country/{1}/type/{2}/place/{3}/zoom/{4}/latitude/{5}/longitude/{6}/'
+            .format(this.settings.route).replace('{7}', '{0}');
+        routeChanged: boolean;
         private _isActivated: KnockoutObservable<boolean> = ko.observable(false);
 
         private _runSammy(): void {
@@ -280,7 +352,7 @@ module Agreements.ViewModels {
 
             // do this when we already have hashtag parameters in the page
             this.sammy.get(
-                this.routeFormat.format(':continent', ':country', ':place', ':zoom', ':lat', ':lng'),
+                this.routeFormat.format(':continent', ':country', ':type', ':place', ':zoom', ':lat', ':lng'),
                 function (): void {
                     var e: Sammy.EventContext = this;
                     viewModel._onRoute(e);
@@ -342,6 +414,7 @@ module Agreements.ViewModels {
         private _onRoute(e: Sammy.EventContext): void {
             var continent: string = e.params['continent'];
             var country: string = e.params['country'];
+            var type: string = e.params['type'];
             var placeId: string = e.params['place'];
             var zoom: string = e.params['zoom'];
             var lat: string = e.params['lat'];
@@ -349,6 +422,7 @@ module Agreements.ViewModels {
 
             this.continentCode(continent);
             this.countryCode(country);
+            this.typeCode(type);
             this.placeId(parseInt(placeId));
             this.zoom(parseInt(zoom));
             this.lat(parseFloat(lat));
@@ -380,11 +454,13 @@ module Agreements.ViewModels {
             // build what the route should be, based on current filter inputs
             var continentCode = this.continentCode();
             var countryCode = this.countryCode();
+            var typeCode = this.typeCode();
             var placeId = this.placeId();
             var zoom = this.zoom();
             var lat = this.lat();
             var lng = this.lng();
-            var route = this.routeFormat.format(continentCode, countryCode, placeId, zoom, lat, lng);
+            this.routeChanged = true;
+            var route = this.routeFormat.format(continentCode, countryCode, typeCode, placeId, zoom, lat, lng);
             return route;
         }
 
@@ -409,6 +485,7 @@ module Agreements.ViewModels {
             var scope: SearchMapScope = {
                 continentCode: this.continentCode(),
                 countryCode: this.countryCode(),
+                typeCode: this.typeCode(),
                 placeId: this.placeId(),
             };
             return scope;
@@ -428,7 +505,12 @@ module Agreements.ViewModels {
 
             if (!lastScope || lastScope.countryCode != thisScope.countryCode ||
                 lastScope.continentCode != thisScope.continentCode ||
-                lastScope.placeId != thisScope.placeId) {
+                (!isNaN(lastScope.placeId) && lastScope.placeId != thisScope.placeId) || lastScope.typeCode != thisScope.typeCode) {
+                //if (lastScope && lastScope.typeCode != thisScope.typeCode) {
+                //    this._continentsResponse = undefined;
+                //    this._countriesResponse = undefined;
+                //    this._placesResponse = undefined;
+                //}
                 this._scopeHistory.push(thisScope);
                 $.when(this._map.ready()).then((): void => {
                     this._map.triggerResize();
@@ -494,9 +576,13 @@ module Agreements.ViewModels {
         private _load(): void {
             this.spinner.start();
             if (!this.placeId()) {
+
+                this.status.agreementCount('?');
+                this.status.partnerCount('?');
                 var placeType = '';
                 var continentCode = this.continentCode();
                 var countryCode = this.countryCode();
+                var typeCode = this.typeCode();
                 if (continentCode == 'any' && countryCode == 'any') {
                     placeType = 'continents';
                 }
@@ -576,6 +662,36 @@ module Agreements.ViewModels {
                 ? this._countriesResponse()
                 : this._placesResponse();
 
+            if (this.typeCode() != 'any') {
+                var type = this.typeCode();
+                //places = places.filter(function (value, index, test) {
+                //    if (value.agreementTypes.indexOf(type) == -1) {
+                //        return false;
+                //    } else {
+                //        return true;
+                //    }
+                //})
+                places = places.map(function (x) {
+                    x.agreementCount = x.agreementTypes.filter(function (value, index, test) {
+                        if (value.indexOf(type) == -1) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }).length;
+                    return x;
+                })
+                //places = Enumerable.From(places)
+                //    .Where(function (x: ApiModels.PlaceWithAgreements): boolean {
+                //        return x.agreementTypes.indexOf(type) > -1;
+                //    }).ToArray();
+            } else {
+                places = places.map(function (x) {
+                    x.agreementCount = x.agreementTypes.length;
+                    return x;
+                })
+            }
+
             if (placeType == 'countries') {
                 var continentCode = this.continentCode();
                 places = Enumerable.From(places)
@@ -604,8 +720,8 @@ module Agreements.ViewModels {
             var viewportSettings = this._getMapViewportSettings(placeType, places);
             if (this._scopeHistory().length + this.loadViewport > 1) {
                 this._map.setViewport(viewportSettings).then((): void => {
-                    this._updateRoute();
                 });
+                this._updateRoute();
             }
         }
 
@@ -633,6 +749,7 @@ module Agreements.ViewModels {
                     places = [{
                         id: country.id,
                         agreementCount: 0,
+                        agreementTypes: [],
                         name: country.name,
                         center: country.center,
                         boundingBox: country.box,
@@ -644,7 +761,8 @@ module Agreements.ViewModels {
             }
             var markers: google.maps.Marker[] = [];
             $.each(places, (i: number, place: ApiModels.PlaceWithAgreements): void => {
-                if (placeType == 'continents' && !place.agreementCount) return; // do not render zero on continent
+                if (!place.agreementCount) return; // do not render zero
+                //if (placeType == 'continents' && !place.agreementCount) return; // do not render zero on continent
                 var title = '{0} - {1} agreement{2}\r\nClick for more information'
                     .format(place.name, place.agreementCount, place.agreementCount == 1 ? '' : 's');
                 if (!placeType)
@@ -866,6 +984,11 @@ module Agreements.ViewModels {
                 this.lat(this._map.lat());
                 isDirty = true;
             }
+            if(this.routeChanged){
+                isDirty = true;
+                this.routeChanged = false;
+            }
+
             if (!this._areFloatsEqualEnough(this.lng(), this._map.lng())) {
                 this.lng(this._map.lng());
                 isDirty = true;
@@ -883,29 +1006,81 @@ module Agreements.ViewModels {
             if (this.loadViewport < 0) this.loadViewport = 0;
         }
 
+
+        private _loadStatus(countryCode?: string, continentCode?: string, typeCode?: string): void {
+            var url = this.settings.summaryApi;
+            url = url += "Map/" + countryCode + "/" + typeCode + "/" + continentCode
+            this.status.agreementCount('?');
+            this.status.partnerCount('?');
+            $.get(url)
+                .done((response: ApiModels.Summary): void => {
+                    //ko.mapping.fromJS(response, {}, this.summary);
+                    this.status.agreementCount(response.agreementCount.toString());
+                    this.status.partnerCount(response.partnerCount.toString());
+                });
+        }
+
         private _updateStatus(placeType: string, places: ApiModels.PlaceWithAgreements[]) {
-            if (places && places.length) {
-                this.status.agreementCount(Enumerable.From(places)
-                    .SelectMany(function (x: ApiModels.PlaceWithAgreements, i: number): number[] {
-                        return x.agreementIds;
-                    })
-                    .Distinct(function (x: number): number {
-                        return x;
-                    })
-                    .Count().toString());
-                this.status.partnerCount(Enumerable.From(places)
-                    .SelectMany(function (x: ApiModels.PlaceWithAgreements, i: number): number[] {
-                        return x.partnerIds;
-                    })
-                    .Distinct(function (x: number): number {
-                        return x;
-                    })
-                    .Count().toString());
-            }
-            else {
-                this.status.agreementCount('0');
-                this.status.partnerCount('0');
-            }
+
+            this._loadStatus(this.countryCode(),this.continentCode(), this.typeCode());
+            //if (this.typeCode() != 'any') {
+            //    var type = this.typeCode();
+            //    places = places.map(function (x) {
+            //        //var myX = x.agreementTypes.filter(function (value, index, test) {
+            //        //    if (value.indexOf(type) == -1) {
+            //        //        return false;
+            //        //    } else {
+            //        //        return true;
+            //        //    }
+            //        //});
+            //        //x.agreementCount = x.agreementTypes.filter(function (value, index, test) {
+            //        //if (value.indexOf(type) == -1) {
+            //        //    return false;
+            //        //} else {
+            //        //    return true;
+            //        //}
+            //        //}).length;
+            //        //x.partnerCount = x.agreementTypes.filter(function (value, index, test) {
+            //        //    if (value.indexOf(type) == -1) {
+            //        //        return false;
+            //        //    } else {
+            //        //        return true;
+            //        //    }
+            //        //}).length;
+
+            //        //x.agreementTypes.forEach(function (value: any, index: number, array: Array<Object>) {
+            //        //    if (value.indexOf(type) == -1) {
+            //        //        x.partnerCount = x.partnerCount - 1;
+            //        //        x.agreementCount = x.agreementCount - 1;
+            //        //        //x.partnerIds.splice(index, 1);
+            //        //        //x.agreementIds.splice(index, 1);
+            //        //    } 
+            //        //});
+            //        //return x;
+            //    })
+            //}
+            //if (places && places.length) {
+            //    this.status.agreementCount(Enumerable.From(places)
+            //        .SelectMany(function (x: ApiModels.PlaceWithAgreements, i: number): number[] {
+            //            return x.agreementIds;
+            //        })
+            //        .Distinct(function (x: number): number {
+            //            return x;
+            //        })
+            //        .Count().toString());
+            //    this.status.partnerCount(Enumerable.From(places)
+            //        .SelectMany(function (x: ApiModels.PlaceWithAgreements, i: number): number[] {
+            //            return x.partnerIds;
+            //        })
+            //        .Distinct(function (x: number): number {
+            //            return x;
+            //        })
+            //        .Count().toString());
+            //}
+            //else {
+            //    this.status.agreementCount('0');
+            //    this.status.partnerCount('0');
+            //}
             if (placeType == 'countries') {
                 var continentCode = this.continentCode();
                 if (continentCode == 'none') {

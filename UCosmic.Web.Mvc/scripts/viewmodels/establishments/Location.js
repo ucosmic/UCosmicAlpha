@@ -1,8 +1,8 @@
 var Establishments;
 (function (Establishments) {
+    var ViewModels;
     (function (ViewModels) {
         var gm = google.maps;
-
         var Location = (function () {
             function Location(ownerId) {
                 var _this = this;
@@ -30,12 +30,11 @@ var Establishments;
                 this.admin3sLoading = ko.observable(false);
                 this.places = ko.observableArray();
                 this.subAdmins = ko.observableArray();
-                this.loadSpinner = new App.Spinner({ delay: 400 });
-                this.saveSpinner = new App.Spinner({ delay: 400 });
+                this.loadSpinner = new App.Spinner({ delay: 400, });
+                this.saveSpinner = new App.Spinner({ delay: 400, });
                 this.isEditing = ko.observable();
                 this.ownerId = ownerId;
                 this._initComputedsAndSubscriptions();
-
                 this.loadSpinner.isVisible.subscribe(function (newValue) {
                     if (!_this.$dataLoadingDialog || !_this.$dataLoadingDialog.length) {
                         return;
@@ -47,23 +46,22 @@ var Establishments;
                             dialogClass: 'no-close',
                             width: '450px'
                         });
-                    } else {
+                    }
+                    else {
                         _this.$dataLoadingDialog.dialog('close');
                     }
                 });
-
                 this.isEditable = ko.computed(function () {
                     return _this.ownerId && _this.ownerId !== 0;
                 });
-
                 this.isEditIconVisible = ko.computed(function () {
                     return _this.isEditable() && !_this.isEditing();
                 });
-
                 this.isEditing.subscribe(function (newValue) {
                     if (newValue) {
                         _this.mapTools().showMarkerTools();
-                    } else if (_this.isEditable()) {
+                    }
+                    else if (_this.isEditable()) {
                         _this.mapTools().hideMarkerTools();
                     }
                 });
@@ -80,7 +78,6 @@ var Establishments;
                     if (!_this.map)
                         _this.initMap();
                 });
-
                 ko.computed(function () {
                     $.get(App.Routes.WebApi.Places.get(), { isContinent: true }).done(function (response) {
                         _this.continents(response);
@@ -93,7 +90,6 @@ var Establishments;
                     var continent = Places.Utils.getPlaceById(_this.continents(), continentId);
                     return continent ? continent.officialName : '[Unknown]';
                 });
-
                 this.countryOptionsCaption = ko.computed(function () {
                     return _this.countries().length > 0 ? '[Unspecified]' : '[Loading...]';
                 });
@@ -117,27 +113,27 @@ var Establishments;
                 this.countryId.subscribe(function (newValue) {
                     if (newValue && _this.countries().length == 0)
                         _this._countryId = newValue;
-
                     if (newValue && _this.countries().length > 0) {
                         var country = Places.Utils.getPlaceById(_this.countries(), newValue);
                         if (country) {
                             if (_this.allowCountryFitBounds) {
                                 _this.map.fitBounds(Places.Utils.convertToLatLngBounds(country.box));
-                            } else {
+                            }
+                            else {
                                 setTimeout(function () {
                                     _this.allowCountryFitBounds = true;
                                 }, 1000);
                             }
-
                             _this.continentId(country.parentId);
-
                             _this.loadAdmin1s(country.id);
                         }
-                    } else if (!newValue && _this.countries().length > 0) {
+                    }
+                    else if (!newValue && _this.countries().length > 0) {
                         _this.map.setCenter(new gm.LatLng(0, 0));
                         if (_this.allowCountryFitBounds) {
                             _this.map.setZoom(1);
-                        } else {
+                        }
+                        else {
                             setTimeout(function () {
                                 _this.allowCountryFitBounds = true;
                             }, 1000);
@@ -145,7 +141,6 @@ var Establishments;
                         _this.continentId(null);
                     }
                 });
-
                 this.admin1OptionsCaption = ko.computed(function () {
                     return !_this.admin1sLoading() ? '[Unspecified]' : '[Loading...]';
                 }).extend({ throttle: 400 });
@@ -155,12 +150,12 @@ var Establishments;
                 this.admin1Id.subscribe(function (newValue) {
                     if (newValue && _this.admin1s().length == 0)
                         _this._admin1Id = newValue;
-
                     if (newValue && _this.admin1s().length > 0) {
                         var admin1 = Places.Utils.getPlaceById(_this.admin1s(), newValue);
                         if (admin1) {
                             _this.loadAdmin2s(admin1.id);
-                        } else {
+                        }
+                        else {
                             _this._admin1Id = newValue;
                             _this.loadAdmin1s(_this.countryId() || _this._countryId);
                         }
@@ -173,7 +168,6 @@ var Establishments;
                     var admin1 = Places.Utils.getPlaceById(_this.admin1s(), admin1Id);
                     return admin1 ? admin1.officialName : '[Unknown]';
                 });
-
                 this.admin2OptionsCaption = ko.computed(function () {
                     return !_this.admin2sLoading() ? '[Unspecified]' : '[Loading...]';
                 }).extend({ throttle: 400 });
@@ -183,12 +177,12 @@ var Establishments;
                 this.admin2Id.subscribe(function (newValue) {
                     if (newValue && _this.admin2s().length == 0)
                         _this._admin2Id = newValue;
-
                     if (newValue && _this.admin2s().length > 0) {
                         var admin2 = Places.Utils.getPlaceById(_this.admin2s(), newValue);
                         if (admin2) {
                             _this.loadAdmin3s(admin2.id);
-                        } else {
+                        }
+                        else {
                             _this._admin2Id = newValue;
                             _this.loadAdmin2s(_this.admin1Id() || _this._admin1Id);
                         }
@@ -201,7 +195,6 @@ var Establishments;
                     var admin2 = Places.Utils.getPlaceById(_this.admin2s(), admin2Id);
                     return admin2 ? admin2.officialName : '[Unknown]';
                 });
-
                 this.admin3OptionsCaption = ko.computed(function () {
                     return !_this.admin3sLoading() ? '[Unspecified]' : '[Loading...]';
                 }).extend({ throttle: 400 });
@@ -211,7 +204,6 @@ var Establishments;
                 this.admin3Id.subscribe(function (newValue) {
                     if (newValue && _this.admin3s().length == 0)
                         _this._admin3Id = newValue;
-
                     if (newValue && _this.admin3s().length > 0) {
                         var admin3 = Places.Utils.getPlaceById(_this.admin3s(), newValue);
                         if (!admin3) {
@@ -228,11 +220,9 @@ var Establishments;
                     return admin3 ? admin3.officialName : '[Unknown]';
                 });
             };
-
             Location.prototype.initMap = function () {
                 var _this = this;
                 var me = this;
-
                 var mapOptions = {
                     mapTypeId: gm.MapTypeId.ROADMAP,
                     center: new gm.LatLng(0, 0),
@@ -243,16 +233,13 @@ var Establishments;
                 google.maps.visualRefresh = true;
                 this.map = new gm.Map(this.$mapCanvas()[0], mapOptions);
                 this.isMapVisible(true);
-
                 gm.event.addListenerOnce(this.map, 'idle', function () {
                     _this.mapTools(new App.GoogleMaps.ToolsOverlay(_this.map));
                     _this.mapTools().hideMarkerTools();
-
                     gm.event.addListener(_this.map, 'zoom_changed', function () {
                         _this.mapZoom(_this.map.getZoom());
                     });
                 });
-
                 this.$mapCanvas().on('marker_destroyed', function () {
                     var center = _this.map.getCenter();
                     var zoom = _this.map.getZoom();
@@ -265,7 +252,6 @@ var Establishments;
                     _this.map.setCenter(center);
                     _this.map.setZoom(zoom);
                 });
-
                 this.$mapCanvas().on('marker_dragend marker_created', function () {
                     var latLng = _this.mapTools().markerLatLng();
                     var route = App.Routes.WebApi.Places.ByCoordinates.get(latLng.lat(), latLng.lng());
@@ -280,7 +266,6 @@ var Establishments;
                     }).fail(function (arg1, arg2, arg3, arg4, arg5) {
                     });
                 });
-
                 if (this.ownerId) {
                     this.isLoaded(false);
                     $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId)).done(function (response) {
@@ -288,29 +273,26 @@ var Establishments;
                             _this.loadMapZoom(response);
                             _this.loadMapMarker(response);
                         });
-
                         _this.fillPlacesHierarchy(response.places);
                         _this.isLoaded(true);
                     });
-                } else {
+                }
+                else {
                     gm.event.addListenerOnce(this.map, 'idle', function () {
                         _this.isEditing(true);
                     });
                 }
             };
-
             Location.prototype.loadMapZoom = function (response) {
                 if (response.googleMapZoomLevel && response.center && response.center.hasValue)
                     this.map.setZoom(response.googleMapZoomLevel);
                 else if (response.box.hasValue)
                     this.map.fitBounds(Places.Utils.convertToLatLngBounds(response.box));
-
                 if (response.googleMapZoomLevel && response.googleMapZoomLevel > 1)
                     this.map.setZoom(response.googleMapZoomLevel);
                 if (response.googleMapZoomLevel || response.box.hasValue)
                     this.allowCountryFitBounds = false;
             };
-
             Location.prototype.loadMapMarker = function (response) {
                 if (response.center.hasValue) {
                     var latLng = Places.Utils.convertToLatLng(response.center);
@@ -318,56 +300,50 @@ var Establishments;
                     this.map.setCenter(latLng);
                 }
             };
-
             Location.prototype.fillPlacesHierarchy = function (places) {
                 this.places(places);
-
                 var test = Places.Utils.getPlaceById(places, places[0].parentId);
-
                 var continent = Places.Utils.getContinent(places);
                 if (continent)
                     this.continentId(continent.id);
-
                 var country = Places.Utils.getCountry(places);
                 if (country)
                     this.countryId(country.id);
                 else
                     this.countryId(undefined);
-
                 var admin1 = Places.Utils.getAdmin1(places);
                 if (admin1) {
                     this.admin1Id(admin1.id);
                     this.admin1Label(admin1.placeTypeEnglishName);
-                } else {
+                }
+                else {
                     this.admin1Label(undefined);
                     this.admin1Id(undefined);
                 }
-
                 var admin2 = Places.Utils.getAdmin2(places);
                 if (admin2) {
                     this.admin2Id(admin2.id);
                     this.admin2Label(admin2.placeTypeEnglishName);
-                } else {
+                }
+                else {
                     this.admin2Label(undefined);
                     this.admin2Id(undefined);
                 }
-
                 var admin3 = Places.Utils.getAdmin3(places);
                 if (admin3) {
                     this.admin3Id(admin3.id);
                     this.admin3Label(admin3.placeTypeEnglishName);
-                } else {
+                }
+                else {
                     this.admin3Label(undefined);
                     this.admin3Id(undefined);
                 }
-
                 var subAdmins = Places.Utils.getSubAdmins(places);
                 if (subAdmins && subAdmins.length)
                     this.subAdmins(subAdmins);
                 else
                     this.subAdmins([]);
             };
-
             Location.prototype.loadAdmin1s = function (countryId) {
                 var _this = this;
                 var admin1Url = App.Routes.WebApi.Places.get();
@@ -383,13 +359,13 @@ var Establishments;
                         _this.admin1Id(_this._admin1Id);
                     if (_this.admin1s()) {
                         _this.admin1Label(_this.admin1s()[0].placeTypeEnglishName);
-                    } else {
+                    }
+                    else {
                         _this.admin1Label(undefined);
                     }
                     _this.admin1sLoading(false);
                 });
             };
-
             Location.prototype.loadAdmin2s = function (admin1Id) {
                 var _this = this;
                 var admin2Url = App.Routes.WebApi.Places.get();
@@ -398,20 +374,20 @@ var Establishments;
                     type: 'GET',
                     data: { isAdmin2: true, parentId: admin1Id },
                     url: admin2Url,
-                    cache: false
+                    cache: false,
                 }).done(function (results) {
                     _this.admin2s(results);
                     if (_this._admin2Id)
                         _this.admin2Id(_this._admin2Id);
                     if (_this.admin2s() && _this.admin2s().length > 0) {
                         _this.admin2Label(_this.admin2s()[0].placeTypeEnglishName);
-                    } else {
+                    }
+                    else {
                         _this.admin2Label(undefined);
                     }
                     _this.admin2sLoading(false);
                 });
             };
-
             Location.prototype.loadAdmin3s = function (admin2Id) {
                 var _this = this;
                 var admin3Url = App.Routes.WebApi.Places.get();
@@ -427,28 +403,24 @@ var Establishments;
                         _this.admin3Id(_this._admin3Id);
                     if (_this.admin3Id()) {
                         _this.admin3Label(_this.admin3s()[0].placeTypeEnglishName);
-                    } else {
+                    }
+                    else {
                         _this.admin3Label(undefined);
                     }
                     _this.admin3sLoading(false);
                 });
             };
-
             Location.prototype.changePlaceInLocation = function () {
                 this.subAdmins([]);
             };
-
             Location.prototype.clickToEdit = function () {
                 this.isEditing(true);
             };
-
             Location.prototype.clickToSave = function () {
                 var _this = this;
                 var me = this;
-
                 if (!this.ownerId)
                     return;
-
                 this.saveSpinner.start();
                 $.ajax({
                     url: App.Routes.WebApi.Establishments.Locations.put(me.ownerId),
@@ -462,7 +434,6 @@ var Establishments;
                 }).fail(function (arg1, arg2, arg3) {
                 });
             };
-
             Location.prototype.serializeData = function () {
                 var center, centerLat = this.toolsMarkerLat(), centerLng = this.toolsMarkerLng(), zoom = this.map.getZoom();
                 if (centerLat != null && centerLng != null)
@@ -470,10 +441,8 @@ var Establishments;
                         latitude: centerLat,
                         longitude: centerLng
                     };
-
                 if (center)
                     this.map.setCenter(Places.Utils.convertToLatLng(center));
-
                 var box, northEast, northEastLat = this.map.getBounds().getNorthEast().lat(), northEastLng = this.map.getBounds().getNorthEast().lng(), southWest, southWestLat = this.map.getBounds().getSouthWest().lat(), southWestLng = this.map.getBounds().getSouthWest().lng(), placeId;
                 if (zoom && zoom > 1)
                     box = {
@@ -486,7 +455,6 @@ var Establishments;
                             longitude: southWestLng
                         }
                     };
-
                 if (this.subAdmins().length)
                     placeId = this.subAdmins()[this.subAdmins().length - 1].id;
                 else if (this.admin3Id())
@@ -499,7 +467,6 @@ var Establishments;
                     placeId = this.countryId();
                 else if (this.continentId())
                     placeId = this.continentId();
-
                 var js = {
                     center: center,
                     box: box,
@@ -508,33 +475,26 @@ var Establishments;
                 };
                 return js;
             };
-
             Location.prototype.clickToCancelEdit = function () {
                 var _this = this;
                 this.isEditing(false);
-
                 if (!this.ownerId)
                     return;
-
                 this.isLoaded(false);
                 $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId)).done(function (response) {
                     _this.map.setZoom(1);
                     _this.loadMapZoom(response);
-
                     _this.mapTools().destroyMarker();
                     _this.loadMapMarker(response);
-
                     _this.fillPlacesHierarchy(response.places);
                     _this.isLoaded(true);
                 });
             };
-
             Location.prototype.clickForHelp = function () {
                 alert('TODO: Show location help dialog here.');
             };
             return Location;
         })();
         ViewModels.Location = Location;
-    })(Establishments.ViewModels || (Establishments.ViewModels = {}));
-    var ViewModels = Establishments.ViewModels;
+    })(ViewModels = Establishments.ViewModels || (Establishments.ViewModels = {}));
 })(Establishments || (Establishments = {}));

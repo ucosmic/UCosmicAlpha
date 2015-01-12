@@ -1,5 +1,6 @@
 var ViewModels;
 (function (ViewModels) {
+    var Degrees;
     (function (Degrees) {
         var DegreeSearchInput = (function () {
             function DegreeSearchInput() {
@@ -7,7 +8,6 @@ var ViewModels;
             return DegreeSearchInput;
         })();
         Degrees.DegreeSearchInput = DegreeSearchInput;
-
         var DegreeList = (function () {
             function DegreeList(personId) {
                 this.personId = personId;
@@ -16,21 +16,17 @@ var ViewModels;
                 var _this = this;
                 var deferred = $.Deferred();
                 var expertiseSearchInput = new DegreeSearchInput();
-
                 expertiseSearchInput.orderBy = "";
                 expertiseSearchInput.pageNumber = 1;
                 expertiseSearchInput.pageSize = App.Constants.int32Max;
-
                 $.get(App.Routes.WebApi.My.Degrees.get(), expertiseSearchInput).done(function (data, textStatus, jqXHR) {
                     ko.mapping.fromJS(data, {}, _this);
                     deferred.resolve();
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while loading your degrees', true);
                 });
-
                 return deferred;
             };
-
             DegreeList.prototype.deleteEducationById = function (expertiseId) {
                 $.ajax({
                     async: false,
@@ -43,7 +39,6 @@ var ViewModels;
                     }
                 });
             };
-
             DegreeList.prototype.deleteEducation = function (data, event, viewModel) {
                 $("#confirmDegreeDeleteDialog").dialog({
                     dialogClass: 'jquery-ui',
@@ -52,28 +47,27 @@ var ViewModels;
                     modal: true,
                     buttons: [
                         {
-                            text: "Yes, confirm delete", click: function () {
+                            text: "Yes, confirm delete",
+                            click: function () {
                                 viewModel.deleteEducationById(data.id());
                                 $(this).dialog("close");
-
                                 location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
                             }
                         },
                         {
-                            text: "No, cancel delete", click: function () {
+                            text: "No, cancel delete",
+                            click: function () {
                                 $(this).dialog("close");
                             }
-                        }
+                        },
                     ]
                 });
             };
-
             DegreeList.prototype.editUrl = function (id) {
                 return App.Routes.Mvc.My.Degrees.edit(id);
             };
             return DegreeList;
         })();
         Degrees.DegreeList = DegreeList;
-    })(ViewModels.Degrees || (ViewModels.Degrees = {}));
-    var Degrees = ViewModels.Degrees;
+    })(Degrees = ViewModels.Degrees || (ViewModels.Degrees = {}));
 })(ViewModels || (ViewModels = {}));

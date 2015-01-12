@@ -1,5 +1,6 @@
-﻿var Employees;
+var Employees;
 (function (Employees) {
+    var Servers;
     (function (Servers) {
         function GetEmployeesPlaces(tenantId, data, settings) {
             var promise = $.Deferred();
@@ -15,7 +16,6 @@
             return promise;
         }
         Servers.GetEmployeesPlaces = GetEmployeesPlaces;
-
         function GetActivityCounts(tenantId, settings) {
             var promise = $.Deferred();
             settings = settings || {};
@@ -28,9 +28,8 @@
             return promise;
         }
         Servers.GetActivityCounts = GetActivityCounts;
-
         function GetSettingsByPerson(personId, settings) {
-            if (typeof personId === "undefined") { personId = 0; }
+            if (personId === void 0) { personId = 0; }
             var promise = $.Deferred();
             settings = settings || {};
             settings.url = Routes.Api.Employees.Settings.byPerson(personId);
@@ -45,6 +44,5 @@
             return promise;
         }
         Servers.GetSettingsByPerson = GetSettingsByPerson;
-    })(Employees.Servers || (Employees.Servers = {}));
-    var Servers = Employees.Servers;
+    })(Servers = Employees.Servers || (Employees.Servers = {}));
 })(Employees || (Employees = {}));

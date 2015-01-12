@@ -1,5 +1,6 @@
 var Establishments;
 (function (Establishments) {
+    var ServerModels;
     (function (ServerModels) {
         var Name = (function () {
             function Name(ownerId) {
@@ -15,12 +16,11 @@ var Establishments;
             return Name;
         })();
         ServerModels.Name = Name;
-    })(Establishments.ServerModels || (Establishments.ServerModels = {}));
-    var ServerModels = Establishments.ServerModels;
+    })(ServerModels = Establishments.ServerModels || (Establishments.ServerModels = {}));
 })(Establishments || (Establishments = {}));
-
 var Establishments;
 (function (Establishments) {
+    var ViewModels;
     (function (ViewModels) {
         var EstablishmentNameTextValidator = (function () {
             function EstablishmentNameTextValidator() {
@@ -35,7 +35,8 @@ var Establishments;
                 var _this = this;
                 if (!vm.isTextValidatableAsync()) {
                     callback(true);
-                } else if (!this._isAwaitingResponse) {
+                }
+                else if (!this._isAwaitingResponse) {
                     var route = App.Routes.WebApi.Establishments.Names.validateText(vm.ownerId(), vm.id());
                     this._isAwaitingResponse = true;
                     $.post(route, vm.serializeData()).always(function () {
@@ -50,7 +51,6 @@ var Establishments;
             return EstablishmentNameTextValidator;
         })();
         new EstablishmentNameTextValidator();
-
         var Name = (function () {
             function Name(js, owner) {
                 var _this = this;
@@ -70,20 +70,15 @@ var Establishments;
                 this.textValidationSpinner = new App.Spinner();
                 this.saveEditorClicked = false;
                 this.owner = owner;
-
                 if (!js)
                     js = new Establishments.ServerModels.Name(this.owner.id);
                 if (js.id === 0)
                     js.ownerId = this.owner.id;
-
                 this.originalValues = js;
-
                 ko.mapping.fromJS(js, {}, this);
-
                 this.isOfficialNameEnabled = ko.computed(function () {
                     return !_this.originalValues.isOfficialName;
                 });
-
                 this.isTextValidatableAsync = ko.computed(function () {
                     return _this.text() !== _this.originalValues.text;
                 });
@@ -97,23 +92,21 @@ var Establishments;
                 this.text.isValidating.subscribe(function (isValidating) {
                     if (isValidating) {
                         _this.textValidationSpinner.start();
-                    } else {
+                    }
+                    else {
                         _this.textValidationSpinner.stop();
                         if (_this.saveEditorClicked)
                             _this.saveEditor();
                     }
                 });
-
                 this.selectedLanguageCode = ko.observable(this.originalValues.languageCode);
                 this.owner.languages.subscribe(function () {
                     _this.selectedLanguageCode(_this.languageCode());
                 });
-
                 this.isOfficialName.subscribe(function (newValue) {
                     if (newValue)
                         _this.isFormerName(false);
                 });
-
                 this.mutationSuccess = function (response) {
                     _this.owner.requestNames(function () {
                         _this.owner.editingName(0);
@@ -123,7 +116,6 @@ var Establishments;
                         App.flasher.flash(response);
                     });
                 };
-
                 this.mutationError = function (xhr) {
                     if (xhr.status === 400) {
                         _this.owner.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
@@ -143,7 +135,6 @@ var Establishments;
                     _this.saveSpinner.stop();
                     _this.purgeSpinner.stop();
                 };
-
                 ko.validation.group(this);
             }
             Name.prototype.clickOfficialNameCheckbox = function () {
@@ -165,7 +156,6 @@ var Establishments;
                 }
                 return true;
             };
-
             Name.prototype.showEditor = function () {
                 var editingName = this.owner.editingName();
                 if (!editingName) {
@@ -175,23 +165,23 @@ var Establishments;
                     this.$textElement.focus();
                 }
             };
-
             Name.prototype.saveEditor = function () {
                 this.saveEditorClicked = true;
                 if (!this.isValid()) {
                     this.saveEditorClicked = false;
                     this.errors.showAllMessages();
-                } else if (!this.text.isValidating()) {
+                }
+                else if (!this.text.isValidating()) {
                     this.saveEditorClicked = false;
                     this.saveSpinner.start();
-
                     if (this.id()) {
                         $.ajax({
                             url: App.Routes.WebApi.Establishments.Names.put(this.owner.id, this.id()),
                             type: 'PUT',
                             data: this.serializeData()
                         }).done(this.mutationSuccess).fail(this.mutationError);
-                    } else if (this.owner.id) {
+                    }
+                    else if (this.owner.id) {
                         $.ajax({
                             url: App.Routes.WebApi.Establishments.Names.post(this.owner.id),
                             type: 'POST',
@@ -201,17 +191,16 @@ var Establishments;
                 }
                 return false;
             };
-
             Name.prototype.cancelEditor = function () {
                 this.owner.editingName(0);
                 if (this.id()) {
                     ko.mapping.fromJS(this.originalValues, {}, this);
                     this.editMode(false);
-                } else {
+                }
+                else {
                     this.owner.names.shift();
                 }
             };
-
             Name.prototype.purge = function (vm, e) {
                 var _this = this;
                 e.stopPropagation();
@@ -267,7 +256,6 @@ var Establishments;
                     ]
                 });
             };
-
             Name.prototype.serializeData = function () {
                 return {
                     id: this.id(),
@@ -281,6 +269,5 @@ var Establishments;
             return Name;
         })();
         ViewModels.Name = Name;
-    })(Establishments.ViewModels || (Establishments.ViewModels = {}));
-    var ViewModels = Establishments.ViewModels;
+    })(ViewModels = Establishments.ViewModels || (Establishments.ViewModels = {}));
 })(Establishments || (Establishments = {}));

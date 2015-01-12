@@ -1,5 +1,6 @@
 var ViewModels;
 (function (ViewModels) {
+    var Users;
     (function (Users) {
         var User = (function () {
             function User() {
@@ -7,7 +8,7 @@ var ViewModels;
                 this.name = ko.observable();
                 this.password = ko.observable();
                 this.username = ko.observable();
-                this.saveSpinner = new App.Spinner({ delay: 200 });
+                this.saveSpinner = new App.Spinner({ delay: 200, });
                 this.errorMessage = ko.observable();
                 this.isWarnedSSO = ko.observable(sessionStorage.getItem('UserCreateFormIsWarnedSSO') || false);
                 this.isWarnedNotSSO = ko.observable(sessionStorage.getItem('UserCreateFormIsWarnedNotSSO') || false);
@@ -19,7 +20,6 @@ var ViewModels;
                     maxLength: 256,
                     validUserName: this
                 });
-
                 ko.validation.group(this);
             }
             User.prototype.acceptWarningSSO = function () {
@@ -30,7 +30,6 @@ var ViewModels;
                 this.isWarnedNotSSO(true);
                 sessionStorage.setItem('UserCreateFormIsWarnedNotSSO', this.isWarnedNotSSO().toString());
             };
-
             User.prototype.createUserNotSSO = function () {
                 var _this = this;
                 if (!this.isAjaxing) {
@@ -53,16 +52,13 @@ var ViewModels;
                     });
                 }
             };
-
             User.prototype.save = function () {
                 var _this = this;
                 if (!this.isValid()) {
                     this.errors.showAllMessages();
                     return false;
                 }
-
                 this.saveSpinner.start();
-
                 $.ajax({
                     type: "POST",
                     async: false,
@@ -73,14 +69,12 @@ var ViewModels;
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
                         _this.errorMessage(jqXhr.responseText);
-                    }
+                    },
                 });
-
                 if (this.errorMessage() != null) {
                     this.saveSpinner.stop();
                     return;
                 }
-
                 $.ajax({
                     type: "POST",
                     async: true,
@@ -100,6 +94,5 @@ var ViewModels;
             return User;
         })();
         Users.User = User;
-    })(ViewModels.Users || (ViewModels.Users = {}));
-    var Users = ViewModels.Users;
+    })(Users = ViewModels.Users || (ViewModels.Users = {}));
 })(ViewModels || (ViewModels = {}));

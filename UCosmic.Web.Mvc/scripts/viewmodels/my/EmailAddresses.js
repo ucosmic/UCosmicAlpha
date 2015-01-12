@@ -1,5 +1,6 @@
-﻿var ViewModels;
+var ViewModels;
 (function (ViewModels) {
+    var My;
     (function (My) {
         var EmailAddresses = (function () {
             function EmailAddresses() {
@@ -7,6 +8,5 @@
             return EmailAddresses;
         })();
         My.EmailAddresses = EmailAddresses;
-    })(ViewModels.My || (ViewModels.My = {}));
-    var My = ViewModels.My;
+    })(My = ViewModels.My || (ViewModels.My = {}));
 })(ViewModels || (ViewModels = {}));

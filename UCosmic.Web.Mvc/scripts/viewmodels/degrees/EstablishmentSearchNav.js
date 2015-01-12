@@ -1,5 +1,6 @@
 var ViewModels;
 (function (ViewModels) {
+    var Degrees;
     (function (Degrees) {
         var EstablishmentSearchNav = (function () {
             function EstablishmentSearchNav(institutionId, institutionOfficialName, institutionCountryOfficialName, institutionTranslatedName, degreeId, institutionOfficialNameDoesNotMatchTranslation) {
@@ -13,7 +14,6 @@ var ViewModels;
                 this.institutionOfficialName = institutionOfficialName;
                 this.institutionCountryOfficialName = institutionCountryOfficialName;
                 this.degreeId = degreeId;
-
                 this.institutionTranslatedName = institutionTranslatedName;
                 if (this.degreeId() && this.degreeId() > 0) {
                     this.sammyUrl = this.degreeId() + "/";
@@ -22,11 +22,9 @@ var ViewModels;
             EstablishmentSearchNav.prototype.SearchPageBind = function (parentOrParticipant) {
                 var _this = this;
                 var $cancelAddParticipant = $("#cancelAddParticipant"), $searchSideBarAddNew = $("#searchSideBarAddNew"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("[data-current-module=degrees]"), $obj2 = $("#add_establishment"), time = 500;
-
                 this.establishmentSearchViewModel.detailTooltip = function () {
                     return 'Choose this Institution as a ' + parentOrParticipant;
                 };
-
                 $cancelAddParticipant.off();
                 $searchSideBarAddNew.off();
                 $searchSideBarAddNew.on("click", function (e) {
@@ -40,7 +38,8 @@ var ViewModels;
                         e.preventDefault();
                         return false;
                     });
-                } else {
+                }
+                else {
                     $cancelAddParticipant.on("click", function (e) {
                         _this.establishmentSearchViewModel.sammy.setLocation('#/index');
                         e.preventDefault();
@@ -48,29 +47,28 @@ var ViewModels;
                     });
                 }
                 this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
-
                 $.when(deferred, deferred2).done(function () {
                     $("#establishment_search").fadeIn(500);
                 });
             };
-
             EstablishmentSearchNav.prototype.fadeModsOut = function (deferred, deferred2, $obj, $obj2, time) {
                 if ($obj.css("display") !== "none") {
                     $obj.fadeOut(time, function () {
                         deferred.resolve();
                     });
-                } else {
+                }
+                else {
                     deferred.resolve();
                 }
                 if ($obj2.css("display") !== "none") {
                     $obj2.fadeOut(time, function () {
                         deferred2.resolve();
                     });
-                } else {
+                }
+                else {
                     deferred2.resolve();
                 }
             };
-
             EstablishmentSearchNav.prototype.bindSearch = function () {
                 var _this = this;
                 if (!this.hasBoundSearch.does) {
@@ -81,27 +79,24 @@ var ViewModels;
                     if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#") === -1) {
                         if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + this.sammyUrl + "") === -1) {
                             this.establishmentSearchViewModel.sammy.setLocation("/degrees/" + this.sammyUrl + "#/index");
-                        } else {
+                        }
+                        else {
                             this.establishmentSearchViewModel.sammy.setLocation('#/index');
                         }
                     }
                     if (sessionStorage.getItem("addest") == undefined) {
                         sessionStorage.setItem("addest", "no");
                     }
-
                     this.establishmentSearchViewModel.sammy.bind("location-changed", function () {
                         if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(_this.lastURL) < 0) {
                             var $asideRootSearch = $("#asideRootSearch"), $asideParentSearch = $("#asideParentSearch");
-
                             if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + _this.sammyUrl + "#/new/") > 0) {
                                 var $addEstablishment = $("#add_establishment"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("#establishment_search"), $obj2 = $("#degree_editor"), time = 500;
-
                                 _this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
                                 $.when(deferred, deferred2).done(function () {
                                     $addEstablishment.css("visibility", "").hide().fadeIn(500, function () {
                                         if (!_this.hasBoundItem) {
                                             var $cancelAddEstablishment = $("#cancelAddEstablishment");
-
                                             _this.establishmentItemViewModel = new Establishments.ViewModels.Item(null, false);
                                             _this.establishmentItemViewModel.goToSearch = function () {
                                                 sessionStorage.setItem("addest", "yes");
@@ -110,18 +105,14 @@ var ViewModels;
                                             _this.establishmentItemViewModel.submitToCreate = function (formElement) {
                                                 if (!_this.establishmentItemViewModel.id || _this.establishmentItemViewModel.id === 0) {
                                                     var me = _this.establishmentItemViewModel, officialName = _this.establishmentItemViewModel.names()[0], officialUrl = _this.establishmentItemViewModel.urls()[0], location = _this.establishmentItemViewModel.location;
-
                                                     _this.establishmentItemViewModel.validatingSpinner.start();
-
                                                     if (officialName.text.isValidating() || officialUrl.value.isValidating() || _this.establishmentItemViewModel.ceebCode.isValidating() || _this.establishmentItemViewModel.uCosmicCode.isValidating()) {
                                                         setTimeout(function () {
                                                             var waitResult = _this.establishmentItemViewModel.submitToCreate(formElement);
-
                                                             return false;
                                                         }, 50);
                                                         return false;
                                                     }
-
                                                     _this.establishmentItemViewModel.isValidationSummaryVisible(true);
                                                     if (!_this.establishmentItemViewModel.isValid()) {
                                                         _this.establishmentItemViewModel.errors.showAllMessages();
@@ -135,7 +126,6 @@ var ViewModels;
                                                     _this.establishmentItemViewModel.validatingSpinner.stop();
                                                     if (officialName.isValid() && officialUrl.isValid() && _this.establishmentItemViewModel.isValid()) {
                                                         var $LoadingPage = $("#Loading_page").find("strong"), url = App.Routes.WebApi.Establishments.post(), data = _this.establishmentItemViewModel.serializeData();
-
                                                         $LoadingPage.text("Creating Institution...");
                                                         data.officialName = officialName.serializeData();
                                                         data.officialUrl = officialUrl.serializeData();
@@ -181,13 +171,11 @@ var ViewModels;
                                     });
                                 });
                                 _this.lastURL = "#/new/";
-                            } else if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + _this.sammyUrl + "#/page/") > 0) {
+                            }
+                            else if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + _this.sammyUrl + "#/page/") > 0) {
                                 var establishment_search = $("#establishment_search"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("#degree_editor"), $obj2 = $("#add_establishment"), time = 500;
-
                                 _this.lastURL = 'asdf';
-
                                 _this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
-
                                 $.when(deferred, deferred2).done(function () {
                                     establishment_search.css("visibility", "").hide().fadeIn(500);
                                 });
@@ -203,7 +191,8 @@ var ViewModels;
                                     $asideParentSearch.show();
                                     _this.SearchPageBind("parent");
                                     _this.establishmentSearchViewModel.header("Choose a parent Institution");
-                                } else {
+                                }
+                                else {
                                     $asideRootSearch.show();
                                     $asideParentSearch.hide();
                                     _this.SearchPageBind("institution");
@@ -215,14 +204,13 @@ var ViewModels;
                                         _this.institutionTranslatedName(context.translatedName());
                                         _this.institutionOfficialNameDoesNotMatchTranslation(context.officialNameDoesNotMatchTranslation());
                                         _this.establishmentSearchViewModel.sammy.setLocation("my/degrees/" + _this.sammyUrl + "");
-
                                         return false;
                                     };
                                 }
                                 _this.lastURL = "#/page/";
-                            } else if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("my/degrees/" + _this.sammyUrl + "") > 0) {
+                            }
+                            else if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("my/degrees/" + _this.sammyUrl + "") > 0) {
                                 var deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("#establishment_search"), $obj2 = $("#add_establishment"), time = 500;
-
                                 sessionStorage.setItem("addest", "no");
                                 _this.lastURL = "#/index";
                                 _this.establishmentSearchViewModel.sammy.setLocation('#/index');
@@ -232,7 +220,8 @@ var ViewModels;
                                         $(_this).show();
                                     });
                                 });
-                            } else {
+                            }
+                            else {
                                 window.location.replace(_this.establishmentSearchViewModel.sammy.getLocation());
                             }
                         }
@@ -243,6 +232,5 @@ var ViewModels;
             return EstablishmentSearchNav;
         })();
         Degrees.EstablishmentSearchNav = EstablishmentSearchNav;
-    })(ViewModels.Degrees || (ViewModels.Degrees = {}));
-    var Degrees = ViewModels.Degrees;
+    })(Degrees = ViewModels.Degrees || (ViewModels.Degrees = {}));
 })(ViewModels || (ViewModels = {}));

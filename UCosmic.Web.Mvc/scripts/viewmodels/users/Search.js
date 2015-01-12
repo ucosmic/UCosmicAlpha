@@ -6,6 +6,7 @@ var __extends = this.__extends || function (d, b) {
 };
 var ViewModels;
 (function (ViewModels) {
+    var Users;
     (function (Users) {
         var Search = (function (_super) {
             __extends(Search, _super);
@@ -27,7 +28,6 @@ var ViewModels;
                 this._setupPagingDefaults();
                 this._setupSessionStorage();
             };
-
             Search.prototype._pullResults = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -55,7 +55,6 @@ var ViewModels;
                 });
                 return deferred;
             };
-
             Search.prototype._loadResults = function (results) {
                 var _this = this;
                 var resultsMapping = {
@@ -72,28 +71,23 @@ var ViewModels;
                 ko.mapping.fromJS(results, resultsMapping, this);
                 this.transitionedPageNumber(this.pageNumber());
             };
-
             Search.prototype._setupQueryComputed = function () {
                 var _this = this;
                 ko.computed(function () {
                     if (_this.pageSize() === undefined || _this.orderBy() === undefined)
                         return;
-
                     _this._pullResults().done(function (response) {
                         _this._loadResults(response);
                     }).fail(function () {
                     });
                 }).extend({ throttle: 250 });
             };
-
             Search.prototype._setupSammy = function () {
                 var _this = this;
                 var self = this;
-
                 this.sammy.before(/\#\/page\/(.*)/, function () {
                     if (self.nextForceDisabled() || self.prevForceDisabled())
                         return false;
-
                     if (self._history().length > 1) {
                         var toPath = this.path;
                         for (var i = 0; i < self._history().length; i++) {
@@ -104,24 +98,20 @@ var ViewModels;
                             }
                         }
                     }
-
                     self._history.push(this.path);
                     self._historyIndex = self._history().length - 1;
                     return true;
                 });
-
                 this.sammy.get(this.getPageHash(':pageNumber'), function () {
                     var pageNumber = this.params['pageNumber'];
                     if (pageNumber && parseInt(pageNumber) !== Number(self.pageNumber()))
                         self.pageNumber(parseInt(pageNumber));
                     document.title = 'Users (Page #' + self.pageNumber() + ')';
                 });
-
                 this.sammy.get('/users[\/]?', function () {
                     _this.sammy.setLocation(_this.getPageHash(1));
                 });
             };
-
             Search.prototype._setupHistory = function () {
                 var _this = this;
                 this.$historyJson.subscribe(function (newValue) {
@@ -133,7 +123,6 @@ var ViewModels;
                         }
                     }
                 });
-
                 this._history.subscribe(function (newValue) {
                     if (_this.$historyJson() && _this.$historyJson().length) {
                         var currentJson = _this.$historyJson().val();
@@ -143,12 +132,10 @@ var ViewModels;
                     }
                 });
             };
-
             Search.prototype._setupPagingDefaults = function () {
                 var _this = this;
                 this.orderBy($('input[type=hidden][data-bind*="value: orderBy"]').val());
                 this.pageSize($('input[type=hidden][data-bind*="value: pageSize"]').val());
-
                 this.pageCount.subscribe(function (newValue) {
                     _this.pageNumberOptions.removeAll();
                     for (var i = 1; i < _this.pageCount() + 1; i++) {
@@ -159,7 +146,6 @@ var ViewModels;
                     _this._gotoPage(newValue - _this.pageNumber());
                 });
             };
-
             Search.prototype._setupSessionStorage = function () {
                 this.keyword.subscribe(function (newValue) {
                     sessionStorage.setItem(Search.KeywordSessionKey, newValue);
@@ -171,13 +157,11 @@ var ViewModels;
                     sessionStorage.setItem(Search.OrderBySessionKey, newValue);
                 });
             };
-
             Search.prototype.applySession = function () {
                 this.keyword(sessionStorage.getItem(Search.KeywordSessionKey) || this.keyword());
                 this.pageSize(parseInt(window.sessionStorage.getItem('UserSearchPageSize')) || Number(this.pageSize()));
                 this.orderBy(sessionStorage.getItem(Search.OrderBySessionKey) || this.orderBy());
             };
-
             Search.prototype.nextPage = function () {
                 this._gotoPage(1);
             };
@@ -223,6 +207,5 @@ var ViewModels;
             return Search;
         })(App.PagedSearch);
         Users.Search = Search;
-    })(ViewModels.Users || (ViewModels.Users = {}));
-    var Users = ViewModels.Users;
+    })(Users = ViewModels.Users || (ViewModels.Users = {}));
 })(ViewModels || (ViewModels = {}));
