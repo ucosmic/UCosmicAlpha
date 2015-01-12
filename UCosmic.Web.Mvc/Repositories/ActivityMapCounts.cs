@@ -13,7 +13,7 @@ using System.Text.RegularExpressions;
 //http://stackoverflow.com/questions/554013/regular-expression-to-split-on-spaces-unless-in-quotes
 namespace UCosmic.Repositories
 {
-    public class ActivityMapCountRepository// : ILocationsRepository
+    public class ActivityMapCountRepository// : ISummaryRepository
     {
         private static string AddSqlFilter(string sql, ActivitySearchInputModel input)
         {
@@ -106,51 +106,57 @@ namespace UCosmic.Repositories
                 List<string> keywords;
                 //string[] keywords;
                 //keywords = input.Keyword.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries);
+                input.Keyword = input.Keyword.Replace("+", "+ ");
                 keywords = Regex
                     .Matches(input.Keyword, "(?<match>[^\\s\"]+)|\"(?<match>[^\"]*)\"")
                     .Cast<Match>()
                     .Select(m => m.Groups["match"].Value)
                     .ToList();
-                sql += " and (";
+                sql += " and ((";
 
                 // -black + white
                 // black + white
                 // black + -white
-                string sql2 = "";
+                //string sql2 = "";
 
                 foreach (var keyword in keywords.Select((x, i) => new { Value = x, Index = i }))
                 {
                     string not = "";
-                    string not2 = "";
+                    //string not2 = "";
                     string or = "or";
                     string keywordValue = "";
 
-                    if (keyword.Index + 2 <= keywords.Count())
-                    {
-                        if (keywords[keyword.Index + 1].IndexOf("+") == 0)
+                    //if (keyword.Index + 2 <= keywords.Count())
+                    //{
+                    if (keywords[keyword.Index].IndexOf("+") == 0 || keyword.Value.IndexOf("-") == 0)
                         {
-                            sql += "(";
+                            sql += ")";
                         }
-                    }
+                    //}
 
 
                     if (keyword.Value.IndexOf("-") == 0)
                     {
                         not = "!";
                         or = "and";
+                        //sql += " and (";
                         keywordValue = keyword.Value.Replace("-", "");
 
                         if (keyword.Index > 0)
                         {
-                            sql += " " + or;
+                            sql += " " + or + "(";
                         }
                         //if (keyword.Index > 0)
                         //{
                         sql += "( pp1.officialname " + not + "='" + keywordValue + "' " + or + " (pp2.officialname " + not + "='" + keywordValue + "' or pp2.officialname is null)";
-                        sql += " " + or + " people.displayname " + not + "='" + keywordValue + "' " + or + " people.firstname " + not + "='" + keywordValue + "' " + or + " people.lastname " + not + "='" + keywordValue + "'";
-                        sql += " " + or + " iu.name " + not + "='" + keywordValue + "'";
+                        sql += " " + or + " (people.displayname not like '%" + keywordValue + "%' or people.displayname is null)";
+                        sql += " " + or + " (people.firstname not like '%" + keywordValue + "%' or people.firstname is null)";
+                        sql += " " + or + " (people.lastname not like '%" + keywordValue + "%' or people.lastname is null)";
+                        sql += " " + or + " (iu.name not like '%" + keywordValue + "%' or iu.name is null)";
+                        //sql += " " + or + " people.displayname " + not + "='" + keywordValue + "' " + or + " people.firstname " + not + "='" + keywordValue + "' " + or + " people.lastname " + not + "='" + keywordValue + "'";
+                        //sql += " " + or + " iu.name " + not + "='" + keywordValue + "'";
                         sql += " " + or + " (atag.text not like '%" + keywordValue + "%' or atag.text is null)";
-                        sql += " " + or + " (av.title not like '%" + keywordValue + "%'  or atag.text is null)" + or + " (av.contentsearchable not like '%" + keywordValue + "%'  or atag.text is null))";
+                        sql += " " + or + " (av.title not like '%" + keywordValue + "%'  or av.title is null)" + or + " (av.contentsearchable not like '%" + keywordValue + "%'  or av.contentsearchable is null))";
                         
                     }else if(keyword.Value != "+"){
                         keywordValue = keyword.Value;
@@ -160,13 +166,17 @@ namespace UCosmic.Repositories
                         }
                         else if (keyword.Index > 0 && keywords[keyword.Index - 1].IndexOf("+") == 0)
                         {
-                            sql += " and";
+                            sql += " and (";
                         }
                         //if (keyword.Index > 0)
                         //{
                         sql += "( pp1.officialname " + not + "='" + keywordValue + "' " + or + " pp2.officialname " + not + "='" + keywordValue + "'";
-                        sql += " " + or + " people.displayname " + not + "='" + keywordValue + "' " + or + " people.firstname " + not + "='" + keywordValue + "' " + or + " people.lastname " + not + "='" + keywordValue + "'";
-                        sql += " " + or + " iu.name " + not + "='" + keywordValue + "'";
+                        sql += " " + or + " (people.displayname like '%" + keywordValue + "%')";
+                        sql += " " + or + " (people.firstname like '%" + keywordValue + "%')";
+                        sql += " " + or + " (people.lastname like '%" + keywordValue + "%')";
+                        sql += " " + or + " (iu.name like '%" + keywordValue + "%')";
+                        //sql += " " + or + " people.displayname " + not + "='" + keywordValue + "' " + or + " people.firstname " + not + "='" + keywordValue + "' " + or + " people.lastname " + not + "='" + keywordValue + "'";
+                        //sql += " " + or + " iu.name " + not + "='" + keywordValue + "'";
 
                             sql += " " + or + " atag.text  like '%" + keywordValue + "%'";
                             sql += " " + or + " av.title  like '%" + keywordValue + "%' " + or + " av.contentsearchable  like '%" + keywordValue + "%' )";
@@ -174,13 +184,13 @@ namespace UCosmic.Repositories
 
                     }
 
-                    if (keyword.Index > 0)
-                    {
-                        if (keywords[keyword.Index - 1].IndexOf("+") == 0)
-                        {
-                            sql += ")";
-                        }
-                    }
+                    //if (keyword.Index > 0)
+                    //{
+                    //    if (keywords[keyword.Index - 1].IndexOf("+") == 0)
+                    //    {
+                    //        sql += ")(";
+                    //    }
+                    //}
                     //}
                     //else
                     //{
@@ -191,7 +201,7 @@ namespace UCosmic.Repositories
                     //    sql += " " + or + " av.title " + not2 + " like '%" + keywordValue + "%' " + or + " av.contentsearchable " + not2 + " like '%" + keywordValue + "%' )";
                     //}
                 }
-                sql += ")";
+                sql += "))";
                 //sql += "("+sql2+")"
             }
             return sql;
