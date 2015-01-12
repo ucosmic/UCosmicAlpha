@@ -73,6 +73,12 @@ namespace UCosmic.Web.Mvc.Controllers
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult Experts2()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Experts2);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public System.Web.Mvc.ActionResult Experts()
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Experts);
@@ -99,6 +105,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string Map = "Map";
             public readonly string DegreesTable = "DegreesTable";
             public readonly string LanguagesTable = "LanguagesTable";
+            public readonly string Experts2 = "Experts2";
             public readonly string Experts = "Experts";
         }
 
@@ -111,6 +118,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string Map = "Map";
             public const string DegreesTable = "DegreesTable";
             public const string LanguagesTable = "LanguagesTable";
+            public const string Experts2 = "Experts2";
             public const string Experts = "Experts";
         }
 
@@ -159,6 +167,14 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string domain = "domain";
             public readonly string input = "input";
         }
+        static readonly ActionParamsClass_Experts2 s_params_Experts2 = new ActionParamsClass_Experts2();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Experts2 Experts2Params { get { return s_params_Experts2; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Experts2
+        {
+            public readonly string domain = "domain";
+        }
         static readonly ActionParamsClass_Experts s_params_Experts = new ActionParamsClass_Experts();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionParamsClass_Experts ExpertsParams { get { return s_params_Experts; } }
@@ -181,6 +197,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _Bib = "_Bib";
                 public readonly string DegreesTable = "DegreesTable";
                 public readonly string Experts = "Experts";
+                public readonly string Experts2 = "Experts2";
                 public readonly string Index = "Index";
                 public readonly string LanguagesTable = "LanguagesTable";
                 public readonly string Map = "Map";
@@ -192,6 +209,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _Bib = "~/Views/Employees/_Bib.cshtml";
             public readonly string DegreesTable = "~/Views/Employees/DegreesTable.cshtml";
             public readonly string Experts = "~/Views/Employees/Experts.cshtml";
+            public readonly string Experts2 = "~/Views/Employees/Experts2.cshtml";
             public readonly string Index = "~/Views/Employees/Index.cshtml";
             public readonly string LanguagesTable = "~/Views/Employees/LanguagesTable.cshtml";
             public readonly string Map = "~/Views/Employees/Map.cshtml";
@@ -248,6 +266,13 @@ namespace UCosmic.Web.Mvc.Controllers
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.LanguagesTable);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "input", input);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Experts2(string domain)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Experts2);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
             return callInfo;
         }
 
