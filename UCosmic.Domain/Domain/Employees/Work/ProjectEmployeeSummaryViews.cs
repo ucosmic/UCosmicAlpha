@@ -13,7 +13,7 @@ namespace UCosmic.Domain.Employees
         private readonly EmployeePlacesViewBuilder _placesBuilder;
         private readonly EmployeePlacesViewProjector _placesProjector;
         private readonly EmployeeActivityCountsViewBuilder _activityCountsBuilder;
-        private readonly EmployeeActivityCountsViewProjector _activityCountsProjector;
+        //private readonly EmployeeActivityCountsViewProjector _activityCountsProjector;
         private readonly ISendMail _mailSender;
         private readonly ILogExceptions _exceptionLogger;
         private static bool _mailSent;
@@ -26,7 +26,7 @@ namespace UCosmic.Domain.Employees
             _placesBuilder = placesBuilder;
             _placesProjector = placesProjector;
             _activityCountsBuilder = activityCountsBuilder;
-            _activityCountsProjector = activityCountsProjector;
+            //_activityCountsProjector = activityCountsProjector;
             _mailSender = mailSender;
             _exceptionLogger = exceptionLogger;
         }
@@ -42,11 +42,11 @@ namespace UCosmic.Domain.Employees
                 foreach (var establishmentId in establishmentIds)
                 {
                     var placesViews = _placesBuilder.Build(establishmentId);
-                    var activityCountView = _activityCountsBuilder.Build(establishmentId);
+                    //var activityCountView = _activityCountsBuilder.Build(establishmentId);
                     reportBuilder.Report("Places view has {0} records., projecting...", placesViews.Length);
                     _placesProjector.Set(placesViews, establishmentId);
                     reportBuilder.Report("Places projected into view manager for establishment #{0}.", establishmentId);
-                    _activityCountsProjector.Set(activityCountView, establishmentId);
+                    //_activityCountsProjector.Set(activityCountView, establishmentId);
                 }
                 reportBuilder.Report("Activity data cooked.");
             }
