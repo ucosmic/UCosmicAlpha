@@ -1,0 +1,11 @@
+.list-item {
+  margin-bottom: 4px;
+  cursor: pointer;
+  padding: 4px; }
+
+.list-item:hover {
+  background-color: yellow;
+  border-radius: 5px;
+  cursor: pointer; }
+
+/*# sourceMappingURL=autoComplete.css.map */

@@ -1,0 +1,43 @@
+﻿<link rel="import" href="../../Polymer/bower_components/paper-input/paper-input-decorator.html">
+<link rel="import" href="../../Polymer/bower_components/core-input/core-input.html">
+<polymer-element name="is-auto-complete" attributes="url,selected,selectedid,list">
+    <template>
+        <link href="autoComplete.css" rel="stylesheet" />
+
+        <div style="margin-left:20px;" flex layout vertical>
+            <paper-input-decorator style="padding-bottom: 2px;" floatinglabel layout vertical label="Type and choose an establishment">
+                <input is="core-input" on-keyup="{{listSearch}}" id="selectedInput" on-blur="{{leaveSearch}}" value="{{selected}}">
+            </paper-input-decorator>
+            <div id="firstItemInListContainer" style="height:0; z-index:10;">
+                <template if="{{firstItemInList}}">
+                    <div id="firstItemInListItem" style="color:rgba(1,1,1,.3); border-radius: 5px; position:relative;top:-24px;">
+                        <div on-click="{{selectFirstItemInList}}"  data-id="{{firstItemInList._id}}" class="first-list-item">{{firstItemInListText}}</div>
+                    </div>
+                </template>
+            </div>
+            <div style="height:0; z-index:10;">
+                <template if="{{secondToN_list.length > 0}}">
+                    <div style="background-color:gray;padding: 5px;border-radius: 5px">
+                        <template repeat="{{item, itemI in secondToN_list}}">
+                            <div on-click="{{select}}" data-id="{{item._id}}" class="list-item">
+                                {{item.text}}
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <core-ajax url="{{url}}"
+                   handleas="json"
+                   on-core-response="{{response}}"
+                   on-core-error="{{error}}"
+                   id="ajax_list">
+        </core-ajax>
+
+    </template>
+    <script src="autoComplete.js"></script>
+
+</polymer-element>
+
+
