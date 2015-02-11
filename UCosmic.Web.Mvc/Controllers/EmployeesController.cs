@@ -56,10 +56,11 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 EagerLoad = new Expression<Func<ActivityValues, object>>[]
                 {
-                    //x => x.Activity.Person.Affiliations,
+                    x => x.Activity.Person,
                     x => x.Activity.Person.Affiliations,
                     x => x.Activity.Person.Affiliations.Select(y => y.Establishment),
                     x => x.Activity.Person.Affiliations.Select(y => y.Establishment.Ancestors),//.Select(z => z.Ancestor)),
+                    //x => x.Activity.Person.Affiliations.All().,//.Select(z => z.Ancestor)),
                     //x => x.Locations,                    
                     //x => x.Tags,
                     //x => x.Types,
@@ -315,6 +316,7 @@ namespace UCosmic.Web.Mvc.Controllers
             //results.ToList;
             //results.Items = results.Items.ToArray();
             //results.AsQueryable();
+            myOutput.Items = myOutput.Items.OrderBy(x => x.Name);
 
             var model = new LanguageExpertiseSearchModel
             {

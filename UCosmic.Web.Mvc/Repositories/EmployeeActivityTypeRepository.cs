@@ -23,8 +23,9 @@ namespace UCosmic.Repositories
 
 
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
-            const string sql = "select type, id as typeId  FROM [employees].[employeeactivitytype] " +
-                  " where establishmentid=3306";
+            string sql = "select type, id as typeId  FROM [employees].[employeeactivitytype] " +
+                  " where establishmentid=";
+            sql += EstablishmentId;
             IList<ActivityTypesApiReturn> activityLocations = connectionFactory.SelectList<ActivityTypesApiReturn>(DB.UCosmic, sql);
             
             return activityLocations;
