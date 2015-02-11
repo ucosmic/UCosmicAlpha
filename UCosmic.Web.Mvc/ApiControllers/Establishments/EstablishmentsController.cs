@@ -9,6 +9,7 @@ using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
+using UCosmic.Repositories;
 using FluentValidation;
 using FluentValidation.Results;
 using UCosmic.Domain.Establishments;
@@ -92,6 +93,19 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
+        [GET("list/{establishment}/")]
+        public IList<EstablishmentListApiReturn> GetEstablishmentList(string establishment)
+        {
+
+            //IList<AgreementEstablishmentApiModel> returnModel = new List<AgreementEstablishmentApiModel>();
+            IList<EstablishmentListApiReturn> model = new List<EstablishmentListApiReturn>();
+
+            EstablishmentListRepository establishmentListRepository = new EstablishmentListRepository();
+            //AgreementTypesRepository AgreementTypesRepository = new AgreementTypesRepository();
+            model = establishmentListRepository.EstablishmentList_By_establishment(establishment);
+
+            return model.ToList();
+        }
         [POST("")]
         public HttpResponseMessage Post(EstablishmentPostModel model)
         {
