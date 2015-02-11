@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,UAAW;EACT,MAAM,EAAE,GAAG;EACX,MAAM,EAAE,OAAO;EACf,OAAO,EAAE,GAAG;EACZ,aAAa,EAAE,GAAG",
+"sources": ["autoDDL.scss"],
+"names": [],
+"file": "autoDDL.css"
+}
