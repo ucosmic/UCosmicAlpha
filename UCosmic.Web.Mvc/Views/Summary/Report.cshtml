@@ -1,0 +1,20 @@
+﻿
+<link rel="import" href="~/components/pages/Summary/report.html">
+@{
+    ViewBag.Title = "Summary - Report";
+    var tenancy = Request.Tenancy();
+    var styleDomain = tenancy != null ? tenancy.StyleDomain : "default";
+    var tenantId = tenancy != null ? tenancy.TenantId : 0;
+    var hasStyleDomain = !string.IsNullOrWhiteSpace(styleDomain) && !"default".Equals(styleDomain, StringComparison.OrdinalIgnoreCase);
+}
+@section bib
+{
+    <nav class="bib hide" data-current-bib="report">
+        @Html.Partial(MVC.Summary.Views._Bib)
+    </nav>
+}
+
+<div class="fixed content" data-current-module="summary">
+
+    <is-page-summary-report styledomain="@styleDomain" tenantid="@tenantId"></is-page-summary-report>
+</div>
