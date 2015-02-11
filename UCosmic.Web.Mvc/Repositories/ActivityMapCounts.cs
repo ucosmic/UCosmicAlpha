@@ -209,7 +209,7 @@ namespace UCosmic.Repositories
         public IList<ActivityMapCountsApiQueryResultModel> ActivityMapCount_Country(ActivitySearchInputModel input, int? ancestorId)
         {
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
-            string sql = "select distinct aa.revisionid, pp1.revisionid as id,  pp1.latitude, pp1.longitude, gnt.continentcode as code, " +
+            string sql = "select distinct aa.revisionid, pp1.revisionid as id, people.revisionId as personId,  pp1.latitude, pp1.longitude, gnt.continentcode as code, " +
                   " pp1.isContinent, pp1.isCountry, pp1.isRegion, pp1.isWater," +
                   " CASE WHEN (gnt.continentcode = 'AF' and pp1.iscontinent = 1) THEN 'Africa' " +
                   " WHEN (gnt.continentcode = 'AN' and pp1.iscontinent = 1) THEN 'Antarctica' " +
@@ -250,7 +250,7 @@ namespace UCosmic.Repositories
         public IList<ActivityMapCountsApiQueryResultModel> ActivityMapCount_Water(ActivitySearchInputModel input, int? ancestorId)
         {
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
-            string sql = "select distinct aa.revisionid, pp1.revisionid as id, pp1.officialName as name, pp1.latitude, pp1.longitude, code = '' FROM [ActivitiesV2].[ActivityLocation] al" +
+            string sql = "select distinct aa.revisionid, pp1.revisionid as id, people.revisionId as personId, pp1.officialName as name, pp1.latitude, pp1.longitude, code = '' FROM [ActivitiesV2].[ActivityLocation] al" +
                   " inner join [ActivitiesV2].[ActivityValues] av on al.activityValuesId=av.revisionid" +
                   " left outer join [ActivitiesV2].[ActivityType] at on at.activityValuesId=av.revisionid" +
                   " left outer join [ActivitiesV2].[ActivityTag] atag on atag.activityValuesId=av.revisionid" +//may not have tags
@@ -283,7 +283,7 @@ namespace UCosmic.Repositories
 
 
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
-            string sql = "select distinct aa.revisionid, pp1.revisionid as id, pp1.latitude, pp1.longitude, pp1.isContinent, pp1.isWater, " +
+            string sql = "select distinct aa.revisionid, pp1.revisionid as id, people.revisionId as personId, pp1.latitude, pp1.longitude, pp1.isContinent, pp1.isWater, " +
                   " CASE WHEN (pp1.iswater = 1 and gnt.continentcode IS null) THEN 'WATER' WHEN pp1.isearth = 1 THEN 'GLOBAL' ELSE gnt.continentcode END as code, " +
                   " CASE WHEN (pp1.iswater = 1 and gnt.continentcode IS null) THEN 'Bodies Of Water' WHEN pp1.isearth = 1 THEN 'Global'  " +
                   " WHEN gnt.continentcode = 'AF' THEN 'Africa' " +

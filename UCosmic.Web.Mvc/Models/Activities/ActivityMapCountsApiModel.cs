@@ -6,6 +6,7 @@ namespace UCosmic.Web.Mvc.Models
     public class ActivityMapCountsApiQueryResultModel
     {
         public int id { get; set; }
+        public int personId { get; set; }
         public string name { get; set; }
         public float latitude { get; set; }
         public float longitude { get; set; }

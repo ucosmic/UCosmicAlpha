@@ -64,6 +64,7 @@ namespace UCosmic.Web.Mvc.Models
         public MapPointModel Center { get; set; }
         public BoundingBox BoundingBox { get; set; }
         public int Count { get; set; }
+        public int PeopleCount { get; set; }
         public int? ActivityCount { get; set; }
 
     }
