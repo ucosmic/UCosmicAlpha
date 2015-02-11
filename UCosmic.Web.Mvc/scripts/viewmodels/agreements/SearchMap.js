@@ -92,6 +92,7 @@ var Agreements;
                     _this._onViewportDirty();
                 }).extend({ throttle: 1 });
                 this.spinner = new App.Spinner({ delay: 400, });
+                this.lastStatusRequestedCount = 0;
                 this.infoWindowContent = {
                     partner: ko.observable({}),
                     agreements: ko.observableArray([]),
@@ -741,13 +742,21 @@ var Agreements;
             };
             SearchMap.prototype._loadStatus = function (countryCode, continentCode, typeCode) {
                 var _this = this;
-                var url = this.settings.summaryApi;
+                var url = this.settings.summaryApi, lastStatusRequestedCountLocal;
                 url = url += "Map/" + countryCode + "/" + typeCode + "/" + continentCode;
                 this.status.agreementCount('?');
                 this.status.partnerCount('?');
+                this.lastStatusRequestedCount += 1;
+                lastStatusRequestedCountLocal = this.lastStatusRequestedCount;
                 $.get(url).done(function (response) {
-                    _this.status.agreementCount(response.agreementCount.toString());
-                    _this.status.partnerCount(response.partnerCount.toString());
+                    if (lastStatusRequestedCountLocal == _this.lastStatusRequestedCount) {
+                        _this.status.agreementCount(response.agreementCount.toString());
+                        _this.status.partnerCount(response.partnerCount.toString());
+                    }
+                    else {
+                        _this.status.agreementCount('?');
+                        _this.status.partnerCount('?');
+                    }
                 });
             };
             SearchMap.prototype._updateStatus = function (placeType, places) {

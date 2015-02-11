@@ -163,8 +163,8 @@ module Agreements.ViewModels {
             }
             $.get(url)
                 .done((response: ApiModels.Summary): void => {
-                    ko.mapping.fromJS(response, {}, this.summary);
-                });
+                ko.mapping.fromJS(response, {}, this.summary);
+            });
         }
         clearFilter(): void {
             if (this.placeId()) this.placeId(0);
@@ -233,8 +233,8 @@ module Agreements.ViewModels {
                 if (continentCode != 'any' && continentCode != 'none') {
                     options = Enumerable.From(options)
                         .Where(function (x: Places.ApiModels.Country): boolean {
-                            return x.continentCode == continentCode;
-                        }).ToArray();
+                        return x.continentCode == continentCode;
+                    }).ToArray();
                 }
                 options = Enumerable.From([anyCountry])
                     .Concat(options)
@@ -261,17 +261,17 @@ module Agreements.ViewModels {
                 };
                 options = Enumerable.From(countries)
                     .Select(function (x: Places.ApiModels.Country): any {
-                        return {
-                            code: x.continentCode,
-                            name: x.continentName
-                        };
-                    })
+                    return {
+                        code: x.continentCode,
+                        name: x.continentName
+                    };
+                })
                     .Distinct(function (x: any): string {
-                        return x.code;
-                    })
+                    return x.code;
+                })
                     .OrderBy(function (x: any): string {
-                        return x.name;
-                    })
+                    return x.name;
+                })
                     .ToArray();
                 options = Enumerable.From([anyContinent])
                     .Concat(options)
@@ -287,10 +287,10 @@ module Agreements.ViewModels {
             var deferred = $.Deferred();
             $.get(App.Routes.WebApi.Countries.get())
                 .done((response: Places.ApiModels.Country[]): void => {
-                    // ...but this will run after sammy and applyBindings
-                    this.countries(response);
-                    deferred.resolve();
-                });
+                // ...but this will run after sammy and applyBindings
+                this.countries(response);
+                deferred.resolve();
+            });
             return deferred;
         }
 
@@ -300,20 +300,20 @@ module Agreements.ViewModels {
             var deferred = $.Deferred();
             $.get("/api/agreements/agreement-types/0/")
                 .done((response: Places.ApiModels.AgreementType[]): void => {
-                    // ...but this will run after sammy and applyBindings
-                    var options = response.slice(0);
-                    // customize options
-                    var any: Places.ApiModels.AgreementType = {
-                        code: 'any',
-                        name: '[All types]'
-                    };
-                    options = Enumerable.From([any]).Concat(options).ToArray();
+                // ...but this will run after sammy and applyBindings
+                var options = response.slice(0);
+                // customize options
+                var any: Places.ApiModels.AgreementType = {
+                    code: 'any',
+                    name: '[All types]'
+                };
+                options = Enumerable.From([any]).Concat(options).ToArray();
 
-                    this.typeOptions(options); // push into observable array
-                    this.typeCode(this.initSessionTypeCode);
-                    deferred.resolve();
+                this.typeOptions(options); // push into observable array
+                this.typeCode(this.initSessionTypeCode);
+                deferred.resolve();
 
-                });
+            });
             return deferred;
         }
 
@@ -599,8 +599,8 @@ module Agreements.ViewModels {
                     }, 0);
                 })
                     .always((): void => {
-                        this.spinner.stop();
-                    });
+                    this.spinner.stop();
+                });
             }
             else {
                 var partnersReceived = this._requestPartners();
@@ -608,8 +608,8 @@ module Agreements.ViewModels {
                     this._receivePartners();
                 })
                     .always((): void => {
-                        this.spinner.stop();
-                    });
+                    this.spinner.stop();
+                });
             }
         }
 
@@ -632,21 +632,21 @@ module Agreements.ViewModels {
 
                 $.get(this.settings.partnerPlacesApi.format(placeType))
                     .done((response: ApiModels.PlaceWithAgreements[]): void => {
-                        if (placeType == 'continents') {
-                            this._continentsResponse = ko.observableArray(response);
-                        }
-                        else if (placeType == 'countries') {
-                            this._countriesResponse = ko.observableArray(response);
-                        }
-                        else {
-                            this._placesResponse = ko.observableArray(response);
-                        }
-                        deferred.resolve();
-                    })
+                    if (placeType == 'continents') {
+                        this._continentsResponse = ko.observableArray(response);
+                    }
+                    else if (placeType == 'countries') {
+                        this._countriesResponse = ko.observableArray(response);
+                    }
+                    else {
+                        this._placesResponse = ko.observableArray(response);
+                    }
+                    deferred.resolve();
+                })
                     .fail((xhr: JQueryXHR): void => {
-                        App.Failures.message(xhr, 'while trying to load agreement map data', true)
-                            deferred.reject();
-                    });
+                    App.Failures.message(xhr, 'while trying to load agreement map data', true)
+                    deferred.reject();
+                });
             }
             else {
                 deferred.resolve();
@@ -659,8 +659,8 @@ module Agreements.ViewModels {
             var places = placeType == 'continents'
                 ? this._continentsResponse()
                 : placeType == 'countries'
-                ? this._countriesResponse()
-                : this._placesResponse();
+                    ? this._countriesResponse()
+                    : this._placesResponse();
 
             if (this.typeCode() != 'any') {
                 var type = this.typeCode();
@@ -696,10 +696,10 @@ module Agreements.ViewModels {
                 var continentCode = this.continentCode();
                 places = Enumerable.From(places)
                     .Where(function (x: ApiModels.PlaceWithAgreements): boolean {
-                        return continentCode == 'none'
-                            ? !x.id
-                            : x.continentCode == continentCode;
-                    })
+                    return continentCode == 'none'
+                        ? !x.id
+                        : x.continentCode == continentCode;
+                })
                     .ToArray();
             }
 
@@ -707,10 +707,10 @@ module Agreements.ViewModels {
                 var countryCode = this.countryCode();
                 places = Enumerable.From(places)
                     .Where(function (x: ApiModels.PlaceWithAgreements): boolean {
-                        return countryCode == 'none'
-                            ? !x.countryId
-                            : x.countryCode == countryCode;
-                    })
+                    return countryCode == 'none'
+                        ? !x.countryId
+                        : x.countryCode == countryCode;
+                })
                     .ToArray();
             }
 
@@ -733,8 +733,8 @@ module Agreements.ViewModels {
             if (placeType == 'countries' && !places.length && continentCode != 'none') {
                 var continent = Enumerable.From(this._continentsResponse())
                     .SingleOrDefault(undefined, function (x: ApiModels.PlaceWithAgreements): boolean {
-                        return x.continentCode == continentCode;
-                    });
+                    return x.continentCode == continentCode;
+                });
                 if (continent) {
                     places = [continent];
                 }
@@ -743,8 +743,8 @@ module Agreements.ViewModels {
             if (!placeType && !places.length && countryCode != 'none') {
                 var country: Places.ApiModels.Country = Enumerable.From(this.countryOptions())
                     .SingleOrDefault(undefined, function (x: Places.ApiModels.Country): boolean {
-                        return x.code == countryCode;
-                    });
+                    return x.code == countryCode;
+                });
                 if (country) {
                     places = [{
                         id: country.id,
@@ -760,7 +760,7 @@ module Agreements.ViewModels {
                 }
             }
             var markers: google.maps.Marker[] = [];
-            $.each(places, (i: number, place: ApiModels.PlaceWithAgreements): void => {
+            $.each(places,(i: number, place: ApiModels.PlaceWithAgreements): void => {
                 if (!place.agreementCount) return; // do not render zero
                 //if (placeType == 'continents' && !place.agreementCount) return; // do not render zero on continent
                 var title = '{0} - {1} agreement{2}\r\nClick for more information'
@@ -783,12 +783,12 @@ module Agreements.ViewModels {
                     marker.set('ucosmic_agreement_id', place.agreementIds[0]);
                 }
 
-                google.maps.event.addListener(marker, 'mouseover', (e: google.maps.MouseEvent): void => {
+                google.maps.event.addListener(marker, 'mouseover',(e: google.maps.MouseEvent): void => {
                     marker.setOptions({
                         zIndex: 201,
                     });
                 });
-                google.maps.event.addListener(marker, 'mouseout', (e: google.maps.MouseEvent): void => {
+                google.maps.event.addListener(marker, 'mouseout',(e: google.maps.MouseEvent): void => {
                     var side = marker.getIcon().size.width;
                     setTimeout((): void => {
                         marker.setOptions({
@@ -797,7 +797,7 @@ module Agreements.ViewModels {
                     }, 400);
                 });
                 if (placeType === 'continents') {
-                    google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
+                    google.maps.event.addListener(marker, 'click',(e: google.maps.MouseEvent): void => {
                         if (place.agreementCount == 1) {
                             var url = this.settings.detailUrl.format(place.agreementIds[0]);
                             var detailPreference = this.detailPreference();
@@ -820,7 +820,7 @@ module Agreements.ViewModels {
                     });
                 }
                 else if (placeType === 'countries') {
-                    google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
+                    google.maps.event.addListener(marker, 'click',(e: google.maps.MouseEvent): void => {
                         if (place.agreementCount == 1) {
                             var url = this.settings.detailUrl.format(place.agreementIds[0]);
                             var detailPreference = this.detailPreference();
@@ -839,7 +839,7 @@ module Agreements.ViewModels {
                     });
                 }
                 else if (!placeType) {
-                    google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
+                    google.maps.event.addListener(marker, 'click',(e: google.maps.MouseEvent): void => {
                         if (place.agreementCount == 1) {
                             var url = this.settings.detailUrl.format(place.agreementIds[0]);
                             var detailPreference = this.detailPreference();
@@ -861,35 +861,35 @@ module Agreements.ViewModels {
             // update titles of markers with agreementCount == 1
             var singleMarkers = Enumerable.From(markers)
                 .Where(function (x: google.maps.Marker): boolean {
-                    var agreementId = x.get('ucosmic_agreement_id');
-                    return !isNaN(agreementId) && agreementId > 0;
-                })
+                var agreementId = x.get('ucosmic_agreement_id');
+                return !isNaN(agreementId) && agreementId > 0;
+            })
                 .ToArray();
             if (singleMarkers.length) {
                 var agreementIds = Enumerable.From(singleMarkers)
                     .Select(function (x: google.maps.Marker): number {
-                        return parseInt(x.get('ucosmic_agreement_id'));
-                    }).ToArray();
+                    return parseInt(x.get('ucosmic_agreement_id'));
+                }).ToArray();
                 // TODO: this is not dry
                 $.get(this.settings.partnersApi, { agreementIds: agreementIds, })
                     .done((response: ApiModels.Participant[]): void => {
-                        $.each(singleMarkers, (i: number, singleMarker: google.maps.Marker): void => {
-                            var agreementId = parseInt(singleMarker.get('ucosmic_agreement_id'));
-                            // agreement can have many partners
-                            var partners: ApiModels.Participant[] = Enumerable.From(response)
-                                .Where(function (x: ApiModels.Participant): boolean {
-                                    return x.agreementId == agreementId;
-                                }).ToArray();
-                            if (!partners.length) return;
-                            if (!this.placeId()) {
-                                var title = singleMarker.getTitle().replace('\r\nClick for more information', '');
-                                $.each(partners, (i: number, partner: ApiModels.Participant): void => {
-                                    title += '\r\n{0}'.format(partner.establishmentTranslatedName);
-                                });
-                                singleMarker.setTitle(title);
-                            }
-                        });
-                    })
+                    $.each(singleMarkers,(i: number, singleMarker: google.maps.Marker): void => {
+                        var agreementId = parseInt(singleMarker.get('ucosmic_agreement_id'));
+                        // agreement can have many partners
+                        var partners: ApiModels.Participant[] = Enumerable.From(response)
+                            .Where(function (x: ApiModels.Participant): boolean {
+                            return x.agreementId == agreementId;
+                        }).ToArray();
+                        if (!partners.length) return;
+                        if (!this.placeId()) {
+                            var title = singleMarker.getTitle().replace('\r\nClick for more information', '');
+                            $.each(partners,(i: number, partner: ApiModels.Participant): void => {
+                                title += '\r\n{0}'.format(partner.establishmentTranslatedName);
+                            });
+                            singleMarker.setTitle(title);
+                        }
+                    });
+                })
             }
         }
 
@@ -913,8 +913,8 @@ module Agreements.ViewModels {
                     if (continentCode && this._continentsResponse) {
                         var continent: ApiModels.PlaceWithAgreements = Enumerable.From(this._continentsResponse())
                             .SingleOrDefault(undefined, function (x: ApiModels.PlaceWithAgreements): boolean {
-                                return x.continentCode == continentCode;
-                            });
+                            return x.continentCode == continentCode;
+                        });
                         if (continent && continent.boundingBox && continent.boundingBox.hasValue) {
                             settings.bounds = Places.Utils.convertToLatLngBounds(continent.boundingBox);
                         }
@@ -932,8 +932,8 @@ module Agreements.ViewModels {
                 else {
                     var latLngs = Enumerable.From(places)
                         .Select(function (x: ApiModels.PlaceWithAgreements): any {
-                            return new google.maps.LatLng(x.center.latitude, x.center.longitude);
-                        }).ToArray();
+                        return new google.maps.LatLng(x.center.latitude, x.center.longitude);
+                    }).ToArray();
                     $.each(latLngs, function (index: number, latLng: google.maps.LatLng): void {
                         settings.bounds.extend(latLng);
                     });
@@ -947,8 +947,8 @@ module Agreements.ViewModels {
                     if (countryCode && this.countryOptions) {
                         var countryOption: Places.ApiModels.Country = Enumerable.From(this.countryOptions())
                             .SingleOrDefault(undefined, function (x: Places.ApiModels.Country): boolean {
-                                return x.code == countryCode;
-                            });
+                            return x.code == countryCode;
+                        });
                         if (countryOption && countryOption.box && countryOption.box.hasValue) {
                             settings.bounds = Places.Utils.convertToLatLngBounds(countryOption.box);
                         }
@@ -966,8 +966,8 @@ module Agreements.ViewModels {
                 else {
                     var latLngs = Enumerable.From(places)
                         .Select(function (x: ApiModels.PlaceWithAgreements): any {
-                            return new google.maps.LatLng(x.center.latitude, x.center.longitude);
-                        }).ToArray();
+                        return new google.maps.LatLng(x.center.latitude, x.center.longitude);
+                    }).ToArray();
                     $.each(latLngs, function (index: number, latLng: google.maps.LatLng): void {
                         settings.bounds.extend(latLng);
                     });
@@ -984,7 +984,7 @@ module Agreements.ViewModels {
                 this.lat(this._map.lat());
                 isDirty = true;
             }
-            if(this.routeChanged){
+            if (this.routeChanged) {
                 isDirty = true;
                 this.routeChanged = false;
             }
@@ -998,7 +998,7 @@ module Agreements.ViewModels {
                 isDirty = true;
             }
             isDirty = isDirty || (this.settings.activationRoute
-            && this.sammy.getLocation().indexOf(this.settings.activationRoute) < 0);
+                && this.sammy.getLocation().indexOf(this.settings.activationRoute) < 0);
             if (isDirty) {
                 this.setLocation();
             }
@@ -1006,23 +1006,30 @@ module Agreements.ViewModels {
             if (this.loadViewport < 0) this.loadViewport = 0;
         }
 
-
+        lastStatusRequestedCount: number = 0;
         private _loadStatus(countryCode?: string, continentCode?: string, typeCode?: string): void {
-            var url = this.settings.summaryApi;
+            var url = this.settings.summaryApi, lastStatusRequestedCountLocal;
             url = url += "Map/" + countryCode + "/" + typeCode + "/" + continentCode
             this.status.agreementCount('?');
             this.status.partnerCount('?');
+            this.lastStatusRequestedCount += 1;
+            lastStatusRequestedCountLocal = this.lastStatusRequestedCount;
             $.get(url)
                 .done((response: ApiModels.Summary): void => {
                     //ko.mapping.fromJS(response, {}, this.summary);
-                    this.status.agreementCount(response.agreementCount.toString());
-                    this.status.partnerCount(response.partnerCount.toString());
+                    if (lastStatusRequestedCountLocal == this.lastStatusRequestedCount) {
+                        this.status.agreementCount(response.agreementCount.toString());
+                        this.status.partnerCount(response.partnerCount.toString());
+                    } else {
+                        this.status.agreementCount('?');
+                        this.status.partnerCount('?');
+                    }
                 });
         }
 
         private _updateStatus(placeType: string, places: ApiModels.PlaceWithAgreements[]) {
 
-            this._loadStatus(this.countryCode(),this.continentCode(), this.typeCode());
+            this._loadStatus(this.countryCode(), this.continentCode(), this.typeCode());
             //if (this.typeCode() != 'any') {
             //    var type = this.typeCode();
             //    places = places.map(function (x) {
@@ -1089,8 +1096,8 @@ module Agreements.ViewModels {
                 else {
                     var continent = Enumerable.From(this.continentOptions())
                         .SingleOrDefault(undefined, function (x: any): boolean {
-                            return x.code == continentCode;
-                        });
+                        return x.code == continentCode;
+                    });
                     if (continent && continent.name) {
                         this.status.countryCount(continent.name);
                     }
@@ -1104,8 +1111,8 @@ module Agreements.ViewModels {
                 else {
                     var country: Places.ApiModels.Country = Enumerable.From(this.countryOptions())
                         .SingleOrDefault(undefined, function (x: Places.ApiModels.Country): boolean {
-                            return x.code == countryCode;
-                        });
+                        return x.code == countryCode;
+                    });
                     if (country && country.name) {
                         this.status.countryCount(country.name);
                     }
@@ -1170,8 +1177,8 @@ module Agreements.ViewModels {
                 var placeId = this.placeId();
                 var place: ApiModels.PlaceWithAgreements = Enumerable.From(this._placesResponse())
                     .SingleOrDefault(undefined, function (x: ApiModels.PlaceWithAgreements): boolean {
-                        return x.id == placeId;
-                    });
+                    return x.id == placeId;
+                });
                 if (!place || !place.agreementCount) {
                     this.status.agreementCount('0');
                     this.status.partnerCount('0');
@@ -1184,13 +1191,13 @@ module Agreements.ViewModels {
                     // load the partners
                     $.get(this.settings.partnersApi, { agreementIds: place.agreementIds, })
                         .done((response: ApiModels.Participant[]): void => {
-                            this._partnersResponse = ko.observableArray(response);
-                            deferred.resolve();
-                        })
+                        this._partnersResponse = ko.observableArray(response);
+                        deferred.resolve();
+                    })
                         .fail((xhr: JQueryXHR): void => {
-                            App.Failures.message(xhr, 'while trying to load agreement partner data', true)
-                            deferred.reject();
-                        });
+                        App.Failures.message(xhr, 'while trying to load agreement partner data', true)
+                        deferred.reject();
+                    });
                 }
             }
 
@@ -1204,8 +1211,8 @@ module Agreements.ViewModels {
             // how many different partners are there?
             var uniquePartners: ApiModels.Participant[] = Enumerable.From(allPartners)
                 .Distinct(function (x: ApiModels.Participant): number {
-                    return x.establishmentId;
-                })
+                return x.establishmentId;
+            })
                 .ToArray();
 
             // set map viewport
@@ -1224,7 +1231,7 @@ module Agreements.ViewModels {
                 }
             }
             else if (uniquePartners.length > 1) {
-                $.each(uniquePartners, (i: number, partner: ApiModels.Participant): void => {
+                $.each(uniquePartners,(i: number, partner: ApiModels.Participant): void => {
                     viewportSettings.bounds.extend(Places.Utils.convertToLatLng(partner.center));
                 });
             }
@@ -1235,15 +1242,15 @@ module Agreements.ViewModels {
             // plot the markers
             var markers: google.maps.Marker[] = [];
             var scaler = this._getMarkerIconScaler('', this._placesResponse());
-            $.each(uniquePartners, (i: number, partner: ApiModels.Participant): void => {
+            $.each(uniquePartners,(i: number, partner: ApiModels.Participant): void => {
                 // how many agreements for this partner?
                 var agreements: ApiModels.Participant[] = Enumerable.From(allPartners)
                     .Where(function (x: ApiModels.Participant): boolean {
-                        return x.establishmentId == partner.establishmentId;
-                    })
+                    return x.establishmentId == partner.establishmentId;
+                })
                     .Distinct(function (x: ApiModels.Participant): number {
-                        return x.agreementId;
-                    }).ToArray();
+                    return x.agreementId;
+                }).ToArray();
 
                 var options: google.maps.MarkerOptions = {
                     position: Places.Utils.convertToLatLng(partner.center),
@@ -1255,7 +1262,7 @@ module Agreements.ViewModels {
                 this._setMarkerIcon(options, agreements.length.toString(), scaler);
                 var marker = new google.maps.Marker(options);
                 markers.push(marker);
-                google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
+                google.maps.event.addListener(marker, 'click',(e: google.maps.MouseEvent): void => {
                     if (agreements.length == 1) {
                         var url = this.settings.detailUrl.format(partner.agreementId);
                         var detailPreference = this.detailPreference();
@@ -1270,8 +1277,8 @@ module Agreements.ViewModels {
                         this.infoWindowContent.partner(partner);
                         this.infoWindowContent.agreements(Enumerable.From(agreements)
                             .OrderByDescending(function (x: ApiModels.Participant): string {
-                                return x.agreementStartsOn;
-                            })
+                            return x.agreementStartsOn;
+                        })
                             .ToArray());
                         var content = this.$infoWindow.html();
                         var options: google.maps.InfoWindowOptions = {
@@ -1293,8 +1300,8 @@ module Agreements.ViewModels {
             // update the status
             this.status.agreementCount(Enumerable.From(allPartners)
                 .Distinct(function (x: ApiModels.Participant): number {
-                    return x.agreementId;
-                }).Count().toString());
+                return x.agreementId;
+            }).Count().toString());
             this.status.partnerCount(uniquePartners.length.toString());
             this.status.countryCount('this area');
 

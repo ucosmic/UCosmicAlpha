@@ -1,5 +1,6 @@
 var Agreements;
 (function (Agreements) {
+    var ViewModels;
     (function (ViewModels) {
         var SearchResult = (function () {
             function SearchResult(values, owner) {
@@ -15,7 +16,8 @@ var Agreements;
                     var myDate = new Date(value);
                     if (myDate.getFullYear() < 1500) {
                         return "unknown";
-                    } else {
+                    }
+                    else {
                         return (moment(value)).format('M/D/YYYY');
                     }
                 });
@@ -26,7 +28,8 @@ var Agreements;
                     var myDate = new Date(value);
                     if (myDate.getFullYear() < 1500) {
                         return "unknown";
-                    } else {
+                    }
+                    else {
                         return (moment(value)).format('M/D/YYYY');
                     }
                 });
@@ -36,13 +39,11 @@ var Agreements;
             SearchResult.prototype._pullData = function (values) {
                 ko.mapping.fromJS(values, {}, this);
             };
-
             SearchResult.prototype.clickAction = function (viewModel, e) {
                 return this._owner.clickAction(viewModel, e);
             };
             return SearchResult;
         })();
         ViewModels.SearchResult = SearchResult;
-    })(Agreements.ViewModels || (Agreements.ViewModels = {}));
-    var ViewModels = Agreements.ViewModels;
+    })(ViewModels = Agreements.ViewModels || (Agreements.ViewModels = {}));
 })(Agreements || (Agreements = {}));
