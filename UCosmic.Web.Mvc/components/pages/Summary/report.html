@@ -1,0 +1,237 @@
+﻿
+<link rel="import" href="../../Polymer/bower_components/paper-dropdown/paper-dropdown.html">
+<link rel="import" href="../../Polymer/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../Polymer/bower_components/core-dropdown-menu/core-dropdown-menu.html">
+<link rel="import" href="../../Polymer/bower_components/core-dropdown/core-dropdown.html">
+<link rel="import" href="../../Polymer/bower_components/core-selector/core-selector.html">
+<link rel="import" href="../../Polymer/bower_components/core-item/core-item.html">
+<link rel="import" href="../../Polymer/bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../Polymer/bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="../../Polymer/bower_components/paper-input/paper-input-decorator.html">
+<link rel="import" href="../../Polymer/bower_components/core-input/core-input.html">
+<link rel="import" href="../../components/autoDDL/autoDDL.html">
+<polymer-element name="is-page-summary-report" attributes="styledomain, tenantid">
+    <template>
+        <link href="report.css" rel="stylesheet" />
+        <!--</form>-->
+        <!--<paper-dropdown-menu selected="[all countries]" label="[all countries]" valueattr="label">
+            <template repeat="{{country, countryI in countries}}">
+                <paper-item label="{{country.name}}"></paper-item>
+            </template>
+        </paper-dropdown-menu>-->
+        <!--<core-icon-button id="trigger" icon="menu"></core-icon-button>-->
+        <!--<paper-dropdown relatedtarget="{{$.trigger}}">
+            <core-menu>
+                <template repeat="{{country, countryI in countries}}">
+                    <paper-item>{{country.name}}</paper-item>
+                </template>
+            </core-menu>
+        </paper-dropdown>-->
+        <div layout horizontal end style="width:800px;">
+                <select on-click="{{selectCountry}}" id="selectCountry" style="padding: 1px; margin: initial; height: 30px; width: 200px; font-size: 14px;">
+                    <option>
+                        <paper-item>[Select a Country]</paper-item>
+                    </option>
+                    <template repeat="{{country, countryI in countries}}">
+                        <option on-click="{{selectCountry}}" value="{{country.name}}">
+                            <paper-item on-click="{{selectCountry}}" id="country{{countryI}}">{{country.name}}</paper-item>
+                        </option>
+                    </template>
+                </select>
+            <is-auto-ddl flex selected="{{establishmentSearch}}" selectedid="{{selectedEstablishmentId}}" on-selected-updated="{{establishmentSelected}}"
+                         on-search-updated="{{establishmentListSearch}}" list="{{establishmentList}}">
+
+            </is-auto-ddl>
+            <!--<div style="margin-left:20px;" flex layout vertical>
+                <paper-input-decorator style="padding-bottom: 2px;" floatinglabel layout vertical label="Type and choose an establishment">
+                    <input is="core-input" on-keyup="{{establishmentListSearch}}" id="Phone" min="10" max="15" on-blur="{{leaveEstablishmentSearch}}" value="{{establishmentSearch}}" on-input="{{validateInput}}">
+                </paper-input-decorator>
+                <div style="height:0; z-index:10;">
+                    <template if="{{establishmentList.length > 0}}">
+                        <div style="background-color:gray;padding: 5px;border-radius: 5px">
+                            <template repeat="{{establishment, establishmentI in establishmentList}}">
+                                <div on-click="{{establishmentSelected}}" data-id="{{establishment.forestablishmentId}}" class="establishment-list-item">{{establishment.text}}</div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+            </div>-->
+        </div>
+        <!--<paper-dropdown-menu>
+            <paper-dropdown class="dropdown">
+                <core-menu class="menu">
+                    <paper-item>[Select a Country]</paper-item>
+                    <template repeat="{{country, countryI in countries}}">
+                        <paper-item>{{country.name}}</paper-item>
+                    </template>
+                </core-menu>
+            </paper-dropdown>
+        </paper-dropdown-menu>
+        <core-dropdown-menu>
+            <core-dropdown class="dropdown">
+                <core-selector selected="{{selectedCountry}}">
+                    <paper-item>[Select a Country]</paper-item>
+                    <template repeat="{{country, countryI in countries}}">
+                        <paper-item>{{country.name}}</paper-item>
+                    </template>
+                </core-selector>
+            </core-dropdown>
+        </core-dropdown-menu>-->
+        <section style="position:relative; z-index:-1;">
+            <h3 style="margin-bottom:4px;">Agreements</h3>
+            <template if="{{agreementTypeCountsLoaded}}" repeat="{{agreementTypeCount, agreementTypeCountI in agreementTypeCounts}}">
+                <div>
+                    <b>{{agreementTypeCount.typeCount}}</b>
+                    <a href="{{styledomain}}/agreements/#/table/country/{{selectedCountryCode}}/type/{{agreementTypeCount.type}}/sort/start-desc/size/10/page/1/">{{agreementTypeCount.type}}</a>
+                    agreements in <b>{{agreementTypeCount.locationCount}}</b> locations.
+                </div>
+            </template>
+            <template if="{{agreementTypeCounts.length == 0 && agreementTypeCountsLoaded}}">
+                <div>You do not have any agreements for the selected location</div>
+            </template>
+            <template if="{{!agreementTypeCountsLoaded}}">
+                <div>Loading...</div>
+            </template>
+        </section>
+
+        <section style="position:relative; z-index:-1;">
+            <h3 style="display:block; margin-bottom:4px;">Faculty & Staff Activities</h3>
+            <template if="{{activityTypeCountsLoaded}}" repeat="{{activityTypeCount, activityTypeCountI in activityTypeCounts}}">
+                <div>
+                    <b>{{activityTypeCount.typeCount}}</b>
+                    <a href="{{styledomain}}/employees/table/?activityTypeIds={{activityTypeCount.typeId}}&placeIds={{selectedPlaceId}}&placeNames={{selectedPlaceName}}">{{activityTypeCount.type}}</a>
+                    activities in <b>{{activityTypeCount.locationCount}}</b> locations.
+                </div>
+            </template>
+            <template if="{{activityTypeCounts.length == 0 && activityTypeCountsLoaded && establishmentSearch == ''}}">
+                <div>You do not have any activities for the selected location</div>
+            </template>
+            <template if="{{activityTypeCounts.length == 0 && activityTypeCountsLoaded && establishmentSearch != ''}}">
+                <div>Activities are not associated with establishments.</div>
+            </template>
+            <template if="{{!activityTypeCountsLoaded}}">
+                <div>Loading...</div>
+            </template>
+        </section>
+        
+        <section style="position:relative; z-index:-1;">
+            <h3 style="margin-bottom:4px;">Faculty & Staff Degrees</h3>
+            <template if="{{degrees.degreeCount.length != 0 && degreeCountLoaded}}">
+                <div>
+                    <b>{{degrees.personCount}}</b>
+                    people with
+                    <template if="{{selectedCountryCode != 'any'}}">
+                        <a href="{{styledomain}}/employees/degrees/table/?countryCode={{selectedCountryCode}}">{{degrees.degreeCount}}</a>
+                    </template>
+                    <template if="{{selectedCountryCode == 'any'}}">
+                        <a href="{{styledomain}}/employees/degrees/table/">{{degrees.degreeCount}}</a>
+                    </template>
+                    degrees in
+                    <b>{{degrees.establishmentCount}}</b> institutions.
+                </div>
+            </template>
+            <template if="{{degrees.degreeCount.length == 0 && degreeCountLoaded}}">
+                <div>You do not have any degrees for the selected location</div>
+            </template>
+            <template if="{{!degreeCountLoaded}}">
+                <div>Loading...</div>
+            </template>
+        </section>
+        <!--<h3 style="margin-bottom:4px;">International Affiliations</h3>
+        <template if="{{affiliations.affiliationCount.length != 0 && affiliationCountLoaded}}">
+            <div>
+                <b>{{affiliations.personCount}}</b>
+                people with
+                <b>{{affiliations.affiliationCount}}</b>
+                Affiliations in
+                <b>{{affiliations.establishmentCount}}</b> institutions.
+            </div>
+        </template>
+        <template if="{{affiliations.affiliationCount.length == 0 && affiliationCountLoaded}}">
+            <div>You do not have any international affiliations for the selected location</div>
+        </template>
+        <template if="{{!affiliationCountLoaded}}">
+            <div>Loading...</div>
+        </template>
+
+        <h3 style="margin-bottom:4px;">Geograpic Expertises</h3>
+        <template if="{{expertises.expertiseCount.length != 0 && expertiseCountLoaded}}">
+            <div>
+                <b>{{expertises.personCount}}</b>
+                people with
+                <b>{{expertises.expertiseCount}}</b>
+                Expertises in
+                <b>{{expertises.locationCount}}</b> locations.
+            </div>
+        </template>
+        <template if="{{expertises.expertiseCount.length == 0 && expertiseCountLoaded}}">
+            <div>You do not have any geograpic expertises for the selected location</div>
+        </template>
+        <template if="{{!expertiseCountLoaded}}">
+            <div>Loading...</div>
+        </template>-->
+
+        <!--<core-ajax url="/api/home/section"
+                   params='{"Description":"{{description}}",
+                   "Links" "{{links}}" ,
+                   "Title" "{{title}}" }'
+                   handleas="json"
+                   method="post"
+                   on-core-response="{{addSectionResponse}}"
+                   on-core-error="{{ajaxError}}"
+                   id="ajax_addSection">
+        </core-ajax>-->
+        <core-ajax url="/api/countries/"
+                   headers='{"Accept": "application/json"}'
+                   handleas="json" auto
+                   on-core-response="{{countriesResponse}}"
+                   on-core-error="{{ajaxError}}"
+                   id="ajax_countries">
+        </core-ajax>
+        <core-ajax url="/api/faculty-staff/activity-count/{{tenantid}}/{{selectedPlaceId}}/"
+                   headers='{"Accept": "application/json"}'
+                   handleas="json" auto
+                   on-core-response="{{activitiesResponse}}"
+                   on-core-error="{{ajaxError}}"
+                   id="ajax_activities">
+        </core-ajax>
+        <core-ajax url="/api/agreements/agreement-count/{{tenantid}}/{{selectedPlaceId}}/{{selectedEstablishmentId}}/"
+                   headers='{"Accept": "application/json"}'
+                   handleas="json" auto
+                   on-core-response="{{agreementsResponse}}"
+                   on-core-error="{{ajaxError}}"
+                   id="ajax_agreements">
+        </core-ajax>
+        <core-ajax url="/api/degrees/degree-count/{{tenantid}}/{{selectedPlaceId}}/{{selectedEstablishmentId}}/"
+                   headers='{"Accept": "application/json"}'
+                   handleas="json" auto
+                   on-core-response="{{degreesResponse}}"
+                   on-core-error="{{ajaxError}}"
+                   id="ajax_degrees">
+        </core-ajax>
+        <core-ajax url="/api/establishments/list/{{establishmentSearch}}/"
+                   headers='{"Accept": "application/json"}'
+                   handleas="json"
+                   on-core-response="{{establishmentResponse}}"
+                   on-core-error="{{ajaxError}}"
+                   id="ajax_establishmentsList">
+        </core-ajax>
+        <!--<core-ajax url="/api/international-affiliations/Affiliation-count/{{tenantid}}/{{selectedPlaceId}}/"
+                   handleas="json" auto
+                   on-core-response="{{affiliationsResponse}}"
+                   on-core-error="{{ajaxError}}"
+                   id="ajax_degrees">
+        </core-ajax>
+        <core-ajax url="/api/geographic-expertise/expertise-count/{{tenantid}}/{{selectedPlaceId}}/"
+                   handleas="json" auto
+                   on-core-response="{{expertisesResponse}}"
+                   on-core-error="{{ajaxError}}"
+                   id="ajax_degrees">
+        </core-ajax>-->
+
+    </template>
+    <script src="report.js"></script>
+
+</polymer-element>
+
+

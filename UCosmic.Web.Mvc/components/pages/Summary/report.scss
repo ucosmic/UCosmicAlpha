@@ -1,0 +1,38 @@
+
+h1, h2, h3, h4, h5, h6{
+    text-transform: uppercase;
+    display: inline-block;
+    font-family: Arial;
+    vertical-align: text-top;
+    line-height: 30px;
+    color: black;
+}
+.on-left {
+    float: left;
+}
+header {
+    margin: 0 0 16px;
+    padding: 0;
+    vertical-align: text-top;
+    > h2{ 
+        font-family: Arial;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 20px;
+        font-weight: normal;
+    }
+    :first-child {
+        margin-top: 0 !important;
+    }
+}
+.group:after {
+    content: "";
+    clear: both;
+    display: table;
+}
+ul{
+    margin-left: 20px;
+    padding: 0;
+    border: 0;
+}
