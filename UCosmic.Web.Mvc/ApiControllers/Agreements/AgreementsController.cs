@@ -216,9 +216,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
 
         /* Returns agreement type counts for given place.*/
-        [GET("agreements/agreement-count/{establishmentId?}/{placeId?}")]
+        [GET("agreements/agreement-count/{establishmentId?}/{placeId?}/{selectedEstablishmentId?}")]
         //[CacheHttpGet(Duration = 3600)]
-        public List<AgreementSummaryApiModel> GetAgreementCount(int? establishmentId, int? placeId)
+        public List<AgreementSummaryApiModel> GetAgreementCount(int? establishmentId, int? placeId, int? selectedEstablishmentId)
         {
             IList<AgreementSummaryApiModel> returnModel = new List<AgreementSummaryApiModel>();
             IList<AgreementSummaryApiQueryResultModel> model = new List<AgreementSummaryApiQueryResultModel>();
@@ -244,7 +244,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 {
                     SummaryRepository summaryRepository = new SummaryRepository();
                     AgreementTypesRepository AgreementTypesRepository = new AgreementTypesRepository();
-                    model = summaryRepository.AgreementSummaryByEstablishment_Place(establishmentId, placeId);
+                    model = summaryRepository.AgreementSummaryByEstablishment_Place(establishmentId, placeId, selectedEstablishmentId);
                     var modelDistinct = model.DistinctBy(x => new { x.id, x.type } );
                     //agreementTypes = AgreementTypesRepository.AgreementTypes_By_establishmentId(establishmentId);
                     var agreementTypes = modelDistinct.DistinctBy(x => x.type );
