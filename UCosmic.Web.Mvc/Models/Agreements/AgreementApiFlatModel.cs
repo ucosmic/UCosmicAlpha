@@ -20,7 +20,8 @@ namespace UCosmic.Web.Mvc.Models
         public string[] EstablishmentOfficialName { get; set; }
         public string[] EstablishmentTranslatedName { get; set; }
         public string Contacts { get; set; }
-        public string Description { get; set; }
+        public string Content { get; set; }
+        //public string Description { get; set; }
 
     }
     public class PageOfAgreementApiFlatModel : PageOf<AgreementApiFlatModel> { }
@@ -76,6 +77,7 @@ namespace UCosmic.Web.Mvc.Models
                         //var repsonse = String.Join<string>(String.Empty, contacts.ToList());
                         return contacts.Implode(", ");
                     }))
+                    //.ForMember(d => d.)
                 ;
             }
         }

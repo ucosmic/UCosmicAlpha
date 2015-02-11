@@ -69,6 +69,33 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private ExcelWorksheet _worksheet;
         private bool _isProtected;
         private bool _isPrivate;
+        public static string StripTagsCharArray(string source)
+        {
+            char[] array = new char[source.Length];
+            int arrayIndex = 0;
+            bool inside = false;
+
+            for (int i = 0; i < source.Length; i++)
+            {
+                char let = source[i];
+                if (let == '<')
+                {
+                    inside = true;
+                    continue;
+                }
+                if (let == '>')
+                {
+                    inside = false;
+                    continue;
+                }
+                if (!inside)
+                {
+                    array[arrayIndex] = let;
+                    arrayIndex++;
+                }
+            }
+            return new string(array, 0, arrayIndex);
+        }
 
         private void WriteSpreadsheet(AgreementApiFlatModel[] models, Stream stream)
         {
@@ -161,7 +188,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     if (_isPrivate)
                         Cell(ColumnName.Status, rowNumber).Value = model.Status;
 
-                    Cell(ColumnName.Description, rowNumber).Value = model.Description ?? "[None]";
+                    Cell(ColumnName.Description, rowNumber).Value = model.Content.Length > 0 ? StripTagsCharArray(model.Content) : "[None]";
+                    //Cell(ColumnName.Description, rowNumber).Value = model.Description ?? "[None]";
                     Cell(ColumnName.Contacts, rowNumber).Value = model.Contacts ?? "[Unknown]";
 
                     var url = string.Format("https://alpha.ucosmic.com/agreements/{0}", model.Id);
