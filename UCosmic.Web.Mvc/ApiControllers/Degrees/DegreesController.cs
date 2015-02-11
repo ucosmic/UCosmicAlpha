@@ -38,9 +38,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         /* Returns degree type counts for given place.*/
-        [GET("degrees/degree-count/{establishmentId?}/{placeId?}")]
+        [GET("degrees/degree-count/{establishmentId?}/{placeId?}/{selectedEstablishmentId?}")]
         //[CacheHttpGet(Duration = 3600)]
-        public List<DegreeSummaryApiModel> GetDegreeCount(int? establishmentId, int? placeId)
+        public List<DegreeSummaryApiModel> GetDegreeCount(int? establishmentId, int? placeId, int? selectedEstablishmentId)
         {
             IList<DegreeSummaryApiModel> returnModel = new List<DegreeSummaryApiModel>();
             IList<DegreeSummaryApiQueryResultModel> model = new List<DegreeSummaryApiQueryResultModel>();
@@ -65,7 +65,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 {
                     SummaryRepository summaryRepository = new SummaryRepository();
 
-                    model = summaryRepository.DegreeSummaryByEstablishment_Place(establishmentId, placeId);
+                    model = summaryRepository.DegreeSummaryByEstablishment_Place(establishmentId, placeId, selectedEstablishmentId);
                     var modelDistinct = model.DistinctBy(x => new { x.degreeId });
                     
                     //degreeTypes = DegreeTypesRepository.DegreeTypes_By_establishmentId(establishmentId);
