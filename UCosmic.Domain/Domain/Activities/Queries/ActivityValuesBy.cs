@@ -80,7 +80,7 @@ namespace UCosmic.Domain.Activities
 
             if (query.AncestorId.HasValue)
             {
-                queryable = queryable.Where(x => x.Activity.Person.Affiliations.Any(y => y.Establishment.Ancestors.Any(z => z.AncestorId == query.AncestorId.Value)));
+                queryable = queryable.Where(x => x.Activity.Person.Affiliations.Any(y => y.EstablishmentId == query.AncestorId.Value || y.Establishment.Ancestors.Any(z => z.AncestorId == query.AncestorId.Value)));
 
                 //queryable = queryable.Where(x =>
                 //    x.Activity.Person.Affiliations.Any(y => y.IsDefault)
