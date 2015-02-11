@@ -964,6 +964,9 @@ module Activities.ViewModels {
                     google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
                         //take to advanced search table
                         if (place.id != 0) {
+                            $('#mapCover').addClass('mapCover');
+                            $('#mapCoverLoading').addClass('mapCoverLoading');
+                            
                             this.parentObject.loadingSpinner.start();
                             var search = this.serializeObject(this.parentObject.$form);
                             var hasChangedPlaces = false;
