@@ -89,7 +89,7 @@ namespace UCosmic.Domain.Agreements
             // when there is no group by, use only the most specific (last) place in the partner location
             else
             {
-                var lastPlaceIds = partnerIdPlaceIds.Select(x => x.Value.Last());
+                var lastPlaceIds = partnerIdPlaceIds.Where(x => x.Value.Count() != 0).Select(x => x.Value.Last());
                 candidatePlaces = candidatePlaces.Where(x => lastPlaceIds.Contains(x.RevisionId));
             }
 
@@ -126,11 +126,15 @@ namespace UCosmic.Domain.Agreements
                     foreach (var agreementId in partnerPlace.AgreementIds.ToArray())
                     {
                         // is this place really the last in an agreement partner's place collection?
-                        foreach (var partnerId in agreementIdPartnerIds.Single(x => x.Key == agreementId).Value)
+                        foreach (var partnerId in agreementIdPartnerIds.Single(x => x.Key == agreementId ).Value)
                         {
-                            var placeId = partnerIdPlaceIds.Single(x => x.Key == partnerId).Value.Last();
-                            if (placeId == partnerPlace.Place.RevisionId)
-                                newAgreementIds.Add(agreementId);
+                            var value = partnerIdPlaceIds.Single(x => x.Key == partnerId).Value;
+                            if (value.Count() != 0)
+                            {
+                                var placeId = value.Last();
+                                if (placeId == partnerPlace.Place.RevisionId)
+                                    newAgreementIds.Add(agreementId);
+                            }
                         }
                     }
                     partnerPlace.AgreementIds = newAgreementIds.Distinct().ToArray();
