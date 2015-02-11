@@ -9,8 +9,25 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc
 {
+    
     public static class TenancyExtensions
     {
+        public static int IndexOfNth(string str, char c, int n)
+        {
+            int remaining = n;
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i] == c)
+                {
+                    remaining--;
+                    if (remaining == 0)
+                    {
+                        return i;
+                    }
+                }
+            }
+            return -1;
+        }
         private const string CookieName = "Tenancy";
 
         public static void Tenancy(this HttpResponseBase response, Tenancy tenancy)
@@ -32,11 +49,23 @@ namespace UCosmic.Web.Mvc
         {
             // default tenancy is empty
             var json = "{}";
-
+            
             // try to get tenancy json from cookie
             var cookie = request.Cookies.Get(CookieName);
             if (cookie != null)
+            {
                 json = cookie.Value ?? json;
+            }
+            else
+            {
+                if (request.Path.Length > 1)
+                {
+                    string domain = request.Path.Substring(1);
+                    domain = domain.Substring(0, domain.IndexOf("/"));
+                    string estId = request.QueryString["establishmentId"];
+                    json = "{\"StyleDomain\":\"" + domain + "\", \"TenantId\":\"" + estId + "\"}";
+                }
+            }
 
             // deserialize & return the tenancy from json
             var tenancy = JsonConvert.DeserializeObject<Tenancy>(json);
