@@ -10,6 +10,7 @@ var Activities;
                 this.continentName = ko.observable(sessionStorage.getItem('continentName') || '');
                 this.regionCount = ko.observable('');
                 this.activityCount = ko.observable('?');
+                this.peopleCount = ko.observable('?');
                 this.locationCount = ko.observable('?');
                 this.dataDefered = $.Deferred();
                 this.placeFilter = ko.observable();
@@ -610,10 +611,12 @@ var Activities;
                 });
                 if (places.length > 0) {
                     this.activityCount(count.toString());
+                    this.peopleCount(places[0].peopleCount.toString());
                     this.locationCount(places.length.toString());
                 }
                 else {
                     this.activityCount('0');
+                    this.peopleCount('0');
                     this.locationCount('0');
                 }
                 this._plotMarkers(placeType, places);
@@ -723,6 +726,8 @@ var Activities;
                     else {
                         google.maps.event.addListener(marker, 'click', function (e) {
                             if (place.id != 0) {
+                                $('#mapCover').addClass('mapCover');
+                                $('#mapCoverLoading').addClass('mapCoverLoading');
                                 _this.parentObject.loadingSpinner.start();
                                 var search = _this.serializeObject(_this.parentObject.$form);
                                 var hasChangedPlaces = false;

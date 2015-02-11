@@ -43,6 +43,7 @@ module Activities.ViewModels {
         keyword;
         regionCount = ko.observable<string>('');
         activityCount = ko.observable<string>('?');
+        peopleCount = ko.observable<string>('?');
         locationCount = ko.observable<string>('?');
 
         //#endregion
@@ -842,9 +843,11 @@ module Activities.ViewModels {
             });
             if (places.length > 0) {
                 this.activityCount(count.toString());
+                this.peopleCount(places[0].peopleCount.toString());
                 this.locationCount(places.length.toString());
             } else {
                 this.activityCount('0');
+                this.peopleCount('0');
                 this.locationCount('0');
             }
 
