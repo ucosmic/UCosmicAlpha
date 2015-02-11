@@ -8,11 +8,13 @@ module Agreements.ViewModels {
         activationRoute?: string;
         detailUrl: string;
         sammy?: Sammy.Application
+        summaryApi: string;
     }
 
     export interface SearchTableInput {
         keyword: string;
         countryCode: string;
+        typeCode: string;
         pageSize: number;
         pageNumber: number;
         orderBy: string;
@@ -31,6 +33,9 @@ module Agreements.ViewModels {
         countryCode: KnockoutObservable<string> = ko.observable(
             sessionStorage.getItem(SearchTable.CountrySessionKey) || 'any');
 
+        typeCode: KnockoutObservable<string> = ko.observable(
+            sessionStorage.getItem(SearchTable.TypeSessionKey) || 'any');
+
         pager = new App.Pager<TableRow>(
             sessionStorage.getItem(SearchTable.PageNumberSessionKey) || 1,
             sessionStorage.getItem(SearchTable.PageSizeSessionKey) || 10);
@@ -43,22 +48,49 @@ module Agreements.ViewModels {
             sessionStorage.getItem(SearchTable.OrderBySessionKey) || 'start-desc');
 
         //#endregion
+
+        //status: KoModels.Summary = {
+        //    agreementCount: ko.observable('?'),
+        //    partnerCount: ko.observable('?'),
+        //    countryCount: ko.observable('?'),
+        //};
+        summary: KoModels.Summary = {
+            agreementCount: ko.observable('?'),
+            partnerCount: ko.observable('?'),
+            countryCount: ko.observable('?'),
+        };
+        private _loadSummary(countryCode?: string, typeCode?: string, keyword?: string): void {
+            var url = this.settings.summaryApi;
+            if (countryCode) {
+                if(keyword == null || keyword == ""){
+                    keyword = "!none!";
+                }
+                url = url += "Table/" + countryCode + "/" + typeCode + "/" + keyword
+            }
+            $.get(url)
+                .done((response: ApiModels.Summary): void => {
+                    ko.mapping.fromJS(response, {}, this.summary);
+                });
+        }
         //#region Search Filter Input sessionStorage
 
         static KeywordSessionKey = 'AgreementSearchKeyword2';
         static PageSizeSessionKey = 'AgreementSearchPageSize2';
         static OrderBySessionKey = 'AgreementSearchOrderBy2';
         static CountrySessionKey = 'AgreementSearchCountry2';
+        static TypeSessionKey = 'AgreementSearchType2';
         static PageNumberSessionKey = 'AgreementSearchPageNumber2';
 
         // automatically save the search inputs to session when they change
         private _inputChanged: KnockoutComputed<void> = ko.computed((): void => {
 
             if (this.countryCode() == undefined) this.countryCode('any');
+            if (this.typeCode() == undefined) this.typeCode('any');
             if (isNaN(this.pager.input.pageNumber())) this.pager.input.pageNumberText('1');
 
             sessionStorage.setItem(SearchTable.KeywordSessionKey, this.keyword() || '');
             sessionStorage.setItem(SearchTable.CountrySessionKey, this.countryCode());
+            sessionStorage.setItem(SearchTable.TypeSessionKey, this.typeCode());
             sessionStorage.setItem(SearchTable.PageNumberSessionKey, this.pager.input.pageNumberText());
             sessionStorage.setItem(SearchTable.PageSizeSessionKey, this.pager.input.pageSizeText());
             sessionStorage.setItem(SearchTable.OrderBySessionKey, this.orderBy());
@@ -69,6 +101,7 @@ module Agreements.ViewModels {
 
         constructor(public settings: SearchTableSettings) {
             this._loadCountryOptions();
+            this._loadAgreementTypes();
             this.sammy = this.settings.sammy || Sammy();
             this._runSammy();
             if (sessionStorage.getItem("agreementSaved") == "deleted") {
@@ -84,8 +117,16 @@ module Agreements.ViewModels {
         countryOptions: KnockoutObservableArray<Places.ApiModels.Country> = ko.observableArray(
             [{ code: 'any', name: '[Loading...]' }]);
 
+
+        typeOptions: KnockoutObservableArray<Places.ApiModels.AgreementType> = ko.observableArray(
+            [{ code: 'any', name: '[Loading...]' }]);
+
         private _countryChanged: KnockoutComputed<void> = ko.computed((): void => {
             this._onCountryChanged();
+        });
+
+        private _typeChanged: KnockoutComputed<void> = ko.computed((): void => {
+            this._onTypeChanged();
         });
 
         private _onCountryChanged(): void {
@@ -95,6 +136,14 @@ module Agreements.ViewModels {
             // keep countryCode as an option so that we don't lose it when options change
             if (options.length == 1 && options[0].code != countryCode)
                 options[0].code = countryCode;
+        }
+        private _onTypeChanged(): void {
+            // changes when applyBindings happens and after options data is loaded
+            var typeCode = this.typeCode();
+            var options = this.typeOptions();
+            // keep typeCode as an option so that we don't lose it when options change
+            if (options.length == 1 && options[0].code != typeCode)
+                options[0].code = typeCode;
         }
 
         private _loadCountryOptions(): JQueryDeferred<void> {
@@ -122,6 +171,27 @@ module Agreements.ViewModels {
             return deferred;
         }
 
+        private _loadAgreementTypes(): JQueryDeferred<void> {
+            // this will run once during construction
+            // this will run before sammy and applyBindings...
+            var deferred = $.Deferred();
+            $.get("/api/agreements/agreement-types/0/")
+                .done((response: Places.ApiModels.AgreementType[]): void => {
+                    // ...but this will run after sammy and applyBindings
+                    var options = response.slice(0);
+                    // customize options
+                    var any: Places.ApiModels.AgreementType = {
+                        code: 'any',
+                        name: '[All types]'
+                    };
+                    options = Enumerable.From([any]).Concat(options).ToArray();
+
+                    this.typeOptions(options); // push into observable array
+                    deferred.resolve();
+                });
+            return deferred;
+        }
+
         //#endregion
         //#region Result Filter Pagination
 
@@ -129,6 +199,7 @@ module Agreements.ViewModels {
             var keyword = this.keywordThrottled();
             var pageSize = this.pager.input.pageSize();
             var countryCode = this.countryCode();
+            var typeCode = this.typeCode();
             //alert('filter changed');
             this.pager.input.pageNumberText("1");
         });
@@ -137,8 +208,8 @@ module Agreements.ViewModels {
         //#region Sammy Routing
 
         sammy: Sammy.Application;
-        routeFormat: string = '#/{0}/country/{4}/sort/{1}/size/{2}/page/{3}/'
-            .format(this.settings.route).replace('{4}', '{0}');
+        routeFormat: string = '#/{0}/country/{5}/type/{1}/sort/{2}/size/{3}/page/{4}/'
+            .format(this.settings.route).replace('{5}', '{0}');
         private _isActivated: KnockoutObservable<boolean> = ko.observable(false);
 
         private _runSammy(): void {
@@ -147,7 +218,7 @@ module Agreements.ViewModels {
 
             // sammy will run the first route that it matches
             var beforeRegex = new RegExp('\\{0}'.format(
-                this.routeFormat.format('(.*)', '(.*)', '(.*)', '(.*)').replace(/\//g, '\\/')));
+                this.routeFormat.format('(.*)', '(.*)', '(.*)', '(.*)', '(.*)').replace(/\//g, '\\/')));
             this.sammy.before(
                 beforeRegex,
                 function (): boolean {
@@ -157,7 +228,7 @@ module Agreements.ViewModels {
 
             // do this when we already have hashtag parameters in the page
             this.sammy.get(
-                this.routeFormat.format(':country', ':sort', ':size', ':number'),
+                this.routeFormat.format(':country', ':type', ':sort', ':size', ':number'),
                 function (): void {
                     var e: Sammy.EventContext = this;
                     viewModel._onRoute(e);
@@ -180,6 +251,7 @@ module Agreements.ViewModels {
 
         private _onRoute(e: Sammy.EventContext): void {
             var country = e.params['country'];
+            var type = e.params['type'];
             var sort = e.params['sort'];
             var size = e.params['size'];
             var page = e.params['number'];
@@ -189,6 +261,7 @@ module Agreements.ViewModels {
             // it will also run when users page back & forward through the history
             // keyword is not stored as part of the route or history
             this.countryCode(country);
+            this.typeCode(type);
             this.orderBy(sort);
             this.pager.input.pageSizeText(size);
             this.pager.input.pageNumberText(page);
@@ -213,10 +286,11 @@ module Agreements.ViewModels {
         private _computeRoute(): string {
             // build what the route should be, based on current filter inputs
             var countryCode = this.countryCode();
+            var typeCode = this.typeCode();
             var orderBy = this.orderBy();
             var pageSize = this.pager.input.pageSize();
             var pageNumber = this.pager.input.pageNumber();
-            var route = this.routeFormat.format(countryCode,
+            var route = this.routeFormat.format(countryCode, typeCode,
                 orderBy, pageSize, pageNumber);
             return route;
         }
@@ -244,6 +318,7 @@ module Agreements.ViewModels {
             var thisRequest: SearchTableInput = {
                 keyword: this.keywordThrottled(),
                 countryCode: this.countryCode(),
+                typeCode: this.typeCode(),
                 orderBy: this.orderBy(),
                 pageSize: this.pager.input.pageSize(),
                 pageNumber: this.pager.input.pageNumber(),
@@ -297,6 +372,7 @@ module Agreements.ViewModels {
             if (this.$results) { // just give results less opacity, do not fade out entirely
                 this.$results.fadeTo(200, 0.5);
             }
+            this._loadSummary(lastRequest.countryCode, lastRequest.typeCode, lastRequest.keyword);
             $.get(App.Routes.WebApi.Agreements.Search.get(this.settings.domain), lastRequest)
                 .done((response: App.PageOf<any>): void => {
                     // need to make sure the current inputs still match the request
@@ -319,6 +395,8 @@ module Agreements.ViewModels {
                             }).ToArray();
                         this.pager.apply(response);
                         this.displayPager.apply(response);
+
+                        //this._updateStatus(response);
                         this.setLocation();
                         deferred.resolve();
                     }
@@ -362,6 +440,7 @@ module Agreements.ViewModels {
         private _areRequestsAligned(first: SearchTableInput, second: SearchTableInput, ignorePageNumber: boolean = false): boolean {
             var aligned = first.keyword === second.keyword
                 && first.countryCode === second.countryCode
+                && first.typeCode === second.typeCode
                 && first.orderBy === second.orderBy
                 && first.pageSize === second.pageSize
             ;
@@ -378,6 +457,61 @@ module Agreements.ViewModels {
         }
 
         //#endregion
+
+        //private _updateStatus(places) {
+        //    if (places && places.length) {
+        //        this.status.agreementCount(Enumerable.From(places)
+        //            .SelectMany(function (x: ApiModels.PlaceWithAgreements, i: number): number[] {
+        //                return x.agreementIds;
+        //            })
+        //            .Distinct(function (x: number): number {
+        //                return x;
+        //            })
+        //            .Count().toString());
+        //        this.status.partnerCount(Enumerable.From(places)
+        //            .SelectMany(function (x: ApiModels.PlaceWithAgreements, i: number): number[] {
+        //                return x.partnerIds;
+        //            })
+        //            .Distinct(function (x: number): number {
+        //                return x;
+        //            })
+        //            .Count().toString());
+        //    }
+        //    else {
+        //        this.status.agreementCount('0');
+        //        this.status.partnerCount('0');
+        //    }
+        //    //if (placeType == 'countries') {
+        //    //    var continentCode = this.continentCode();
+        //    //    if (continentCode == 'none') {
+        //    //        this.status.countryCount('unknown continent');
+        //    //    }
+        //    //    else {
+        //    //        var continent = Enumerable.From(this.continentOptions())
+        //    //            .SingleOrDefault(undefined, function (x: any): boolean {
+        //    //                return x.code == continentCode;
+        //    //            });
+        //    //        if (continent && continent.name) {
+        //    //            this.status.countryCount(continent.name);
+        //    //        }
+        //    //    }
+        //    //}
+        //    //else if (!placeType) {
+        //        var countryCode = this.countryCode();
+        //        if (countryCode == 'none') {
+        //            this.status.countryCount('unknown country');
+        //        }
+        //        else {
+        //            var country: Places.ApiModels.Country = Enumerable.From(this.countryOptions())
+        //                .SingleOrDefault(undefined, function (x: Places.ApiModels.Country): boolean {
+        //                    return x.code == countryCode;
+        //                });
+        //            if (country && country.name) {
+        //                this.status.countryCount(country.name);
+        //            }
+        //        }
+        //    //}
+        //}
     }
 
     export class TableRow {
