@@ -311,10 +311,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 Output.Add(new ActivityMapCountsApiQueryResultModel { id = 55949070, name = "South America", latitude = -23.030081F, longitude = -67.903702F, code = "SA", isContinent = true });
                 //need to add for other continents as well
                 var waterCount = Output.Where(x => x.isWater).Count();
+                var peopleCount = Output.DistinctBy(x => new { x.personId }).Count();
                 var grouped = Output.GroupBy(g => g.code).Select(g => new ActivitySearchResultPlacesCounted
                 {
                     ActivityCount = null,
                     Count = g.First().code == "WATER" ? waterCount : g.First().code != "GLOBAL" ? g.Count() - 1 : g.Count(),//take off one for adding the default above
+                    PeopleCount = peopleCount,
                     PlaceType = g.First().code == "WATER" ? "water" : g.First().code == "GLOBAL" ? "global" : "continent",
                     Name = g.First().code == "WATER" ? "Bodies Of Water" : g.First().code == "GLOBAL" ? "Global" : g.First().name,
                     Id = g.First().id,
@@ -344,11 +346,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 ActivityMapCountRepository activityMapCountRepository = new ActivityMapCountRepository();
                 var Output = activityMapCountRepository.ActivityMapCount_Country(input, tenant);
+                var peopleCount = Output.DistinctBy(x => new { x.personId }).Count();
                 //add continents only on zoomed
                 var grouped = Output.GroupBy(g => g.name).Select(g => new ActivitySearchResultPlacesCounted
                 {
                     ActivityCount = null,
                     Count = g.Count(),
+                    PeopleCount = peopleCount,
                     PlaceType = g.First().isContinent ? "continent" : g.First().isCountry ? "country" : g.First().isRegion ? "region" : g.First().isWater ? "water" : "global",
                     Name = g.First().name,
                     Id = g.First().id,
@@ -378,12 +382,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 ActivityMapCountRepository activityMapCountRepository = new ActivityMapCountRepository();
                 var Output = activityMapCountRepository.ActivityMapCount_Water(input, tenant);
+                var peopleCount = Output.DistinctBy(x => new { x.personId }).Count();
                 //var activityCount = Output.Count();
 
                 var grouped = Output.GroupBy(g => g.id).Select(g => new ActivitySearchResultPlacesCounted
                 {
                     ActivityCount = null,
                     Count = g.Count(),
+                    PeopleCount = peopleCount,
                     PlaceType = "water",
                     Name = g.First().name,
                     Id = g.First().id,
