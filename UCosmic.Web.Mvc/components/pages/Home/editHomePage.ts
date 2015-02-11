@@ -5,7 +5,7 @@ Polymer('polymer-content-edit-home-page', {
     flasherUpdated: 0,
     addedSection: "",
     showFlasher: function(){
-        var polymerNotification = document.createElement('polymer-notification');
+        var polymerNotification:any = document.createElement('polymer-notification');
         polymerNotification.message = this.flashertext;
         polymerNotification.type = 'notify';
         polymerNotification.fadeOutDelay = '10000';
@@ -28,7 +28,7 @@ Polymer('polymer-content-edit-home-page', {
     ready: function () {
         //create array with what is sent from server
         if (!this.flasherisdisabled) {
-            var polymerNotification = document.createElement('polymer-notification');
+            var polymerNotification:any = document.createElement('polymer-notification');
             polymerNotification.message = this.flashertext;
             polymerNotification.type = 'notify';
             polymerNotification.fadeOutDelay = '10000';

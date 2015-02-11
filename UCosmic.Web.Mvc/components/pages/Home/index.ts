@@ -3,7 +3,7 @@
 Polymer('polymer-content-home-index', {
     ready: function () {
         if (!this.flasherisdisabled) {
-            var polymerNotification = document.createElement('polymer-notification');
+            var polymerNotification:any = document.createElement('polymer-notification');
             polymerNotification.message = this.flashertext;
             polymerNotification.type = 'notify';
             polymerNotification.fadeOutDelay = '10000';
