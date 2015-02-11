@@ -37,7 +37,7 @@ namespace UCosmic.Repositories
 
             return activitySummary;
         }
-        public IList<AgreementSummaryApiQueryResultModel> AgreementSummaryByEstablishment_Place(int? EstablishmentId, int? PlaceId)
+        public IList<AgreementSummaryApiQueryResultModel> AgreementSummaryByEstablishment_Place(int? EstablishmentId, int? PlaceId, int? selectedEstablishmentId)
         {
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
             string sql = "SELECT Distinct  aa.[Id] ,aa.[Type], pp.OfficialName " +
@@ -53,12 +53,16 @@ namespace UCosmic.Repositories
             {
                 sql += " and pp.revisionid=" + PlaceId;
             }
+            if (selectedEstablishmentId > 0)
+            {
+                sql += " and aap2.establishmentId=" + selectedEstablishmentId;
+            }
             IList<AgreementSummaryApiQueryResultModel> agreementSummary = connectionFactory.SelectList<AgreementSummaryApiQueryResultModel>(DB.UCosmic, sql);
            
             return agreementSummary;
         }
 
-        public IList<DegreeSummaryApiQueryResultModel> DegreeSummaryByEstablishment_Place(int? EstablishmentId, int? PlaceId)
+        public IList<DegreeSummaryApiQueryResultModel> DegreeSummaryByEstablishment_Place(int? EstablishmentId, int? PlaceId, int? selectedEstablishmentId)
         {
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
             string sql = "SELECT  distinct  d.[RevisionId] as degreeId " +
@@ -75,6 +79,10 @@ namespace UCosmic.Repositories
             if (PlaceId > 0)
             {
                 sql += " and pp.revisionid=" + PlaceId;
+            }
+            if (selectedEstablishmentId > 0)
+            {
+                sql += " and ee.revisionId=" + selectedEstablishmentId;
             }
             IList<DegreeSummaryApiQueryResultModel> degreeSummary = connectionFactory.SelectList<DegreeSummaryApiQueryResultModel>(DB.UCosmic, sql);
 
