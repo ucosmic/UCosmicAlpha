@@ -22,7 +22,7 @@ module Activities.ViewModels {
         continentCode: string;
         countryCode: string;
         placeId: number;
-    } 
+    }
 
     export class SearchMap {
         //#region Search Filter Inputs
@@ -77,7 +77,7 @@ module Activities.ViewModels {
         }
 
         createTableUrl(search) {
-            if (!this.parentObject.tableUrl()  || this.parentObject.tableUrl().indexOf('?') == 0) {
+            if (!this.parentObject.tableUrl() || this.parentObject.tableUrl().indexOf('?') == 0) {
                 this.parentObject.tableUrl(location.href.replace('map', 'table') + '?');
             }
             var tempUrl: string = this.parentObject.tableUrl();
@@ -87,7 +87,7 @@ module Activities.ViewModels {
             return tempUrl
         }
 
-        private updateSession(search){
+        private updateSession(search) {
 
             if (this.countryCode() == undefined) this.countryCode('any');
             if (this.continentCode() == undefined) this.continentCode('any');
@@ -99,16 +99,16 @@ module Activities.ViewModels {
 
             var tempUrl = this.createTableUrl(search);
             this.parentObject.tableUrl(tempUrl);
-           
+
 
         }
 
         //#endregion
         //#region Construction & Initialization
 
-        private _removeContinents(placeNames: Array<string>, continent:string){
+        private _removeContinents(placeNames: Array<string>, continent: string) {
             var index = placeNames.indexOf(continent);
-            if(index > -1){
+            if (index > -1) {
                 placeNames.splice(index, 1);
             }
         }
@@ -123,7 +123,7 @@ module Activities.ViewModels {
             //this.keyword = output.input.keyword ? output.input.keyword : "null";
             if (!output.input.activityTypeIds) {
                 output.input.activityTypeIds = [];
-                $.each(output.activityTypes, (i: number, type: any): void => {
+                $.each(output.activityTypes,(i: number, type: any): void => {
                     output.input.activityTypeIds.push(type.activityTypeId);
                 });
             }
@@ -164,7 +164,7 @@ module Activities.ViewModels {
                 placeFilter = 'waters';
                 input.placeFilter = placeFilter;
 
-            } else if (!placeFilter && this.continentCode() != 'any' && this.continentCode() != 'WATER'){
+            } else if (!placeFilter && this.continentCode() != 'any' && this.continentCode() != 'WATER') {
                 placeFilter = 'countries'
                 input.placeFilter = placeFilter;
             } else {
@@ -172,7 +172,7 @@ module Activities.ViewModels {
                 input.placeFilter = placeFilter;
             }
             this.placeFilter(placeFilter);
-            if (placeFilter) {
+            //if (placeFilter) {
                 if (placeFilter == 'continents') {
                     this._getContinentData(input, continentsData, dataDeferred);
                     $.when(dataDeferred).then(() => {
@@ -184,12 +184,13 @@ module Activities.ViewModels {
                             $.when(dataDeferred).then(() => {
                                 this.dataDefered.resolve();
                                 //this.loadSummary();
-                            //    dataDeferred = $.Deferred();
-                            //    this._getRegionsData(input, regionsData);
+                                //    dataDeferred = $.Deferred();
+                                //    this._getRegionsData(input, regionsData);
                             });
                         });
                     });
                 } else if (placeFilter == 'countries') {
+                    this._getContinentData(input, continentsData, dataDeferred);
                     this._getCountriesData(input, countriesData, dataDeferred);
                     $.when(dataDeferred).then(() => {
                         dataDeferred = $.Deferred();
@@ -200,12 +201,13 @@ module Activities.ViewModels {
                             $.when(dataDeferred).then(() => {
                                 this.dataDefered.resolve();
                                 //this.loadSummary();
-                            //    dataDeferred = $.Deferred();
-                            //    this._getRegionsData(input, regionsData);
+                                //    dataDeferred = $.Deferred();
+                                //    this._getRegionsData(input, regionsData);
                             });
                         });
                     });
                 } else {
+                    this._getContinentData(input, continentsData, dataDeferred);
                     this._getWatersData(input, watersData, dataDeferred);
                     $.when(dataDeferred).then(() => {
                         dataDeferred = $.Deferred();
@@ -215,32 +217,12 @@ module Activities.ViewModels {
                             this._getCountriesData(input, countriesData, dataDeferred);
                             $.when(dataDeferred).then(() => {
                                 this.dataDefered.resolve();
-                                //this.loadSummary();
-                            //    dataDeferred = $.Deferred();
-                            //    this._getRegionsData(input, regionsData);
                             });
                         });
                     });
                 }
-            }// else {
-            //    placeFilter = 'continents'
-            //    input.placeFilter = placeFilter;
-            //    this._getContinentData(input, continentsData, dataDeferred);
-            //    $.when(dataDeferred).then(() => {
-            //        dataDeferred = $.Deferred();
-            //        this._getCountriesData(input, countriesData, dataDeferred);
-            //        $.when(dataDeferred).then(() => {
-            //            dataDeferred = $.Deferred();
-            //            this._getWatersData(input, watersData, dataDeferred);
-            //            //$.when(dataDeferred).then(() => {
-            //            //    dataDeferred = $.Deferred();
-            //            //    this._getRegionsData(input, regionsData);
-            //            //});
-            //        });
-            //    });
-            //}
         }
-        private _deleteInputProperties(input){
+        private _deleteInputProperties(input) {
             delete input.pageSize;
             delete input.placeFilter;
             delete input.pageNumber;
@@ -259,7 +241,7 @@ module Activities.ViewModels {
                     });
                 }
             }
-            else{
+            else {
                 var settings = settings || {};
                 input.continentCode = 'any';
                 var url = '/api/usf.edu/employees/continents/?' + $.param(input);
@@ -267,25 +249,25 @@ module Activities.ViewModels {
                 settings.url = url;
                 $.ajax(settings)
                     .done((response: any): void => {
-                        this._continentsResponse = ko.observableArray(response);
-                        dataDeferred.resolve();
-                        if (placeFilter == 'continents') {
-                            this._map.ready().done((): void => {
-                                this._load(placeFilter);
-                                input = this._deleteInputProperties(input);
-                                sessionStorage.setItem(JSON.stringify(input) + 'continents', JSON.stringify(response))
-                            });
-                        } else {
+                    this._continentsResponse = ko.observableArray(response);
+                    dataDeferred.resolve();
+                    if (placeFilter == 'continents') {
+                        this._map.ready().done((): void => {
+                            this._load(placeFilter);
                             input = this._deleteInputProperties(input);
                             sessionStorage.setItem(JSON.stringify(input) + 'continents', JSON.stringify(response))
-                        }
-                    })
+                        });
+                    } else {
+                        input = this._deleteInputProperties(input);
+                        sessionStorage.setItem(JSON.stringify(input) + 'continents', JSON.stringify(response))
+                    }
+                })
                     .fail((xhr: JQueryXHR): void => {
-                        //promise.reject(xhr);
-                    })
+                    //promise.reject(xhr);
+                })
                     .always(() => {
-                        dataDeferred.resolve();
-                    });
+                    dataDeferred.resolve();
+                });
             }
         }
 
@@ -320,32 +302,32 @@ module Activities.ViewModels {
                 var placeFilter = input.placeFilter;
                 $.ajax(settings)
                     .done((response: any): void => {
-                        dataDeferred.resolve();
-                        this._countriesResponse = ko.observableArray(response);
-                        //if (response.length > 0) {
-                        //    this.activityCount(response[0].activityCount);
-                        //    this.locationCount(response[0].length.toString());
-                        //} else {
-                        //    this.activityCount('0');
-                        //    this.locationCount('0');
-                        //}
-                        if (placeFilter == 'countries') {
-                            this._map.ready().done((): void => {
-                                this._load(placeFilter);
-                                input = this._deleteInputProperties(input);
-                                sessionStorage.setItem(JSON.stringify(input) + 'countries', JSON.stringify(response))
-                            });
-                        } else {
+                    dataDeferred.resolve();
+                    this._countriesResponse = ko.observableArray(response);
+                    //if (response.length > 0) {
+                    //    this.activityCount(response[0].activityCount);
+                    //    this.locationCount(response[0].length.toString());
+                    //} else {
+                    //    this.activityCount('0');
+                    //    this.locationCount('0');
+                    //}
+                    if (placeFilter == 'countries') {
+                        this._map.ready().done((): void => {
+                            this._load(placeFilter);
                             input = this._deleteInputProperties(input);
                             sessionStorage.setItem(JSON.stringify(input) + 'countries', JSON.stringify(response))
-                        }
-                    })
+                        });
+                    } else {
+                        input = this._deleteInputProperties(input);
+                        sessionStorage.setItem(JSON.stringify(input) + 'countries', JSON.stringify(response))
+                    }
+                })
                     .fail((xhr: JQueryXHR): void => {
-                        //promise.reject(xhr);
-                    })
+                    //promise.reject(xhr);
+                })
                     .always(() => {
-                        dataDeferred.resolve();
-                    });
+                    dataDeferred.resolve();
+                });
             }
         }
 
@@ -373,95 +355,29 @@ module Activities.ViewModels {
                 var placeFilter = input.placeFilter;
                 $.ajax(settings)
                     .done((response: any): void => {
-                        dataDeferred.resolve();
-                        this._watersResponse = ko.observableArray(response);
-                        if (placeFilter == 'waters') {
-                            this._map.ready().done((): void => {
-                                this._load(placeFilter);
-                                input = this._deleteInputProperties(input);
-                                sessionStorage.setItem(JSON.stringify(input) + 'waters', JSON.stringify(response))
-                            });
-                        } else {
+                    dataDeferred.resolve();
+                    this._watersResponse = ko.observableArray(response);
+                    if (placeFilter == 'waters') {
+                        this._map.ready().done((): void => {
+                            this._load(placeFilter);
                             input = this._deleteInputProperties(input);
                             sessionStorage.setItem(JSON.stringify(input) + 'waters', JSON.stringify(response))
-                        }
-                    })
+                        });
+                    } else {
+                        input = this._deleteInputProperties(input);
+                        sessionStorage.setItem(JSON.stringify(input) + 'waters', JSON.stringify(response))
+                    }
+                })
                     .fail((xhr: JQueryXHR): void => {
-                        //promise.reject(xhr);
-                    })
+                    //promise.reject(xhr);
+                })
                     .always(() => {
-                        dataDeferred.resolve();
-                    });
-                
+                    dataDeferred.resolve();
+                });
+
             }
         }
 
-        //private _getRegionsData(input, data) {
-        //    if (data) {
-        //        this.dataDefered.resolve();
-        //        this.regionCount(JSON.parse(data));
-        //    }
-        //    else {
-
-
-        //    var placeNames: Array<string> = [];
-        //    if (input.placeNames && input.placeNames.length > 1) {
-        //        placeNames = input.placeNames.split(" & ");
-        //    }
-        //    if (placeNames.length > 0) {
-        //        this._removeContinents(placeNames, 'Asia');
-        //        this._removeContinents(placeNames, 'Africa');
-        //        this._removeContinents(placeNames, 'North America');
-        //        this._removeContinents(placeNames, 'South America');
-        //        this._removeContinents(placeNames, 'Antarctica');
-        //        this._removeContinents(placeNames, 'Oceania');
-        //        this._removeContinents(placeNames, 'Europe');
-        //    }    
-
-        //    if (placeNames.length > 0) {
-        //        var settings = settings || {};
-
-        //        var input = JSON.parse(sessionStorage.getItem(SearchMap.SearchOptions));
-
-        //        var url = '/api/usf.edu/employees/regions/?' + $.param(input);
-
-        //        settings.url = url;
-        //        $.ajax(settings)
-        //            .done((response: any): void => {
-        //                this.dataDefered.resolve();
-        //                var x = response;
-        //                var hasOnePlace = false;
-        //                if (placeNames.length > 1) {
-        //                    $.each(placeNames, (i: number, place: string): void => {
-        //                        var count = Enumerable.From(response).Where("$.name=='" + placeNames[0] + "'").Select('$.count').ToArray()[0];
-        //                        if (count > 0) {
-        //                            if (hasOnePlace) {
-        //                                this.regionCount(this.regionCount() + "Results have " + count + " activity tags of the region " + place + " not shown on map. ");
-        //                            } else {
-        //                                hasOnePlace = true;
-        //                                this.regionCount("Results have " + count + " activity tags of the region " + place + " not shown on map. ");
-        //                            }
-        //                        }
-        //                    });
-        //                } else if (placeNames.length == 1) {
-        //                    var count = Enumerable.From(response).Where("$.name=='" + placeNames[0] + "'").Select('$.count').ToArray()[0];
-        //                    if (count > 0) {
-        //                        this.regionCount("Results have " + count + " activity tags of the region " + placeNames[0] + " not shown on map.");
-        //                    }
-        //                } else {
-        //                    this.regionCount('');
-        //                }
-        //                sessionStorage.setItem(JSON.stringify(input) + 'continents', JSON.stringify(this.regionCount()))
-        //            })
-        //            .fail((xhr: JQueryXHR): void => {
-        //                //promise.reject(xhr);
-        //            });
-        //    } else {
-        //        this.dataDefered.resolve();
-        //        this.regionCount('');
-        //    }
-        //    }
-        //}
 
         //#endregion
         //#region Google Map
@@ -494,7 +410,7 @@ module Activities.ViewModels {
 
         //#endregion
 
-        serializeObject(object): any{
+        serializeObject(object): any {
 
             var o = {};
             var a = object.serializeArray();
@@ -534,7 +450,7 @@ module Activities.ViewModels {
 
             this._ConstructMapData();
         }
-        
+
         clearFilter(): void {
             this.continentCode('any');
             this.continentName('');
@@ -585,8 +501,8 @@ module Activities.ViewModels {
                 if (continentCode != 'any' && continentCode != 'none') {
                     options = Enumerable.From(options)
                         .Where(function (x: Places.ApiModels.Country): boolean {
-                            return x.continentCode == continentCode;
-                        }).ToArray();
+                        return x.continentCode == continentCode;
+                    }).ToArray();
                 }
                 options = Enumerable.From([anyCountry])
                     .Concat(options)
@@ -613,17 +529,17 @@ module Activities.ViewModels {
                 };
                 options = Enumerable.From(countries)
                     .Select(function (x: Places.ApiModels.Country): any {
-                        return {
-                            code: x.continentCode,
-                            name: x.continentName
-                        };
-                    })
+                    return {
+                        code: x.continentCode,
+                        name: x.continentName
+                    };
+                })
                     .Distinct(function (x: any): string {
-                        return x.code;
-                    })
+                    return x.code;
+                })
                     .OrderBy(function (x: any): string {
-                        return x.name;
-                    })
+                    return x.name;
+                })
                     .ToArray();
                 options = Enumerable.From([anyContinent])
                     .Concat(options)
@@ -639,10 +555,10 @@ module Activities.ViewModels {
             var deferred = $.Deferred();
             $.get(App.Routes.WebApi.Countries.get())
                 .done((response: Places.ApiModels.Country[]): void => {
-                    // ...but this will run after sammy and applyBindings
-                    this.countries(response);
-                    deferred.resolve();
-                });
+                // ...but this will run after sammy and applyBindings
+                this.countries(response);
+                deferred.resolve();
+            });
             return deferred;
         }
 
@@ -689,7 +605,7 @@ module Activities.ViewModels {
             return Math.abs(precision1 - precision2) < 100;
             return true;
         }
-        
+
         loadViewport: number = 0;
         activate(): void {
             if (!this._isActivated()) {
@@ -761,7 +677,7 @@ module Activities.ViewModels {
             var countryCode = this.countryCode();
             if (continentCode != 'any' && continentCode != 'WATER') {
                 placeType = 'countries';
-            } else if (continentCode == 'WATER'){
+            } else if (continentCode == 'WATER') {
                 placeType = 'waters';
             }
             //if (this.parentObject.placeNames() != '') {
@@ -769,9 +685,9 @@ module Activities.ViewModels {
             //}
 
             this.placeType(placeType);
-               
+
             this._receivePlaces(placeType);
-                
+
         }
 
         private _requestPlaces(placeType: string): JQueryDeferred<void> {
@@ -797,7 +713,7 @@ module Activities.ViewModels {
         private _receivePlaces(placeType: string): void {
             var places;
             if (placeType == 'countries') {
-                if(this._countriesResponse()){
+                if (this._countriesResponse()) {
                     this.parentObject.loadingSpinner.start
                     places = this._countriesResponse();
                 } else {
@@ -830,20 +746,35 @@ module Activities.ViewModels {
                 if (this.continentCode() && this.continentCode() != 'any') {
                     places = Enumerable.From(places)
                         .Where(function (x: ApiModels.PlaceWithActivities): boolean {
-                            return continentCode == 'none'
-                                ? !x.id
-                                : x.code == continentCode;
-                        })
+                        return continentCode == 'none'
+                            ? !x.id
+                            : x.code == continentCode;
+                    })
                         .ToArray();
-                } 
+                }
             }
             var count = 0;
+            var peopleCount = 0;
             $.each(places, function (index, place) {
                 count += place.count;
             });
+            if (placeType != 'countries' || this.continentCode() == 'any') {
+                var places2: any = this._continentsResponse();
+                peopleCount = places2[0].peopleCountTotal;
+            } else {
+                var places2: any = this._continentsResponse();
+                var place = places2.filter((value, index, test) => {
+                    if (value.code == this.continentCode()) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+                peopleCount = place[0].peopleCount;
+            }
             if (places.length > 0) {
                 this.activityCount(count.toString());
-                this.peopleCount(places[0].peopleCount.toString());
+                this.peopleCount(peopleCount.toString());
                 this.locationCount(places.length.toString());
             } else {
                 this.activityCount('0');
@@ -853,15 +784,15 @@ module Activities.ViewModels {
 
             this._plotMarkers(placeType, places);
             var viewportSettings = this._getMapViewportSettings(placeType, places);
-                this._map.setViewport(viewportSettings).then((): void => {
-                });
+            this._map.setViewport(viewportSettings).then((): void => {
+            });
         }
 
         private _plotMarkers(placeType: string, places: ApiModels.PlaceWithActivities[]) {
             var scaler;
 
 
-            if (placeType == 'countries'){
+            if (placeType == 'countries') {
                 scaler = this._getMarkerIconScaler(placeType, this._countriesResponse())
             } else if (placeType == 'waters') {
                 scaler = this._getMarkerIconScaler(placeType, this._watersResponse())
@@ -872,15 +803,15 @@ module Activities.ViewModels {
             if (placeType == 'countries' && !places.length && continentCode != 'none') {
                 var continent = Enumerable.From(this._continentsResponse())
                     .SingleOrDefault(undefined, function (x: ApiModels.PlaceWithActivities): boolean {
-                        return x.code == continentCode;
-                    });
+                    return x.code == continentCode;
+                });
                 if (continent) {
                     places = [continent];
                 }
             }
             var countryCode = this.countryCode();
             var markers: google.maps.Marker[] = [];
-            $.each(places, (i: number, place: ApiModels.PlaceWithActivities): void => {
+            $.each(places,(i: number, place: ApiModels.PlaceWithActivities): void => {
                 if (placeType == 'continents' && !place.count) return; // do not render zero on continent
                 var title = '{0} - {1} activit{2}\r\nClick for more information'
                     .format(place.name, place.count, place.count == 1 ? 'y' : 'ies');
@@ -915,12 +846,12 @@ module Activities.ViewModels {
                 var marker = new google.maps.Marker(options);
                 markers.push(marker);
 
-                google.maps.event.addListener(marker, 'mouseover', (e: google.maps.MouseEvent): void => {
+                google.maps.event.addListener(marker, 'mouseover',(e: google.maps.MouseEvent): void => {
                     marker.setOptions({
                         zIndex: 201,
                     });
                 });
-                google.maps.event.addListener(marker, 'mouseout', (e: google.maps.MouseEvent): void => {
+                google.maps.event.addListener(marker, 'mouseout',(e: google.maps.MouseEvent): void => {
                     var side = marker.getIcon().size.width;
                     setTimeout((): void => {
                         marker.setOptions({
@@ -929,7 +860,7 @@ module Activities.ViewModels {
                     }, 400);
                 });
                 if (placeType === 'continents') {
-                    google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
+                    google.maps.event.addListener(marker, 'click',(e: google.maps.MouseEvent): void => {
                         if (place.code == 'WATER') {
                             this.parentObject.loadingSpinner.start();
                             sessionStorage.setItem(SearchMap.ContinentSessionKey, this.continentCode());
@@ -944,7 +875,7 @@ module Activities.ViewModels {
                             this.placeFilter('waters');
                             var search = this.serializeObject(this.parentObject.$form);
                             this.updateSession(search);
-                            
+
                         }
                         else if (place.code) {
                             this.parentObject.loadingSpinner.start();
@@ -960,16 +891,16 @@ module Activities.ViewModels {
                             this.placeFilter('countries');
                             var search = this.serializeObject(this.parentObject.$form);
                             this.updateSession(search);
-                        } 
+                        }
                     });
                 }
-                else{
-                    google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
+                else {
+                    google.maps.event.addListener(marker, 'click',(e: google.maps.MouseEvent): void => {
                         //take to advanced search table
                         if (place.id != 0) {
                             $('#mapCover').addClass('mapCover');
                             $('#mapCoverLoading').addClass('mapCoverLoading');
-                            
+
                             this.parentObject.loadingSpinner.start();
                             var search = this.serializeObject(this.parentObject.$form);
                             var hasChangedPlaces = false;
@@ -977,7 +908,7 @@ module Activities.ViewModels {
                                 search.placeNames += " & " + place.name;
                                 search.placeIds += " " + place.id;
                                 hasChangedPlaces = true;
-                            } else if( search.placeNames.indexOf(place.name) < 0) {
+                            } else if (search.placeNames.indexOf(place.name) < 0) {
                                 search.placeNames = place.name;
                                 search.placeIds = place.id.toString();
                                 hasChangedPlaces = true;
@@ -985,7 +916,7 @@ module Activities.ViewModels {
 
                             if (hasChangedPlaces) {
                                 sessionStorage.setItem("isMapClick", "1");
-                            }                            
+                            }
 
                             search.placeIds = search.placeIds.split(" ");
                             this.updateSession(search);
@@ -995,13 +926,13 @@ module Activities.ViewModels {
                         }
                     });
                 }
-                
+
             });
             this._map.replaceMarkers(markers);
             if (this.parentObject.affiliationsLoaded) {
                 this.parentObject.loadingSpinner.stop();
             }
-            
+
         }
 
         fixBoundingBox(boundingBox) {
@@ -1033,8 +964,8 @@ module Activities.ViewModels {
                     if (continentCode && this._continentsResponse) {
                         var continent: ApiModels.PlaceWithActivities = Enumerable.From(this._continentsResponse())
                             .SingleOrDefault(undefined, function (x: ApiModels.PlaceWithActivities): boolean {
-                                return x.code == continentCode;
-                            });
+                            return x.code == continentCode;
+                        });
                         if (continent && continent.boundingBox && continent.boundingBox.hasValue) {
                             continent.boundingBox = this.fixBoundingBox(continent.boundingBox);
                             settings.bounds = Places.Utils.convertToLatLngBounds(continent.boundingBox);
@@ -1055,8 +986,8 @@ module Activities.ViewModels {
                 else {
                     var latLngs = Enumerable.From(places)
                         .Select(function (x: ApiModels.PlaceWithActivities): any {
-                            return new google.maps.LatLng(x.center.latitude, x.center.longitude);
-                        }).ToArray();
+                        return new google.maps.LatLng(x.center.latitude, x.center.longitude);
+                    }).ToArray();
                     $.each(latLngs, function (index: number, latLng: google.maps.LatLng): void {
                         settings.bounds.extend(latLng);
                     });
@@ -1070,8 +1001,8 @@ module Activities.ViewModels {
                     if (countryCode && this.countryOptions) {
                         var countryOption: Places.ApiModels.Country = Enumerable.From(this.countryOptions())
                             .SingleOrDefault(undefined, function (x: Places.ApiModels.Country): boolean {
-                                return x.code == countryCode;
-                            });
+                            return x.code == countryCode;
+                        });
                         if (countryOption && countryOption.box && countryOption.box.hasValue) {
                             settings.bounds = Places.Utils.convertToLatLngBounds(countryOption.box);
                         }
@@ -1089,8 +1020,8 @@ module Activities.ViewModels {
                 else {
                     var latLngs = Enumerable.From(places)
                         .Select(function (x: ApiModels.PlaceWithActivities): any {
-                            return new google.maps.LatLng(x.center.latitude, x.center.longitude);
-                        }).ToArray();
+                        return new google.maps.LatLng(x.center.latitude, x.center.longitude);
+                    }).ToArray();
                     $.each(latLngs, function (index: number, latLng: google.maps.LatLng): void {
                         settings.bounds.extend(latLng);
                     });
@@ -1141,7 +1072,7 @@ module Activities.ViewModels {
             options.shape = shape;
             options.zIndex = 200 - side;
         }
-        
+
         $infoWindow: JQuery;
         infoWindowContent: any = {
             partner: ko.observable({}),
@@ -1168,8 +1099,8 @@ module Activities.ViewModels {
             }
 
             openRequest.onsuccess = function (e) {
-                    console.log("Success!");
-                }
+                console.log("Success!");
+            }
 
             openRequest.onerror = function (e) {
                 console.log("Error");
@@ -1189,19 +1120,6 @@ module Activities.ViewModels {
         //#endregion
 
 
-        //loadSummary(): void {
-
-        //    var settings = settings || {};
-        //    settings.url = "/api/" + this.ancestorId + "/employees/activities/counts";
-        //    $.ajax(settings)
-        //        .done((response): void => {
-        //            this.locationCount(response.locationCount);
-        //            this.activityCount(response.activityCount);
-        //        })
-        //        .fail((xhr: JQueryXHR): void => {
-
-        //        });
-        //}
 
     }
 

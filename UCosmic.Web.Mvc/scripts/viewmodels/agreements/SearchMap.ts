@@ -664,13 +664,6 @@ module Agreements.ViewModels {
 
             if (this.typeCode() != 'any') {
                 var type = this.typeCode();
-                //places = places.filter(function (value, index, test) {
-                //    if (value.agreementTypes.indexOf(type) == -1) {
-                //        return false;
-                //    } else {
-                //        return true;
-                //    }
-                //})
                 places = places.map(function (x) {
                     x.agreementCount = x.agreementTypes.filter(function (value, index, test) {
                         if (value.indexOf(type) == -1) {
@@ -681,10 +674,6 @@ module Agreements.ViewModels {
                     }).length;
                     return x;
                 })
-                //places = Enumerable.From(places)
-                //    .Where(function (x: ApiModels.PlaceWithAgreements): boolean {
-                //        return x.agreementTypes.indexOf(type) > -1;
-                //    }).ToArray();
             } else {
                 places = places.map(function (x) {
                     x.agreementCount = x.agreementTypes.length;
@@ -1030,64 +1019,6 @@ module Agreements.ViewModels {
         private _updateStatus(placeType: string, places: ApiModels.PlaceWithAgreements[]) {
 
             this._loadStatus(this.countryCode(), this.continentCode(), this.typeCode());
-            //if (this.typeCode() != 'any') {
-            //    var type = this.typeCode();
-            //    places = places.map(function (x) {
-            //        //var myX = x.agreementTypes.filter(function (value, index, test) {
-            //        //    if (value.indexOf(type) == -1) {
-            //        //        return false;
-            //        //    } else {
-            //        //        return true;
-            //        //    }
-            //        //});
-            //        //x.agreementCount = x.agreementTypes.filter(function (value, index, test) {
-            //        //if (value.indexOf(type) == -1) {
-            //        //    return false;
-            //        //} else {
-            //        //    return true;
-            //        //}
-            //        //}).length;
-            //        //x.partnerCount = x.agreementTypes.filter(function (value, index, test) {
-            //        //    if (value.indexOf(type) == -1) {
-            //        //        return false;
-            //        //    } else {
-            //        //        return true;
-            //        //    }
-            //        //}).length;
-
-            //        //x.agreementTypes.forEach(function (value: any, index: number, array: Array<Object>) {
-            //        //    if (value.indexOf(type) == -1) {
-            //        //        x.partnerCount = x.partnerCount - 1;
-            //        //        x.agreementCount = x.agreementCount - 1;
-            //        //        //x.partnerIds.splice(index, 1);
-            //        //        //x.agreementIds.splice(index, 1);
-            //        //    } 
-            //        //});
-            //        //return x;
-            //    })
-            //}
-            //if (places && places.length) {
-            //    this.status.agreementCount(Enumerable.From(places)
-            //        .SelectMany(function (x: ApiModels.PlaceWithAgreements, i: number): number[] {
-            //            return x.agreementIds;
-            //        })
-            //        .Distinct(function (x: number): number {
-            //            return x;
-            //        })
-            //        .Count().toString());
-            //    this.status.partnerCount(Enumerable.From(places)
-            //        .SelectMany(function (x: ApiModels.PlaceWithAgreements, i: number): number[] {
-            //            return x.partnerIds;
-            //        })
-            //        .Distinct(function (x: number): number {
-            //            return x;
-            //        })
-            //        .Count().toString());
-            //}
-            //else {
-            //    this.status.agreementCount('0');
-            //    this.status.partnerCount('0');
-            //}
             if (placeType == 'countries') {
                 var continentCode = this.continentCode();
                 if (continentCode == 'none') {

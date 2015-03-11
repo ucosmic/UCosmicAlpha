@@ -165,49 +165,49 @@ var Activities;
                     input.placeFilter = placeFilter;
                 }
                 this.placeFilter(placeFilter);
-                if (placeFilter) {
-                    if (placeFilter == 'continents') {
-                        this._getContinentData(input, continentsData, dataDeferred);
+                if (placeFilter == 'continents') {
+                    this._getContinentData(input, continentsData, dataDeferred);
+                    $.when(dataDeferred).then(function () {
+                        dataDeferred = $.Deferred();
+                        _this._getCountriesData(input, countriesData, dataDeferred);
+                        $.when(dataDeferred).then(function () {
+                            dataDeferred = $.Deferred();
+                            _this._getWatersData(input, watersData, dataDeferred);
+                            $.when(dataDeferred).then(function () {
+                                _this.dataDefered.resolve();
+                            });
+                        });
+                    });
+                }
+                else if (placeFilter == 'countries') {
+                    this._getContinentData(input, continentsData, dataDeferred);
+                    this._getCountriesData(input, countriesData, dataDeferred);
+                    $.when(dataDeferred).then(function () {
+                        dataDeferred = $.Deferred();
+                        _this._getContinentData(input, continentsData, dataDeferred);
+                        $.when(dataDeferred).then(function () {
+                            dataDeferred = $.Deferred();
+                            _this._getWatersData(input, watersData, dataDeferred);
+                            $.when(dataDeferred).then(function () {
+                                _this.dataDefered.resolve();
+                            });
+                        });
+                    });
+                }
+                else {
+                    this._getContinentData(input, continentsData, dataDeferred);
+                    this._getWatersData(input, watersData, dataDeferred);
+                    $.when(dataDeferred).then(function () {
+                        dataDeferred = $.Deferred();
+                        _this._getContinentData(input, continentsData, dataDeferred);
                         $.when(dataDeferred).then(function () {
                             dataDeferred = $.Deferred();
                             _this._getCountriesData(input, countriesData, dataDeferred);
                             $.when(dataDeferred).then(function () {
-                                dataDeferred = $.Deferred();
-                                _this._getWatersData(input, watersData, dataDeferred);
-                                $.when(dataDeferred).then(function () {
-                                    _this.dataDefered.resolve();
-                                });
+                                _this.dataDefered.resolve();
                             });
                         });
-                    }
-                    else if (placeFilter == 'countries') {
-                        this._getCountriesData(input, countriesData, dataDeferred);
-                        $.when(dataDeferred).then(function () {
-                            dataDeferred = $.Deferred();
-                            _this._getContinentData(input, continentsData, dataDeferred);
-                            $.when(dataDeferred).then(function () {
-                                dataDeferred = $.Deferred();
-                                _this._getWatersData(input, watersData, dataDeferred);
-                                $.when(dataDeferred).then(function () {
-                                    _this.dataDefered.resolve();
-                                });
-                            });
-                        });
-                    }
-                    else {
-                        this._getWatersData(input, watersData, dataDeferred);
-                        $.when(dataDeferred).then(function () {
-                            dataDeferred = $.Deferred();
-                            _this._getContinentData(input, continentsData, dataDeferred);
-                            $.when(dataDeferred).then(function () {
-                                dataDeferred = $.Deferred();
-                                _this._getCountriesData(input, countriesData, dataDeferred);
-                                $.when(dataDeferred).then(function () {
-                                    _this.dataDefered.resolve();
-                                });
-                            });
-                        });
-                    }
+                    });
                 }
             };
             SearchMap.prototype._deleteInputProperties = function (input) {
@@ -606,12 +606,29 @@ var Activities;
                     }
                 }
                 var count = 0;
+                var peopleCount = 0;
                 $.each(places, function (index, place) {
                     count += place.count;
                 });
+                if (placeType != 'countries' || this.continentCode() == 'any') {
+                    var places2 = this._continentsResponse();
+                    peopleCount = places2[0].peopleCountTotal;
+                }
+                else {
+                    var places2 = this._continentsResponse();
+                    var place = places2.filter(function (value, index, test) {
+                        if (value.code == _this.continentCode()) {
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    });
+                    peopleCount = place[0].peopleCount;
+                }
                 if (places.length > 0) {
                     this.activityCount(count.toString());
-                    this.peopleCount(places[0].peopleCount.toString());
+                    this.peopleCount(peopleCount.toString());
                     this.locationCount(places.length.toString());
                 }
                 else {

@@ -65,6 +65,7 @@ namespace UCosmic.Web.Mvc.Models
         public BoundingBox BoundingBox { get; set; }
         public int Count { get; set; }
         public int PeopleCount { get; set; }
+        public int? PeopleCountTotal { get; set; }
         public int? ActivityCount { get; set; }
 
     }

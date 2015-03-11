@@ -117,6 +117,7 @@ declare module Activities.ApiModels {
         name?: string;
         type?: string;
         count?: number;
+        peopleCount?: number;
         //isEarth?: boolean;
         //isContinent?: boolean;
         //isCountry?: boolean;
