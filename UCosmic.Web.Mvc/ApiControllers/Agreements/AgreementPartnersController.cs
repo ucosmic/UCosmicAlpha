@@ -69,7 +69,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 EagerLoad = new Expression<Func<Place, object>>[]
                 {
                     x => x.GeoPlanetPlace.Type,
-                    //x => x.Ancestors.Select(y => y.Ancestor.GeoPlanetPlace.Type),
                 },
                 OrderBy = new Dictionary<Expression<Func<Place, object>>, OrderByDirection>
                 {

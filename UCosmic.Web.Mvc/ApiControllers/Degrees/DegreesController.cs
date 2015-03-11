@@ -39,7 +39,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         /* Returns degree type counts for given place.*/
         [GET("degrees/degree-count/{establishmentId?}/{placeId?}/{selectedEstablishmentId?}")]
-        //[CacheHttpGet(Duration = 3600)]
+        [CacheHttpGet(Duration = 3600)]
         public List<DegreeSummaryApiModel> GetDegreeCount(int? establishmentId, int? placeId, int? selectedEstablishmentId)
         {
             IList<DegreeSummaryApiModel> returnModel = new List<DegreeSummaryApiModel>();
@@ -68,7 +68,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     model = summaryRepository.DegreeSummaryByEstablishment_Place(establishmentId, placeId, selectedEstablishmentId);
                     var modelDistinct = model.DistinctBy(x => new { x.degreeId });
                     
-                    //degreeTypes = DegreeTypesRepository.DegreeTypes_By_establishmentId(establishmentId);
                     var degreeCount = modelDistinct.ToList().Count();
                     var establishmentCount = modelDistinct.DistinctBy(x => x.establishmentId).ToList().Count();
                     var personCount = modelDistinct.DistinctBy(x => x.personId).ToList().Count();

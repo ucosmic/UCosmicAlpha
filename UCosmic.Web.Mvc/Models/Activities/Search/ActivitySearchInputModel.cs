@@ -14,6 +14,8 @@ namespace UCosmic.Web.Mvc.Models
         {
             Pivot = ActivitySearchPivot.Activities;
             OrderBy = "recency-desc";
+            PageNumber = 1;
+            PageSize = 10;
         }
 
         public string Domain { get; set; }
@@ -22,11 +24,13 @@ namespace UCosmic.Web.Mvc.Models
         public string[] PlaceNames { get; set; }
         public int[] ActivityTypeIds { get; set; }
         public string Keyword { get; set; }
-        public string OrderBy { get; set; }
         public string Since { get; set; }
         public string Until { get; set; }
         public bool? IncludeUndated { get; set; }
         public int? AncestorId { get; set; }
+        public int PageNumber {get; set;}
+        public int PageSize { get; set; }
+        public string OrderBy { get; set; }
     }
 
     public static class ActivitySearchInputProfiler

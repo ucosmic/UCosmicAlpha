@@ -9,29 +9,6 @@ using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Domain.LanguageExpertises
 {
-    //public class A
-    //{
-    //    public string TheData1 { get; set; }
-    //    public string TheData2 { get; set; }
-    //    public string UniqueID { get; set; }
-    //}
-    //public class AComparer : IEqualityComparer<A>
-    //{
-
-    //    #region IEqualityComparer<A> Members
-
-    //    public bool Equals(A x, A y)
-    //    {
-    //        return x.UniqueID == y.UniqueID;
-    //    }
-
-    //    public int GetHashCode(A obj)
-    //    {
-    //        return obj.UniqueID.GetHashCode();
-    //    }
-
-    //    #endregion
-    //}
 
     public class LanguageExpertisesPageByTerms : BaseEntitiesQuery<LanguageExpertise>, IDefineQuery<PagedQueryResult<LanguageExpertise>>
     {
@@ -125,16 +102,8 @@ namespace UCosmic.Domain.LanguageExpertises
                 var inName = queryable.Where(x => (x.Language.Names.Count() > 0 && (x.Language.Names.Where(y => y.Text.Contains(query.Keyword)).Count() > 0)));
                 var inNativeName = queryable.Where(x => (x.Language.NativeName != null && x.Language.NativeName.Text.Contains(query.Keyword)));
                 var inOther = queryable.Where(x => (x.Other != null && x.Other.Contains(query.Keyword)));
-                //var inTwoLetterIsoCode = queryable.Where(x => (x.TwoLetterIsoCode != null && x.TwoLetterIsoCode.Contains(query.Keyword)));
-                //var inYearAwarded = queryable.Where(x => (x.YearAwarded.HasValue && SqlFunctions.StringConvert((double)x.YearAwarded.Value).Contains(query.Keyword)));
-                //var inEstablishment = queryable.Where(x => x.Institution != null && x.Institution.Names.Any(y => y.Text.Contains(query.Keyword)));
-                //var inCountry = queryable.Where(x => x.Institution != null && x.Institution.Location.Places.Any(y => y.OfficialName.Contains(query.Keyword)));
                 var inPerson = queryable.Where(x => x.Person.DisplayName.Contains(query.Keyword)).Distinct();
-                //queryable = inName.Union(inDialect).Union(inPerson);
-                //queryable = inName.Union(inDialect).Union(inNativeName).Union(inOther).Union(inPerson);
                 queryable = inName.Union(inDialect).Union(inOther).Union(inPerson);
-                //queryable = queryable.AsEnumerable().Distinct(new EqualityComparerTransaction());
-                //queryable = inName.Concat(inDialect).Concat(inOther).Concat(inPerson).DistinctBy(x => x.PersonId);
             }
 
             queryable = queryable.OrderBy(query.OrderBy);

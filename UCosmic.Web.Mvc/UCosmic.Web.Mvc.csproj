@@ -23,7 +23,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <TypeScriptToolsVersion>1.1</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>1.4</TypeScriptToolsVersion>
     <TypeScriptSourceMap>False</TypeScriptSourceMap>
     <TypeScriptModuleKind>none</TypeScriptModuleKind>
     <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
@@ -352,6 +352,7 @@
     <Compile Include="Models\Activities\ActivitySnapshotApiModel.cs" />
     <Compile Include="Models\Activities\ActivityMapCountsApiModel.cs" />
     <Compile Include="Models\Activities\ActivityPlaceMapViewModel.cs" />
+    <Compile Include="Models\Activities\Search\ActivityQueryResultModel.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchMapModel.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchMapPlaceModel.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchResultMapRegionsModel.cs" />
@@ -608,7 +609,9 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ActivityRepository.cs" />
     <Compile Include="Repositories\AgreementTypeRepository.cs" />
+    <Compile Include="Repositories\ActivityDocumentRepository.cs" />
     <Compile Include="Repositories\EstablishmentListRepository.cs" />
     <Compile Include="Repositories\EmployeeActivityTypeRepository.cs" />
     <Compile Include="Repositories\ActivityMapCounts.cs" />

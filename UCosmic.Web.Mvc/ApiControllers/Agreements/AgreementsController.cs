@@ -266,8 +266,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
         //[CacheHttpGet(Duration = 3600)]
         public List<AgreementTypesApiReturn> GetAgreementTypes(int? establishmentId)
         {
-            //IList<AgreementSummaryApiModel> returnModel = new List<AgreementSummaryApiModel>();
-            //IList<AgreementSummaryApiQueryResultModel> model = new List<AgreementSummaryApiQueryResultModel>();
             IList<AgreementTypesApiReturn> agreementTypes = new List<AgreementTypesApiReturn>();
 
             var tenancy = Request.Tenancy();
@@ -289,10 +287,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
                     //SummaryRepository summaryRepository = new SummaryRepository();
                     AgreementTypesRepository agreementTypesRepository = new AgreementTypesRepository();
-                    //model = summaryRepository.AgreementLocationsByEstablishment_Place(establishmentId, placeId);
-                    //var modelDistinct = model.DistinctBy(x => new { x.id, x.type });
                 agreementTypes = agreementTypesRepository.AgreementTypes_By_establishmentId(establishmentId);
-                    //var agreementTypes = modelDistinct.DistinctBy(x => x.type);
             }
             return agreementTypes.ToList();
         }

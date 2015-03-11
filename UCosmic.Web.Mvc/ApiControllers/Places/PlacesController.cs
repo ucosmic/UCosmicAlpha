@@ -87,7 +87,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
                         i = 5;
                     }
                 }
-                //var places = place.Ancestors.OrderByDescending(x => x.Separation).Select(x => x.Ancestor).ToList();
 
 
                 places.Add(place);
@@ -100,7 +99,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{placeId:int}/children")]
         public IEnumerable<PlaceApiModel> GetChildren(int placeId)
         {
-            //System.Threading.Thread.Sleep(5000); // test api latency
 
             var query = new PlaceById(placeId)
             {

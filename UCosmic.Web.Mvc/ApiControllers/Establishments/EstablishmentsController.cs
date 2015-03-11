@@ -129,10 +129,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 return badRequest;
             }
 
-            //command.Location.Id = command.Created.RevisionId;
-            //command.Location.Entity = command.Location;
-            //command.Location.NoCommit = false;
-            //_updateLocation.Handle(command.Location);
             var command2 = new UpdateEstablishmentLocation(command.Created.RevisionId, User);
             Mapper.Map(model.Location, command2);
 
