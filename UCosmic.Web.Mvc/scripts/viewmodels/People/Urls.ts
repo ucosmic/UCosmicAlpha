@@ -5,7 +5,6 @@ module People.ViewModels {
             this.personId = personId;
             this.externalLinks = ko.mapping.fromJS(model);
             this.purge = <() => void > this.purge.bind(this);
-            //this.bindJquery();
         }
         externalLinks = ko.mapping.fromJS([]);
         isEditing = ko.observable<Boolean>(false);
@@ -82,12 +81,6 @@ module People.ViewModels {
         }
 
         //can't do because kendo goes and overrides this.
-        //verticallyCenterWindow(kendoWindow): void {
-        //    var windowHeight = window.innerHeight;
-        //    var kendoWindowHeight = kendoWindow.height();
-        //    var top = (windowHeight / 2) - (kendoWindowHeight / 2);
-        //    kendoWindow.css("top", top+"px");
-        //}
 
         edit(item, event): void {
             var context = ko.contextFor(event.target).$parent;
@@ -95,11 +88,9 @@ module People.ViewModels {
             context.editUrlId = item.urlId();
             $("#edit_description").data("kendoComboBox").value(item.description());
             context.editDescription(item.description());
-            //context.verticallyCenterWindow(context.$edit_urls_dialog.parent());
             context.$edit_urls_dialog.data("kendoWindow").open().title("Urls");
             context.purgeSpinner.start();
             context.editItem = item;
-            //window.location.href = App.Routes.Mvc.My.GeographicExpertise.edit(id)
         }
         isValidUrl(url): boolean {
             return url.match(/^(ht)tps?:\/\/[a-z0-9-\.]+\.[a-z]{2,4}\/?([^\s<>\#%"\,\{\}\\|\\\^\[\]`]+)?$/);
@@ -188,21 +179,11 @@ module People.ViewModels {
                 top: 100,
                     open: () => {
                         $("html, body").css("overflow", "hidden");
-                        //this.verticallyCenterWindow(this.$edit_urls_dialog.parent());
                     },
                     close: () => {
                         $("html, body").css("overflow", "");
                         this.purgeSpinner.stop();
 
-                        //var editableAffiliations = this.editableAffiliations();
-                        //var editingAffiliation = Enumerable.From(editableAffiliations)
-                        //    .FirstOrDefault(undefined, function (x: AffiliationSpike): boolean {
-                        //        return x.isEditing();
-                        //    });
-                        //if (this.cancelClicked) {
-                        //    editingAffiliation.cancel();
-                        //}
-                        //this.cancelClicked = true;
                     },
                     visible: false,
                     draggable: false,
@@ -213,7 +194,6 @@ module People.ViewModels {
             dialog.center();
 
             $(window).resize(() => {
-                //this.verticallyCenterWindow(this.$edit_urls_dialog.parent());
                 dialog.center();
             });
         }

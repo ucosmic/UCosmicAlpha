@@ -154,7 +154,6 @@ namespace UCosmic.Domain.Agreements
                     Place = new Place
                     {
                         OfficialName = string.Format("[{0} Unknown]", query.GroupBy.Value == PlaceGroup.Continents ? "Continent" : "Country"),
-                        //OfficialName = "[Continent unknown]",
                         Center = new Coordinates(0, -180),
                         BoundingBox = new BoundingBox(5, -175, -5, 175),
                     },

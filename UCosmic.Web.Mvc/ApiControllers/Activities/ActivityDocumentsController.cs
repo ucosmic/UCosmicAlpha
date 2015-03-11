@@ -18,6 +18,7 @@ using ImageResizer;
 using Newtonsoft.Json;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Files;
+using UCosmic.Repositories;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
@@ -72,20 +73,34 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 EagerLoad = ActivityDocumentApiModel.EagerLoad,
             });
             var model = Mapper.Map<ActivityDocumentApiModel>(entity);
+
             return model;
         }
 
 
-        //[GET("{agreementId:int}/files/{fileId:int}/download")]
-        //public HttpResponseMessage GetDownload(int agreementId, int fileId)
-        //{
-        //    var response = GetContent(agreementId, fileId);
-        //    response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-        //    {
-        //        FileName = response.Content.Headers.ContentDisposition.FileName,
-        //    };
-        //    return response;
-        //}
+        [GET("{activityId:int}/documents/{documentId:int}/download")]
+        public HttpResponseMessage GetDownload(int activityId, int documentId)
+        {
+        
+            IList<ActivityDocumentApiReturn> model = new List<ActivityDocumentApiReturn>();
+
+            ActivityDocumentRepository activityDocumentRepository = new ActivityDocumentRepository();
+            model = activityDocumentRepository.ActivityDocument_By_Id(documentId);
+            var result = model.SingleOrDefault();
+
+            var fileName = result.fileName;
+            var file = _binaryData.Get(result.path);
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(file),
+            };
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue(fileName.GetContentType());
+            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("inline")
+            {
+                FileName = fileName,
+            };
+            return response;
+        }
 
         [CacheHttpGet(Duration = 3600)]
         [GET(ThumbnailUrl)]
