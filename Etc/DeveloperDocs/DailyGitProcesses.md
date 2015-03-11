@@ -144,3 +144,6 @@
    This is so that I can review your commit(s) in my tracking remotes. After a rebase, your local work branch's history may differ from the remote's history, causing git to reject the push. In the past I have had you run  git push origin :work to delete, and then git push origin work to re-add. While that works, I recently discovered that the -f flag can force a history rewrite as well, without having to explicitly delete and re-add the branch to the github remote.
 
 3. After pushing your work branch at the end of the day, check to see if you have an open pull request to merge your work back into the team branch. You can do this by going to https://github.com/danludwig/Layout3/pulls. If you already have an OPEN pull request, stop here, you don't need to do anything. If you do not have an open pull request, create one. You can do this by clicking the **Pull Request** button at the top of the page. Select your work branch from the **head branch** dropdown, and make sure you are pulling it into the team base branch.
+
+
+

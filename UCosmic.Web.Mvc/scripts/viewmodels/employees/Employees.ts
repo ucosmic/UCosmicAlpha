@@ -1,34 +1,5 @@
 ﻿module ViewModels.Employees {
 
-    //declare class MarkerWithLabelOptions extends MarkerWithLabel {
-    //    constructor();
-    //    crossImage: string;
-    //    handCursor: string;
-    //    labelAnchor: any;
-    //    labelClass: string;
-    //    labelContent: any;
-    //    labelInBackground: boolean;
-    //    labelStyle: any;
-    //    labelVisible: boolean;
-    //    optimized: boolean;
-    //    raiseOnDrag: boolean;
-    //    position: any;
-
-    //}
-
-    //declare class MarkerWithLabel extends google.maps.Marker {
-    //    constructor(opts?: any);
-    //    crossImage: string;
-    //    handCursor: string;
-    //    labelAnchor: any;
-    //    labelClass: string;
-    //    labelContent: any;
-    //    labelInBackground: boolean;
-    //    labelStyle: any;
-    //    labelVisible: boolean;
-    //    optimized: boolean;
-    //    raiseOnDrag: boolean;
-    //}
 
     export class FacultyAndStaffSelect {
         institutions: KnockoutObservableArray<any>;
@@ -38,29 +9,6 @@
 
         load(): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
-            //this.loadSpinner.start();
-            //$.ajax({
-            //    type: "GET",
-            //    async: true,
-            //    dataType: 'json',
-            //   url: App.Routes.WebApi.Establishments.get(),
-            //    data: {
-            //        pageNumber: 1,
-            //        pageSize: App.Constants.int32Max,
-            //        typeEnglishNames: ['University', 'University System'],
-            //        orderBy: 'name-asc'
-            //    },
-            //    success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
-            //        this.institutions = ko.mapping.fromJS(data);
-            //        deferred.resolve();
-            //    },
-            //    error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-            //        deferred.reject(errorThrown);
-            //    },
-            //    complete: (jqXhr: JQueryXHR, textStatus: string): void => {
-            //        //this.loadSpinner.stop();
-            //    }
-            //});
 
             $.ajax({
                 type: "GET",
@@ -440,59 +388,12 @@
             this.collegeDropListId = collegeDropListId;
             this.departmentDropListId = departmentDropListId;
 
-            //$("#" + establishmentDropListId).kendoAutoComplete({
-            //    minLength: 3,
-            //    filter: "contains",
-            //    ignoreCase: true,
-            //    placeholder: "[Enter Institution]",
-            //    dataTextField: "officialName",
-            //    dataSource: new kendo.data.DataSource({
-            //        serverFiltering: true,
-            //        transport: {
-            //            read: (options: any): void => {
-            //                $.ajax({
-            //                    url: App.Routes.WebApi.Establishments.get(),
-            //                    data: {
-            //                        typeEnglishNames: ['University', 'University System']
-            //                    },
-            //                    success: (results: any): void => {
-            //                        options.success(results.items);
-            //                    }
-            //                });
-            //            }
-            //        }
-            //    }),
-            //    change: (e: any): void => {
-            //        this.checkInstitutionForNull();
-            //    },
-            //    select: (e: any): void => {
-            //        var me = $("#" + establishmentDropListId).data("kendoAutoComplete");
-            //        var dataItem = me.dataItem(e.item.index());
-            //        this.establishmentOfficialName(dataItem.officialName);
-            //        this.establishmentId(dataItem.id);
-            //        if ((dataItem.countryName != null) && (dataItem.countryName.length > 0)) {
-            //            this.establishmentCountryOfficialName(dataItem.countryName);
-            //        }
-            //        else {
-            //            this.establishmentCountryOfficialName(null);
-            //        }
-            //    }
-            //});
-
 
             $("#" + establishmentDropListId).kendoDropDownList({
                 dataTextField: "officialName",
                 dataValueField: "id",
                 dataSource: this.institutionDropListData,
-                //change: function (e) {
-                //    var item = this.dataItem(e.sender.selectedIndex);
-                //    me.clearCachedData();
-                //    me.establishmentId(item.id);
-                //    me.establishmentOfficialName(item.officialName);
-                //    me.selectMap(me.mapType());
-
-                //    me.drawPointmap(true);
-                //}
+                
             });
 
             $("#" + departmentDropListId).kendoDropDownList({
@@ -537,30 +438,7 @@
                 dataValueField: "id",
                 optionLabel: { officialName: "[All Colleges]", id: 0 },
                 dataSource: collegeDropListDataSource,
-                //change: function (e) {
-                //    var selectedIndex = e.sender.selectedIndex;
-                //    if (selectedIndex != -1) {
-                //        var item = this.dataItem(selectedIndex);
-                //        if ((item != null) && (item.id != 0)) {
-                //            var dataSource = new kendo.data.DataSource({
-                //                transport: {
-                //                    read: {
-                //                        url: App.Routes.WebApi.Establishments.getChildren(item.id),
-                //                        data: { orderBy: ['rank-asc', 'name-asc'] }
-                //                    }
-                //                }
-                //            });
-
-                //            $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(dataSource);
-                //        }
-
-                //        if (selectedIndex == 0) {
-                //            $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
-                //        }
-
-                //        me.drawPointmap(true);
-                //    }
-                //},
+                
                 dataBound: function (e) {
                     if ((this.selectedIndex != null) && (this.selectedIndex != -1)) {
                         var item = this.dataItem(this.selectedIndex);
@@ -596,33 +474,7 @@
                             }
                         }
                     }),
-                    //change: function (e) {
-                    //    var selectedIndex = e.sender.selectedIndex;
-                    //    if ((selectedIndex != null) && (selectedIndex != -1)) {
-                    //        var item = this.dataItem(selectedIndex);
-                    //        if ((item != null) && (item.id != 0)) {
-                    //            var dataSource = new kendo.data.DataSource({
-                    //                transport: {
-                    //                    read: {
-                    //                        url: App.Routes.WebApi.Establishments.getChildren(item.id),
-                    //                        data: { orderBy: ['rank-asc', 'name-asc'] }
-                    //                    }
-                    //                }
-                    //            });
-
-                    //            $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(dataSource);
-                    //        }
-
-                    //        if (selectedIndex == 0) {
-                    //            $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
-                    //            $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
-
-                    //            $("#" + collegeDropListId).data("kendoDropDownList").text("");
-                    //        }
-
-                    //        me.drawPointmap(true);
-                    //    }
-                    //},
+                    
                     dataBound: function (e) {
                         if ((this.selectedIndex != null) && (this.selectedIndex != -1)) {
                             var item = this.dataItem(this.selectedIndex);
@@ -649,28 +501,11 @@
                 });
             }
 
-            //$("#heatmapActivityDropList").kendoDropDownList({
-            //    dataTextField: "type",
-            //    dataValueField: "selected",
-            //    dataSource: activities
-            //});
+            
         }
 
         setupValidation(): void {
-            //ko.validation.rules['atLeast'] = {
-            //    validator: (val: any, otherVal: any): boolean => {
-            //        return val.length >= otherVal;
-            //    },
-            //    message: 'At least {0} must be selected.'
-            //};
-
-            //ko.validation.registerExtenders();
-
-            //this.locations.extend({ atLeast: 1 });
-            //this.institutions.extend({ required: true, maxLength: 200 });
-            //this.from.extend({ required: true });
-
-            //ko.validation.group(this);
+            
         }
 
         setupSubscriptions(): void {
@@ -1608,21 +1443,7 @@
                             map: null,
                             title: placeResults[i].officialName,
                             icon: iconURL
-                            //icon: {
-                            //    path: google.maps.SymbolPath.CIRCLE,
-                            //    fillOpacity: 1.0,
-                            //    fillColor: 'green',
-                            //    strokeOpacity: 1.0,
-                            //    strokeColor: 'green',
-                            //    strokeWeight: 1.0,
-                            //    scale: 9 //pixels
-                            //},
-                            //icon: "/api/graphics/circle?side=18&opacity=&color=" + $("#mapMarkerColor").css("background-color"),
-                            //labelContent: placeResults[i].results.length.toString(),
-                            //labelAnchor: new google.maps.Point(5, 5),
-                            //labelAnchor: new google.maps.Point(18, 12),
-                            //labelClass: "googleMarkerLabel",
-                            //labelInBackground: false
+                            
                         });
 
                         markers.push(marker);
@@ -1814,18 +1635,7 @@
                         this.activityTypes()[i].checked = ko.observable(true);
                     }
 
-                    //ko.mapping.fromJS(data, {}, this);
-
-                    ///* Initialize the list of selected locations with current locations in values. */
-                    //for (var i = 0; i < this.locations().length; i += 1) {
-
-                    //    this.initialLocations.push({
-                    //        officialName: this.locations()[i].placeOfficialName(),
-                    //        id: this.locations()[i].placeId()
-                    //    });
-
-                    //    this.selectedLocationValues.push(this.locations()[i].placeId());
-                    //}                  
+                                
 
                     this.places = places.concat(waters);
 

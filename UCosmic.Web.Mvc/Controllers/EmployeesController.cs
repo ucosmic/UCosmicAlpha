@@ -13,13 +13,31 @@ using UCosmic.Domain.Degrees;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.LanguageExpertises;
+using UCosmic.Repositories;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
+    public static class myHelper
+    {
+
+        public static IEnumerable<TSource> DistinctBy2<TSource, TKey>
+    (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+        {
+            HashSet<TKey> seenKeys = new HashSet<TKey>();
+            foreach (TSource element in source)
+            {
+                if (seenKeys.Add(keySelector(element)))
+                {
+                    yield return element;
+                }
+            }
+        }
+    }
     [UserVoiceForum(UserVoiceForum.Employees)]
     public partial class EmployeesController : Controller
     {
+
         private readonly IProcessQueries _queryProcessor;
 
         [UsedImplicitly]
@@ -52,67 +70,129 @@ namespace UCosmic.Web.Mvc.Controllers
         public virtual ActionResult Table(string domain, ActivitySearchInputModel input)
         {
             //input.AncestorId = null;
-            var query = new ActivityValuesPageBy
+            //var query = new ActivityValuesPageBy
+            //{
+            //    EagerLoad = new Expression<Func<ActivityValues, object>>[]
+            //    {
+            //        x => x.Activity.Person,
+            //        x => x.Activity.Person.Affiliations,
+            //        x => x.Activity.Person.Affiliations.Select(y => y.Establishment),
+            //        x => x.Activity.Person.Affiliations.Select(y => y.Establishment.Ancestors),
+            //    }
+            //};
+            //Mapper.Map(input, query);
+            //var results = _queryProcessor.Execute(query);
+
+            var tenant = _queryProcessor.Execute(new EstablishmentByDomain(domain)).RevisionId as int?;
+            if (input.AncestorId != null)
             {
-                EagerLoad = new Expression<Func<ActivityValues, object>>[]
-                {
-                    x => x.Activity.Person,
-                    x => x.Activity.Person.Affiliations,
-                    x => x.Activity.Person.Affiliations.Select(y => y.Establishment),
-                    x => x.Activity.Person.Affiliations.Select(y => y.Establishment.Ancestors),//.Select(z => z.Ancestor)),
-                    //x => x.Activity.Person.Affiliations.All().,//.Select(z => z.Ancestor)),
-                    //x => x.Locations,                    
-                    //x => x.Tags,
-                    //x => x.Types,
-                    //x => x.Activity,
-                    //x => x.Activity.Values,
-                    //x => x.Locations.Select(z => z.Place),
-                    //x => x.Locations.Select(z => z.Place.GeoNamesToponym),
-                    //x => x.Locations.Select(z => z.Place.GeoPlanetPlace),
-                    //x => x.Locations.Select(z => z.Place.Ancestors),
-                    //x => x.Locations.Select(z => z.Place.Ancestors.Select(y => y.Ancestor)),
-                    //x => x.Locations.Select(z => z.Place.Ancestors.Select(y => y.Ancestor.GeoNamesToponym)),
-                    //x => x.Locations.Select(z => z.Place.Ancestors.Select(y => y.Ancestor.GeoPlanetPlace)),
-                }
-                //EagerLoad = new Expression<Func<ActivityValues, object>>[]
+                tenant = input.AncestorId;
+            }
+            if (tenant != null)
+            {
+                ActivityRepository activityMapCountRepository = new ActivityRepository();
+                var Output = ActivityRepository.ActivitiesPageBy(input, tenant);
+
+                //var peopleCount = Output.DistinctBy(x => new { x.personId }).Count();
+
+                //var places = Output.DistinctBy(x => new { x.id }).
+
+                //add continents only on zoomed
+                //var grouped = Output.GroupBy(g => g.locationName).Select(g => new ActivitySearchResultModel
                 //{
-                //    x => x.Activity.Values,
-                //    x => x.Locations.Select(z => z.Place),
-                //    x => x.Locations.Select(z => z.Place.GeoNamesToponym),
-                //    x => x.Locations.Select(z => z.Place.GeoPlanetPlace),
-                //    x => x.Locations.Select(z => z.Place.Ancestors),
-                //    x => x.Locations.Select(z => z.Place.Ancestors.Select(y => y.Ancestor)),
-                //    x => x.Locations.Select(z => z.Place.Ancestors.Select(y => y.Ancestor.GeoNamesToponym)),
-                //    x => x.Locations.Select(z => z.Place.Ancestors.Select(y => y.Ancestor.GeoPlanetPlace)),
+                //    ActivityId = g.
+                //    Name = g.First().name,
+                //    Id = g.First().id,
+                //    Code = g.First().code,
+                //    Center = g.First().center,
+                //    BoundingBox = null,
+                //}).ToArray();
 
-                //}
-            };
-            Mapper.Map(input, query);
-            var results = _queryProcessor.Execute(query);
+                var results = Output.GroupBy(g => g.id).Select(x => new ActivitySearchResultModel
+                {
+                    ActivityId = x.First().id,
+                    EndsFormat = x.First().EndsOnFormat,
+                    EndsOn = x.First().EndsOn,
+                    OnGoing = x.First().onGoing,
+                    Owner = new UCosmic.Web.Mvc.Models.ActivitySearchResultModel.ActivitySearchResultOwnerModel()
+                    {
+                        PersonId = x.First().personId,
+                        DisplayName = x.First().displayName,
+                        LastCommaFirst = !string.IsNullOrWhiteSpace(x.First().lastName) && !string.IsNullOrWhiteSpace(x.First().firstName) ? x.First().lastName + ", " + x.First().firstName : !string.IsNullOrWhiteSpace(x.First().lastName) ? x.First().lastName : x.First().displayName,
+                    },
+                    Places = x.DistinctBy2(d => new { d.locationName }).Select(y => new ActivityPlaceViewModel()
+                    {
+                        PlaceCenter = null,
+                        PlaceName = y.locationName
+                    }).ToArray(),
+                    StartsFormat = x.First().StartsOnFormat,
+                    StartsOn = x.First().StartsOn,
+                    Title = x.First().title,
+                    Types = x.DistinctBy2(d => new { d.typeId }).Select(y => new ActivityTypeViewModel()
+                    {
+                        Text = y.type,
+                        TypeId = y.typeId
+                    }).ToArray()
 
-            var model = new ActivitySearchModel
-            {
-                Domain = domain,
-                Input = input,
-                Output = Mapper.Map<PageOfActivitySearchResultModel>(results),
-                ActivityTypes = Enumerable.Empty<ActivityTypeModel>(),
-            };
-            var settings = _queryProcessor.Execute(new EmployeeSettingsByEstablishment(domain)
-            {
-                EagerLoad = new Expression<Func<EmployeeModuleSettings, object>>[]
+                });
+                if (input != null)
+                {
+
+                    if (input.ActivityTypeIds != null && input.ActivityTypeIds.Length > 0 && input.ActivityTypeIds[0] != 0)
+                    {
+                        //var t = fileList.Where(file => filterList.Any(folder => file.ToUpperInvariant().Contains(folder.ToUpperInvariant())))
+                        results = results.Where(x => input.ActivityTypeIds.Any(y => x.Types.Select(z => z.TypeId).Contains(y)));
+                    }
+                }
+                var resultsCount = results.Count();
+                var peopleCount = results.DistinctBy2(x => x.Owner.PersonId).Count();
+                
+                if (input != null){
+                    //int endPosition = 10;
+                    //int startPosition = 1;
+                    //startPosition = input.PageSize * input.PageNumber - (input.PageSize-1);
+                    //endPosition = startPosition + input.PageSize;
+                    results = results
+                      .Skip(input.PageSize * (input.PageNumber-1))
+                      .Take(input.PageSize);
+                }
+                var pagedResults = new PageOfActivitySearchResultModel()
+                {
+                    Items = results,
+                    ItemTotal = resultsCount,
+                    peopleTotal = peopleCount,
+                    PageNumber = input.PageNumber,
+                    PageSize = input.PageSize
+                };
+
+                var model = new ActivitySearchModel
+                {
+                    Domain = domain,
+                    Input = input,
+                    Output = pagedResults,//results.ToList(),
+                    ActivityTypes = Enumerable.Empty<ActivityTypeModel>(),
+                };
+                var settings = _queryProcessor.Execute(new EmployeeSettingsByEstablishment(domain)
+                {
+                    EagerLoad = new Expression<Func<EmployeeModuleSettings, object>>[]
                 {
                     x => x.ActivityTypes,
                 }
-            });
-            if (settings != null && settings.ActivityTypes.Any())
-                model.ActivityTypes = Mapper.Map<ActivityTypeModel[]>(settings.ActivityTypes.OrderBy(x => x.Rank));
+                });
+                if (settings != null && settings.ActivityTypes.Any())
+                    model.ActivityTypes = Mapper.Map<ActivityTypeModel[]>(settings.ActivityTypes.OrderBy(x => x.Rank));
 
-            var establishment = _queryProcessor.Execute(new EstablishmentByDomain(domain));
-            if (establishment == null) return HttpNotFound();
-            ViewBag.EmployeesEstablishmentId = establishment.RevisionId;
-            Session.LastEmployeeLens(Request);
-            Session.LastActivityLens(Request);
-            return View(model);
+                var establishment = _queryProcessor.Execute(new EstablishmentByDomain(domain));
+                if (establishment == null) return HttpNotFound();
+                ViewBag.EmployeesEstablishmentId = establishment.RevisionId;
+                Session.LastEmployeeLens(Request);
+                Session.LastActivityLens(Request);
+                return View(model);
+            }
+            else
+            {
+                return HttpNotFound();
+            }
         }
 
         //[CurrentModuleTab(ModuleTab.Employees)]
@@ -294,13 +374,15 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 PageNumber = results.PageNumber,
                 PageSize = results.PageSize,
-                Items = results.Items.Select( x => new LanguageExpertiseSearchResultModel(){
+                Items = results.Items.Select(x => new LanguageExpertiseSearchResultModel()
+                {
                     Dialect = x.Dialect,
                     LanguageExpertiseId = x.RevisionId,
                     ListeningProficiency = x.ListeningProficiency == 1 ? "elementary listening" : x.ListeningProficiency == 2 ? "limited listening" : x.ListeningProficiency == 3 ? "general listening" : x.ListeningProficiency == 4 ? "advanced listening" : x.ListeningProficiency == 5 ? "fluent listening" : "no known listening",
                     Name = x.Language != null ? x.Language.Names.FirstOrDefault().Text : x.Other,
                     Other = x.Other,
-                    Owner = new LanguageExpertiseSearchResultModel.LanguageExpertiseSearchResultOwnerModel(){
+                    Owner = new LanguageExpertiseSearchResultModel.LanguageExpertiseSearchResultOwnerModel()
+                    {
                         PersonId = x.Person.RevisionId,
                         DisplayName = x.Person.DisplayName,
                         LastCommaFirst = !string.IsNullOrWhiteSpace(x.Person.LastName) && !string.IsNullOrWhiteSpace(x.Person.FirstName) ? x.Person.LastName + ", " + x.Person.FirstName : !string.IsNullOrWhiteSpace(x.Person.LastName) ? x.Person.LastName : x.Person.DisplayName,

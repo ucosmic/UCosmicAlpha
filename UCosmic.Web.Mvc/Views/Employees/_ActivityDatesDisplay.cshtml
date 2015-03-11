@@ -5,6 +5,15 @@
     var onGoing = (bool?)Model.OnGoing;
     var startsFormat = (string)Model.StartsFormat;
     var endsFormat = (string)Model.EndsFormat;
+    //var testDate = new System.DateTime("1/1/0001");
+    if (endsOn.ToString() == "1/1/0001 12:00:00 AM")
+    {
+        endsOn = null;
+    }
+    if (startsOn.ToString() == "1/1/0001 12:00:00 AM")
+    {
+        startsOn = null;
+    }
 }
 @if (!startsOn.HasValue && !endsOn.HasValue && (!onGoing.HasValue || !onGoing.Value))
 {

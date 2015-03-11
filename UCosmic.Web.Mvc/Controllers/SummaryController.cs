@@ -25,72 +25,7 @@ namespace UCosmic.Web.Mvc.Controllers
         public virtual ActionResult Report()
         {
             var tenancy = Request.Tenancy() ?? new Tenancy();
-            //Establishment establishment = null;
-            //List<SummarySectionApiModelReturn> homeSectionModelList = new List<SummarySectionApiModelReturn>();
-            //if (!string.IsNullOrWhiteSpace(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
-            //{
-            //    if (tenancy.TenantId.HasValue)
-            //    {
-            //        establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
-            //    }
-            //    else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
-            //    {
-            //        establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
-            //    }
-            //    if (establishment != null)
-            //    {
-
-            //        var establishmentId = establishment.RevisionId;
-            //        var homeSections = _queryProcessor.Execute(new SummarySectionByEstablishmentId(establishmentId));
-            //        var homeAlert = _queryProcessor.Execute(new SummaryAlertByEstablishmentId(establishmentId));
-            //        if (homeSections != null)
-            //        {
-            //            foreach (SummarySection homeSection in homeSections)
-            //            {
-
-            //                List<SummaryLinksApiModel> homeLinks = new List<SummaryLinksApiModel>();
-            //                SummarySectionApiModelReturn homeSectionModel = new SummarySectionApiModelReturn()
-            //                {
-            //                    Description = homeSection.Description,
-            //                    Title = homeSection.Title,
-            //                    EstablishmentId = 0,
-            //                    Links = new List<SummaryLinksApiModel>(),
-            //                    Id = homeSection.Id
-            //                };
-            //                if (homeSection.Photo == null)
-            //                {
-            //                    homeSectionModel.HasPhoto = false;
-            //                }
-            //                else
-            //                {
-            //                    homeSectionModel.HasPhoto = true;
-            //                }
-            //                foreach (SummaryLink homeLink in homeSection.Links)
-            //                {
-            //                    homeLinks.Add(new SummaryLinksApiModel() { Text = homeLink.Text, Url = homeLink.Url });
-            //                }
-            //                homeSectionModel.Links = homeLinks;
-            //                homeSectionModelList.Add(homeSectionModel);
-            //            }
-            //        }
-            //        if (homeAlert != null)
-            //        {
-            //            ViewBag.alertIsDisabled = homeAlert.IsDisabled;
-            //            ViewBag.alert = homeAlert.Text;
-            //        }
-            //        else
-            //        {
-            //            ViewBag.alertIsDisabled = true;
-            //            ViewBag.alert = "You do not have any flasher text.";
-            //        }
-            //    }
-
-            //}
-            //else
-            //{
-            //    ViewBag.alertIsDisabled = true;
-            //    ViewBag.alert = "You do not have any flasher text.";
-            //}
+            
             
             return View("Report", "_Layout2");
         }

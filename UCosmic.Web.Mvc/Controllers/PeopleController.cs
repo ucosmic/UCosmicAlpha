@@ -211,12 +211,10 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             var entity = _queryProcessor.Execute(new ExternalUrlsBy(personId));
 
-            //var model = Mapper.Map<PersonUrlsViewModel>(entity);
             var model = Mapper.Map<PersonUrlViewModel[]>(entity);
 
             var personModel = GetPerson(personId);
             ViewBag.PersonName = personModel.DisplayName;
-            //ViewBag.CustomBib = personModel.DisplayName;
             ViewBag.Username = personModel.Username;
             ViewBag.isEdit = isEdit;
             ViewBag.personId = personId;

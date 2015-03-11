@@ -40,7 +40,6 @@ namespace UCosmic.Web.Mvc.Controllers
 
         [Authorize]
         [Route("my/activities/new")]
-        //[POST("my/activities")]
         public virtual RedirectToRouteResult Create()
         {
             var command = new CreateActivityAndValues(User);

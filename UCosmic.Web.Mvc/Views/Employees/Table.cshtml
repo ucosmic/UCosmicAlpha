@@ -94,11 +94,11 @@
                     <a href="@Url.Action(MVC.Employees.Table(Model.Domain, null))" class="restore-underline">Reset search</a>
                 </div>
             </div>
-            <p style="font-size: 12px; display: none; margin-top:0px; color:grey;" data-bind="visible: pivot()==1">
+            <p style="font-size: 12px; display: none; margin:0px; color:grey;" data-bind="visible: pivot()==1">
                 The Activities view shows the number of activities tagged to a specific country or body of water.
             </p>
-            <p style="font-size: 12px; display: none; margin-top:0px; color:grey;" data-bind="visible: pivot()==2">
-                The People view shows the number of people who are involved in activities tagged to a specific country or body of water.
+            <p style="font-size: 12px; display: none; margin:0px; color:grey;" data-bind="visible: pivot()==2">
+                The People view shows the number of activities tagged to a specific person.
             </p>
 
             @* KEYWORD TEXT BOX *@
@@ -191,7 +191,7 @@
                 <table style="width:100%">
                     <tr>
                         <td>
-                            <div style="height: 24px; ">
+                            <div style="height: 40px; ">
                                 <strong>
                                     Showing <span>@Model.Output.FirstNumber</span>
                                     @if (@Model.Output.PageCount > 0)
@@ -199,6 +199,14 @@
                                         <span>- <span>@Model.Output.LastNumber</span></span>
                                     }
                                     of <span>@Model.Output.ItemTotal</span>
+                                    @if (@Model.Output.ItemTotal > 1)
+                                    {
+                                        <span>activities</span>
+                                    }
+                                    else
+                                    {
+                                        <span>activity</span>
+                                    }
                                 </strong>
                                 @if (Model != null && Model.Output != null && Model.Output.PageCount > 0)
                                 {
@@ -218,6 +226,20 @@
                                 })
                                         of <span>@Model.Output.PageCount</span>)
                                     </span>
+                                }
+                                @if (@Model.Output.peopleTotal > 0)
+                                {
+                                    <strong style="display:block;">
+                                        <span> from @Model.Output.peopleTotal</span>
+                                        @if (@Model.Output.peopleTotal > 1)
+                                        {
+                                            <span>people.</span>
+                                        }
+                                        else
+                                        {
+                                            <span>person.</span>
+                                        }
+                                    </strong>
                                 }
                             </div>
 
@@ -255,6 +277,7 @@
                                                         @class = "side",
                                                         Name = "orderBy",
                                                         data_bind = "value: orderBy",
+                                                        style = "width: 220px;"
                                                     })
                             </div>
 
@@ -274,11 +297,15 @@
                                                     {
                                                         @class = "side",
                                                         Name = "pageSize",
-                                                        data_bind = "value: pager.input.pageSizeText"
+                                                        data_bind = "value: pager.input.pageSizeText",
+                                                        style = "width: 220px;"
                                                     })
                             </div>
                         </td>
                     </tr>
+
+
+
                 </table>
 
                 @* ACTIVITY RESULTS TABLE *@
