@@ -9,7 +9,7 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc
 {
-    
+
     public static class TenancyExtensions
     {
         public static int IndexOfNth(string str, char c, int n)
@@ -61,9 +61,12 @@ namespace UCosmic.Web.Mvc
                 if (request.Path.Length > 1)
                 {
                     string domain = request.Path.Substring(1);
-                    domain = domain.Substring(0, domain.IndexOf("/"));
-                    string estId = request.QueryString["establishmentId"];
-                    json = "{\"StyleDomain\":\"" + domain + "\", \"TenantId\":\"" + estId + "\"}";
+                    if (domain.IndexOf("/") > 0)
+                    {
+                        domain = domain.Substring(0, domain.IndexOf("/"));
+                        string estId = request.QueryString["establishmentId"];
+                        json = "{\"StyleDomain\":\"" + domain + "\", \"TenantId\":\"" + estId + "\"}";
+                    }
                 }
             }
 

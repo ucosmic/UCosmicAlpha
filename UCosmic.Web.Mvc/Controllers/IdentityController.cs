@@ -149,13 +149,24 @@ namespace UCosmic.Web.Mvc.Controllers
             // if user is signed on, sign out and redirect back to this action
             if (!string.IsNullOrWhiteSpace(User.Identity.Name))
             {
+                var user = _queryProcessor.Execute(new UserByName(User.Identity.Name)
+                {
+                    EagerLoad = new Expression<Func<User, object>>[]
+                    {
+                        x => x.Person.Affiliations.Select(y => y.Establishment),
+                    },
+                });
+                var tenancy = Mapper.Map<Tenancy>(user);
+
+                // set tenancy
+                Response.Tenancy(tenancy);
                 _userSigner.SignOff();
 
                 // reset tenancy cookie
-                var oldTenancy = Request.Tenancy();
-                var newTenancy = new Tenancy();
-                if (oldTenancy != null) newTenancy.StyleDomain = oldTenancy.StyleDomain;
-                Response.Tenancy(newTenancy);
+                //var oldTenancy = Request.Tenancy();
+                //var newTenancy = new Tenancy();
+                //if (oldTenancy != null) newTenancy.StyleDomain = oldTenancy.StyleDomain;
+                //Response.Tenancy(newTenancy);
 
                 TempData.Flash("You have successfully been signed out of UCosmic.");
                 return RedirectToAction(MVC.Identity.SignOut(returnUrl));
