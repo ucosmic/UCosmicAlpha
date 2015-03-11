@@ -65,28 +65,29 @@ namespace UCosmic.Repositories
                 }
                 sql += ")";
             }
+
             if (input.IncludeUndated != null)
             {
                 if (input.IncludeUndated == false)
                 {
                     if (input.Since != null && input.Since != "")
                     {
-                        sql += " and av.startson >= '" + input.Since + "'";
+                        sql += " and (av.startson >= '" + input.Since + "' or av.endson >= '" + input.Since + "' or av.ongoing=1)";
                     }
                     if (input.Until != null && input.Until != "")
                     {
-                        sql += " and av.endson <= '" + input.Until + "'";
+                        sql += " and (av.endson <= '" + input.Until + "' or av.startson <= '" + input.Until + "')";
                     }
                 }
                 else
                 {
                     if (input.Since != null && input.Since != "")
                     {
-                        sql += " and (av.startson >= '" + input.Since + "' or av.startson is null)";
+                        sql += " and (av.startson >= '" + input.Since + "' or av.startson is null or av.endson >= '" + input.Since + "' or av.ongoing=1)";
                     }
                     if (input.Until != null && input.Until != "")
                     {
-                        sql += " and (av.endson <= '" + input.Until + "' or av.endson is null)";
+                        sql += " and (av.endson <= '" + input.Until + "' or av.endson is null or av.startson <= '" + input.Until + "')";
                     }
                 }
             }
@@ -94,11 +95,11 @@ namespace UCosmic.Repositories
             {
                 if (input.Since != null && input.Since != "")
                 {
-                    sql += " and av.startson >= '" + input.Since + "'";
+                    sql += " and (av.startson >= '" + input.Since + "' or av.endson >= '" + input.Since + "' or av.ongoing=1)";
                 }
                 if (input.Until != null && input.Until != "")
                 {
-                    sql += " and av.endson <= '" + input.Until + "'";
+                    sql += " and (av.endson <= '" + input.Until + "' or av.startson <= '" + input.Until + "')";
                 }
             }
             if (input.Keyword != null && input.Keyword != "")
@@ -184,22 +185,6 @@ namespace UCosmic.Repositories
 
                     }
 
-                    //if (keyword.Index > 0)
-                    //{
-                    //    if (keywords[keyword.Index - 1].IndexOf("+") == 0)
-                    //    {
-                    //        sql += ")(";
-                    //    }
-                    //}
-                    //}
-                    //else
-                    //{
-                    //    sql += "( pp1.officialname " + not + "='" + keywordValue + "' " + or + " pp2.officialname " + not + "='" + keywordValue + "'";
-                    //    sql += " " + or + " people.displayname " + not + "='" + keywordValue + "' " + or + " people.firstname " + not + "='" + keywordValue + "' " + or + " people.lastname " + not + "='" + keywordValue + "'";
-                    //    sql += " " + or + " iu.name " + not + "='" + keywordValue + "'";
-                    //    sql += " " + or + " atag.text " + not2 + " like '%" + keywordValue + "%'";
-                    //    sql += " " + or + " av.title " + not2 + " like '%" + keywordValue + "%' " + or + " av.contentsearchable " + not2 + " like '%" + keywordValue + "%' )";
-                    //}
                 }
                 sql += "))";
                 //sql += "("+sql2+")"
@@ -224,7 +209,6 @@ namespace UCosmic.Repositories
                   " left outer join [ActivitiesV2].[ActivityType] at on at.activityValuesId=av.revisionid" +
                   " left outer join [ActivitiesV2].[ActivityTag] atag on atag.activityValuesId=av.revisionid" +//may not have tags
                   " inner join Places.place pp1 on al.placeId=pp1.revisionid" +
-                //" left outer join Places.place pp2 on pp1.parentid=pp2.revisionid" +
                   " inner join [ActivitiesV2].[Activity] aa on av.activityId=aa.revisionid" +
                   " inner join [People].Person people on aa.personId=people.revisionid" +
                   " left outer join people.affiliation pa on pa.personId=people.revisionid" +
@@ -236,7 +220,6 @@ namespace UCosmic.Repositories
                   " left outer join Places.GeoPlanetPlace gpp2 on gppbt.BelongToWoeId=gpp2.woeid" +
                   " left outer join Places.place pp2 on gpp2.placeId=pp2.revisionid " +
                   " where (pa.establishmentid=" + ancestorId + " or een.AncestorId=" + ancestorId + ") and aa.mode='public' and av.mode='public' and aa.EditSourceId is null";
-            //ActivityMapCountRepository activityMapCountRepository = new ActivityMapCountRepository();
             if (input != null)
             {
                 sql = AddSqlFilter(sql, input);
@@ -255,7 +238,6 @@ namespace UCosmic.Repositories
                   " left outer join [ActivitiesV2].[ActivityType] at on at.activityValuesId=av.revisionid" +
                   " left outer join [ActivitiesV2].[ActivityTag] atag on atag.activityValuesId=av.revisionid" +//may not have tags
                   " inner join Places.place pp1 on al.placeId=pp1.revisionid" +
-                //" left outer join Places.place pp2 on pp1.parentid=pp2.revisionid" + // may not need but would have to change filter
                   " inner join [ActivitiesV2].[Activity] aa on av.activityId=aa.revisionid" +
                   " inner join [People].Person people on aa.personId=people.revisionid" +
                   " left outer join people.affiliation pa on pa.personId=people.revisionid" +
@@ -270,9 +252,7 @@ namespace UCosmic.Repositories
             {
                 sql = AddSqlFilter(sql, input);
             }
-            //if(Type == "country"){
-            //    sql += "pp1.isCountry = 1";
-            //}
+
             IList<ActivityMapCountsApiQueryResultModel> ActivityMapCounts = connectionFactory.SelectList<ActivityMapCountsApiQueryResultModel>(DB.UCosmic, sql);
 
             return ActivityMapCounts;
@@ -316,9 +296,6 @@ namespace UCosmic.Repositories
             {
                 sql = AddSqlFilter(sql, input);
             }
-            //if(Type == "country"){
-            //    sql += "pp1.isCountry = 1";
-            //}
             IList<ActivityMapCountsApiQueryResultModel> ActivityMapCounts = connectionFactory.SelectList<ActivityMapCountsApiQueryResultModel>(DB.UCosmic, sql);
 
             return ActivityMapCounts;

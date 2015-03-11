@@ -35,9 +35,6 @@ Polymer('is-page-summary-report', {
             this.selectedPlaceId = this.countries[index - 1].id;
             this.selectedPlaceName = this.countries[index - 1].name;
             this.selectedCountryCode = this.countries[index - 1].code;
-            //this.selectedPlaceId = this.countries[newVal - 1].id;
-            //this.selectedPlaceName = this.countries[newVal - 1].name;
-            //this.selectedCountryCode = this.countries[newVal - 1].code;
         } else {
             this.selectedPlaceId = 0;
             this.selectedPlaceName = undefined;
@@ -53,14 +50,7 @@ Polymer('is-page-summary-report', {
         }, 200);
     },
     establishmentSelected: function (event, detail, sender) {
-        //this.selectedEstablishmentId = sender.getAttribute('data-id');
-        ////if (index != 0) {
-        ////    this.selectedEstablishmentId = this.establishmentList[index - 1].forEstablishmentId;
-        ////} else {
-        ////    this.selectedEstablishmentId = 0;
-        ////}
-        //this.establishmentSearch = sender.textContent || sender.innerText || "";
-        //this.$.ajax_activities.go();
+
         if (this.establishmentSearch != "") {
             this.activityTypeCounts = [];
         }else{
@@ -68,7 +58,6 @@ Polymer('is-page-summary-report', {
         }
         this.$.ajax_agreements.go();
         this.$.ajax_degrees.go();
-        //this.$.ajax_establishmentsList.go();
     },
     establishmentListSearch: function (event, detail, sender) {
         if (this.establishmentSearch == "") {
@@ -109,15 +98,6 @@ Polymer('is-page-summary-report', {
 
         if (!response.detail.response.error) {
             this.activityTypeCounts = response.detail.response;
-            //console.log(response.detail.response)
-            //this.countries = response.detail.response
-            //response.detail.response.forEach(function (value: any, index: number, array: Array<Object>) {
-            //    if (index == indexes[1]) {
-            //        value.isSelected = true;
-            //    } else {
-            //        value.isSelected = false;
-            //    }
-            //});
         } else {
 
             console.log(response.detail.response.error)
@@ -168,7 +148,6 @@ Polymer('is-page-summary-report', {
         this.isAjaxing = false;
 
         if (!response.detail.response.error) {
-            //console.log(response.detail.response)
             this.countries = response.detail.response
         } else {
 
@@ -180,8 +159,6 @@ Polymer('is-page-summary-report', {
         this.isAjaxing = false;
 
         if (!response.detail.response.error) {
-            //console.log(response.detail.response)
-            //this.countries = response.detail.response
             
             var list = response.detail.response
             for (var i = 0; i < list.length; i++) {

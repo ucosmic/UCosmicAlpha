@@ -86,7 +86,6 @@ module Languages.ViewModels {
             parseInt(sessionStorage.getItem(Search._establishmentIdKey)) || this.tenantId);
 
         hasTenancyData = ko.observable<boolean>(false);
-        //selectedTenant = ko.observable<number>(this.tenantId);
         isCreatingSelectEstablishments = false;
 
         tenancyData: App.DataCacher<Establishments.ApiModels.ScalarEstablishment[]> = new App.DataCacher(
@@ -95,7 +94,6 @@ module Languages.ViewModels {
             });
 
         private _selectedTenantChanged = ko.computed((): void => {
-            //var areBindingsApplied = this.areBindingsApplied();
             var hasTenancyData = this.hasTenancyData();
             var selectedTenant = this.selectedTenant();
             if (this.selectedTenant()) {
@@ -105,16 +103,13 @@ module Languages.ViewModels {
             if (!hasTenancyData || !selectedTenant || selectedTenant == establishmentId)
                 return;
 
-            //$.when(this.placeData.reload(), this.activityCountsData.reload()).done((): void => {
                 this.establishmentId(selectedTenant);
-            //});
         });
 
         tenantOptions = ko.observableArray<App.ApiModels.SelectOption<number>>();
 
         private _createEstablishmentSelects(response): void {
             <number>this.establishmentId()
-            //var parentId = this.settings.input.ancestorId;
             if (this.selectedTenant() == 0) {
                 this.selectedTenant(this.establishmentId())
             }
@@ -171,7 +166,6 @@ module Languages.ViewModels {
             var temp = sessionStorage.getItem('campuses' + this.mainCampus);
             if (temp) {
                 var response = $.parseJSON(temp);
-                //this.selectedTenant(this.establishmentId());
                 this._createEstablishmentSelects(response);
             } else {
 
@@ -181,7 +175,6 @@ module Languages.ViewModels {
                     .done((response: ApiModels.ScalarEstablishment[]): void => {
                         promise.resolve(response);
                         sessionStorage.setItem('campuses' + this.mainCampus, JSON.stringify(response));
-                        //this.selectedTenant(this.establishmentId());
                         this._createEstablishmentSelects(response);
 
 
@@ -200,7 +193,6 @@ module Languages.ViewModels {
             });
 
         private _loadTenancyData(): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> {
-            // calling .ready() on tenancyData invokes this
             var deferred: JQueryDeferred<Establishments.ApiModels.ScalarEstablishment[]> = $.Deferred();
             $.when(Establishments.Servers.Single(this.tenantId), Establishments.Servers.GetChildren(this.tenantId))
                 .done((parentData: Establishments.ApiModels.ScalarEstablishment, childData: Establishments.ApiModels.ScalarEstablishment[]): void => {

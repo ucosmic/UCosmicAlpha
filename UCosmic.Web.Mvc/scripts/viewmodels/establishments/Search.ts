@@ -153,10 +153,6 @@ module Establishments.ViewModels {
         lenses: KnockoutObservableArray<Lens> = ko.observableArray([
             { text: 'Table', value: 'table' },
             { text: 'List', value: 'list' }//,
-            //{ text: 'Grid', value: 'grid' },
-            //{ text: 'Map', value: 'map' },
-            //{ text: 'Tree', value: 'tree' }
-        ]);
         lens = ko.observable<string>();
         changeLens: (lens: Lens) => void;
 
@@ -232,14 +228,6 @@ module Establishments.ViewModels {
         // click item
         // TODO: is this still needed?
         clickAction(viewModel: SearchResult, e: JQueryEventObject): boolean {
-            //var href, $target = $(e.target);
-            //while ($target.length && !$target.attr('href') && !$target.attr('data-href')) {
-            //    $target = $target.parent();
-            //}
-            //if ($target.length) {
-            //    href = $target.attr('href') || $target.attr('data-href');
-            //    location.href = href.replace('/0/', '/' + viewModel.id() + '/');
-            //}
             return true;
         }
 

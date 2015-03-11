@@ -107,7 +107,6 @@
             var stringActivityMapData;
             var activityMapData;
             var stringActivityMapDataSearch = sessionStorage.getItem('activityMapDataSearch');
-            //var searchOptions = JSON.parse(sessionStorage.getItem(Summary.SearchOptions));
             var ancestorId = this.selectedTenant() ? this.selectedTenant().toString() : "null";
             var keyword = "null";
 
@@ -120,9 +119,6 @@
                 var settings = settings || {};
 
                 var url = '/api/usf.edu/employees/map/?ancestorid=' + ancestorId;
-                //if (output.input.keyword) {
-                //    url += '&keyword=' + keyword;
-                //}
                 settings.url = url;//'/api/usf.edu/employees/map/?pivot=1&keyword=&ancestorid=3306&placeNames=&placeIds=&activityTypeIds=2&activityTypeIds=3&activityTypeIds=5&activityTypeIds=1&activityTypeIds=4&Since=&Until=&includeUndated=true&includeUndated=false';
                 //check with ancestorid - use output.input.anc...
                 

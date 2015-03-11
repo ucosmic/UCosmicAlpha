@@ -49,11 +49,6 @@ module Agreements.ViewModels {
 
         //#endregion
 
-        //status: KoModels.Summary = {
-        //    agreementCount: ko.observable('?'),
-        //    partnerCount: ko.observable('?'),
-        //    countryCount: ko.observable('?'),
-        //};
         summary: KoModels.Summary = {
             agreementCount: ko.observable('?'),
             partnerCount: ko.observable('?'),
@@ -340,12 +335,6 @@ module Agreements.ViewModels {
             var thisRequest = this._currentRequest();
 
             //// do we know for a fact that the pageNumber is overflowed?
-            //if (this.pager.input.pageCount() != undefined &&
-            //    this.pager.input.pageCount() < thisRequest.pageNumber) {
-
-            //    this.pager.input.pageNumberText("1");
-            //    return;
-            //}
 
             if (!lastRequest || !this._areRequestsAligned(thisRequest, lastRequest)) {
                 this._requestHistory.push(thisRequest);
@@ -458,60 +447,6 @@ module Agreements.ViewModels {
 
         //#endregion
 
-        //private _updateStatus(places) {
-        //    if (places && places.length) {
-        //        this.status.agreementCount(Enumerable.From(places)
-        //            .SelectMany(function (x: ApiModels.PlaceWithAgreements, i: number): number[] {
-        //                return x.agreementIds;
-        //            })
-        //            .Distinct(function (x: number): number {
-        //                return x;
-        //            })
-        //            .Count().toString());
-        //        this.status.partnerCount(Enumerable.From(places)
-        //            .SelectMany(function (x: ApiModels.PlaceWithAgreements, i: number): number[] {
-        //                return x.partnerIds;
-        //            })
-        //            .Distinct(function (x: number): number {
-        //                return x;
-        //            })
-        //            .Count().toString());
-        //    }
-        //    else {
-        //        this.status.agreementCount('0');
-        //        this.status.partnerCount('0');
-        //    }
-        //    //if (placeType == 'countries') {
-        //    //    var continentCode = this.continentCode();
-        //    //    if (continentCode == 'none') {
-        //    //        this.status.countryCount('unknown continent');
-        //    //    }
-        //    //    else {
-        //    //        var continent = Enumerable.From(this.continentOptions())
-        //    //            .SingleOrDefault(undefined, function (x: any): boolean {
-        //    //                return x.code == continentCode;
-        //    //            });
-        //    //        if (continent && continent.name) {
-        //    //            this.status.countryCount(continent.name);
-        //    //        }
-        //    //    }
-        //    //}
-        //    //else if (!placeType) {
-        //        var countryCode = this.countryCode();
-        //        if (countryCode == 'none') {
-        //            this.status.countryCount('unknown country');
-        //        }
-        //        else {
-        //            var country: Places.ApiModels.Country = Enumerable.From(this.countryOptions())
-        //                .SingleOrDefault(undefined, function (x: Places.ApiModels.Country): boolean {
-        //                    return x.code == countryCode;
-        //                });
-        //            if (country && country.name) {
-        //                this.status.countryCount(country.name);
-        //            }
-        //        }
-        //    //}
-        //}
     }
 
     export class TableRow {
