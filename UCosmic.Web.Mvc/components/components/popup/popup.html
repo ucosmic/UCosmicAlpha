@@ -1,0 +1,17 @@
+﻿
+<link rel="import" href="../../utilities/htmlEcho.html" />
+<polymer-element name="is-popup" attributes="content country_name">
+    <template>
+
+        <link href="popup.css" rel="stylesheet" />
+        <span  class="popup" id="popup">
+            <span class="close" on-click="{{close}}" data-type="close">X</span>
+            <html-echo html="{{content}}"></html-echo>            
+        </span>
+        
+    </template>
+    <script src="popup.js"></script>
+
+</polymer-element>
+
+

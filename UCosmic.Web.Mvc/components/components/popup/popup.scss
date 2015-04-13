@@ -1,0 +1,22 @@
+
+.close {
+    background-color: darkgray;
+    position: absolute;
+    padding: 5px;
+    border-radius: 8px;
+    display: block;
+    top: 4px;
+    right: 4px;
+    cursor: pointer;
+}
+
+.popup {
+    background-color: lightgray;
+    position: absolute;
+    padding: 5px;
+    border-radius: 8px;
+    font-size: 18px;
+    width: 130px;
+    display: block;
+    cursor: move;
+}
