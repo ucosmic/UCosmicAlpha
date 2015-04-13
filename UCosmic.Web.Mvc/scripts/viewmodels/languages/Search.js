@@ -101,16 +101,15 @@ var Languages;
                 this.isCreatingSelectEstablishments = true;
                 this.affiliations.removeAll();
                 while (true) {
-                    var options = Enumerable.From(response).Where("x => x.parentId==" + parentId).Select("x =>  {value: x.id, text: x.officialName}").OrderBy(function (x) {
+                    response.map(function (x, index, array) {
+                        x.officialName = x.contextName ? x.contextName : x.officialName && x.officialName.indexOf(',') > -1 ? x.officialName.substring(0, x.officialName.indexOf(',')) : x.officialName;
+                        return x;
+                    });
+                    var options = Enumerable.From(response).Where("x => x.parentId==" + parentId).OrderBy(function (x) {
                         return x.rank;
                     }).ThenBy(function (x) {
                         return x.contextName || x.officialName;
-                    }).ToArray();
-                    for (var i = 0; i < options.length; i++) {
-                        if (options[i].text.indexOf(',') > 0) {
-                            options[i].text = options[i].text.substring(0, options[i].text.indexOf(','));
-                        }
-                    }
+                    }).Select("x =>  {value: x.id, text: x.officialName}").ToArray();
                     if (options.length > 0) {
                         options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
                         this.affiliations.unshift(ko.mapping.fromJS([{ options: options, value: previousParentId.toString() }])()[0]);

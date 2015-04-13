@@ -152,7 +152,7 @@ module Establishments.ViewModels {
         // lensing
         lenses: KnockoutObservableArray<Lens> = ko.observableArray([
             { text: 'Table', value: 'table' },
-            { text: 'List', value: 'list' }//,
+            { text: 'List', value: 'list' }]);//,
         lens = ko.observable<string>();
         changeLens: (lens: Lens) => void;
 

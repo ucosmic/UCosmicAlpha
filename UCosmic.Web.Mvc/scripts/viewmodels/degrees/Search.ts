@@ -124,20 +124,21 @@ module Degrees.ViewModels {
             this.isCreatingSelectEstablishments = true;
             this.affiliations.removeAll();
             while (true) {
+
+                response.map(function (x, index, array) {
+                    x.officialName = x.contextName ? x.contextName : x.officialName && x.officialName.indexOf(',') > -1 ? x.officialName.substring(0, x.officialName.indexOf(',')) : x.officialName;
+                    return x;
+                });
+
                 var options: any = Enumerable.From(response)
                     .Where("x => x.parentId==" + parentId)
-                    .Select("x =>  {value: x.id, text: x.officialName}")
                     .OrderBy(function (x: Establishments.ApiModels.ScalarEstablishment): number {
-                        return x.rank; // sort by rank, then by name
-                    })
+                    return x.rank; // sort by rank, then by name
+                })
                     .ThenBy(function (x: Establishments.ApiModels.ScalarEstablishment): string {
-                        return x.contextName || x.officialName;
-                    }).ToArray();
-                for (var i = 0; i < options.length; i++) {
-                    if (options[i].text.indexOf(',') > 0) {
-                        options[i].text = options[i].text.substring(0, options[i].text.indexOf(','))
-                    }
-                }
+                    return x.contextName || x.officialName;
+                })
+                    .Select("x =>  {value: x.id, text: x.officialName}").ToArray();
 
                 if (options.length > 0) {
                     options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
@@ -153,6 +154,36 @@ module Degrees.ViewModels {
                     return;
                 }
             }
+            //while (true) {
+            //    var options: any = Enumerable.From(response)
+            //        .Where("x => x.parentId==" + parentId)
+            //        .Select("x =>  {value: x.id, text: x.officialName}")
+            //        .OrderBy(function (x: Establishments.ApiModels.ScalarEstablishment): number {
+            //            return x.rank; // sort by rank, then by name
+            //        })
+            //        .ThenBy(function (x: Establishments.ApiModels.ScalarEstablishment): string {
+            //            return x.contextName || x.officialName;
+            //        }).ToArray();
+            //    for (var i = 0; i < options.length; i++) {
+            //        if (options[i].text.indexOf(',') > 0) {
+            //            options[i].text = options[i].text.substring(0, options[i].text.indexOf(','))
+            //        }
+            //    }
+
+            //    if (options.length > 0) {
+            //        options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
+            //        this.affiliations.unshift(ko.mapping.fromJS([{ options: options, value: previousParentId.toString() }])()[0]);
+            //    }
+            //    previousParentId = parentId;
+            //    var parentCheck = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
+            //    if (parentCheck[0] != undefined) {
+            //        parentId = parentCheck[0].parentId;
+            //    } else {
+            //        this.isCreatingSelectEstablishments = false;
+            //        this.hasEstablishmentSelects(true);
+            //        return;
+            //    }
+            //}
 
         }
 

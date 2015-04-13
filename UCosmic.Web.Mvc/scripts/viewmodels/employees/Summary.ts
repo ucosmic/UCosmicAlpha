@@ -91,7 +91,7 @@
             this._parsePlaceOverlays();
 
             // bind history.js to statechange events
-            HistoryJS.Adapter.bind(window, 'statechange', (): void => { this._onRouteChanged(); });
+            HistoryJS.Adapter.bind(window, 'statechange',(): void => { this._onRouteChanged(); });
             this.rootEstablishment = settings.tenantId;//this.establishmentId();//settings.tenantId;
             // initialize charts
             this._initGeoChart();
@@ -124,14 +124,14 @@
                 
                 this.ajaxMapData = $.ajax(settings)
                     .done((response: any): void => {
-                        //get ancestorid and add it to the sessionStorage
-                        sessionStorage.setItem('activityMapData', JSON.stringify(response));
-                        sessionStorage.setItem('activityMapDataSearch', ancestorId + keyword);
-                        this.MapDataIsLoading(false);
-                    })
+                    //get ancestorid and add it to the sessionStorage
+                    sessionStorage.setItem('activityMapData', JSON.stringify(response));
+                    sessionStorage.setItem('activityMapDataSearch', ancestorId + keyword);
+                    this.MapDataIsLoading(false);
+                })
                     .fail((xhr: JQueryXHR): void => {
-                        //promise.reject(xhr);
-                    });
+                    //promise.reject(xhr);
+                });
             } else {
                 this.MapDataIsLoading(false);
             }
@@ -156,7 +156,7 @@
             this._bindingsApplied.resolve();
 
 
-            $(window).on("popstate", () => {
+            $(window).on("popstate",() => {
                 if (this.ajaxMapData) {
                     this.ajaxMapData.abort();
                 }
@@ -315,30 +315,30 @@
             this.tenancyData.ready()
                 .done((establishments: Establishments.ApiModels.ScalarEstablishment[]): void => {
 
-                    routeState = this.routeState(); // the new state we want in the URL
-                    urlState = this._getUrlState(); // actual state based on current URL
+                routeState = this.routeState(); // the new state we want in the URL
+                urlState = this._getUrlState(); // actual state based on current URL
 
-                    // this runs whenever an observable component of routeState changes
-                    // and will run at least once when the page loads, since it is a computed
-                    // there are 4 main scenarios we want to handle here:
-                    // 1.) when the route state matches the url state, update the historyjs state
-                    // 2.) when we have incomplete url state, replace current url based on route state
-                    // 3.) when historyjs state is empty and url state is complete, we have a url
-                    //     that should override the current route state values
-                    // 4.) all other cases mean user interaction, and should push a new url
-                    ///var areBindingsApplied = this.areBindingsApplied();
+                // this runs whenever an observable component of routeState changes
+                // and will run at least once when the page loads, since it is a computed
+                // there are 4 main scenarios we want to handle here:
+                // 1.) when the route state matches the url state, update the historyjs state
+                // 2.) when we have incomplete url state, replace current url based on route state
+                // 3.) when historyjs state is empty and url state is complete, we have a url
+                //     that should override the current route state values
+                // 4.) all other cases mean user interaction, and should push a new url
+                ///var areBindingsApplied = this.areBindingsApplied();
 
-                    // when the url state is missing something (or everything), replace it with route data
-                    if (SummaryRouteState.isIncomplete(urlState) || SummaryRouteState.areEqual(routeState, urlState)) {
-                        HistoryJS.replaceState(routeState, '', '?' + $.param(routeState));
-                    }
+                // when the url state is missing something (or everything), replace it with route data
+                if (SummaryRouteState.isIncomplete(urlState) || SummaryRouteState.areEqual(routeState, urlState)) {
+                    HistoryJS.replaceState(routeState, '', '?' + $.param(routeState));
+                }
 
-                    // by now url state is not equal but is not incomplete either
-                    // since we have it, update the route values with the url values
-                    else {
-                        HistoryJS.pushState(routeState, '', '?' + $.param(routeState));
-                    }
-                });
+                // by now url state is not equal but is not incomplete either
+                // since we have it, update the route values with the url values
+                else {
+                    HistoryJS.pushState(routeState, '', '?' + $.param(routeState));
+                }
+            });
         }
 
         private _onRouteChanged(): void {
@@ -385,26 +385,26 @@
             var establishmentId = this.selectedTenant() ? this.selectedTenant() : this.establishmentId();
             Servers.GetEmployeesPlaces(establishmentId, request)
                 .done((places: ApiModels.EmployeesPlaceApiModel[]): void => {
-                    this.hasPlaceData(places && places.length > 0);
-                    promise.resolve(places);
+                this.hasPlaceData(places && places.length > 0);
+                promise.resolve(places);
 
-                    //this._ConstructMapData();
-                })
+                //this._ConstructMapData();
+            })
                 .fail((xhr: JQueryXHR): void => {
-                    App.Failures.message(xhr, 'while trying to load employee location summary data.', true);
-                    promise.reject();
-                })
+                App.Failures.message(xhr, 'while trying to load employee location summary data.', true);
+                promise.reject();
+            })
                 .always((): void => {
-                    this.geoChartSpinner.stop();
-                });
+                this.geoChartSpinner.stop();
+            });
             return promise;
         }
 
         private _getPlaceById(placeId: number): ApiModels.EmployeesPlaceApiModel {
             var place: ApiModels.EmployeesPlaceApiModel = Enumerable.From(this.placeData.cached)
                 .FirstOrDefault(undefined, function (x: ApiModels.EmployeesPlaceApiModel): boolean {
-                    return x.placeId == placeId;
-                });
+                return x.placeId == placeId;
+            });
 
             return place;
         }
@@ -412,8 +412,8 @@
         private _getPlaceByName(placeName: string): ApiModels.EmployeesPlaceApiModel {
             var place: ApiModels.EmployeesPlaceApiModel = Enumerable.From(this.placeData.cached)
                 .FirstOrDefault(undefined, function (x: ApiModels.EmployeesPlaceApiModel): boolean {
-                    return x.placeName == placeName;
-                });
+                return x.placeName == placeName;
+            });
 
             return place;
         }
@@ -451,7 +451,7 @@
         private _createEstablishmentSelects(response): void {
             <number>this.establishmentId()
             //var parentId = this.settings.input.ancestorId;
-            if(this.selectedTenant() == 0){
+            if (this.selectedTenant() == 0) {
                 this.selectedTenant(this.establishmentId())
             }
             var parentId = this.selectedTenant();
@@ -462,20 +462,36 @@
             this.isCreatingSelectEstablishments = true;
             this.affiliations.removeAll();
             while (true) {
+
+                response.map(function (x, index, array) {
+                    x.officialName = x.contextName ? x.contextName : x.officialName && x.officialName.indexOf(',') > -1 ? x.officialName.substring(0, x.officialName.indexOf(',')) : x.officialName;
+                    return x;
+                });
+
                 var options: any = Enumerable.From(response)
                     .Where("x => x.parentId==" + parentId)
-                    .Select("x =>  {value: x.id, text: x.officialName}")
                     .OrderBy(function (x: Establishments.ApiModels.ScalarEstablishment): number {
                         return x.rank; // sort by rank, then by name
                     })
                     .ThenBy(function (x: Establishments.ApiModels.ScalarEstablishment): string {
                         return x.contextName || x.officialName;
-                    }).ToArray();
-                for (var i = 0; i < options.length; i++) {
-                    if (options[i].text.indexOf(',') > 0) {
-                        options[i].text = options[i].text.substring(0, options[i].text.indexOf(','))
-                    }
-                }
+                    })
+                    .Select("x =>  {value: x.id, text: x.officialName}").ToArray();
+
+                //var options: any = Enumerable.From(response)
+                //    .Where("x => x.parentId==" + parentId)
+                //    .Select("x =>  {value: x.id, text: x.officialName}")
+                //    .OrderBy(function (x: Establishments.ApiModels.ScalarEstablishment): number {
+                //    return x.rank; // sort by rank, then by name
+                //})
+                //    .ThenBy(function (x: Establishments.ApiModels.ScalarEstablishment): string {
+                //    return x.contextName || x.officialName;
+                //}).ToArray();
+                //for (var i = 0; i < options.length; i++) {
+                //    if (options[i].text.indexOf(',') > 0) {
+                //        options[i].text = options[i].text.substring(0, options[i].text.indexOf(','))
+                //    }
+                //}
 
                 if (options.length > 0) {
                     options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
@@ -515,16 +531,16 @@
                 settings.url = '/api/establishments/' + this.mainCampus + '/offspring';
                 $.ajax(settings)
                     .done((response: ApiModels.ScalarEstablishment[]): void => {
-                        promise.resolve(response);
-                        sessionStorage.setItem('campuses' + this.mainCampus, JSON.stringify(response));
-                        //this.selectedTenant(this.establishmentId());
-                        this._createEstablishmentSelects(response);
+                    promise.resolve(response);
+                    sessionStorage.setItem('campuses' + this.mainCampus, JSON.stringify(response));
+                    //this.selectedTenant(this.establishmentId());
+                    this._createEstablishmentSelects(response);
 
 
-                    })
+                })
                     .fail((xhr: JQueryXHR): void => {
-                        promise.reject(xhr);
-                    });
+                    promise.reject(xhr);
+                });
             }
 
             return promise;
@@ -540,60 +556,60 @@
             var deferred: JQueryDeferred<Establishments.ApiModels.ScalarEstablishment[]> = $.Deferred();
             $.when(Establishments.Servers.Single(this.settings.tenantId), Establishments.Servers.GetChildren(this.settings.tenantId))
                 .done((parentData: Establishments.ApiModels.ScalarEstablishment, childData: Establishments.ApiModels.ScalarEstablishment[]): void => {
-                    childData = childData || [];
-                    var tenants = Enumerable.From(childData)
-                        .OrderBy(function (x: Establishments.ApiModels.ScalarEstablishment): number {
-                            return x.rank;
-                        }).ToArray();
-                    tenants.unshift(parentData);
+                childData = childData || [];
+                var tenants = Enumerable.From(childData)
+                    .OrderBy(function (x: Establishments.ApiModels.ScalarEstablishment): number {
+                    return x.rank;
+                }).ToArray();
+                tenants.unshift(parentData);
 
-                    this.tenantOptions([]);
-                    if (childData.length) {
-                        var options = Enumerable.From(tenants)
-                            .Select(function (x: Establishments.ApiModels.ScalarEstablishment): App.ApiModels.SelectOption<number> {
-                                var option: App.ApiModels.SelectOption<number> = {
-                                    value: x.id,
-                                    text: x.contextName || x.officialName,
-                                };
-                                return option;
-                            }).ToArray();
-                        this.tenantOptions(options);
-                    }
+                this.tenantOptions([]);
+                if (childData.length) {
+                    var options = Enumerable.From(tenants)
+                        .Select(function (x: Establishments.ApiModels.ScalarEstablishment): App.ApiModels.SelectOption<number> {
+                        var option: App.ApiModels.SelectOption<number> = {
+                            value: x.id,
+                            text: x.contextName || x.officialName,
+                        };
+                        return option;
+                    }).ToArray();
+                    this.tenantOptions(options);
+                }
 
-                    deferred.resolve(tenants);
+                deferred.resolve(tenants);
 
-                    this.establishmentData.ready();
+                this.establishmentData.ready();
 
-                    var myThis = this;
-                    //this.establishmentId(this.selectedTenant());
-                    this.selectedTenant(<number>this.establishmentId());
-                    this.selectedTenant.subscribe((newValue: number): void => {
-                        this.selectedEstablishment(this.selectedTenant());
-                    });
-                    $("#campusSelect").on("change", "select", function () {
-                        if (myThis.isCreatingSelectEstablishments == false) {
-                            if (this.value != '') {
-                                myThis.selectedTenant(this.value);
+                var myThis = this;
+                //this.establishmentId(this.selectedTenant());
+                this.selectedTenant(<number>this.establishmentId());
+                this.selectedTenant.subscribe((newValue: number): void => {
+                    this.selectedEstablishment(this.selectedTenant());
+                });
+                $("#campusSelect").on("change", "select", function () {
+                    if (myThis.isCreatingSelectEstablishments == false) {
+                        if (this.value != '') {
+                            myThis.selectedTenant(this.value);
+                            myThis._loadEstablishmentData();
+                        } else {
+                            var prevCampusSelect = $(this).parent().parent().prev().find("select");
+                            if (prevCampusSelect.length) {
+                                myThis.selectedTenant(prevCampusSelect.val());
                                 myThis._loadEstablishmentData();
                             } else {
-                                var prevCampusSelect = $(this).parent().parent().prev().find("select");
-                                if (prevCampusSelect.length) {
-                                    myThis.selectedTenant(prevCampusSelect.val());
-                                    myThis._loadEstablishmentData();
-                                } else {
-                                    myThis.selectedTenant(myThis.rootEstablishment);
-                                    myThis._loadEstablishmentData();
-                                }
+                                myThis.selectedTenant(myThis.rootEstablishment);
+                                myThis._loadEstablishmentData();
                             }
                         }
-                    })
-                    if (childData.length) this.hasTenancyData(true);
+                    }
+                })
+                if (childData.length) this.hasTenancyData(true);
 
-                })
+            })
                 .fail((xhr: JQueryXHR): void => {
-                    App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
-                    deferred.reject();
-                })
+                App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
+                deferred.reject();
+            })
             return deferred.promise();
         }
 
@@ -615,13 +631,13 @@
             var promise: JQueryDeferred<ApiModels.EmployeeActivityCounts> = $.Deferred();
             Servers.GetActivityCounts(this.selectedTenant())
                 .done((summary: ApiModels.EmployeeActivityCounts): void => {
-                    ko.mapping.fromJS(summary, {}, this.activityTotals);
-                    promise.resolve(summary);
-                })
+                ko.mapping.fromJS(summary, {}, this.activityTotals);
+                promise.resolve(summary);
+            })
                 .fail((xhr: JQueryXHR): void => {
-                    App.Failures.message(xhr, 'while trying to load activity total summary data.', true);
-                    promise.reject();
-                })
+                App.Failures.message(xhr, 'while trying to load activity total summary data.', true);
+                promise.reject();
+            })
             return promise;
         }
 
@@ -714,26 +730,26 @@
             if (!this.isGeoChartReady()) {
                 this.geoChart.draw(this._geoChartDataTable, this._getGeoChartOptions())
                     .then((): void => {
-                        // svg injection depends on the chart being ready,
-                        // and bindings having been applied, and the
-                        // overlays being visible
-                        if (!this.isGeoChartReady()) {
-                            this.isGeoChartReady(true); // call this before overlaying to ensure positions
-                            this.bindingsApplied.done((): void=> {
-                                this._svgInjectPlaceOverlays();
-                                google.visualization.events.addListener(
-                                    this.geoChart.geoChart, 'select',
-                                    (): void => { this._onGeoChartSelect(); });
-                                google.visualization.events.addListener(this.geoChart.geoChart,
-                                    'regionClick',
-                                    (e: google.visualization.GeoChartRegionClickEvent): void => {
-                                        this._onGeoChartRegionClick(e);
-                                    }
-                                    );
-                            });
-                        }
-                        promise.resolve();
-                    });
+                    // svg injection depends on the chart being ready,
+                    // and bindings having been applied, and the
+                    // overlays being visible
+                    if (!this.isGeoChartReady()) {
+                        this.isGeoChartReady(true); // call this before overlaying to ensure positions
+                        this.bindingsApplied.done((): void=> {
+                            this._svgInjectPlaceOverlays();
+                            google.visualization.events.addListener(
+                                this.geoChart.geoChart, 'select',
+                                (): void => { this._onGeoChartSelect(); });
+                            google.visualization.events.addListener(this.geoChart.geoChart,
+                                'regionClick',
+                                (e: google.visualization.GeoChartRegionClickEvent): void => {
+                                    this._onGeoChartRegionClick(e);
+                                }
+                                );
+                        });
+                    }
+                    promise.resolve();
+                });
             }
             else {
                 promise.resolve();
@@ -757,11 +773,11 @@
             var place = this._getPlaceById(placeId);
             var optionOverrides = this._getGeoChartOptions();
             optionOverrides.region = !placeId || placeId == 1 || !place || !place.countryCode
-            ? 'world' : place.countryCode;
+                ? 'world' : place.countryCode;
 
             // change aspect ratio based on placeId
             optionOverrides.keepAspectRatio = placeId && placeId > 1 && place && place.countryCode ? false :
-            this.settings.geoChart.keepAspectRatio ? true : false;
+                this.settings.geoChart.keepAspectRatio ? true : false;
 
             // hit the server up for data and redraw
             this._initGeoChart().then((): void => {
@@ -773,7 +789,7 @@
                     var isPivotPeople = this.isPivotPeople();
                     this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(isPivotPeople ? 'People' : 'Activities'));
                     this._geoChartDataTable.removeRows(0, this._geoChartDataTable.getNumberOfRows());
-                    $.each(places, (i: number, dataPoint: ApiModels.EmployeesPlaceApiModel): void => {
+                    $.each(places,(i: number, dataPoint: ApiModels.EmployeesPlaceApiModel): void => {
                         // do not count the agnostic place
                         if (!dataPoint.placeId) return;
                         var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
@@ -781,10 +797,10 @@
                     });
                     this.geoChart.draw(this._geoChartDataTable, this._getGeoChartOptions(optionOverrides))
                         .then((): void => {
-                            setTimeout((): void => { this._svgInjectPlaceOverlays(); }, 0);
-                            this._applyPlaceOverlayTotals(places);
-                            this._createOverlayTooltips();
-                        });
+                        setTimeout((): void => { this._svgInjectPlaceOverlays(); }, 0);
+                        this._applyPlaceOverlayTotals(places);
+                        this._createOverlayTooltips();
+                    });
                 });
             });
         }
@@ -887,16 +903,16 @@
             if (!this.isActivityTypeChartReady()) {
                 this.activityTypeChart.draw(this._activityTypeChartDataTable, this._getActivityTypeChartOptions())
                     .then((): void => {
-                        if (!this.isActivityTypeChartReady()) {
-                            this.isActivityTypeChartReady(true);
-                            this.bindingsApplied.done((): void=> {
-                                google.visualization.events.addListener(
-                                    this.activityTypeChart.columnChart, 'select',
-                                    (): void => { this._onActivityTypeChartSelect(); });
-                            });
-                        }
-                        promise.resolve();
-                    });
+                    if (!this.isActivityTypeChartReady()) {
+                        this.isActivityTypeChartReady(true);
+                        this.bindingsApplied.done((): void=> {
+                            google.visualization.events.addListener(
+                                this.activityTypeChart.columnChart, 'select',
+                                (): void => { this._onActivityTypeChartSelect(); });
+                        });
+                    }
+                    promise.resolve();
+                });
             }
             else {
                 promise.resolve();
@@ -949,7 +965,7 @@
                     this._activityTypeChartDataTable.removeRows(0, this._activityTypeChartDataTable.getNumberOfRows());
                     var activityTypes = this._getActivityTypes();
                     this.activityTypes(activityTypes);
-                    $.each(activityTypes, (i: number, dataPoint: ApiModels.EmployeeActivityTypeCount): void => {
+                    $.each(activityTypes,(i: number, dataPoint: ApiModels.EmployeeActivityTypeCount): void => {
                         var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
                         this._activityTypeChartDataTable.addRow([dataPoint.text, total, total, dataPoint.activityTypeId]);
                     });
@@ -957,7 +973,7 @@
                     dataView.setColumns([0, 1, 1, 2]);
                     this.activityTypeChart.draw(dataView, this._getActivityTypeChartOptions())
                         .then((): void => {
-                        });
+                    });
                 });
             });
         }
@@ -969,22 +985,22 @@
             var places = this.placeData.cached;
             var activityTypes: ApiModels.EmployeeActivityTypeCount[] = Enumerable.From(places)
                 .Where(function (x: ApiModels.EmployeesPlaceApiModel): boolean {
-                    if (placeId == null) return !x.placeId;
-                    return x.placeId == placeId;
-                })
+                if (placeId == null) return !x.placeId;
+                return x.placeId == placeId;
+            })
                 .SelectMany(function (x: ApiModels.EmployeesPlaceApiModel): ApiModels.EmployeeActivityTypeCount[] {
-                    return x.activityTypes;
-                })
+                return x.activityTypes;
+            })
                 .Distinct(function (x: ApiModels.EmployeeActivityTypeCount): number {
-                    return x.activityTypeId;
-                })
+                return x.activityTypeId;
+            })
                 .OrderBy(function (x: ApiModels.EmployeeActivityTypeCount): number {
-                    return x.rank;
-                })
+                return x.rank;
+            })
                 .Select(function (x: ApiModels.EmployeeActivityTypeCount): ApiModels.EmployeeActivityTypeCount {
-                    x.iconSrc = Routes.Api.Employees.Settings.ActivityTypes.icon(x.activityTypeId);
-                    return x;
-                })
+                x.iconSrc = Routes.Api.Employees.Settings.ActivityTypes.icon(x.activityTypeId);
+                return x;
+            })
                 .ToArray();
             return activityTypes;
         }
@@ -1032,13 +1048,13 @@
             if (!this.isActivityYearChartReady()) {
                 this.activityYearChart.draw(this._activityYearChartDataTable, this._getActivityYearChartOptions())
                     .then((): void => {
-                        if (!this.isActivityYearChartReady()) {
-                            this.isActivityYearChartReady(true);
-                            this.bindingsApplied.done((): void=> {
-                            });
-                        }
-                        promise.resolve();
-                    });
+                    if (!this.isActivityYearChartReady()) {
+                        this.isActivityYearChartReady(true);
+                        this.bindingsApplied.done((): void=> {
+                        });
+                    }
+                    promise.resolve();
+                });
             }
             else {
                 promise.resolve();
@@ -1065,13 +1081,13 @@
                     this._activityYearChartDataTable.removeRows(0, this._activityYearChartDataTable.getNumberOfRows());
                     var activityYears = this._getActivityYears();
                     this.activityYears(activityYears);
-                    $.each(activityYears, (i: number, dataPoint: ApiModels.EmployeeActivityYearCount): void => {
+                    $.each(activityYears,(i: number, dataPoint: ApiModels.EmployeeActivityYearCount): void => {
                         var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
                         this._activityYearChartDataTable.addRow([dataPoint.year.toString(), total]);
                     });
                     this.activityYearChart.draw(this._activityYearChartDataTable, this._getActivityYearChartOptions())
                         .then((): void => {
-                        });
+                    });
                 });
             });
         }
@@ -1087,21 +1103,21 @@
             var minYear = 2003;
             var activityYears: ApiModels.EmployeeActivityYearCount[] = Enumerable.From(places)
                 .Where(function (x: ApiModels.EmployeesPlaceApiModel): boolean {
-                    if (placeId == null) return !x.placeId;
-                    return x.placeId == placeId;
-                })
+                if (placeId == null) return !x.placeId;
+                return x.placeId == placeId;
+            })
                 .SelectMany(function (x: ApiModels.EmployeesPlaceApiModel): ApiModels.EmployeeActivityYearCount[] {
-                    return x.years;
-                })
+                return x.years;
+            })
                 .Distinct(function (x: ApiModels.EmployeeActivityYearCount): number {
-                    return x.year;
-                })
+                return x.year;
+            })
                 .OrderBy(function (x: ApiModels.EmployeeActivityYearCount): number {
-                    return x.year;
-                })
+                return x.year;
+            })
                 .Where(function (x: ApiModels.EmployeeActivityYearCount): boolean {
-                    return x.year >= minYear && x.year <= currentYear;
-                })
+                return x.year >= minYear && x.year <= currentYear;
+            })
                 .ToArray();
             return activityYears;
         }
@@ -1143,7 +1159,7 @@
             this.placeOverlays = ko.observableArray<SummaryGeoChartPlaceOverlay>();
             var overlays = $('#{0} .overlays .places .data'
                 .format(this.settings.geoChart.boxElementId)).children();
-            $.each(overlays, (i: number, overlay: Element): void => {
+            $.each(overlays,(i: number, overlay: Element): void => {
                 var jOverlay = $(overlay);
                 var iOverlay: SummaryGeoChartPlaceOverlay = {
                     total: ko.observable(0),
@@ -1161,8 +1177,8 @@
         private _getOverlayPlaceIds(): number[] {
             var placeIds: number[] = Enumerable.From(this.placeOverlays())
                 .Select(function (x: SummaryGeoChartPlaceOverlay): number {
-                    return x.placeId;
-                })
+                return x.placeId;
+            })
                 .ToArray();
             return placeIds;
         }
@@ -1196,8 +1212,8 @@
             var isOverlaySelected = false;
             var overlay = Enumerable.From(placeOverlays)
                 .SingleOrDefault(undefined, function (x: SummaryGeoChartPlaceOverlay): boolean {
-                    return x.placeId == placeId;
-                });
+                return x.placeId == placeId;
+            });
             if (overlay) {
                 isOverlaySelected = true;
             }
@@ -1247,7 +1263,7 @@
             // all of the overlays will become children of this g element
             var dInjectRoot = dGoogleG.append('g')
                 .attr('id', dInjectRootElementId)
-            ;
+                ;
             var areOverlaysVisible = this.arePlaceOverlaysVisible();
             if (!areOverlaysVisible)
                 dInjectRoot.attr('style', 'display: none;');
@@ -1259,7 +1275,7 @@
             jContainer.show(); // need to do this to get positions & dimensions from jQuery
 
             var overlays = this.placeOverlays();
-            $.each(overlays, (i: number, overlay: SummaryGeoChartPlaceOverlay): void => {
+            $.each(overlays,(i: number, overlay: SummaryGeoChartPlaceOverlay): void => {
                 this._svgInjectPlaceOverlay(dInjectRoot, overlay);
             });
 
@@ -1269,7 +1285,7 @@
             $('#{0} svg > g > g:last-child'
                 .format(this.settings.geoChart.googleElementId))
                 .insertAfter('#{0} svg > g > g:nth-child(2)'
-                    .format(this.settings.geoChart.googleElementId))
+                .format(this.settings.geoChart.googleElementId))
             ;
         }
 
@@ -1291,7 +1307,7 @@
                 .attr('x', x).attr('y', y)
                 .attr('width', width).attr('height', height)
                 .attr('class', 'no-hover')
-            ;
+                ;
 
             // append a hover d3 image to the overlay g element
             var hoverImage = dOverlay.append('image')
@@ -1299,7 +1315,7 @@
                 .attr('x', x).attr('y', y)
                 .attr('width', width).attr('height', height)
                 .attr('class', 'hover').attr('style', 'display: none;')
-            ;
+                ;
 
             if (overlay.placeId == this.placeId()) {
                 hoverImage.attr('style', '');
@@ -1357,14 +1373,14 @@
             // remove tooltips when they already exist
             if (tooltips.length) {
                 // destroy all of the tooltips
-                $.each(this._tooltips(), (i: number, tooltip: JQuery): void => {
+                $.each(this._tooltips(),(i: number, tooltip: JQuery): void => {
                     tooltip.tooltip('destroy');
                 });
                 this._tooltips([]);
             }
 
             var overlays = this.placeOverlays();
-            $.each(overlays, (i: number, overlay: SummaryGeoChartPlaceOverlay): void => {
+            $.each(overlays,(i: number, overlay: SummaryGeoChartPlaceOverlay): void => {
                 // the tooltips are in the place ui
                 var jOverlay = $('#{0} .overlays .places .ui .{1}'
                     .format(this.settings.geoChart.boxElementId, overlay.className));
@@ -1400,14 +1416,14 @@
         private _applyPlaceOverlayTotals(places: ApiModels.EmployeesPlaceApiModel[]): void {
             var isPivotPeople = this.isPivotPeople();
             var placeOverlays = this.placeOverlays();
-            $.each(placeOverlays, (i: number, overlay: SummaryGeoChartPlaceOverlay): void => {
+            $.each(placeOverlays,(i: number, overlay: SummaryGeoChartPlaceOverlay): void => {
                 var total = Enumerable.From(places)
                     .Where(function (x: ApiModels.EmployeesPlaceApiModel): boolean {
-                        return x.placeId == overlay.placeId;
-                    })
+                    return x.placeId == overlay.placeId;
+                })
                     .Sum(function (x: ApiModels.EmployeesPlaceApiModel): number {
-                        return isPivotPeople ? x.activityPersonIds.length : x.activityIds.length;
-                    });
+                    return isPivotPeople ? x.activityPersonIds.length : x.activityIds.length;
+                });
                 overlay.total(total);
             });
         }
