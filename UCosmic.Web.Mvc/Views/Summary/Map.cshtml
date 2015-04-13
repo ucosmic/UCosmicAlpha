@@ -1,5 +1,10 @@
 ﻿
-<link rel="import" href="~/components/pages/Summary/report.html">
+@*<script src="../../../../scripts/app/app.js"></script>
+<script src="../../../../scripts/viewmodels/places/Utils.js"></script>
+<script src="../../../../scripts/google/Map.js"></script>*@
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.12&sensor=false&libraries=visualization" type="text/javascript"> </script>
+<link rel="import" href="~/components/pages/Summary/map/map.html">
 @{
     ViewBag.Title = "Summary - Map";
     var tenancy = Request.Tenancy();
@@ -16,5 +21,5 @@
 
 <div class="fixed content" data-current-module="summary">
 
-    <is-page-summary-index styledomain="@styleDomain" tenantid="@tenantId"></is-page-summary-index>
+    <is-page-summary-map styledomain="@styleDomain" tenantid="@tenantId"></is-page-summary-map>
 </div>

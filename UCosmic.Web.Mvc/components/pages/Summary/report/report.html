@@ -1,15 +1,16 @@
 ﻿
-<link rel="import" href="../../Polymer/bower_components/paper-dropdown/paper-dropdown.html">
-<link rel="import" href="../../Polymer/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../../Polymer/bower_components/core-dropdown-menu/core-dropdown-menu.html">
-<link rel="import" href="../../Polymer/bower_components/core-dropdown/core-dropdown.html">
-<link rel="import" href="../../Polymer/bower_components/core-selector/core-selector.html">
-<link rel="import" href="../../Polymer/bower_components/core-item/core-item.html">
-<link rel="import" href="../../Polymer/bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../Polymer/bower_components/core-icon-button/core-icon-button.html">
-<link rel="import" href="../../Polymer/bower_components/paper-input/paper-input-decorator.html">
-<link rel="import" href="../../Polymer/bower_components/core-input/core-input.html">
-<link rel="import" href="../../components/autoDDL/autoDDL.html">
+<!--<link rel="import" href="../../../Polymer/bower_components/paper-dropdown/paper-dropdown.html">
+<link rel="import" href="../../../Polymer/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../Polymer/bower_components/core-dropdown-menu/core-dropdown-menu.html">
+<link rel="import" href="../../../Polymer/bower_components/core-dropdown/core-dropdown.html">-->
+<link rel="import" href="../../../Polymer/bower_components/core-selector/core-selector.html">
+<link rel="import" href="../../../Polymer/bower_components/core-item/core-item.html">
+<link rel="import" href="../../../Polymer/bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../Polymer/bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="../../../Polymer/bower_components/paper-input/paper-input-decorator.html">
+<link rel="import" href="../../../Polymer/bower_components/core-input/core-input.html">
+<link rel="import" href="../../../components/autoDDL/autoDDL.html">
+<script src="../../../Polymer/bower_components/page.js/page.js"></script>
 <polymer-element name="is-page-summary-report" attributes="styledomain, tenantid">
     <template>
         <link href="report.css" rel="stylesheet" />
@@ -27,7 +28,7 @@
                 </template>
             </core-menu>
         </paper-dropdown>-->
-        <div layout horizontal end style="width:800px;">
+        <div layout horizontal end style="width:800px; z-index:1;">
                 <select on-click="{{selectCountry}}" id="selectCountry" style="padding: 1px; margin: initial; height: 30px; width: 200px; font-size: 14px;">
                     <option>
                         <paper-item>[Select a Country]</paper-item>
@@ -77,7 +78,7 @@
                 </core-selector>
             </core-dropdown>
         </core-dropdown-menu>-->
-        <section style="position:relative; z-index:-1;">
+        <section style="position:relative; ">
             <h3 style="margin-bottom:4px;">Agreements</h3>
             <template if="{{agreementTypeCountsLoaded}}" repeat="{{agreementTypeCount, agreementTypeCountI in agreementTypeCounts}}">
                 <div>
@@ -94,7 +95,7 @@
             </template>
         </section>
 
-        <section style="position:relative; z-index:-1;">
+        <section style="position:relative; ">
             <h3 style="display:block; margin-bottom:4px;">Faculty & Staff Activities</h3>
             <template if="{{activityTypeCountsLoaded}}" repeat="{{activityTypeCount, activityTypeCountI in activityTypeCounts}}">
                 <div>
@@ -114,7 +115,7 @@
             </template>
         </section>
         
-        <section style="position:relative; z-index:-1;">
+        <section style="position:relative; ">
             <h3 style="margin-bottom:4px;">Faculty & Staff Degrees</h3>
             <template if="{{degrees.degreeCount.length != 0 && degreeCountLoaded}}">
                 <div>
@@ -126,7 +127,7 @@
                     <template if="{{selectedCountryCode == 'any'}}">
                         <a href="{{styledomain}}/employees/degrees/table/">{{degrees.degreeCount}}</a>
                     </template>
-                    degrees in
+                    degrees from
                     <b>{{degrees.establishmentCount}}</b> institutions.
                 </div>
             </template>
@@ -188,23 +189,23 @@
                    on-core-error="{{ajaxError}}"
                    id="ajax_countries">
         </core-ajax>
-        <core-ajax url="/api/faculty-staff/activity-count/{{tenantid}}/{{selectedPlaceId}}/"
+        <core-ajax url="/api/summary/activity-count/{{tenantid}}/{{selectedPlaceId}}/"
                    headers='{"Accept": "application/json"}'
-                   handleas="json" auto
+                   handleas="json" 
                    on-core-response="{{activitiesResponse}}"
                    on-core-error="{{ajaxError}}"
                    id="ajax_activities">
         </core-ajax>
-        <core-ajax url="/api/agreements/agreement-count/{{tenantid}}/{{selectedPlaceId}}/{{selectedEstablishmentId}}/"
+        <core-ajax url="/api/summary/agreement-count/{{tenantid}}/{{selectedPlaceId}}/{{selectedEstablishmentId}}/"
                    headers='{"Accept": "application/json"}'
-                   handleas="json" auto
+                   handleas="json" 
                    on-core-response="{{agreementsResponse}}"
                    on-core-error="{{ajaxError}}"
                    id="ajax_agreements">
         </core-ajax>
-        <core-ajax url="/api/degrees/degree-count/{{tenantid}}/{{selectedPlaceId}}/{{selectedEstablishmentId}}/"
+        <core-ajax url="/api/summary/degree-count/{{tenantid}}/{{selectedPlaceId}}/{{selectedEstablishmentId}}/"
                    headers='{"Accept": "application/json"}'
-                   handleas="json" auto
+                   handleas="json" 
                    on-core-response="{{degreesResponse}}"
                    on-core-error="{{ajaxError}}"
                    id="ajax_degrees">

@@ -10,11 +10,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
     <title>@ViewBag.Title</title>
-    @Styles.Render("~/content/themes/base/css")
+    @*@Styles.Render("~/content/themes/base/css")*@
     @*@Styles.Render("~/content/kendo/2013.2.716/uniform-css")*@
     @Html.Action(MVC.Tenancy.Css())
     @RenderSection("styles", required: false)
     @*@Scripts.Render("~/bundles/modernizr")*@
+    <script src="~/components/Polymer/bower_components/lodash/lodash.min.js"></script>
         @Scripts.Render("~/bundles/layout2")
     <link rel="import" href="~/components/Polymer/bower_components/core-ajax/core-ajax.html" />
     <link rel="import" href="~/components/utilities/Notification/notification.html" />

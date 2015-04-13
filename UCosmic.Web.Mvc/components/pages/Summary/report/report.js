@@ -6,14 +6,46 @@ Polymer('is-page-summary-report', {
     selectedCountry: 0,
     selectedCountryCode: 'any',
     selectedPlaceId: 0,
+    last_selected_place_id: -1,
     expertiseCountLoaded: false,
     affiliationCountLoaded: false,
     lastEstablishmentSearch: "",
     selectedEstablishmentId: 0,
+    last_selected_establishment_id: -1,
     degreeCountLoaded: false,
     agreementTypeCountsLoaded: false,
     activityTypeCountsLoaded: false,
-    ready: function () {
+    filter: function (ctx, next) {
+        var myThis = document.querySelector("is-page-summary-report"), country_code = ctx.params.country_code, country = _.find(myThis.countries, function (place, index) {
+            selectedIndex = index + 1;
+            return place.code == country_code;
+        }), place_id = country ? country.id : 0, establishment_id = parseInt(ctx.params.establishment_id);
+        if (establishment_id != myThis.last_selected_establishment_id || place_id != myThis.last_selected_place_id) {
+            myThis.last_selected_establishment_id = establishment_id;
+            myThis.last_selected_place_id = place_id;
+            myThis.selectedEstablishmentId = establishment_id ? establishment_id : 0;
+            var selectedIndex;
+            if (country) {
+                setTimeout(function () {
+                    myThis.$.selectCountry.selectedIndex = selectedIndex;
+                }, 200);
+            }
+            myThis.selectedPlaceId = country ? country.id : 0;
+            myThis.selectedPlaceName = country ? country.name : undefined;
+            myThis.selectedCountryCode = country ? country.code : 'any';
+            if (!myThis.selectedEstablishmentId) {
+                myThis.$.ajax_activities.go();
+            }
+            myThis.$.ajax_agreements.go();
+            myThis.$.ajax_degrees.go();
+        }
+    },
+    setup_routing: function () {
+        page.base('/summary/report');
+        page('/:country_code/:establishment_id', this.filter);
+        page('/:country_code', this.filter);
+        page('*', this.filter);
+        page({ hashbang: true });
     },
     selectCountry: function (event, detail, sender) {
         var index = sender.selectedIndex;
@@ -27,9 +59,7 @@ Polymer('is-page-summary-report', {
             this.selectedPlaceName = undefined;
             this.selectedCountryCode = '';
         }
-        this.$.ajax_activities.go();
-        this.$.ajax_agreements.go();
-        this.$.ajax_degrees.go();
+        page('#!/' + this.selectedCountryCode + '/' + this.selectedEstablishmentId);
     },
     leaveEstablishmentSearch: function (event, detail, sender) {
         var _this = this;
@@ -42,10 +72,8 @@ Polymer('is-page-summary-report', {
             this.activityTypeCounts = [];
         }
         else {
-            this.$.ajax_activities.go();
         }
-        this.$.ajax_agreements.go();
-        this.$.ajax_degrees.go();
+        page('#!/' + this.selectedPlaceId + '/' + this.selectedEstablishmentId);
     },
     establishmentListSearch: function (event, detail, sender) {
         var _this = this;
@@ -68,21 +96,6 @@ Polymer('is-page-summary-report', {
                 }, 500);
             }
         }
-    },
-    selectedCountryChanged: function (oldVal, newVal) {
-        if (newVal != 0) {
-            this.selectedPlaceId = this.countries[newVal - 1].id;
-            this.selectedPlaceName = this.countries[newVal - 1].name;
-            this.selectedCountryCode = this.countries[newVal - 1].code;
-        }
-        else {
-            this.selectedPlaceId = 0;
-            this.selectedPlaceName = undefined;
-            this.selectedCountryCode = 'any';
-        }
-        this.$.ajax_activities.go();
-        this.$.ajax_agreements.go();
-        this.$.ajax_degrees.go();
     },
     activitiesResponse: function (response) {
         this.isAjaxing = false;
@@ -138,6 +151,7 @@ Polymer('is-page-summary-report', {
         this.isAjaxing = false;
         if (!response.detail.response.error) {
             this.countries = response.detail.response;
+            this.setup_routing();
         }
         else {
             console.log(response.detail.response.error);
