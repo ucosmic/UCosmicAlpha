@@ -1,0 +1,83 @@
+﻿<!--<link rel="import" href="../../../Polymer/bower_components/paper-dropdown/paper-dropdown.html">
+<link rel="import" href="../../../Polymer/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../Polymer/bower_components/core-dropdown-menu/core-dropdown-menu.html">
+<link rel="import" href="../../../Polymer/bower_components/core-dropdown/core-dropdown.html">-->
+<link rel="import" href="../../../Polymer/bower_components/core-selector/core-selector.html">
+<link rel="import" href="../../../Polymer/bower_components/core-item/core-item.html">
+<link rel="import" href="../../../Polymer/bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../Polymer/bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="../../../Polymer/bower_components/paper-input/paper-input-decorator.html">
+<link rel="import" href="../../../Polymer/bower_components/core-input/core-input.html">
+<!--<link rel="import" href="../../../components/autoDDL/autoDDL.html">-->
+<link rel="import" href="../../../components/popup/popup.html">
+<polymer-element name="is-page-summary-map" attributes="styledomain, tenantid">
+    <template>
+
+        <link href="map.css" rel="stylesheet" />
+        <!--<div layout horizontal end style="width:800px;">
+                <select on-click="{{selectCountry}}" id="selectCountry" style="padding: 1px; margin: initial; height: 30px; width: 200px; font-size: 14px;">
+                    <option>
+                        <paper-item>[Select a Country]</paper-item>
+                    </option>
+                    <template repeat="{{country, countryI in countries}}">
+                        <option on-click="{{selectCountry}}" value="{{country.name}}">
+                            <paper-item on-click="{{selectCountry}}" id="country{{countryI}}">{{country.name}}</paper-item>
+                        </option>
+                    </template>
+                </select>
+            <is-auto-ddl flex selected="{{establishmentSearch}}" selectedid="{{selectedEstablishmentId}}" on-selected-updated="{{establishmentSelected}}"
+                         on-search-updated="{{establishmentListSearch}}" list="{{establishmentList}}">
+
+            </is-auto-ddl>
+        </div>-->
+        <div id="map_canvas" style="height:800px;"></div>
+        <span id="info_box" style=" background-color:lightgray; position:absolute;  padding: 5px;  border-radius: 8px; left: -20px; display: none;"></span>
+        <div id="info_box_detail_container">
+
+        </div>
+
+
+
+        <core-ajax url="/api/summary/activity-map-count/{{tenantid}}/{{selectedPlaceId}}/"
+                   headers='{"Accept": "application/json"}'
+                   handleas="json" auto
+                   on-core-response="{{activitiesResponse}}"
+                   on-core-error="{{ajaxError}}"
+                   id="ajax_activities">
+        </core-ajax>
+        <core-ajax url="/api/summary/agreement-map-count/{{tenantid}}/{{selectedPlaceId}}/"
+                   headers='{"Accept": "application/json"}'
+                   handleas="json" auto
+                   on-core-response="{{agreementsResponse}}"
+                   on-core-error="{{ajaxError}}"
+                   id="ajax_agreements">
+        </core-ajax>
+        <core-ajax url="/api/summary/degree-map-count/{{tenantid}}/{{selectedPlaceId}}/"
+                   headers='{"Accept": "application/json"}'
+                   handleas="json" auto
+                   on-core-response="{{degreesResponse}}"
+                   on-core-error="{{ajaxError}}"
+                   id="ajax_degrees">
+        </core-ajax>
+        <!--<core-ajax url="/api/establishments/list/{{establishmentSearch}}/"
+                   headers='{"Accept": "application/json"}'
+                   handleas="json"
+                   on-core-response="{{establishmentResponse}}"
+                   on-core-error="{{ajaxError}}"
+                   id="ajax_establishmentsList">
+        </core-ajax>-->
+        <core-ajax url="/api/countries/"
+                   headers='{"Accept": "application/json"}'
+                   handleas="json" auto
+                   on-core-response="{{countriesResponse}}"
+                   on-core-error="{{ajaxError}}"
+                   id="ajax_countries">
+        </core-ajax>
+
+
+    </template>
+    <script src="map.js"></script>
+
+</polymer-element>
+
+
