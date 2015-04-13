@@ -18,4 +18,18 @@ namespace UCosmic.Web.Mvc.Models
         public int DegreeCount { get; set; }
 
     }
+
+    public class DegreeMapSummaryApiQueryResultModel
+    {
+        public int id { get; set; }
+        public string officialName { get; set; }
+        public string countryCode { get; set; }
+    }
+    public class DegreeMapSummaryApiModel
+    {
+        public int LocationCount { get; set; }
+        //public int TypeCount { get; set; }
+        public string CountryCode { get; set; }
+        //public string officialName { get; set; }
+    }
 }

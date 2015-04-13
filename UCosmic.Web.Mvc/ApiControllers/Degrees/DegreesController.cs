@@ -37,45 +37,45 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _updateHandler = updateHandler;
         }
 
-        /* Returns degree type counts for given place.*/
-        [GET("degrees/degree-count/{establishmentId?}/{placeId?}/{selectedEstablishmentId?}")]
-        [CacheHttpGet(Duration = 3600)]
-        public List<DegreeSummaryApiModel> GetDegreeCount(int? establishmentId, int? placeId, int? selectedEstablishmentId)
-        {
-            IList<DegreeSummaryApiModel> returnModel = new List<DegreeSummaryApiModel>();
-            IList<DegreeSummaryApiQueryResultModel> model = new List<DegreeSummaryApiQueryResultModel>();
+        ///* Returns degree type counts for given place.*/
+        //[GET("degrees/degree-count/{establishmentId?}/{placeId?}/{selectedEstablishmentId?}")]
+        //[CacheHttpGet(Duration = 3600)]
+        //public List<DegreeSummaryApiModel> GetDegreeCount(int? establishmentId, int? placeId, int? selectedEstablishmentId)
+        //{
+        //    IList<DegreeSummaryApiModel> returnModel = new List<DegreeSummaryApiModel>();
+        //    IList<DegreeSummaryApiQueryResultModel> model = new List<DegreeSummaryApiQueryResultModel>();
 
-            var tenancy = Request.Tenancy();
+        //    var tenancy = Request.Tenancy();
 
-            if (!(establishmentId.HasValue && (establishmentId.Value != 0)))
-            {
-                if (tenancy.TenantId.HasValue)
-                {
-                    establishmentId = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value)).RevisionId;
-                }
-                else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
-                {
-                    establishmentId = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain)).RevisionId;
-                }
-            }
+        //    if (!(establishmentId.HasValue && (establishmentId.Value != 0)))
+        //    {
+        //        if (tenancy.TenantId.HasValue)
+        //        {
+        //            establishmentId = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value)).RevisionId;
+        //        }
+        //        else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+        //        {
+        //            establishmentId = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain)).RevisionId;
+        //        }
+        //    }
 
-            if (establishmentId != null)
-            {
-                if (placeId.HasValue)
-                {
-                    SummaryRepository summaryRepository = new SummaryRepository();
+        //    if (establishmentId != null)
+        //    {
+        //        if (placeId.HasValue)
+        //        {
+        //            SummaryRepository summaryRepository = new SummaryRepository();
 
-                    model = summaryRepository.DegreeSummaryByEstablishment_Place(establishmentId, placeId, selectedEstablishmentId);
-                    var modelDistinct = model.DistinctBy(x => new { x.degreeId });
+        //            model = summaryRepository.DegreeSummaryByEstablishment_Place(establishmentId, placeId, selectedEstablishmentId);
+        //            var modelDistinct = model.DistinctBy(x => new { x.degreeId });
                     
-                    var degreeCount = modelDistinct.ToList().Count();
-                    var establishmentCount = modelDistinct.DistinctBy(x => x.establishmentId).ToList().Count();
-                    var personCount = modelDistinct.DistinctBy(x => x.personId).ToList().Count();
-                    returnModel.Add(new DegreeSummaryApiModel{ DegreeCount = degreeCount, EstablishmentCount = establishmentCount, PersonCount = personCount });
-                }
-            }
-            return returnModel.ToList();
-        }
+        //            var degreeCount = modelDistinct.ToList().Count();
+        //            var establishmentCount = modelDistinct.DistinctBy(x => x.establishmentId).ToList().Count();
+        //            var personCount = modelDistinct.DistinctBy(x => x.personId).ToList().Count();
+        //            returnModel.Add(new DegreeSummaryApiModel{ DegreeCount = degreeCount, EstablishmentCount = establishmentCount, PersonCount = personCount });
+        //        }
+        //    }
+        //    return returnModel.ToList();
+        //}
 
 
         [GET("people/{personId:int}/degrees")]

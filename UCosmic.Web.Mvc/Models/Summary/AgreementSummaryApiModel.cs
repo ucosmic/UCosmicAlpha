@@ -23,4 +23,17 @@ namespace UCosmic.Web.Mvc.Models
         //    Type = type;
         //}
     }
+
+    public class AgreementMapSummaryApiQueryResultModel
+    {
+        public int id { get; set; }
+        public string officialName { get; set; }
+        public string countryCode { get; set; }
+    }
+    public class AgreementMapSummaryApiModel
+    {
+        public int LocationCount { get; set; }
+        public string CountryCode { get; set; }
+        //public string officialName { get; set; }
+    }
 }

@@ -113,52 +113,52 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return ids.ToArray();
         }
 
-        /* Returns activity type counts for given place.*/
-        [GET("activity-count/{establishmentId?}/{placeId?}")]
-        //[CacheHttpGet(Duration = 3600)]
-        public List<ActivitySummaryApiModel> GetActivityCount(int? establishmentId, int? placeId)
-        {
-            IList<ActivitySummaryApiModel> returnModel = new List<ActivitySummaryApiModel>();
-            IList<ActivitySummaryApiQueryResultModel> model = new List<ActivitySummaryApiQueryResultModel>();
-            //IList<ActivityTypesApiReturn> establishmentTypes = new List<ActivityTypesApiReturn>();
+        ///* Returns activity type counts for given place.*/
+        //[GET("activity-count/{establishmentId?}/{placeId?}")]
+        ////[CacheHttpGet(Duration = 3600)]
+        //public List<ActivitySummaryApiModel> GetActivityCount(int? establishmentId, int? placeId)
+        //{
+        //    IList<ActivitySummaryApiModel> returnModel = new List<ActivitySummaryApiModel>();
+        //    IList<ActivitySummaryApiQueryResultModel> model = new List<ActivitySummaryApiQueryResultModel>();
+        //    //IList<ActivityTypesApiReturn> establishmentTypes = new List<ActivityTypesApiReturn>();
 
-            var tenancy = Request.Tenancy();
+        //    var tenancy = Request.Tenancy();
 
-            if (!(establishmentId.HasValue && (establishmentId.Value != 0)))
-            {
-                if (tenancy.TenantId.HasValue)
-                {
-                    establishmentId = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value)).RevisionId;
-                }
-                else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
-                {
-                    establishmentId = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain)).RevisionId;
-                }
-            }
+        //    if (!(establishmentId.HasValue && (establishmentId.Value != 0)))
+        //    {
+        //        if (tenancy.TenantId.HasValue)
+        //        {
+        //            establishmentId = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value)).RevisionId;
+        //        }
+        //        else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+        //        {
+        //            establishmentId = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain)).RevisionId;
+        //        }
+        //    }
 
-            if (establishmentId != null)
-            {
-                if (placeId.HasValue)
-                {
-                    SummaryRepository summaryRepository = new SummaryRepository();
-                    EmployeeActivityTypesRepository employeeActivityTypesRepository = new EmployeeActivityTypesRepository();
-                    model = summaryRepository.ActivitySummaryByEstablishment_Place(establishmentId, placeId);
-                    //var modelDistinct = model.DistinctBy(x => x.id);
-                    var modelDistinct = model.DistinctBy(x => new { x.id, x.type });
-                    //establishmentTypes = employeeActivityTypesRepository.EmployeeActivityTypes_By_establishmentId(establishmentId);
-                    var establishmentTypes = modelDistinct.DistinctBy(x => x.type);
-                    foreach (var type in establishmentTypes)
-                    {
-                        var typeCount = modelDistinct.Where(x => x.type == type.type).Count();
-                        var locationCount = model.Where(x => x.type == type.type).Count();
-                        returnModel.Add(new ActivitySummaryApiModel{LocationCount = locationCount, TypeCount = typeCount, Type = type.type, TypeId = type.id});
-                    }
-                }
-            }
+        //    if (establishmentId != null)
+        //    {
+        //        if (placeId.HasValue)
+        //        {
+        //            SummaryRepository summaryRepository = new SummaryRepository();
+        //            EmployeeActivityTypesRepository employeeActivityTypesRepository = new EmployeeActivityTypesRepository();
+        //            model = summaryRepository.ActivitySummaryByEstablishment_Place(establishmentId, placeId);
+        //            //var modelDistinct = model.DistinctBy(x => x.id);
+        //            var modelDistinct = model.DistinctBy(x => new { x.id, x.type });
+        //            //establishmentTypes = employeeActivityTypesRepository.EmployeeActivityTypes_By_establishmentId(establishmentId);
+        //            var establishmentTypes = modelDistinct.DistinctBy(x => x.type);
+        //            foreach (var type in establishmentTypes)
+        //            {
+        //                var typeCount = modelDistinct.Where(x => x.type == type.type).Count();
+        //                var locationCount = model.Where(x => x.type == type.type).Count();
+        //                returnModel.Add(new ActivitySummaryApiModel{LocationCount = locationCount, TypeCount = typeCount, Type = type.type, TypeId = type.id});
+        //            }
+        //        }
+        //    }
 
 
-            return returnModel.ToList();
-        }
+        //    return returnModel.ToList();
+        //}
 
         /* Returns people counts for given place. */
         [GET("people-count/{establishmentId?}/{placeId?}")]

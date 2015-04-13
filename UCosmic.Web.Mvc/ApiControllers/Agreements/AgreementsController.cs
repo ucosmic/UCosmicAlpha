@@ -215,49 +215,49 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
 
-        /* Returns agreement type counts for given place.*/
-        [GET("agreements/agreement-count/{establishmentId?}/{placeId?}/{selectedEstablishmentId?}")]
-        //[CacheHttpGet(Duration = 3600)]
-        public List<AgreementSummaryApiModel> GetAgreementCount(int? establishmentId, int? placeId, int? selectedEstablishmentId)
-        {
-            IList<AgreementSummaryApiModel> returnModel = new List<AgreementSummaryApiModel>();
-            IList<AgreementSummaryApiQueryResultModel> model = new List<AgreementSummaryApiQueryResultModel>();
-            //IList<AgreementTypesApiReturn> agreementTypes = new List<AgreementTypesApiReturn>();
+        ///* Returns agreement type counts for given place.*/
+        //[GET("agreements/agreement-count/{establishmentId?}/{placeId?}/{selectedEstablishmentId?}")]
+        ////[CacheHttpGet(Duration = 3600)]
+        //public List<AgreementSummaryApiModel> GetAgreementCount(int? establishmentId, int? placeId, int? selectedEstablishmentId)
+        //{
+        //    IList<AgreementSummaryApiModel> returnModel = new List<AgreementSummaryApiModel>();
+        //    IList<AgreementSummaryApiQueryResultModel> model = new List<AgreementSummaryApiQueryResultModel>();
+        //    //IList<AgreementTypesApiReturn> agreementTypes = new List<AgreementTypesApiReturn>();
 
-            var tenancy = Request.Tenancy();
+        //    var tenancy = Request.Tenancy();
 
-            if (!(establishmentId.HasValue && (establishmentId.Value != 0)))
-            {
-                if (tenancy.TenantId.HasValue)
-                {
-                    establishmentId = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value)).RevisionId;
-                }
-                else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
-                {
-                    establishmentId = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain)).RevisionId;
-                }
-            }
+        //    if (!(establishmentId.HasValue && (establishmentId.Value != 0)))
+        //    {
+        //        if (tenancy.TenantId.HasValue)
+        //        {
+        //            establishmentId = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value)).RevisionId;
+        //        }
+        //        else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+        //        {
+        //            establishmentId = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain)).RevisionId;
+        //        }
+        //    }
 
-            if (establishmentId != null)
-            {
-                if (placeId.HasValue)
-                {
-                    SummaryRepository summaryRepository = new SummaryRepository();
-                    AgreementTypesRepository AgreementTypesRepository = new AgreementTypesRepository();
-                    model = summaryRepository.AgreementSummaryByEstablishment_Place(establishmentId, placeId, selectedEstablishmentId);
-                    var modelDistinct = model.DistinctBy(x => new { x.id, x.type } );
-                    //agreementTypes = AgreementTypesRepository.AgreementTypes_By_establishmentId(establishmentId);
-                    var agreementTypes = modelDistinct.DistinctBy(x => x.type );
-                    foreach (var type in agreementTypes)
-                    {
-                        var typeCount = modelDistinct.Where(x => x.type == type.type).Count();
-                        var locationCount = model.Where(x => x.type == type.type).Count();
-                        returnModel.Add(new AgreementSummaryApiModel { LocationCount = locationCount, TypeCount = typeCount, Type = type.type, TypeId = type.id });
-                    }
-                }
-            }
-            return returnModel.ToList();
-        }
+        //    if (establishmentId != null)
+        //    {
+        //        if (placeId.HasValue)
+        //        {
+        //            SummaryRepository summaryRepository = new SummaryRepository();
+        //            AgreementTypesRepository AgreementTypesRepository = new AgreementTypesRepository();
+        //            model = summaryRepository.AgreementSummaryByEstablishment_Place(establishmentId, placeId, selectedEstablishmentId);
+        //            var modelDistinct = model.DistinctBy(x => new { x.id, x.type } );
+        //            //agreementTypes = AgreementTypesRepository.AgreementTypes_By_establishmentId(establishmentId);
+        //            var agreementTypes = modelDistinct.DistinctBy(x => x.type );
+        //            foreach (var type in agreementTypes)
+        //            {
+        //                var typeCount = modelDistinct.Where(x => x.type == type.type).Count();
+        //                var locationCount = model.Where(x => x.type == type.type).Count();
+        //                returnModel.Add(new AgreementSummaryApiModel { LocationCount = locationCount, TypeCount = typeCount, Type = type.type, TypeId = type.id });
+        //            }
+        //        }
+        //    }
+        //    return returnModel.ToList();
+        //}
 
 
 
