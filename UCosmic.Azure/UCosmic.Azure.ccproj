@@ -75,6 +75,8 @@
     <PublishProfile Include="Profiles\UCosmicPlaygroundStaging2.azurePubxml" />
     <PublishProfile Include="Profiles\UCosmicPlaygroundStaging3.azurePubxml" />
     <PublishProfile Include="Profiles\UCosmicPlaygroundStaging4.azurePubxml" />
+    <PublishProfile Include="Profiles\UCosmicPlaygroundStaging5.azurePubxml" />
+    <PublishProfile Include="Profiles\UCosmicPlaygroundStaging6.azurePubxml" />
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>

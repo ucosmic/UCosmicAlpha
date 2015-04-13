@@ -28,7 +28,7 @@ namespace UCosmic.Domain.Establishments
 
             var entities = _entities.Query<Establishment>()
                 .EagerLoad(_entities, query.EagerLoad)
-                .Where(x => x.Ancestors.Any(y => y.AncestorId == query.AncestorEstablishmentId))
+                .Where(x => x.Ancestors.Any(y => y.AncestorId == query.AncestorEstablishmentId && x.IsDeleted == false))
                 .OrderBy(query.OrderBy)
             ;
 
