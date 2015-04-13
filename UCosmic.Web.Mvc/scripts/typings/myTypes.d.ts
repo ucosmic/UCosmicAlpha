@@ -1,1 +1,2 @@
 ﻿
+declare var ObjectObserver

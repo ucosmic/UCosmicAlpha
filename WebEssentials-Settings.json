@@ -1,8 +1,8 @@
 ﻿{
   "BrowserLink": {
     "CssIgnorePatterns": "bootstrap*; reset.css; normalize.css; jquery*; toastr*; foundation*; animate*; inuit*; elements*; ratchet*; hint*; flat-ui*; 960*; skeleton*",
-    "EnableMenu": true,
-    "EnablePixelPushing": true,
+    "EnableMenu": false,
+    "EnablePixelPushing": false,
     "ShowMenu": true
   },
   "CodeGen": {
@@ -43,12 +43,15 @@
     "MakeMinified": true,
     "OutputDirectory": null,
     "RunOnBuild": false,
-    "SyncBase64ImageValues": true
+    "SyncBase64ImageValues": true,
+    "GenerateRtlSourceMaps": true,
+    "RtlCss": false
   },
   "General": {
     "AllMessagesToOutputWindow": false,
     "KeepImportantComments": false,
-    "SvgPreviewPane": true
+    "SvgPreviewPane": true,
+    "ShowWEIgnoreLogs": true
   },
   "Html": {
     "AutoMinify": true,
@@ -78,7 +81,12 @@
     "MakeMinified": true,
     "MinificationMode": "KeepQuotes",
     "OutputDirectory": null,
-    "RunOnBuild": false
+    "RunOnBuild": false,
+    "AttributeQuotesRemovalMode": "KeepQuotes",
+    "CustomAngularDirectiveList": null,
+    "MinifyAngularBindingExpressions": false,
+    "MinifyKnockoutBindingExpressions": false,
+    "ProcessableScriptTypeList": null
   },
   "JavaScript": {
     "AutoMinify": true,
@@ -90,7 +98,10 @@
     "LintResultLocation": "Message",
     "MakeMinified": true,
     "OutputDirectory": null,
-    "RunOnBuild": false
+    "RunOnBuild": false,
+    "EvalTreatment": "MakeImmediateSafe",
+    "RootDirectory": "/Scripts/",
+    "TermSemicolons": true
   },
   "Less": {
     "CompileOnBuild": false,
@@ -126,7 +137,8 @@
     "ShowPreviewPane": false,
     "NumberPrecision": 5,
     "OutputStyle": "Expanded",
-    "ProcessSourceMapsForEditorEnhancements": true
+    "ProcessSourceMapsForEditorEnhancements": true,
+    "UseRubyRuntime": false
   },
   "SweetJs": {
     "CompileOnBuild": false,
@@ -139,9 +151,9 @@
   },
   "TypeScript": {
     "LintOnBuild": false,
-    "LintOnSave": false,
+    "LintOnSave": true,
     "LintResultLocation": "Message",
-    "ShowPreviewPane": false
+    "ShowPreviewPane": true
   },
   "LiveScript": {
     "CompileOnBuild": false,
@@ -162,6 +174,13 @@
     "RunOnBuild": false,
     "ScssOutputDirectory": null,
     "UseAbsoluteUrl": false,
-    "UseFullPathForIdentifierName": true
+    "UseFullPathForIdentifierName": true,
+    "Margin": 1
+  },
+  "Handlebars": {
+    "CompileOnBuild": false,
+    "CompileOnSave": true,
+    "MinifyInPlace": false,
+    "OutputDirectory": null
   }
 }

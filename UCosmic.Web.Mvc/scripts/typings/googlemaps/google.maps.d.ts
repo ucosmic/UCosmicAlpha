@@ -80,6 +80,7 @@ declare module google.maps {
         controls: MVCArray[]; //Array.<MVCArray.<Node >>
         mapTypes: MapTypeRegistry;
         overlayMapTypes: MVCArray; // MVCArray.<MapType>
+        data: any;
     }
 
     export interface MapOptions {

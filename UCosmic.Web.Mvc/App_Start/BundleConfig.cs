@@ -45,6 +45,7 @@ namespace UCosmic.Web.Mvc
             
             // bundles for layout (all pages)
             bundles.Add(new ScriptBundle("~/bundles/layout2").Include(
+                "~/components/polymer/bower_components/lodash/lodash.min.js",
                 "~/components/polymer/bower_components/webcomponentsjs/webcomponents.js"));
 
             // bundles for layout (all pages)
