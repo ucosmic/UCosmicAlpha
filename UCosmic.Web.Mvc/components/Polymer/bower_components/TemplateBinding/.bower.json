@@ -20,11 +20,11 @@
     "test",
     "tests"
   ],
-  "_release": "5f0b9b16d5",
+  "_release": "b46180bf15",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "5f0b9b16d5d69b85ae4d34974d9e1a595063ecbe"
+    "commit": "b46180bf156f68f5ac27af607def24be1ce57d0c"
   },
   "_source": "git://github.com/Polymer/TemplateBinding.git",
   "_target": "master",

@@ -15,7 +15,7 @@
 
   var WHICH_TO_BUTTONS = [0, 1, 4, 2];
 
-  var CURRENT_BUTTONS = 0;
+  var currentButtons = 0;
 
   var FIREFOX_LINUX = /Linux.*Firefox\//i;
 
@@ -51,7 +51,7 @@
       dispatcher.listen(target, this.events);
     },
     unregister: function(target) {
-      if (target === document) {
+      if (target.nodeType === Node.DOCUMENT_NODE) {
         return;
       }
       dispatcher.unlisten(target, this.events);
@@ -79,11 +79,11 @@
         var type = inEvent.type;
         var bit = WHICH_TO_BUTTONS[inEvent.which] || 0;
         if (type === 'mousedown') {
-          CURRENT_BUTTONS |= bit;
+          currentButtons |= bit;
         } else if (type === 'mouseup') {
-          CURRENT_BUTTONS &= ~bit;
+          currentButtons &= ~bit;
         }
-        e.buttons = CURRENT_BUTTONS;
+        e.buttons = currentButtons;
       }
       return e;
     },
@@ -105,7 +105,7 @@
           // handle case where we missed a mouseup
           if ((HAS_BUTTONS ? e.buttons : e.which) === 0) {
             if (!HAS_BUTTONS) {
-              CURRENT_BUTTONS = e.buttons = 0;
+              currentButtons = e.buttons = 0;
             }
             dispatcher.cancel(e);
             this.cleanupMouse(e.buttons);

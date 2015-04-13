@@ -19,13 +19,13 @@
     "polymer": "Polymer/polymer",
     "core-elements": "Polymer/core-elements",
     "paper-elements": "Polymer/paper-elements",
-    "more-elements": "Polymer/more-elements#master"
+    "more-elements": "Polymer/more-elements#master",
+    "lodash": ">=3.6.0",
+    "page.js": "~1.6.1"
   },
   "resolutions": {
     "polymer": ">=0.5.1",
-    "core-component-page": ">=0.5.1",
     "core-ajax": ">=0.5.1",
-    "google-apis": "master",
-    "webcomponentsjs": "^0.5.1"
+    "google-apis": "master"
   }
 }

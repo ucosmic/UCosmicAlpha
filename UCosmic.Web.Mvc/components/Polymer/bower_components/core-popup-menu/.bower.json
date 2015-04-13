@@ -2,21 +2,21 @@
   "name": "core-popup-menu",
   "private": false,
   "dependencies": {
-    "polymer": "Polymer/polymer#^0.5.0",
-    "core-icon": "Polymer/core-icon#^0.5.0",
-    "core-icon-button": "Polymer/core-icon-button#^0.5.0",
-    "core-icons": "Polymer/core-icons#^0.5.0",
-    "core-item": "Polymer/core-item#^0.5.0",
-    "core-menu": "Polymer/core-menu#^0.5.0",
-    "core-overlay": "Polymer/core-overlay#^0.5.0"
+    "polymer": "Polymer/polymer#^0.5",
+    "core-icon": "Polymer/core-icon#^0.5",
+    "core-icon-button": "Polymer/core-icon-button#^0.5",
+    "core-icons": "Polymer/core-icons#^0.5",
+    "core-item": "Polymer/core-item#^0.5",
+    "core-menu": "Polymer/core-menu#^0.5",
+    "core-overlay": "Polymer/core-overlay#^0.5"
   },
-  "version": "0.5.1",
+  "version": "0.5.5",
   "homepage": "https://github.com/Polymer/core-popup-menu",
-  "_release": "0.5.1",
+  "_release": "0.5.5",
   "_resolution": {
     "type": "version",
-    "tag": "0.5.1",
-    "commit": "e8c7cd9df3aa97bf970fee1ab48652f8708b86a9"
+    "tag": "0.5.5",
+    "commit": "24e5099f285f88d7ebbe0b4ff3c089fc51597d43"
   },
   "_source": "git://github.com/Polymer/core-popup-menu.git",
   "_target": ">=0.4.0 <1.0.0",

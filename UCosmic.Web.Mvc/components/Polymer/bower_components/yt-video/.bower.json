@@ -6,11 +6,11 @@
     "google-apis": "GoogleWebComponents/google-apis#master"
   },
   "homepage": "https://github.com/Polymer/yt-video",
-  "_release": "140e46eda1",
+  "_release": "cbb71a149a",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "140e46eda1a08ebc55a1c702066c239ee956f71a"
+    "commit": "cbb71a149aafd2a8a69eab8e9682527ec7b44e57"
   },
   "_source": "git://github.com/Polymer/yt-video.git",
   "_target": "master",

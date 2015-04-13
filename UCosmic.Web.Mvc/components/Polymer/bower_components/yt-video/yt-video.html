@@ -84,7 +84,7 @@ Polymer('yt-video', {
   },
 
   get playerNode() {
-    return this.player && this.player.a;
+    return this.player && this.player.getIframe();
   },
 
   clearVideo: function() {

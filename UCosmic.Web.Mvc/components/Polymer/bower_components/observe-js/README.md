@@ -4,7 +4,7 @@
 
 ### Why observe-js?
 
-observe-js is a library for observing changes in JavaScript data. It exposes a high-level API and uses Object.observe if available, and otherwise performs dirty-checking. observe-js requires ECMAScript 5.
+observe-js is a library for observing changes in JavaScript data. It exposes a high-level API and uses [Object.observe](https://github.com/arv/ecmascript-object-observe) if available, and otherwise performs dirty-checking. observe-js requires ECMAScript 5.
 
 ### Observable
 
@@ -156,7 +156,7 @@ var observer = new CompoundObserver();
 observer.addPath(obj, 'a');
 observer.addPath(obj, 'b');
 observer.addPath(obj, 'c');
-var transform = new ObserverTransform(observer, fuction(values) {
+var transform = new ObserverTransform(observer, function(values) {
   var value = 0;
   for (var i = 0; i < values.length; i++)
     value += values[i]
