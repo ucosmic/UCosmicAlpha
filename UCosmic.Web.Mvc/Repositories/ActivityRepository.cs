@@ -179,6 +179,7 @@ namespace UCosmic.Repositories
                   //" CASE When startsOn is not null THEN startsOn when endsOn is not null then endsOn ELSE '2999-01-01 00:00:00.000' End as firstDate, " +
                   " CASE When startsOn is not null THEN startsOn ELSE '1901-01-01 00:00:00.000' End as firstDate, " +
                   " CASE When lastName is not null THEN lastName ELSE 'zzzzzzzz' End as lastNameSort, " +
+                  " CASE When firstName is not null THEN firstName ELSE 'zzzzzzzz' End as firstNameSort, " +
                   " CASE When ongoing = 1 THEN 1  ELSE 0 End as onGoingSort, " +
                   " people.firstname,people.lastname, people.displayName, eeat.type, eeat.id as typeId, " +
                   " startsFormat as startsonformat, endsformat as endsonformat, ongoing, " +
@@ -229,31 +230,31 @@ namespace UCosmic.Repositories
                 if (orderBy.Contains("recency"))
                 {
                     if (ascDesc.Contains("desc")){
-                        sql += " order by onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc, av.title asc";
+                        sql += " order by onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
                     }else
                     {
-                        sql += " order by onGoingSort asc, firstDate asc, lastDate asc, locationName asc, lastNameSort asc, av.title asc";
+                        sql += " order by onGoingSort asc, firstDate asc, lastDate asc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
                     }
                 }
                 else if (orderBy.Contains("lastname"))
                 {
                     orderBy = "lastNameSort";
-                    sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, lastDate desc, firstDate desc, locationName asc, av.title asc";
+                    sql += " order by " + orderBy + " " + ascDesc + ", firstNameSort asc, onGoingSort desc, lastDate desc, firstDate desc, locationName asc, av.title asc";
                 }
                 else if (orderBy.Contains("locationName"))
                 {
-                    sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, lastDate desc, firstDate desc, lastNameSort asc, av.title asc";
+                    sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, lastDate desc, firstDate desc, lastNameSort asc, firstNameSort asc, av.title asc";
                 }
                 else if (orderBy.Contains("title"))
                 {
-                    sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc";
+                    sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc, firstNameSort asc";
                 }
                 else
                 {
-                    sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc, av.title asc";
+                    sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
                 }
             }else{
-                sql += " order by onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc, av.title asc";
+                sql += " order by onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
                 
             }
 
