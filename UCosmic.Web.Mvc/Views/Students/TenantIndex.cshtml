@@ -1,0 +1,473 @@
+﻿@using UCosmic.Web.Mvc.Models
+@{
+    ViewBag.Title = "Student Mobility Snapshot";
+    ViewBag.StudentsDomain = "uc.edu"; //temporary for prototype demo
+}
+
+@section bib
+{
+    <nav class="bib">
+        @Html.Partial(MVC.Students.Views._Bib, new StudentsBibNavModel { })
+    </nav>
+}
+
+@section styles
+{
+    <link rel="stylesheet" type="text/css" href="~/styles/sass/sheets/employees/summary.css" />
+}
+@section scripts
+{
+    @* need this for the google visualization packages *@
+    <script src="https://www.google.com/jsapi"></script>
+
+    @* IE8 cannot handle D3 or SVG's in general *@
+    <!--[if !IE | gt IE 8]><!-->
+    <script src="~/scripts/oss/d3.v3.js"></script>
+    <!--<![endif]-->
+    @* API routes come from CSHTML files *@
+    <script>
+        @{Html.RenderPartial(MVC.JavaScriptRoutes.Views.Establishments);}
+        @{Html.RenderPartial(MVC.JavaScriptRoutes.Views.Employees);}
+    </script>
+
+    @* load historyjs, linqjs, viewmodel, & other supporting scripts *@
+    @Scripts.Render("~/bundles/employees/summary")
+
+    @* Google API needs to be called outside of JQuery ready() *@
+    <script>
+        Employees.ViewModels.Summary.loadGoogleVisualization().done(function () {
+            var viewModel = new Employees.ViewModels.Summary({
+                tenantId: parseInt('@ViewBag.EmployeesEstablishmentId'),
+                tenantDomain: '@ViewBag.EmployeesDomain',
+                element: $('[data-current-module=employees]')[0],
+                geoChart: {
+                    boxElementId: 'geochart_box',
+                    googleElementId: 'google_geochart',
+                    keepAspectRatio: true,
+                },
+                activityTypesChart: {
+                    boxElementId: 'activity_type_chart_box',
+                    googleElementId: 'google_activity_type_chart',
+                },
+                activityYearsChart: {
+                    boxElementId: 'activity_year_chart_box',
+                    googleElementId: 'google_activity_year_chart',
+                },
+            });
+            viewModel.applyBindings();
+        });
+    </script>
+
+}
+
+<div class="content fixed to-top" data-current-module="employees">
+    <form class="group">
+        @* LEFT *@
+        <div class="on-left from-top">
+
+            @* HEADER *@
+            <header>
+                <h1>
+                    @ViewBag.Title
+                </h1>
+            </header>
+
+            @* TOTALS SUMMARY *@
+            <div data-bind="with: activityTotals" style="margin: 16px 0; height: 30px; font-size: 20px;">
+                <strong data-bind="text: personCount" style="font-size: 24px;">?</strong>
+                <span data-bind="visible: personCount() == 1" style="display: none;">person</span>
+                <span data-bind="visible: personCount() != 1">people</span>
+                <span data-bind="visible: personCount() > 0" style="display: none;">
+                    with
+                    <strong data-bind="text: activityCount" style="font-size: 24px;">?</strong>
+                    <span data-bind="visible: activityCount() == 1" style="display: none;">activity</span>
+                    <span data-bind="visible: activityCount() != 1">activities</span>
+                    in
+                    <strong data-bind="text: locationCount" style="font-size: 24px;">?</strong>
+                    <span data-bind="visible: locationCount() == 1" style="display: none;">location.</span>
+                    <span data-bind="visible: locationCount() != 1">locations.</span>
+                </span>
+                <a href="#" title="Recently entered activities may take up to 1 hour to display." style="font-size: 14px;" data-bind="click: function () { return false; }">Disclaimer</a>
+            </div>
+            @*<p style="font-size: 16px; display: none;" data-bind="visible: isPivotActivities">
+                    The Activities view shows the number of activities tagged to a specific country or body of water.
+                </p>
+                <p style="font-size: 16px; display: none;" data-bind="visible: isPivotPeople">
+                    The People view shows the number of people who are involved in activities tagged to a specific country or body of water.
+                </p>*@
+
+            @* CHART INSTRUCTIONS & SPINNER *@
+            <div style="margin: 1em 0; height: 28px;">
+                <div class="group">
+                    <div class="on-left">
+                        <div data-bind="visible: !geoChartSpinner.isVisible() && hasPlaceData()" style="display: none;">
+                            <div data-bind="visible: hasNoPlaceId" class="group" style="line-height: 28px;">
+                                Click a location for more information.
+                            </div>
+                            <div data-bind="visible: hasPlaceId" style="line-height: 16px;">
+                                <strong data-bind="text: selectedPlaceSummary.personCount">?</strong>
+                                <span data-bind="visible: selectedPlaceSummary.personCount() == 1" style="display: none;">person</span>
+                                <span data-bind="visible: selectedPlaceSummary.personCount() != 1">people</span>
+                                <span data-bind="visible: selectedPlaceSummary.personCount() != 0">
+                                    with
+                                    <strong data-bind="text: selectedPlaceSummary.activityCount">?</strong>
+                                    <span data-bind="visible: selectedPlaceSummary.activityCount() == 1" style="display: none;">activity</span>
+                                    <span data-bind="visible: selectedPlaceSummary.activityCount() != 1">activities</span>
+                                </span>
+                                in
+                                <span style="display: inline-block; background-color: #ddd; padding: 4px 8px; border-radius: 4px; border: solid 1px #999;">
+                                    <strong data-bind="text: selectedPlaceSummary.locationCount" style="">?</strong>
+                                    <img src="~/images/icons/closer/closer-16-dark.png" title="Return to Global View" alt="Return to Global View"
+                                         style="cursor: pointer; vertical-align: middle;" data-bind="click: clearPlaceSelection" />
+                                </span>
+                            </div>
+                        </div>
+                        <div data-bind="visible: !geoChartSpinner.isVisible() && !hasPlaceData()" style="display: none; line-height: 28px;">
+                            There are no international faculty or staff relationships to summarize.
+                        </div>
+                    </div>
+                    <div class="on-right" style="line-height: 28px;">
+                        <div data-bind="visible: geoChartSpinner.isVisible">
+                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                            <strong>Loading faculty &amp; staff global snapshot data...</strong>
+                        </div>
+                        <div data-bind="visible: !geoChartSpinner.isVisible() && hasPlaceData() && hasNoPlaceId()" style="display: none;">
+                            <strong>Global View</strong>
+                            <img src="@Url.HttpRouteUrl(null, new { controller = "Employees", action = "GetSettingsIcon", domain = @ViewBag.EmployeesDomain, name = "global-view" })"
+                                 alt="Global view" width="24" height="24" style="" />
+                        </div>
+                        <div data-bind="visible: !geoChartSpinner.isVisible() && hasPlaceData() && hasPlaceId()" style="display: none;">
+                            <a href="#" data-bind="click: clearPlaceSelection" class="global-view">
+                                <strong>Return to Global View</strong>
+                                <img src="@Url.HttpRouteUrl(null, new { controller = "Employees", action = "GetSettingsIcon", domain = @ViewBag.EmployeesDomain, name = "global-view" })"
+                                     alt="Global view" width="24" height="24" style="" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="height: 24px; margin-top: 8px; display: none;" data-bind="visible: loadingSpinner.isVisible">
+                <span style="margin-left: 12px;">
+                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                    <strong>Loading...</strong>
+                </span>
+            </div>
+
+            @* GEOCHART *@
+            <div id="geochart_box" data-bind="css: { 'keep-aspect-ratio-480': settings.geoChart.keepAspectRatio }">
+
+                @* GOOGLE ELEMENT + BACKGROUND & FOREGROUND *@
+                <div class="chart-bg">&nbsp;</div>
+                <div id="google_geochart"></div>
+
+                @* CUSTOM CHART OVERLAYS *@
+                <div class="overlays">
+
+                    @* ACTIVITIES | PEOPLE BUTTONS OVERLAY *@
+                    <div class="data-pivoter group" data-bind="visible: isGeoChartReady">
+                        <input type="button" value="Activities" class="on-left" data-bind="click: pivotActivities, css: { active: isPivotActivities }" />
+                        <input type="button" value="People" class="on-left" data-bind="click: pivotPeople, css: { active: isPivotPeople }" />
+                    </div>
+
+                    @* PLACE OVERLAYS *@
+                    <div class="places" data-bind="css: { 'for-svg': isD3Defined }">
+
+                        @* PLACE DATA *@
+                        <ul class="data">
+                            <li class="pacific-ocean" title="Pacific Ocean" data-place-id="7872">
+                                <img src="~/images/geochart/up/pacific-ocean.png" alt="" class="no-hover" />
+                                <img src="~/images/geochart/hot/pacific-ocean.png" alt="" class="hover" style="display: none;" />
+                            </li>
+                            <li class="gulf-of-mexico" title="Gulf of Mexico" data-place-id="7859">
+                                <img src="~/images/geochart/up/gulf-of-mexico.png" alt="" class="no-hover" />
+                                <img src="~/images/geochart/hot/gulf-of-mexico.png" alt="" class="hover" style="display: none;" />
+                            </li>
+                            <li class="caribbean-sea" title="Caribbean Sea" data-place-id="7845">
+                                <img src="~/images/geochart/up/caribbean-sea.png" alt="" class="no-hover" />
+                                <img src="~/images/geochart/hot/caribbean-sea.png" alt="" class="hover" style="display: none;" />
+                            </li>
+                            <li class="atlantic-ocean" title="Atlantic Ocean" data-place-id="8296">
+                                <img src="~/images/geochart/up/atlantic-ocean.png" alt="" class="no-hover" />
+                                <img src="~/images/geochart/hot/atlantic-ocean.png" alt="" class="hover" style="display: none;" />
+                            </li>
+                            <li class="southern-ocean" title="Southern Ocean" data-place-id="7833">
+                                <img src="~/images/geochart/up/southern-ocean.png" alt="" class="no-hover" />
+                                <img src="~/images/geochart/hot/southern-ocean.png" alt="" class="hover" style="display: none;" />
+                            </li>
+                            <li class="arctic-ocean" title="Arctic Ocean" data-place-id="7837">
+                                <img src="~/images/geochart/up/arctic-ocean.png" alt="" class="no-hover" />
+                                <img src="~/images/geochart/hot/arctic-ocean.png" alt="" class="hover" style="display: none;" />
+                            </li>
+                            <li class="indian-ocean" title="Indian Ocean" data-place-id="7863">
+                                <img src="~/images/geochart/up/indian-ocean.png" alt="" class="no-hover" />
+                                <img src="~/images/geochart/hot/indian-ocean.png" alt="" class="hover" style="display: none;" />
+                            </li>
+                            <li class="antarctica" title="Antarctica" data-place-id="17">
+                                <img src="~/images/geochart/up/antarctica.png" alt="" class="no-hover" />
+                                <img src="~/images/geochart/hot/antarctica.png" alt="" class="hover" style="display: none;" />
+                            </li>
+                        </ul>
+
+                        @* PLACE UI *@
+                        <ul class="ui" data-bind="foreach: placeOverlays, visible: arePlaceOverlaysVisible">
+                            <li data-bind="attr: { 'class': className }">
+                                <div class="hit" data-bind="click: function (item, e) { $parent.clickPlaceOverlay(item, e); }, with: imageSwapper">
+                                    <img data-bind="event: { mouseenter: onMouseEnter, mouseleave: onMouseLeave }, visible: $root.isD3Undefined(), attr: { src: src }"
+                                         alt="" src="~/images/transparent.png" />
+                                    <img data-bind="event: { mouseenter: onMouseEnter, mouseleave: onMouseLeave }, visible: $root.isD3Defined()"
+                                         alt="" src="~/images/transparent.png" />
+                                </div>
+                                <div class="tooltip" style="display: none;">
+                                    <div class="title">
+                                        <strong data-bind="text: title"></strong>
+                                    </div>
+                                    <div class="total">
+                                        <span data-bind="visible: $parent.isPivotPeople()">Total People:</span>
+                                        <span data-bind="visible: $parent.isPivotActivities()">Total Activities:</span>
+                                        <strong data-bind="text: total">0</strong>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* RIGHT *@
+        <aside class="on-right from-top">
+            <aside class="on-right from-top" data-fixed-scroll="root">
+                <div data-fixed-scroll="anchor"></div>
+                <div data-fixed-scroll="content">
+                    <nav class="side">
+                        <ul class="top">
+                            <li class="static square-bottom" style="margin-bottom: 0;">
+                                <div class="group">
+                                    <div class="on-left"></div>
+                                </div>
+                                <div class="group no-link" style="margin-left: 15px;">
+                                    <span class="text">
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="static square-bottom">
+                                <div class="content">
+                                    <div class="field">
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <select style="padding: 0; margin: 0; line-height: 16px; height: auto; width:100%">
+                                                        <option>Select sub-affiliation or leave empty</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <hr />
+                                                    <span class="text"><strong>Filter Options</strong></span>
+                                                    
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <select style="padding-top: 0; margin-top: 10px; line-height: 16px; height: auto; width:100%">
+                                                        <option>[All Continents]</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <select style="padding: 0;  margin-top: 10px; line-height: 16px; height: auto; width:100%">
+                                                        <option>[All Countries]</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <select style="padding: 0;  margin-top: 10px; line-height: 16px; height: auto; width:100%">
+                                                        <option>[All Types]</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <select style="padding: 0;  margin-top: 10px; line-height: 16px; height: auto; width:100%">
+                                                        <option>[All Levels]</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <select style="padding: 0;  margin-top: 10px; line-height: 16px; height: auto; width:100%">
+                                                        <option>[All Colleges]</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <select style="padding: 0; margin-top: 10px; line-height: 16px; height: auto; width:100%">
+                                                        <option>[All Majors]</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            
+
+                                       
+
+                                        </table>
+
+                                        <div class="dates picker field" style="margin-top: 12px;">
+                                            <strong>Filter by date(s)</strong>
+                                            <div class="group">
+                                                <div class="on-left" style="width: 110px;">
+                                                    <input type="text" name="Since" placeholder="From" class="side" data-role="datepicker"
+                                                           data-bind="value: since, valueUpdate: 'afterkeydown', jQuery: '$since'" />
+                                                </div>
+                                                <div class="on-right" style="width: 110px;">
+                                                    <input type="text" name="Until" placeholder="To" class="side" data-role="datepicker"
+                                                           data-bind="value: until, valueUpdate: 'afterkeydown', jQuery: '$until'" />
+                                                </div>
+                                            </div>
+                                            <div style="font-size: 12px; color: #555;">
+                                                YYYY or M/YYYY or M/D/YYYY
+                                            </div>
+                                            <div style="color: #000; font-size: 13px; line-height: 13px; margin-top: 4px;">
+
+                                                <label style="cursor: pointer; vertical-align: top;">
+                                                    <input type="checkbox" name="includeUndated" checked="checked" value="true" style="cursor: pointer;" /> Include undated activities
+                                                    <input type="hidden" name="includeUndated" value="false" />
+                                                </label>
+                                            </div>
+                                            <div style="margin-top: 8px">
+
+                                                <input type="submit" value="Search" style="font-size: 14px; line-height: normal; padding: 4px 8px; margin-right: 4px;" />
+                                                <button type="button" class="link"
+                                                        data-bind="click: clearSince, disable: isClearSinceDisabled"
+                                                        disabled="disabled"
+                                                        style="font-size: 14px; line-height: normal; margin-right: 4px;">
+                                                    Clear from
+                                                </button>
+                                                <button type="button" class="link"
+                                                        data-bind="click: clearUntil, disable: isClearUntilDisabled"
+                                                        disabled="disabled"
+                                                        style="font-size: 14px; line-height: normal;">
+                                                    Clear to
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div id="campusSelect">
+
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </li>
+                        </ul>
+
+                        <ul class="bottom">
+                            <li class="current">
+                                <a class="group">
+                                    <span class="arrow"></span>
+                                    <span class="text">Global Snapshot</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/uc.edu/students/table" data-bind="click: table_mapLink" class="group">
+                                    <span class="arrow"></span>
+                                    <span class="text">Advanced Search (Table)</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a style=" display: none;" href="/uc.edu/students/map" data-bind="click: table_mapLink, visible: !MapDataIsLoading()" class="group">
+                                    <span class="arrow"></span>
+                                    <span title="This can take a few minutes." class="text">Advanced Search (Map)</span>
+                                </a>
+                                <a class="group" style="cursor: not-allowed" data-bind="visible: MapDataIsLoading">
+                                    <span class="arrow"></span>
+                                    <span class="text">
+                                        <img src="~/images/icons/spinner/spinner-20-grey.gif" alt="" />
+                                        <strong>Loading Search (Map)...</strong>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="summary-sidebar">
+
+                        @* ACTIVITY TYPES COLUMN CHART & ICONS *@
+                        <div id="activity_type_chart_box" data-bind="visible: activityTypes().length" style="display: none;">
+                            <div class="heading group">
+                                <div class="title on-left">
+                                    <strong data-bind="visible: isPivotActivities">Activities by type</strong>
+                                    <strong data-bind="visible: isPivotPeople">People by activity type</strong>
+                                </div>
+                                <div class="pivot-buttons on-right">
+                                    <a href="#" data-bind="visible: isPivotActivities, click: pivotPeople">See People</a>
+                                    <a href="#" data-bind="visible: isPivotPeople, click: pivotActivities">See Activities</a>
+                                </div>
+                            </div>
+                            <div class="place">
+                                <div data-bind="visible: hasNoPlaceId">
+                                    <div class="group">
+                                        <div class="on-left">
+                                            <span class="light-transparent badge" data-bind="visible: hasNoPlaceId">Everywhere</span>
+                                        </div>
+                                        <div class="on-right">
+                                            <span class="text">Click the map for more info</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span data-bind="visible: hasPlaceId">
+                                    in
+                                    <span class="light-transparent badge" data-bind="text: selectedPlaceSummary.locationCount">?</span>
+                                </span>
+                            </div>
+                            <div id="google_activity_type_chart"></div>
+                            <div>
+                                <ul class="group icons" data-bind="foreach: activityTypes">
+                                    <li>
+                                        <img data-bind="attr: { src: iconSrc, title: text, alt: text }" alt="" src="~/images/transparent.png" />
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        @* ACTIVITY YEARS COLUMN CHART & ICONS *@
+                        <div id="activity_year_chart_box" data-bind="visible: areBindingsApplied() && isActivityTypeChartReady() && activityYears().length" style="display: none;">
+                            <div class="heading group">
+                                <div class="title on-left">
+                                    <strong data-bind="visible: isPivotActivities">Activities Trend</strong>
+                                    <strong data-bind="visible: isPivotPeople">People Trend</strong>
+                                </div>
+                                <div class="pivot-buttons on-right">
+                                    <a href="#" data-bind="visible: isPivotActivities, click: pivotPeople">See People</a>
+                                    <a href="#" data-bind="visible: isPivotPeople, click: pivotActivities">See Activities</a>
+                                </div>
+                            </div>
+                            <div class="place">
+                                <div data-bind="visible: hasNoPlaceId">
+                                    <div class="group">
+                                        <div class="on-left">
+                                            <span class="light-transparent badge" data-bind="visible: hasNoPlaceId">Everywhere</span>
+                                        </div>
+                                        <div class="on-right">
+                                            <span class="text">Click the map for more info</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span data-bind="visible: hasPlaceId">
+                                    in
+                                    <span class="light-transparent badge" data-bind="text: selectedPlaceSummary.locationCount">?</span>
+                                </span>
+                            </div>
+                            <div id="google_activity_year_chart"></div>
+                            <em style="font-size: 12px; position: relative; top: -36px;">Trend data is updated as information becomes available.</em>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </aside>
+    </form>
+</div>
