@@ -1,0 +1,738 @@
+﻿@using System.Globalization
+@using UCosmic.Web.Mvc.Models
+
+
+@{
+    ViewBag.Title = "Search Activities";
+}
+
+@section bib
+{
+    <nav class="bib">
+        @Html.Partial(MVC.Students.Views._Bib, new StudentsBibNavModel { })
+    </nav>
+}
+
+@section styles
+{
+    <link rel="stylesheet" type="text/css" href="~/styles/sass/sheets/employees/summary.css" />
+
+}
+
+<style>
+    code {
+      color: #007000;
+    }
+    google-chart {
+      height: 300px;
+      width: 400px;
+    }
+    #selection-demo {
+      position: relative;
+      height: 300px;
+    }
+    #selection-chart {
+      float: left;
+    }
+    #selection-display {
+      display: inline-block;
+      position: relative;
+      top: 50%;
+    }
+  </style>
+
+
+<link rel="import" href="~/components/Polymer/bower_components/polymer/polymer.html">
+<link rel="import" href="~/components/Polymer/bower_components/google-apis/google-apis.html">
+<link rel="import" href="~/components/Polymer/bower_components/core-ajax/core-ajax.html" />
+
+
+
+<div class="content fixed to-top" data-current-module="students">
+    <form class="group" method="GET">
+        <div class="on-left from-top">
+            <div class="group" style="height:30px;">
+                <div class="on-left">
+                    <header style=" margin-bottom:0px;">
+                        <h1>
+                            Student Mobility
+                        </h1>
+                    </header>
+                </div>
+
+                <div class="on-right">
+                    <a href="/@ViewBag.StudentsDomain/students/map/" class="restore-underline">Reset search</a>
+                </div>
+            </div>
+
+           <!-- <polymer-element name="activity-map" attributes="pager resp url table-headers domain">
+                <template>
+                    <link href="~/styles/reset.css" rel="stylesheet" />
+                    <link rel="stylesheet" type="text/css" href="~/styles/sass/sheets/employees/summary.css" />
+
+                    <core-ajax id="cajax" url="{{url}}" params='{{urlParams}}' loading='{{loading}}' auto on-core-response="{{resp}}"
+                               attributes="urlParams"></core-ajax>
+                    <div id="regions_div" style="width: 100%; height: 500px;"></div>
+
+                </template>
+                <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+                <script>
+                    Polymer('activity-map',
+                    {
+      
+                        data : [[]],
+
+                        drawRegionsMap: function () {
+                            google.load("visualization", "1", { packages: ["geochart"] });
+                            google.setOnLoadCallback(this.drawRegionsMap);
+
+                            var dataTable = google.visualization.arrayToDataTable(
+                                this.data
+                            );
+
+                            var options = {};
+
+                            
+                            var chart = new google.visualization.GeoChart(this.$.regions_div);
+
+                            chart.draw(dataTable, options);
+                        },
+
+                        filterBy: function (field, sel) {
+                            switch (field) {
+                                case "Campus":
+                                    if (sel.value == 'All Campuses') {
+                                        this.urlParams.campus = "%%"
+                                    } else {
+                                        this.urlParams.campus = sel.value;
+                                    }
+                                    break;
+                                case "Continent":
+                                    if (sel.value == 'All Continents') {
+                                        this.urlParams.FContinent = "%%"
+                                    } else {
+                                        this.urlParams.FContinent = sel.value;
+                                    }
+                                    break;
+                                case "Country":
+                                    if (sel.value == 'All Countries') {
+                                        this.urlParams.FCountry = "%%"
+                                    } else {
+                                        this.urlParams.FCountry = sel.value;
+                                    }
+                                    break;
+                                case "Level":
+                                    if (sel.value == 'All Levels') {
+                                        this.urlParams.FLevel = "%%"
+                                    } else {
+                                        this.urlParams.FLevel = sel.value;
+                                    }
+                                    break;
+                                case "Program":
+                                    this.urlParams.FDegree = sel.value;
+                                    break;
+
+                                case "Status":
+                                    this.urlParams.FStatus = sel.value;
+                                    break;
+                                case "StartDate":
+                                    this.urlParams.FStartDate = sel.value;
+                                    break;
+                                case "EndDate":
+                                    this.urlParams.FEndDate = sel.value;
+                                    break;
+                            }
+                            this.refresh();
+                        },
+
+                        changeLevelBy: function (sel) {
+                            //Select orderBy and direction for url parameters
+                            switch (sel.target.value) {
+                                case "UG":
+                                    this.urlParams.FLevel = "UG";
+                                    break;
+                                case "GR":
+                                    this.urlParams.FLevel = "GR";
+                                    break;
+                            }
+                            this.refresh();
+
+                        },
+
+                        isSelected: function (sel) {
+                            if (parseInt(sel.target.value) == this.pager.page) return true;
+                            else return false;
+                        },
+
+                        loading: false,
+
+                        refresh: function () {
+                            this.$.cajax.go();
+                        },
+
+                        resp: function (response) {
+                            this.data = JSON.parse(response.detail.response);
+                            this.drawRegionsMap();
+                        },
+
+                        urlParams: {
+                            domain: "",
+                            campus: "%%",
+                            page: 1,
+                            pageSize: 10,
+                            orderBy: "termStart",
+                            orderDirection: "DESC",
+                            FCountry: "%%",
+                            FStartDate: "1/1/1753 12:00:00 AM", //January 1st, 1900 by default (show activities after 1900)
+                            FEndDate: "12/31/9999 11:59:59 PM", //January 1st, 9999 by default (show activities before 9999)
+                            FContinent: "%%",
+                            FDegree: "%%",
+                            FLevel: "%%",
+                            FInstitution: "%%",
+                            FStatus: "%%"
+                        },
+
+                    });
+                </script>
+            </polymer-element>-->
+
+
+
+            <!--<activity-map id="activity-map" url="~/api/students/map"></activity-map>-->
+           
+           
+            <polymer-element name="google-chart" attributes="type options urlParams cols rows data selection numberFormats">
+                <style>
+                    :host {
+                          display: -webkit-flex;
+                          display: -ms-flex;
+                          display: flex;
+                          margin: 0;
+                          padding: 0;
+                          width: 400px;
+                          height: 300px;
+                        }
+
+                        #chartdiv {
+                          width: 100%;
+                        }
+                </style>
+                <template>
+                    <core-ajax id="ajax" handleas="json" url="{{data}}" params="{{urlParams}}"
+                               on-core-response="{{externalDataLoaded}}"></core-ajax>
+                    <div id="chartdiv"></div>
+                    <google-jsapi on-api-load="{{readyForAction}}"></google-jsapi>
+                </template>
+
+                <script>
+                    (function() {
+                        'use strict';
+                        Polymer('google-chart',{
+                           
+                       
+                        type: 'column',
+                        /**
+                         * Sets the options for the chart.
+                         *
+                         * Example:
+                         *     {
+                         *       title: "Chart title goes here",
+                         *       hAxis: {title: "Categories"},
+                         *       vAxis: {title: "Values", minValue: 0, maxValue: 2},
+                         *       legend: "none"
+                         *     }
+                         *
+                         * See [Google Visualization API reference (Chart Gallery)](https://google-developers.appspot.com/chart/interactive/docs/gallery)
+                         * for the options available to each chart type.
+                         *
+                       
+                         */
+                        options: { colorAxis: { colors: ['#b9ffb9', 'green'] } },
+                        /**
+                         * Sets the data columns for this object.
+                         *
+                         * When specifying data with `cols` you must also specify `rows`, and
+                         * not specify `data`.
+                         *
+                         * Example:
+                         *     [{label: "Categories", type: "string"},
+                         *      {label: "Value", type: "number"}]
+                         * See [Google Visualization API reference (addColumn)](https://google-developers.appspot.com/chart/interactive/docs/reference#DataTable_addColumn)
+                         * for column definition format.
+                         *
+                        
+                         */
+                        cols: null,
+                        /**
+                         * Sets the data rows for this object.
+                         *
+                         * When specifying data with `rows` you must also specify `cols`, and
+                         * not specify `data`.
+                         *
+                         * Example:
+                         *    [["Category 1", 1.0],
+                         *    ["Category 2", 1.1]]
+                         * See [Google Visualization API reference (addRow)](https://google-developers.appspot.com/chart/interactive/docs/reference#addrow)
+                         * for row format.
+                      
+                         */
+                        rows: null,
+                        /**
+                         * Sets the entire dataset for this object.
+                         * Can be used to provide the data directly, or to provide a URL from
+                         * which to request the data.
+                         *
+                         * The data format can be a two-dimensional array or the DataTable format
+                         * expected by Google Charts.
+                         * See [Google Visualization API reference (DataTable constructor)](https://google-developers.appspot.com/chart/interactive/docs/reference#DataTable)
+                         * for data table format details.
+                         *
+                         * When specifying data with `data` you must not specify `cols` or `rows`.
+                         *
+                         * Example:
+                         *    [["Categories", "Value"],
+                         *    ["Category 1", 1.0],
+                         *    ["Category 2", 1.1]]
+                     
+                         */
+                        data: null,
+                        /**
+                         * Selected datapoint(s) in the map.
+                         *
+                         * An array of objects, each with a numeric row and/or column property.
+                         * `row` and `column` are the zero-based row or column number of an item
+                         * in the data table to select.
+                         *
+                         * To select a whole column, set row to null;
+                         * to select a whole row, set column to null.
+                         *
+                         * Example:
+                         *     [{row:0,column:1}, {row:1, column:null}]
+                         *
+         
+                         */
+                        selection: [],
+                        /**
+                         * Sets the format for numbers shown in the tooltip.
+                         *
+                         * An array of objects, each with:
+                         *     - a required `col` property (zero-based column number to which formatting applies)
+                         *     - optional NumberFormat properties (`decimalSymbol`, `fractionDigits`, `groupingSymbol`, `negativeColor`,
+                         *     `negativeParens`, `pattern`, `prefix`, `suffix`)
+                         *
+                         * See [Google Visualization API reference (NumberFormat)](https://developers.google.com/chart/interactive/docs/reference#numberformatter) for details.
+                         *
+                         * Example:
+                         *     [{col:1, pattern: '#,###%', fractionDigits: 2 }, {col: 2, prefix: '$', groupingSymbol: ','}]
+                         *
+                 
+                         */
+                        numberFormats: null,
+                        chartTypes: null,
+                        packages: null,
+                        chartObject: null,
+                        isReady: false,
+                        canDraw: false,
+                        dataTable: null,
+                        created: function() {
+                            this.chartTypes = {};
+                            this.cols = [];
+                            this.data = [];
+                            this.options = {};
+                            this.rows = [];
+                            this.dataTable = null;
+                            this.numberFormats = [];
+                        },
+                        readyForAction: function(e, detail, sender) {
+                            this.loadPackageByChartType();
+                            google.load("visualization", "1", {
+                                packages: this.packages[this.type],
+                                callback: function() {
+                                    this.isReady = true;
+                                    this.loadChartTypes();
+                                    this.loadData();
+                                }.bind(this)
+                            });
+                        },
+                        typeChanged: function() {
+                            // Invalidate current chart object.
+                            this.chartObject = null;
+                            this.loadData();
+                        },
+                        selectionChanged: function() {
+                            if (this.chartObject && this.setSelection) {
+                                this.chartObject.setSelection(this.selection);
+                            }
+                        },
+                        observe: {
+                                rows: 'loadData',
+                                cols: 'loadData',
+                                data: 'loadData'
+                        },
+                        /**
+                         * Draws the chart.
+                         *
+                         * Called automatically on first load and whenever one of the attributes
+                         * changes. Can be called manually to handle e.g. page resizes.
+                         *
+                   
+                        */
+                        drawChart: function () {
+                            //convert the second row in the data table to integers
+                           /* var l = this.dataTable.Lf.length;
+
+                            for(var i=0; i<l; i++){
+                                this.dataTable.Lf[i].c[1].v = parseInt(this.dataTable.Lf[i].c[1].v);
+                            }*/
+                            var m = this.dataTable.getColumnRange(1).max;
+                            this.options = { colorAxis: { colors: ['#f9e4e4','#fd4141', '#ff0000'], minValue: 50, values:[0,m] }, datalessRegionColor:'#fff'};
+                            if (this.canDraw) {
+                                if (!this.options) {
+                                    this.options = { colorAxis: { colors: ['#b9ffb9', 'green'] } };;
+                                }
+                                if (!this.chartObject) {
+                                    var chartClass = this.chartTypes[this.type];
+                                    if (chartClass) {
+                                        this.chartObject = new chartClass(this.$.chartdiv);
+                                    }
+                                }
+                                if (this.chartObject) {
+                                    google.visualization.events.addOneTimeListener(this.chartObject,
+                                        'ready', function() {
+                                            this.fire('google-chart-render');
+                                        }.bind(this));
+                                    google.visualization.events.addListener(this.chartObject,
+                                        'select', function() {
+                                            this.selection = this.chartObject.getSelection();
+                                            this.fire('google-chart-select',
+                                                { selection: this.chartObject.getSelection() });
+                                        }.bind(this));
+                                    this.chartObject.draw(this.dataTable, this.options);
+                                    if (this.chartObject.setSelection){
+                                        this.chartObject.setSelection(this.selection);
+                                    }
+                                } else {
+                                    this.$.chartdiv.innerHTML = 'Undefined chart type';
+                                }
+                            }
+                            return null;
+                        },
+                        loadChartTypes: function() {
+                            this.chartTypes = {
+                                'area': google.visualization.AreaChart,
+                                'bar': google.visualization.BarChart,
+                                'bubble': google.visualization.BubbleChart,
+                                'candlestick': google.visualization.CandlestickChart,
+                                'column': google.visualization.ColumnChart,
+                                'combo': google.visualization.ComboChart,
+                                'geo': google.visualization.GeoChart,
+                                'histogram': google.visualization.Histogram,
+                                'line': google.visualization.LineChart,
+                                'pie': google.visualization.PieChart,
+                                'scatter': google.visualization.ScatterChart,
+                                'stepped-area': google.visualization.SteppedAreaChart,
+                                'table': google.visualization.Table,
+                                'gauge': google.visualization.Gauge
+                            };
+                        },
+                        loadPackageByChartType: function() {
+                            this.packages = {
+                                'area': 'corechart',
+                                'bar': 'corechart',
+                                'bubble': 'corechart',
+                                'candlestick': 'corechart',
+                                'column': 'corechart',
+                                'combo': 'corechart',
+                                'geo': 'corechart',
+                                'histogram': 'corechart',
+                                'line': 'corechart',
+                                'pie': 'corechart',
+                                'scatter': 'corechart',
+                                'stepped-area': 'corechart',
+                                'table': 'table',
+                                'gauge': 'gauge'
+                            };
+                        },
+                        loadData: function() {
+                            this.canDraw = false;
+                            if (this.isReady) {
+                                if (typeof this.data == 'string' || this.data instanceof String) {
+                                    // Load data asynchronously, from external URL.
+                                    this.$.ajax.go();
+                                    
+                                } else {
+                                    var dataTable = this.createDataTable();
+                                    this.canDraw = true;
+                                    if (dataTable) {
+                                        this.dataTable = dataTable;
+                                        this.drawChart();
+                                    }
+                                }
+                            }
+                        },
+                        externalDataLoaded: function(e, detail, sender) {
+                            var dataTable = this.createDataTable(this.$.ajax.response);
+                            this.canDraw = true;
+                            this.dataTable = dataTable;
+                            this.drawChart();
+                        },
+                        createDataTable: function(data) {
+                            var dataTable = null;
+                            // If a data object was not passed to this function, default to the
+                            // chart's data attribute. Passing a data object is necessary for
+                            // cases when the data attribute is a URL pointing to an external
+                            // data source.
+                            if (!data) {
+                                data = this.data;
+                            }
+
+                            var l = data.length;
+                            for (var i = 1; i < l; i++) {
+                                data[i][1] = parseInt(data[i][1]);
+                            }
+
+                            if (this.rows && this.rows.length > 0 && this.cols &&
+                                this.cols.length > 0) {
+                                // Create the data table from cols and rows.
+                                dataTable = new google.visualization.DataTable();
+                                dataTable.cols = this.cols;
+                                for (var i = 0; i < this.cols.length; i++) {
+                                    dataTable.addColumn(this.cols[i]);
+                                }
+                                dataTable.addRows(this.rows);
+                            } else {
+                                // Create dataTable from the passed data or the data attribute.
+                                // Data can be in the form of raw DataTable data or a two
+                                // dimensional array.
+                                if (data.rows && data.cols) {
+                                    dataTable = new google.visualization.DataTable(data);
+                                } else if (data.length > 0) {
+                                    dataTable = google.visualization.arrayToDataTable(data);
+                                }
+                            }
+                            // Apply number formats to designated columns in dataTable
+                            if (this.numberFormats && this.numberFormats.length){
+                                this.applyNumberFormats(dataTable);
+                            }
+                            return dataTable;
+                        },
+                        applyNumberFormats: function(dataTable){
+                            for (var i = 0; i < this.numberFormats.length; i++) {
+                                var format = this.numberFormats[i];
+
+                                // If valid column is given, create formatter object and apply to column in dataTable
+                                if (format.col && format.col < dataTable.getNumberOfColumns()){
+                                    var formatter = new google.visualization.NumberFormat({
+                                        decimalSymbol: format.decimalSymbol,
+                                        fractionDigits: format.fractionDigits,
+                                        groupingSymbol: format.groupingSymbol,
+                                        negativeColor: format.negativeColor,
+                                        negativeParens: format.negativeParens,
+                                        pattern: format.pattern,
+                                        prefix: format.prefix,
+                                        suffix: format.suffix
+                                    });
+                                    formatter.format(dataTable, format.col);
+                                }
+                            }
+                        },
+
+                        urlParams: {
+                            domain: "",
+                            campus: "%%",
+                            page: 1,
+                            pageSize: 10,
+                            orderBy: "termStart",
+                            orderDirection: "DESC",
+                            FCountry: "%%",
+                            FStartDate: "1/1/1753 12:00:00 AM", //January 1st, 1900 by default (show activities after 1900)
+                            FEndDate: "12/31/9999 11:59:59 PM", //January 1st, 9999 by default (show activities before 9999)
+                            FContinent: "%%",
+                            FDegree: "%%",
+                            FLevel: "%%",
+                            FInstitution: "%%",
+                            FStatus: "%%"
+                        }
+                    });
+                    })();
+                </script>
+
+            </polymer-element>
+            <google-chart type="geo" data="~/api/students/map"></google-chart>
+            
+
+        </div>
+
+       
+
+
+        <aside class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                <nav class="side">
+
+                    <ul class="top">
+                        <li class="static square-bottom" style="margin-bottom: 0;">
+                            <div class="group">
+                                <div class="on-left"></div>
+                            </div>
+                            <div class="group no-link" style="margin-left: 15px;">
+                                <span class="text">
+                                </span>
+                            </div>
+                        </li>
+                        <li class="static square-bottom">
+                            <div class="content">
+                                <div class="field">
+                                    <div>
+                                        <select class="campusSelect" style="padding: 1px; margin: initial; height: auto; width: 100%; font-size: 14px;" onchange="updateMap('campus', this)">
+                                            <option value="%%">All Campuses</option>
+                                            @{foreach (var o in ViewBag.campus)
+                                            {
+                                                <option value="@o.OfficialName">@o.OfficialName</option>
+                                            }
+                                            }
+                                        </select>
+
+                                        <input type="hidden" data-bind="value: selectedEstablishment" name="ancestorid" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="middle">
+                        <li class="static square-bottom " style="margin-bottom: 0;">
+                            <div class="group">
+                                <div class="on-left"></div>
+                            </div>
+                            <div class="group no-link">
+                                <span class="arrow"></span>
+                                <span class="text" style="border-radius: 0;">
+                                    Filter options
+                                    <img src="/images/icons/spinner/spinner-20-blue-on-ddd.gif" alt=""
+                                         style="margin-left: 4px; display: none;" data-bind="visible: loadingSpinner.isVisible" />
+                                </span>
+                            </div>
+                        </li>
+                        <li class="static square-bottom">
+                            <div class="content">
+
+                                <div class="location combobox field">
+                                    <select class="campusSelect" style="padding: 1px; margin: initial; height: auto; width: 100%; font-size: 14px;" onchange="updateMap('FContinent', this)">
+                                        <option value="%%">All Continents</option>
+                                        @{foreach (var o in ViewBag.continents)
+                                        {
+                                            <option value="@o">@o</option>
+                                        }
+                                        }
+                                    </select>
+
+                                </div>
+
+                                <div class="location combobox field">
+                                    <select class="campusSelect" style="padding: 1px; margin: initial; height: auto; width: 100%; font-size: 14px;" onchange="updateMap('FCountry', this)">
+                                        <option value="%%">All Countries</option>
+                                        @{foreach (var o in ViewBag.countries)
+                                        {
+                                            <option value="@o">@o</option>
+                                        }
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="location combobox field">
+                                    <select class="campusSelect" style="padding: 1px; margin: initial; height: auto; width: 100%; font-size: 14px;" onchange="updateMap('FDegree', this)">
+                                        <option value="%%">All Programs</option>
+                                        @{foreach (var o in ViewBag.programs)
+                                        {
+                                            <option value="@o.name">@o.name</option>
+                                        }
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="field">
+                                    <select name="levelby" class="side" id="levelby" onchange="updateMap('FLevel', this)">
+                                        <option selected="selected" value="%%">All Levels of Study</option>
+                                        @{foreach (var o in ViewBag.levels)
+                                        {
+                                            <option value="@o.name">@o.name</option>
+                                        }
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="field">
+                                    <select name="levelby" class="side" id="levelby" onchange="updateMap('FStatus', this)">
+                                        <option selected="selected" value="%%">Inbound & Outbound</option>
+                                        <option value="IN">Inbound Only</option>
+                                        <option value="OUT">Outbound Only</option>
+                                    </select>
+                                </div>
+
+                                <div class="dates picker field" style="margin-top: 12px;">
+                                    <strong>Filter by date(s)</strong>
+                                </div>
+
+                                <div class="field">
+                                    <select class="campusSelect" style="padding: 1px; margin: initial; height: auto; width: 100%; font-size: 14px;" onchange="updateMap('FStartDate', this)">
+                                        <option value="1/1/1753 12:00:00 AM">Any Start Term</option>
+                                        @{foreach (var o in ViewBag.terms)
+                                        {
+                                            <option value="@o.startDate">@o.name</option>
+                                        }
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="field">
+                                    <select class="campusSelect" style="padding: 1px; margin: initial; height: auto; width: 100%; font-size: 14px;" onchange="updateMap('FEndDate',this)">
+                                        <option value="12/31/9999 11:59:59 PM">Any End Term</option>
+                                        @{foreach (var o in ViewBag.terms)
+                                        {
+                                            <option value="@o.startDate">@o.name</option>
+                                        }
+                                        }
+                                    </select>
+                                </div>
+
+
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="bottom">
+
+                        <li>
+                            <a href="/@ViewBag.StudentsDomain/students/table/" class="group">
+                                <span class="arrow"></span>
+                                <span class="text">Table</span>
+                            </a>
+                        </li>
+                        <li class="current">
+                            <a href="/@ViewBag.StudentsDomain/students/map/" class="group">
+                                <span class="arrow"></span>
+                                <span class="text">Map</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+    </form>
+</div>
+
+<script>
+
+    function updateMap(attri, val) {
+        var i = document.querySelector("google-chart");
+        
+        if (i.urlParams.hasOwnProperty(attri)) {
+            i.urlParams[attri] = val.value;
+        }
+
+        i.typeChanged();
+        
+    }
+</script>
