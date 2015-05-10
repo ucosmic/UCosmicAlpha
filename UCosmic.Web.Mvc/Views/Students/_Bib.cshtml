@@ -1,0 +1,11 @@
+﻿@using UCosmic.Web.Mvc.Models
+@model StudentsBibNavModel
+@{
+    var tenancy = Request.Tenancy();
+    var styleDomain = tenancy != null ? tenancy.StyleDomain : "default";
+    var hasStyleDomain = !string.IsNullOrWhiteSpace(styleDomain) && !"default".Equals(styleDomain, StringComparison.OrdinalIgnoreCase);
+}
+
+<ul class="group">
+    
+</ul>

@@ -1,0 +1,76 @@
+﻿<section id="file_attachments">
+    <header>
+        <h2>
+            File Attachments
+        </h2>
+    </header>
+    <div>
+        <ul data-bind="foreach: files">
+            <li data-bind="element: 'fileE1'">
+                <div class="typed-item2">
+                    <a title="Remove this file" data-bind="click: $root.removeFile, visible: !isEdit()"><i class="red minus on-right"></i></a>
+                    <a title="Edit file name" data-bind="click: $root.editAFile, visible: !isEdit()"><i class="edit on-right"></i></a>
+                    <a title="Cancel edit" data-bind="click: $root.cancelEditAFile, visible: isEdit"><i class="cancel on-right"></i></a>
+                    <a title="Update file name" data-bind="click: $root.updateFile, visible: isEdit"><i class="save on-right"></i></a>
+                    <a title="Download this file" data-bind="attr: { href: '/api/agreements/' + $root.agreementId + '/files/' + id() + '/download/' }, visible: id() >= 1"><i class="download on-right"></i></a>
+
+                    <div class="item">
+                        <div>
+                            <div>
+                                <a title="View this file" data-bind="attr: { href: '/api/agreements/' + $root.agreementId + '/files/' + id() + '/content/', target: '_blank' }, visible: id() >= 1"><strong data-bind="    text: customName, visible: !isEdit()"></strong></a>
+                                <strong data-bind="text: customName, visible: !isEdit() && id() < 1"></strong>
+                                <input id="file_type_options" type="text" placeholder="[None]" maxlength="200" style="width: 300px;"
+                                       data-bind="value: customNameFile, visible: isEdit" /><strong data-bind="text: customNameExt, visible: isEdit"></strong>
+                                <span class="validationMessage" data-bind="visible: isNotValidated" style="display: none;">File name is required.</span>
+                            </div>
+                            <label style="display: block;" data-bind="click: $root.fileVisibilityClicked"><input name="fileVisibility" type="radio" class="radio" value="Public" data-bind="checked: visibility, attr: { name: 'fileVisibility' + id()}" /><strong>Public:</strong><span class="radioText"> Limits viewing to the general public</span></label>
+                            <label style="display: block;" data-bind="click: $root.fileVisibilityClicked"><input name="fileVisibility" type="radio" class="radio" value="Protected" data-bind="checked: visibility, attr: { name: 'fileVisibility' + id() }" /><strong>Protected:</strong><span class="radioText"> Limits viewing to your University/Institution community members</span></label>
+                            <label style="display: block;" data-bind="click: $root.fileVisibilityClicked"><input name="fileVisibility" type="radio" class="radio" value="Private" data-bind="checked: visibility, attr: { name: 'fileVisibility' + id() }" /><strong>Private:</strong><span class="radioText"> Limits viewing to UCosmic® administrators only</span></label>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <footer id="addAFile">
+        <input id="fileUpload" type="file" name="fileMedium" data-bind="jqObservableElement: '$file'" />
+        <div style="padding-left: 4px;">
+            @*<div data-bind="visible: hasFile" style="display: none; padding-top: 4px;">
+                    <input type="button" value="Delete my file" data-bind="click: startDeletingFile, attr: { disabled: fileDeleteSpinner.isVisible } " />
+                    <img data-bind="visible: fileDeleteSpinner.isVisible" src="~/images/icons/spinner/spinner-20-blue.gif" alt="" style="display: none;" />
+                </div>*@
+            <div data-bind="jqElement: '$confirmPurgeDialog'" title="Please confirm your intent" style="display: none;">
+                <div>
+                    <p>
+                        Are you sure you want to delete your profile file?
+                    </p>
+                </div>
+            </div>
+            <div data-bind="visible: isFileInvalid" style="display: none;">
+                <span class="validationMessage" data-bind="text: fileError"></span>
+            </div>
+            <div data-bind="visible: isFileExtensionInvalid" style="display: none;">
+                <span class="validationMessage">
+                    The file extension &quot;<span data-bind="text: fileFileExtension"></span>&quot;
+                    is either an invalid or unallowed file. Please choose a file with a .pdf, .doc, .docx, .odt, .xls, .xlsx, .ods, .ppt, .pptx extension (case insensitive).
+                </span>
+            </div>
+            <div data-bind="visible: isFileTooManyBytes" style="display: none;">
+                <span class="validationMessage">
+                    The file &quot;<span data-bind="text: fileFileName"></span>&quot;
+                    is too large. Please choose a file that is less than 1 megabyte in size.
+                </span>
+            </div>
+            <div data-bind="visible: isFileFailureUnexpected" style="display: none;">
+                <span class="validationMessage">
+                    UCosmic experienced an unexpected error managing your file, please try again.
+                    If you continue to experience this issue, please use the Feedback &amp; Support link on this page to report it.
+                </span>
+            </div>
+            <div data-bind="visible: fileUploadSpinner.isVisible" style="padding-top: 4px; display: none;">
+                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                <strong>Uploading...</strong>
+            </div>
+        </div>
+    </footer>
+</section>
