@@ -1,8 +1,4 @@
 ﻿
-<!--<link rel="import" href="../../../Polymer/bower_components/paper-dropdown/paper-dropdown.html">
-<link rel="import" href="../../../Polymer/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../../../Polymer/bower_components/core-dropdown-menu/core-dropdown-menu.html">
-<link rel="import" href="../../../Polymer/bower_components/core-dropdown/core-dropdown.html">-->
 <link rel="import" href="../../../Polymer/bower_components/core-selector/core-selector.html">
 <link rel="import" href="../../../Polymer/bower_components/core-item/core-item.html">
 <link rel="import" href="../../../Polymer/bower_components/paper-item/paper-item.html">
@@ -10,134 +6,177 @@
 <link rel="import" href="../../../Polymer/bower_components/paper-input/paper-input-decorator.html">
 <link rel="import" href="../../../Polymer/bower_components/core-input/core-input.html">
 <link rel="import" href="../../../components/autoDDL/autoDDL.html">
+<link rel="import" href="../../../components/CascadingDDL/cascading_DDL.html">
+<link rel="import" href="../../../components/side_filter/side_filter.html">
+<link rel="import" href="../../../Polymer/bower_components/core-localstorage/core-localstorage.html">
 <script src="../../../Polymer/bower_components/page.js/page.js"></script>
-<polymer-element name="is-page-summary-report" attributes="styledomain, tenantid">
+<polymer-element name="is-page-summary-report" attributes="styledomain, tenant_id">
     <template>
         <link href="report.css" rel="stylesheet" />
-        <!--</form>-->
-        <!--<paper-dropdown-menu selected="[all countries]" label="[all countries]" valueattr="label">
-            <template repeat="{{country, countryI in countries}}">
-                <paper-item label="{{country.name}}"></paper-item>
-            </template>
-        </paper-dropdown-menu>-->
-        <!--<core-icon-button id="trigger" icon="menu"></core-icon-button>-->
-        <!--<paper-dropdown relatedtarget="{{$.trigger}}">
-            <core-menu>
-                <template repeat="{{country, countryI in countries}}">
-                    <paper-item>{{country.name}}</paper-item>
-                </template>
-            </core-menu>
-        </paper-dropdown>-->
-        <div layout horizontal end style="width:800px; z-index:1;">
-                <select on-click="{{selectCountry}}" id="selectCountry" style="padding: 1px; margin: initial; height: 30px; width: 200px; font-size: 14px;">
-                    <option>
-                        <paper-item>[Select a Country]</paper-item>
-                    </option>
-                    <template repeat="{{country, countryI in countries}}">
-                        <option on-click="{{selectCountry}}" value="{{country.name}}">
-                            <paper-item on-click="{{selectCountry}}" id="country{{countryI}}">{{country.name}}</paper-item>
-                        </option>
-                    </template>
-                </select>
-            <is-auto-ddl flex selected="{{establishmentSearch}}" selectedid="{{selectedEstablishmentId}}" on-selected-updated="{{establishmentSelected}}"
-                         on-search-updated="{{establishmentListSearch}}" list="{{establishmentList}}">
+        <div layout horizontal>
+            <div flex style="margin-right:10px;">
+                <section style="position:relative;">
+                    <h3 style="margin-bottom:4px;">Agreements</h3>
+                    <div style=" font-size:1.2em;">
+                        <template if="{{agreementTypeCountsLoaded && agreement_total_agreement_count > 0}}">
+                            <template repeat="{{agreementTypeCount, agreementTypeCountI in agreementTypeCounts}}">
+                                <div style="margin-bottom:4px;">
+                                    <b>{{agreementTypeCount.typeCount}}</b>
+                                    <a href="/{{styledomain}}/agreements/#/table/country/{{selectedCountryCode}}/type/{{agreementTypeCount.type}}/sort/start-desc/size/10/page/1/">{{agreementTypeCount.type}}</a>
+                                    <template if="{{agreementTypeCount.typeCount > 1}}">
+                                        agreements
+                                    </template>
+                                    <template if="{{agreementTypeCount.typeCount == 1}}">
+                                        agreement
+                                    </template>
+                                    in
+                                    <b>{{agreementTypeCount.locationCount}}</b>
+                                    <template if="{{agreementTypeCount.locationCount > 1}}">
+                                        locations.
+                                    </template>
+                                    <template if="{{agreementTypeCount.locationCount == 1}}">
+                                        location.
+                                    </template>
+                                </div>
+                            </template>
+                            <div style="margin-top:12px;">
+                                <b>{{agreement_total_agreement_count}} <a style="text-decoration:none;">Total</a></b>
+                                <template if="{{agreement_total_agreement_count > 1}}">
+                                    agreements
+                                </template>
+                                <template if="{{agreement_total_agreement_count == 1}}">
+                                    agreement
+                                </template>
+                                in <b>{{agreement_total_location_count}}</b>
+                                <template if="{{agreement_total_location_count > 1}}">
+                                    locations.
+                                </template>
+                                <template if="{{agreement_total_location_count == 1}}">
+                                    location.
+                                </template>
+                            </div>
+                        </template>
+                        <template if="{{agreementTypeCounts.length == 0 && agreementTypeCountsLoaded}}">
+                            <div>You do not have any agreements for the selected location</div>
+                        </template>
+                        <template if="{{!agreementTypeCountsLoaded}}">
+                            <div>Loading...</div>
+                        </template>
+                    </div>
+                </section>
 
-            </is-auto-ddl>
-            <!--<div style="margin-left:20px;" flex layout vertical>
-                <paper-input-decorator style="padding-bottom: 2px;" floatinglabel layout vertical label="Type and choose an establishment">
-                    <input is="core-input" on-keyup="{{establishmentListSearch}}" id="Phone" min="10" max="15" on-blur="{{leaveEstablishmentSearch}}" value="{{establishmentSearch}}" on-input="{{validateInput}}">
-                </paper-input-decorator>
-                <div style="height:0; z-index:10;">
-                    <template if="{{establishmentList.length > 0}}">
-                        <div style="background-color:gray;padding: 5px;border-radius: 5px">
-                            <template repeat="{{establishment, establishmentI in establishmentList}}">
-                                <div on-click="{{establishmentSelected}}" data-id="{{establishment.forestablishmentId}}" class="establishment-list-item">{{establishment.text}}</div>
+                <section style="position:relative; ">
+                    <h3 style="display:block; margin-bottom:4px;">Faculty & Staff Activities</h3>
+                    <div style=" font-size:1.2em;">
+                        <template if="{{activityTypeCountsLoaded && activity_total_activity_count > 0}}">
+                            <template repeat="{{activityTypeCount, activityTypeCountI in activityTypeCounts}}">
+                                <div style="margin-bottom:4px;">
+                                    <b>{{activityTypeCount.typeCount}}</b>
+                                    <a href="/{{styledomain}}/employees/table/?activityTypeIds={{activityTypeCount.typeId}}&placeIds={{selectedPlaceId}}&placeNames={{selectedPlaceName}}">{{activityTypeCount.type}}</a>
+                                    <template if="{{activityTypeCount.typeCount > 1}}">
+                                        activities
+                                    </template>
+                                    <template if="{{activityTypeCount.typeCount == 1}}">
+                                        activity
+                                    </template>
+                                    in
+                                    <b>{{activityTypeCount.locationCount}}</b>
+                                    <template if="{{activityTypeCount.locationCount > 1}}">
+                                        locations.
+                                    </template>
+                                    <template if="{{activityTypeCount.locationCount == 1}}">
+                                        location.
+                                    </template>
+                                </div>
+                            </template>
+                            <div style="margin-top:12px;">
+                                <b>{{activity_total_activity_count}} <a style="text-decoration:none;">Total</a></b>
+                                <template if="{{activity_total_activity_count > 1}}">
+                                    activitys
+                                </template>
+                                <template if="{{activity_total_activity_count == 1}}">
+                                    activity
+                                </template>
+                                in <b>{{activity_total_location_count}}</b>
+                                <template if="{{activity_total_location_count > 1}}">
+                                    locations.
+                                </template>
+                                <template if="{{activity_total_location_count == 1}}">
+                                    location.
+                                </template>
+                            </div>
+                        </template>
+                        <template if="{{activityTypeCounts.length == 0 && activityTypeCountsLoaded && establishmentSearch == ''}}">
+                            <div>You do not have any activities for the selected location</div>
+                        </template>
+                        <template if="{{activityTypeCounts.length == 0 && activityTypeCountsLoaded && establishmentSearch != ''}}">
+                            <div>Activities are not associated with establishments.</div>
+                        </template>
+                        <template if="{{!activityTypeCountsLoaded}}">
+                            <div>Loading...</div>
+                        </template>
+                    </div>
+                </section>
+
+                <section style="position:relative; ">
+                    <h3 style="margin-bottom:4px;">Faculty & Staff Degrees</h3>
+                    <template if="{{degrees.degreeCount != 0 && degreeCountsLoaded}}">
+                        <div style=" font-size:1.2em;">
+                            <b>{{degrees.personCount}}</b>
+                            <template if="{{degrees.personCount > 1}}">
+                                people
+                            </template>
+                            <template if="{{degrees.personCount == 1}}">
+                                person
+                            </template>
+                            with
+                            <template if="{{selectedCountryCode != 'any'}}">
+                                <a href="/{{styledomain}}/employees/degrees/table/?countryCode={{selectedCountryCode}}">{{degrees.degreeCount}}</a>
+                            </template>
+                            <template if="{{selectedCountryCode == 'any'}}">
+                                <a href="/{{styledomain}}/employees/degrees/table/">{{degrees.degreeCount}}</a>
+                            </template>
+                            <template if="{{degrees.degreeCount > 1}}">
+                                degrees
+                            </template>
+                            <template if="{{degrees.degreeCount == 1}}">
+                                degree
+                            </template>
+                            from
+                            <b>{{degrees.establishmentCount}}</b>
+                            <template if="{{degrees.establishmentCount > 1}}">
+                                institutions.
+                            </template>
+                            <template if="{{degrees.establishmentCount == 1}}">
+                                institution.
                             </template>
                         </div>
                     </template>
-                </div>
-            </div>-->
+                    <template if="{{degrees.degreeCount == 0 && degreeCountsLoaded}}">
+                        <div>You do not have any degrees for the selected location</div>
+                    </template>
+                    <template if="{{!degreeCountsLoaded}}">
+                        <div>Loading...</div>
+                    </template>
+                </section>
+            </div>
+            <is-side-filter width="300px" has_space="true">
+                <is-cascading-ddl style="margin-top:0px;" id="cascading_ddl" new_id="{{new_tenant_id}}" list="{{affiliations}}" limit_id="{{tenant_id}}" place_holder="Select sub-affiliations" layout_type="vertical">
+                </is-cascading-ddl>
+                <is-auto-ddl selected="{{selectedPlaceName}}" selectedid="{{selectedPlaceId}}" place_holder_text="Type and choose a country" on-selected-updated="{{selectCountry}}"
+                             list="{{countries}}" on-search-updated="{{filter_countries}}">
+                </is-auto-ddl>
+                <is-auto-ddl style="margin-bottom:2px;" selected="{{establishmentSearch}}" selectedid="{{selectedEstablishmentId}}" place_holder_text="Type and choose an institution" on-selected-updated="{{establishmentSelected}}"
+                             on-search-updated="{{establishmentListSearch}}" list="{{establishmentList}}">
+                </is-auto-ddl>
+            </is-side-filter>
         </div>
-        <!--<paper-dropdown-menu>
-            <paper-dropdown class="dropdown">
-                <core-menu class="menu">
-                    <paper-item>[Select a Country]</paper-item>
-                    <template repeat="{{country, countryI in countries}}">
-                        <paper-item>{{country.name}}</paper-item>
-                    </template>
-                </core-menu>
-            </paper-dropdown>
-        </paper-dropdown-menu>
-        <core-dropdown-menu>
-            <core-dropdown class="dropdown">
-                <core-selector selected="{{selectedCountry}}">
-                    <paper-item>[Select a Country]</paper-item>
-                    <template repeat="{{country, countryI in countries}}">
-                        <paper-item>{{country.name}}</paper-item>
-                    </template>
-                </core-selector>
-            </core-dropdown>
-        </core-dropdown-menu>-->
-        <section style="position:relative; ">
-            <h3 style="margin-bottom:4px;">Agreements</h3>
-            <template if="{{agreementTypeCountsLoaded}}" repeat="{{agreementTypeCount, agreementTypeCountI in agreementTypeCounts}}">
-                <div>
-                    <b>{{agreementTypeCount.typeCount}}</b>
-                    <a href="{{styledomain}}/agreements/#/table/country/{{selectedCountryCode}}/type/{{agreementTypeCount.type}}/sort/start-desc/size/10/page/1/">{{agreementTypeCount.type}}</a>
-                    agreements in <b>{{agreementTypeCount.locationCount}}</b> locations.
-                </div>
-            </template>
-            <template if="{{agreementTypeCounts.length == 0 && agreementTypeCountsLoaded}}">
-                <div>You do not have any agreements for the selected location</div>
-            </template>
-            <template if="{{!agreementTypeCountsLoaded}}">
-                <div>Loading...</div>
-            </template>
-        </section>
 
-        <section style="position:relative; ">
-            <h3 style="display:block; margin-bottom:4px;">Faculty & Staff Activities</h3>
-            <template if="{{activityTypeCountsLoaded}}" repeat="{{activityTypeCount, activityTypeCountI in activityTypeCounts}}">
-                <div>
-                    <b>{{activityTypeCount.typeCount}}</b>
-                    <a href="{{styledomain}}/employees/table/?activityTypeIds={{activityTypeCount.typeId}}&placeIds={{selectedPlaceId}}&placeNames={{selectedPlaceName}}">{{activityTypeCount.type}}</a>
-                    activities in <b>{{activityTypeCount.locationCount}}</b> locations.
-                </div>
-            </template>
-            <template if="{{activityTypeCounts.length == 0 && activityTypeCountsLoaded && establishmentSearch == ''}}">
-                <div>You do not have any activities for the selected location</div>
-            </template>
-            <template if="{{activityTypeCounts.length == 0 && activityTypeCountsLoaded && establishmentSearch != ''}}">
-                <div>Activities are not associated with establishments.</div>
-            </template>
-            <template if="{{!activityTypeCountsLoaded}}">
-                <div>Loading...</div>
-            </template>
-        </section>
-        
-        <section style="position:relative; ">
-            <h3 style="margin-bottom:4px;">Faculty & Staff Degrees</h3>
-            <template if="{{degrees.degreeCount.length != 0 && degreeCountLoaded}}">
-                <div>
-                    <b>{{degrees.personCount}}</b>
-                    people with
-                    <template if="{{selectedCountryCode != 'any'}}">
-                        <a href="{{styledomain}}/employees/degrees/table/?countryCode={{selectedCountryCode}}">{{degrees.degreeCount}}</a>
-                    </template>
-                    <template if="{{selectedCountryCode == 'any'}}">
-                        <a href="{{styledomain}}/employees/degrees/table/">{{degrees.degreeCount}}</a>
-                    </template>
-                    degrees from
-                    <b>{{degrees.establishmentCount}}</b> institutions.
-                </div>
-            </template>
-            <template if="{{degrees.degreeCount.length == 0 && degreeCountLoaded}}">
-                <div>You do not have any degrees for the selected location</div>
-            </template>
-            <template if="{{!degreeCountLoaded}}">
-                <div>Loading...</div>
-            </template>
-        </section>
+        <!--<div layout horizontal start style="width:1000px; z-index:1;">
+            <is-cascading-ddl flex id="cascading_ddl2" new_id="{{new_tenant_id}}" list="{{affiliations}}" limit_id="{{tenant_id}}" place_holder="Select sub-affiliations" layout_type="horizontal">
+
+            </is-cascading-ddl>
+        </div>-->
         <!--<h3 style="margin-bottom:4px;">International Affiliations</h3>
         <template if="{{affiliations.affiliationCount.length != 0 && affiliationCountLoaded}}">
             <div>
@@ -171,7 +210,6 @@
         <template if="{{!expertiseCountLoaded}}">
             <div>Loading...</div>
         </template>-->
-
         <!--<core-ajax url="/api/home/section"
                    params='{"Description":"{{description}}",
                    "Links" "{{links}}" ,
@@ -189,23 +227,23 @@
                    on-core-error="{{ajaxError}}"
                    id="ajax_countries">
         </core-ajax>
-        <core-ajax url="/api/summary/activity-count/{{tenantid}}/{{selectedPlaceId}}/"
+        <core-ajax url="/api/summary/activity-count/{{new_tenant_id}}/{{selectedPlaceId}}/"
                    headers='{"Accept": "application/json"}'
-                   handleas="json" 
+                   handleas="json"
                    on-core-response="{{activitiesResponse}}"
                    on-core-error="{{ajaxError}}"
                    id="ajax_activities">
         </core-ajax>
-        <core-ajax url="/api/summary/agreement-count/{{tenantid}}/{{selectedPlaceId}}/{{selectedEstablishmentId}}/"
+        <core-ajax url="/api/summary/agreement-count/{{new_tenant_id}}/{{selectedPlaceId}}/{{selectedEstablishmentId}}/"
                    headers='{"Accept": "application/json"}'
-                   handleas="json" 
+                   handleas="json"
                    on-core-response="{{agreementsResponse}}"
                    on-core-error="{{ajaxError}}"
                    id="ajax_agreements">
         </core-ajax>
-        <core-ajax url="/api/summary/degree-count/{{tenantid}}/{{selectedPlaceId}}/{{selectedEstablishmentId}}/"
+        <core-ajax url="/api/summary/degree-count/{{new_tenant_id}}/{{selectedPlaceId}}/{{selectedEstablishmentId}}/"
                    headers='{"Accept": "application/json"}'
-                   handleas="json" 
+                   handleas="json"
                    on-core-response="{{degreesResponse}}"
                    on-core-error="{{ajaxError}}"
                    id="ajax_degrees">
@@ -217,18 +255,27 @@
                    on-core-error="{{ajaxError}}"
                    id="ajax_establishmentsList">
         </core-ajax>
-        <!--<core-ajax url="/api/international-affiliations/Affiliation-count/{{tenantid}}/{{selectedPlaceId}}/"
+        <core-ajax url="/api/establishments/{{tenant_id}}/offspring/"
+                   headers='{"Accept": "application/json"}'
+                   handleas="json"
+                   auto
+                   on-core-response="{{affiliations_response}}"
+                   on-core-error="{{ajaxError}}"
+                   id="ajax_affiliations">
+        </core-ajax>
+        <!--<core-ajax url="/api/international-affiliations/Affiliation-count/{{new_tenant_id}}/{{selectedPlaceId}}/"
                    handleas="json" auto
                    on-core-response="{{affiliationsResponse}}"
                    on-core-error="{{ajaxError}}"
                    id="ajax_degrees">
         </core-ajax>
-        <core-ajax url="/api/geographic-expertise/expertise-count/{{tenantid}}/{{selectedPlaceId}}/"
+        <core-ajax url="/api/geographic-expertise/expertise-count/{{new_tenant_id}}/{{selectedPlaceId}}/"
                    handleas="json" auto
                    on-core-response="{{expertisesResponse}}"
                    on-core-error="{{ajaxError}}"
                    id="ajax_degrees">
         </core-ajax>-->
+        <core-localstorage id="affiliations" name="affiliations" value="{{affiliations}}"></core-localstorage>
 
     </template>
     <script src="report.js"></script>
