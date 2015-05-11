@@ -21,7 +21,8 @@
     "paper-elements": "Polymer/paper-elements",
     "more-elements": "Polymer/more-elements#master",
     "lodash": ">=3.6.0",
-    "page.js": "~1.6.1"
+    "page.js": "~1.6.1",
+    "color-picker-element": "~0.0.2"
   },
   "resolutions": {
     "polymer": ">=0.5.1",
