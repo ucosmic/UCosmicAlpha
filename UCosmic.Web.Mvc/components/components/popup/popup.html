@@ -1,13 +1,14 @@
 ﻿
 <link rel="import" href="../../utilities/htmlEcho.html" />
+<link rel="import" href="../../Polymer/bower_components/paper-shadow/paper-shadow.html" />
 <polymer-element name="is-popup" attributes="content country_name">
     <template>
 
         <link href="popup.css" rel="stylesheet" />
-        <span  class="popup" id="popup">
-            <span class="close" on-click="{{close}}" data-type="close">X</span>
-            <html-echo html="{{content}}"></html-echo>            
-        </span>
+        <paper-shadow z="2" class="tennant_colors popup" id="popup">
+            <paper-shadow z="1" class="close tennant_colors_secondary" on-click="{{close}}" data-type="close">X</paper-shadow>
+            <html-echo html="{{content}}"></html-echo>
+        </paper-shadow>
         
     </template>
     <script src="popup.js"></script>

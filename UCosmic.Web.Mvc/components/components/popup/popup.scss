@@ -20,3 +20,9 @@
     display: block;
     cursor: move;
 }
+
+html-echo {
+    > a {
+        margin-top: 8px;
+    }
+}
