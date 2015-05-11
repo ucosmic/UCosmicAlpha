@@ -1,27 +1,32 @@
 ﻿<link rel="import" href="../../Polymer/bower_components/paper-input/paper-input-decorator.html">
 <link rel="import" href="../../Polymer/bower_components/core-input/core-input.html">
+<link rel="import" href="../../Polymer/bower_components/paper-item/paper-item.html">
 <core-style id="autoDDL">
     .items-inner-container {
     background-color: {{first}};
     padding: 5px;
-    border-radius: 5px
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: scroll;
+
     }
 </core-style>
-<polymer-element name="is-auto-ddl" attributes="url,selected,selectedid,list,backgroundcolor,highlightcolor">
+<polymer-element name="is-auto-ddl" attributes="url,selected,selectedid,list,backgroundcolor,highlightcolor,place_holder_text">
     <template>
         <link href="autoDDL.css" rel="stylesheet" />
         <core-style ref="autoDDL"></core-style>
-        <div style="margin-left:20px;" layout vertical>
-            <paper-input-decorator style="padding-bottom: 2px;" floatinglabel layout vertical label="Type and choose an establishment">
-                <input is="core-input" on-keyup="{{listSearch}}" id="selectedInput" on-blur="{{leaveSearch}}" on-keydown="{{selectedKeyPress}}" value="{{selected}}">
+        <div style="margin-left:20px;" layout vertical tabindex="-1">
+            <paper-input-decorator style="padding-bottom: 2px;" floatinglabel layout vertical label="{{place_holder_text}}">
+                <input is="core-input" on-keyup="{{listSearch}}" on-blur="{{leaveSearch}}" on-focus="{{fire_search}}" id="selectedInput" on-keydown="{{selectedKeyPress}}" value="{{selected}}">
             </paper-input-decorator>
             <div id="itemsContainer" style="height:0; z-index:10;">
                 <template if="{{list.length > 0}}">
                     <div id="itemsInnerContainer" class="items-inner-container" on-mouseout="{{selectHoverLeave2}}">
                         <template repeat="{{item, itemI in list}}">
-                            <div on-click="{{select}}" on-mouseover="{{selectHover}}" on-mouseout="{{selectHoverLeave}}" data-id="{{item._id}}" class="list-item">
+                            <paper-item on-click="{{select}}" on-mouseover="{{selectHover}}" tabindex="-1" on-mouseout="{{selectHoverLeave}}" data-id="{{item._id}}" class="list-item">
                                 {{item.text}}
-                            </div>
+
+                            </paper-item>
                         </template>
                     </div>
                 </template>

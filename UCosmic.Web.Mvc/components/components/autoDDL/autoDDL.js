@@ -7,6 +7,7 @@ Polymer('is-auto-ddl', {
     backgroundcolor: "gray",
     highlightcolor: "yellow",
     isChrome: false,
+    is_scrolling: false,
     fadeOutBackground: function (element, duration, callback) {
         var _this = this;
         if (callback === void 0) { callback = null; }
@@ -56,9 +57,11 @@ Polymer('is-auto-ddl', {
     },
     leaveSearch: function (event, detail, sender) {
         var _this = this;
-        setTimeout(function () {
-            _this.list = [];
-        }, 200);
+        if (!this.is_scrolling) {
+            setTimeout(function () {
+                _this.list = [];
+            }, 200);
+        }
     },
     listChanged: function (oldV, newV) {
         if (newV.length == 1) {
@@ -71,6 +74,7 @@ Polymer('is-auto-ddl', {
         event = event || window.event;
         var charCode = event.keyCode || event.which;
         console.log(charCode);
+        var limit = this.list.length;
         if (charCode == 13 || charCode == 9) {
             if (!this.list || this.list.length > 0) {
                 var position = this.position - 1;
@@ -84,19 +88,28 @@ Polymer('is-auto-ddl', {
         }
         else if (charCode == 38) {
             if (this.position == 1) {
-                this.position = 10;
+                this.position = limit;
             }
             else {
                 this.position -= 1;
             }
+            this.hoverChange(false, 100);
         }
         else if (charCode == 40) {
-            if (this.position == 10) {
+            if (this.position == limit) {
                 this.position = 1;
             }
             else {
                 this.position += 1;
             }
+            this.hoverChange(false, 100);
+        }
+        var x = this.$.itemsContainer.children[1];
+        if (x) {
+            var a = x.children[this.position];
+            this.is_scrolling = true;
+            a.focus();
+            sender.focus();
         }
     },
     selectedChanged: function (oldV, newV) {
@@ -114,12 +127,13 @@ Polymer('is-auto-ddl', {
         this.fire('selected-updated');
         this.list = [];
     },
+    fire_search: function () {
+        this.is_scrolling = false;
+        this.fire('search-updated');
+    },
     listSearch: function (event, detail, sender) {
         if (this.selected == "") {
-            this.list = [];
-            if (this.lastSearch != "") {
-                this.fire('selected-updated');
-            }
+            this.fire('selected-updated');
         }
         else {
             this.fire('search-updated');
@@ -155,14 +169,23 @@ Polymer('is-auto-ddl', {
     hoverChange: function (newValue, speed) {
         var _this = this;
         try {
-            var x = 0, element = this.$.itemsContainer.querySelector("#itemsInnerContainer").children;
-            for (x; x < element.length; x++) {
-                if (element[x].style.backgroundColor == this.highlightcolor) {
-                    this.fadeOutBackground(element[x], 0);
+            var x = 0, elements = this.$.itemsContainer.querySelector("#itemsInnerContainer").children;
+            if (elements) {
+                for (x; x < elements.length; x++) {
+                    if (elements[x].style.backgroundColor == this.highlightcolor) {
+                        this.fadeOutBackground(elements[x], 0);
+                    }
+                    ;
                 }
-                ;
+                this.fadeInBackground(elements[this.position], speed, this.position);
             }
-            this.fadeInBackground(element[this.position], speed, this.position);
+            else {
+                setTimeout(function () {
+                    if (_this.list && _this.list.length > 0) {
+                        _this.hoverChange(newValue, speed);
+                    }
+                }, 20);
+            }
         }
         catch (e) {
             setTimeout(function () {

@@ -1,7 +1,10 @@
 .list-item {
   margin: 0px;
   cursor: pointer;
-  padding: 4px;
+  padding: 4px !important;
   border-radius: 5px; }
+
+paper-item::shadow .button-content {
+  padding: 4px; }
 
 /*# sourceMappingURL=autoDDL.css.map */
