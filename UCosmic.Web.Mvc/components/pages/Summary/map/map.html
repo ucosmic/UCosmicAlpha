@@ -7,13 +7,35 @@
 <link rel="import" href="../../../Polymer/bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../Polymer/bower_components/core-icon-button/core-icon-button.html">
 <link rel="import" href="../../../Polymer/bower_components/paper-input/paper-input-decorator.html">
+<link rel="import" href="../../../Polymer/bower_components/paper-shadow/paper-shadow.html" />
+<link rel="import" href="../../../Polymer/bower_components/paper-icon-button/paper-icon-button.html" />
 <link rel="import" href="../../../Polymer/bower_components/core-input/core-input.html">
+<link rel="import" href="../../../Polymer/bower_components/core-localstorage/core-localstorage.html">
+<link rel="import" href="../../../Polymer/bower_components/color-picker-element/dist/color-picker.html">
+<link rel="import" href="../../../Polymer/bower_components/core-icons/core-icons.html">
+<link rel="import" href="../../../Polymer/bower_components/core-icon/core-icon.html" />
+<link rel="import" href="../../../Polymer/bower_components/core-icons/editor-icons.html" />
 <!--<link rel="import" href="../../../components/autoDDL/autoDDL.html">-->
 <link rel="import" href="../../../components/popup/popup.html">
-<polymer-element name="is-page-summary-map" attributes="styledomain, tenantid">
+<link rel="import" href="../../../components/side_filter/side_filter.html">
+<link rel="import" href="../../../components/CascadingDDL/cascading_DDL.html">
+<link rel="import" href="../../../components/animations/animations.html">
+<script src="../../../Polymer/bower_components/page.js/page.js"></script>
+<polymer-element name="is-page-summary-map" attributes="styledomain, tenant_id" extends="is-animations">
     <template>
 
         <link href="map.css" rel="stylesheet" />
+        <!--<div layout horizontal>
+
+        </div>-->
+        <!--<paper-shadow z="2" layout horizontal start style=" z-index:1; padding: 0 10px; border-radius:10px; margin-bottom:20px; display:inline-flex" class="tennant_colors">
+            <is-cascading-ddl flex id="cascading_ddl" new_id="{{new_tenant_id}}" list="{{affiliations}}" limit_id="{{tenant_id}}" place_holder="Select sub-affiliations" layout_type="horizontal">
+
+            </is-cascading-ddl>
+            <template if="{{!affiliations}}">
+                <div template if="{{!affiliations}}">Loading affiliations...</div>
+            </template>
+        </paper-shadow>-->
         <!--<div layout horizontal end style="width:800px;">
                 <select on-click="{{selectCountry}}" id="selectCountry" style="padding: 1px; margin: initial; height: 30px; width: 200px; font-size: 14px;">
                     <option>
@@ -30,31 +52,74 @@
 
             </is-auto-ddl>
         </div>-->
-        <div id="map_canvas" style="height:800px;"></div>
-        <span id="info_box" style=" background-color:lightgray; position:absolute;  padding: 5px;  border-radius: 8px; left: -20px; display: none;"></span>
-        <div id="info_box_detail_container">
+        <div layout horizontal>
+            <div id="map_canvas" style="height:800px; width: 990px; margin-right: 8px; z-index:2;"></div>
+            <is-side-filter id="side_filter" width="300px" style="position:absolute; z-index:3;" has_space="false">
+                <is-cascading-ddl style="margin-top:0px;" id="cascading_ddl" new_id="{{new_tenant_id}}" list="{{affiliations}}" limit_id="{{tenant_id}}" place_holder="Select sub-affiliations" layout_type="vertical">
+                </is-cascading-ddl>
+            </is-side-filter>
+        </div>
+
+        <paper-shadow z="2" id="close_full_screen" class="tennant_colors" style="border-radius:10px; display:none; position:absolute; top:25px; right: 10px; z-index:3;">
+            <paper-icon-button icon="close" id="close_full_screen_icon" on-click="{{close_full_screen}}"></paper-icon-button>
+        </paper-shadow>
+
+        <span id="info_box" class="tennant_colors" style=" background-color:lightgray; position:absolute;  padding: 5px;  border-radius: 8px; left: -20px; display: none; z-index:3;"></span>
+        <div id="info_box_detail_container" style=" z-index:3; position:absolute; top: 0; left: 0;">
+
+        </div>
+        <div style=" z-index:3; position:relative; margin-right:40px;" layout horizontal id="map_bottom_bar">
+            <div flex layout horizontal start-justified>
+                <!--<template if="{{!color_picker_opened}}">-->
+                <div>
+                    <paper-shadow z="2" class="tennant_colors" style="border-radius:10px; cursor:pointer; margin-top: 10px; padding: 4px; ">
+                        <!--<div on-click="{{open_color_picker}}" style=""></div>-->
+                        <paper-icon-button id="open_color_picker" on-click="{{open_color_picker}}" icon="editor:format-color-fill"></paper-icon-button>
+                        <!--<core-icon on-click="{{open_color_picker}}" icon="editor:format-color-fill"></core-icon>-->
+                    </paper-shadow>
+                </div>
+                <!--</template>
+                <template if="{{color_picker_opened}}">-->
+                <div style="height:0; overflow:visible; position:relative; top:-200px; left:-50px;">
+                    <div id="color_picker_container" style="height:200px; display:none;">
+                        <color-picker on-click="{{color_picked}}" id="color_picker" width="200" height="200"></color-picker>
+                    </div>
+                </div>
+                <!--</template>-->
+                <div flex></div>
+            </div>
+            <div flex layout horizontal end-justified>
+                <div flex></div>
+                <paper-shadow z="2" id="open_full_screen" class="tennant_colors" style="border-radius:10px; cursor:pointer; margin-top: 10px; padding: 4px;">
+                    <!--<div on-click="{{open_color_picker}}" style=""></div>-->
+                    <paper-icon-button on-click="{{full_screen}}" icon="launch"></paper-icon-button>
+                    <!--<core-icon on-click="{{open_color_picker}}" icon="editor:format-color-fill"></core-icon>-->
+                </paper-shadow>
+            </div>
+            <!--<button on-click="{{full_screen}}">test</button>-->
+        </div>
+        <div id="overlay" fit style="display:none; background-color: gray; z-index:10; position:absolute;">
 
         </div>
 
 
-
-        <core-ajax url="/api/summary/activity-map-count/{{tenantid}}/{{selectedPlaceId}}/"
+        <core-ajax url="/api/summary/activity-map-count/{{new_tenant_id}}/{{selectedPlaceId}}/"
                    headers='{"Accept": "application/json"}'
-                   handleas="json" auto
+                   handleas="json"
                    on-core-response="{{activitiesResponse}}"
                    on-core-error="{{ajaxError}}"
                    id="ajax_activities">
         </core-ajax>
-        <core-ajax url="/api/summary/agreement-map-count/{{tenantid}}/{{selectedPlaceId}}/"
+        <core-ajax url="/api/summary/agreement-map-count/{{new_tenant_id}}/{{selectedPlaceId}}/"
                    headers='{"Accept": "application/json"}'
-                   handleas="json" auto
+                   handleas="json"
                    on-core-response="{{agreementsResponse}}"
                    on-core-error="{{ajaxError}}"
                    id="ajax_agreements">
         </core-ajax>
-        <core-ajax url="/api/summary/degree-map-count/{{tenantid}}/{{selectedPlaceId}}/"
+        <core-ajax url="/api/summary/degree-map-count/{{new_tenant_id}}/{{selectedPlaceId}}/"
                    headers='{"Accept": "application/json"}'
-                   handleas="json" auto
+                   handleas="json"
                    on-core-response="{{degreesResponse}}"
                    on-core-error="{{ajaxError}}"
                    id="ajax_degrees">
@@ -74,6 +139,14 @@
                    id="ajax_countries">
         </core-ajax>
 
+        <core-ajax url="/api/establishments/{{tenant_id}}/offspring/"
+                   headers='{"Accept": "application/json"}'
+                   handleas="json"
+                   on-core-response="{{affiliations_response}}"
+                   on-core-error="{{ajaxError}}"
+                   id="ajax_affiliations">
+        </core-ajax>
+        <core-localstorage id="affiliations" name="affiliations" value="{{affiliations}}"></core-localstorage>
 
     </template>
     <script src="map.js"></script>

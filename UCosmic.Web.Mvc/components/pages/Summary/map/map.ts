@@ -14,6 +14,7 @@
 
 Polymer('is-page-summary-map', {
     isAjaxing: false,
+    affiliations: undefined,
     color: function (c, n, i, d) { for (i = 3; i--; c[i] = d < 0 ? 0 : d > 255 ? 255 : d | 0)d = c[i] + n; return c },
     activity_location_counts: [],
     agreement_location_counts: [],
@@ -28,10 +29,94 @@ Polymer('is-page-summary-map', {
     selectedEstablishmentId: 0,
     is_showing_detail: false,
     countries_showing_details: [],
+    color_picker_opened: false,
+    map_color: { r: 0, g: 55, b: 0 },
+    close_full_screen: function (e) {
+        this.fadeIn(this.$.overlay, 200,() => {
+            this.$.map_canvas.style.position = ''; //height: 800px; width: 990px; margin - right: 8px;
+            this.$.map_canvas.style.height = '800px';
+            this.$.map_canvas.style.width = '990px';
+            this.$.map_canvas.style.marginRight = '8px';
+            //this.$.map_canvas.style.zIndex = '2';
+            this.$.map_canvas.removeAttribute('fit');
+            //this.$.map_canvas.setAttribute('fullbleed', '');
 
+            //this.$.info_box_detail_container.style.position = '';// may not need some of this set in javascritp, just set in style in html
+            //this.$.info_box_detail_container.style.zIndex = '3';
+            //this.$.info_box_detail_container.style.top = '0';
+            //this.$.info_box_detail_container.style.left = '0';
+
+            this.$.map_bottom_bar.style.position = 'relative';
+            this.$.map_bottom_bar.style.bottom = '';
+            this.$.map_bottom_bar.style.left = '';
+            this.$.map_bottom_bar.style.width = '';
+
+            this.$.open_full_screen.style.display = 'block'
+        
+
+            //this.$.info_box.style.zIndex = '3';
+
+            //this.$.side_filter.style.zIndex = '3';
+            //this.$.side_filter.style.position = 'relative';
+            this.$.side_filter.style.top = '';
+            this.$.side_filter.style.right = '';
+            this.$.side_filter.is_full_screen = false;
+
+            this.$.close_full_screen.style.display = 'none';
+
+            this.setupMapFilters();
+            this.setup_mouse_tracer(this.$.map_canvas);
+            this.fadeOut(this.$.overlay, 500);
+        });
+    },
+    full_screen: function (e) {
+
+        //this.$.overlay.style.display = 'block'
+        this.fadeIn(this.$.overlay, 200, () => {
+            this.$.map_canvas.style.position = 'absolute';
+            this.$.map_canvas.style.height = '';
+            this.$.map_canvas.style.width = '';
+            this.$.map_canvas.style.marginRight = '';
+            //this.$.map_canvas.style.zIndex = '2';
+            this.$.map_canvas.setAttribute('fit', '');
+            //this.$.map_canvas.setAttribute('fullbleed', '');
+
+            //this.$.info_box_detail_container.style.position = 'absolute';
+            //this.$.info_box_detail_container.style.zIndex = '3';
+            //this.$.info_box_detail_container.style.top = '0';
+            //this.$.info_box_detail_container.style.left = '0';
+
+            this.$.map_bottom_bar.style.position = 'absolute';
+            this.$.map_bottom_bar.style.bottom = '20px';
+            this.$.map_bottom_bar.style.left = '10px';
+            this.$.map_bottom_bar.style.width = '900px';
+
+            this.$.open_full_screen.style.display = 'none'
+
+            //this.$.info_box.style.zIndex = '3';
+
+            //this.$.side_filter.style.zIndex = '3';
+            //this.$.side_filter.style.position = 'absolute';
+            this.$.side_filter.style.top = '25px';
+            this.$.side_filter.style.right = '60px';
+            this.$.side_filter.is_full_screen = true;
+
+            this.$.close_full_screen.style.display = 'block';
+
+            this.setupMapFilters();
+            this.setup_mouse_tracer(this.$.map_canvas);
+            this.fadeOut(this.$.overlay, 500);
+        });
+
+
+
+    },
     data_loaded: { agreements_loaded: 0, activities_loaded: 0, degrees_loaded: 0 },
     ready: function () {
 
+        _.insert = function (arr, index, item) {
+            arr.splice(index, 0, item);
+        };
         var observer = new ObjectObserver(this.data_loaded);
         observer.open((added, removed, changed, getOldValueFn) => {
             // respond to changes to the obj.
@@ -52,9 +137,49 @@ Polymer('is-page-summary-map', {
                 }
             });
         });
+
+
+        this.setup_routing();
+    },
+    open_color_picker: function () {
+        //this.color_picker_opened = this.color_picker_opened ? false : true;
+        if (this.$.color_picker_container.style.display != 'none') {
+            this.$.color_picker_container.style.transformOrigin = "left bottom"
+            this.shrink(this.$.color_picker_container, 200);
+            this.fadeOut(this.$.color_picker_container, 200,() => {
+                this.$.open_color_picker.style.left = '';
+                this.$.open_color_picker.style.visibility = "visible";
+            });
+            this.$.open_color_picker.icon = "editor:format-color-fill";
+        } else {
+            //this.style.width = '40px';//40 is width of icon
+            if (!this.is_full_screen) {
+                //this.style.position = 'relative';
+                //this.style.right = (parseInt(this.width) - 40) + 'px';
+                this.$.open_color_picker.style.left = (parseInt(this.width) - 40) + 'px';
+            } else {
+                //this.style.right = (parseInt(this.width) - 40 + 60) + 'px';
+                this.$.open_color_picker.style.left = (parseInt(this.width) - 40 + 60) + 'px';
+            }
+            this.fadeIn(this.$.color_picker_container, 500);
+            this.$.color_picker_container.style.transformOrigin = "bottom left"
+            this.grow(this.$.color_picker_container, 500);
+            this.$.open_color_picker.icon = 'close'; 
+        }
+    },
+    color_picked: function (e) {
+        this.map_color = e.target.color.rgb;
+        //this.map_color[1] = e.target.color.rgb.g;
+        //this.map_color[2] = e.target.color.rgb.b;
+        this.setupMapFilters();
     },
     domReady: function () {
         this.setup_mouse_tracer();
+        if (!this.affiliations) {
+            this.$.ajax_affiliations.go();
+        } else {
+            this.$.cascading_ddl.item_selected = this.new_tenant_id;
+        }
     },
     mouseX: function (evt) {
         if (!evt) evt = window.event;
@@ -68,7 +193,7 @@ Polymer('is-page-summary-map', {
         else if (evt.clientY) return evt.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
         else return 0;
     },
-    setup_mouse_tracer: function () {
+    setup_mouse_tracer: function (el = document) {
 
         // Simple follow the mouse script
 
@@ -79,7 +204,7 @@ Polymer('is-page-summary-map', {
         //function mouseX(evt) { if (!evt) evt = window.event; if (evt.pageX) return evt.pageX; else if (evt.clientX) return evt.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft); else return 0; }
         //function mouseY(evt) { if (!evt) evt = window.event; if (evt.pageY) return evt.pageY; else if (evt.clientY) return evt.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop); else return 0; }
 
-        document.addEventListener("mousemove",(evt) => {
+        el.addEventListener("mousemove",(evt) => {
             //if (!this.is_showing_detail) {
             var obj = this.$.info_box.style;
             //obj.visibility = 'visible';
@@ -87,6 +212,30 @@ Polymer('is-page-summary-map', {
             obj.top = (parseInt(this.mouseY(evt)) + offY) + 'px';
             //}
         });
+    },
+    filter: function (ctx, next) {
+
+        var myThis: any = document.querySelector("is-page-summary-map"),
+            tenant_id = parseInt(ctx.params.tenant_id);
+        if (tenant_id != myThis.last_tenant_id) {
+            myThis.last_tenant_id = tenant_id;
+            myThis.new_tenant_id = tenant_id && tenant_id != 0 ? tenant_id : myThis.new_tenant_id ? myThis.new_tenant_id : myThis.tenant_id ? myThis.tenant_id : 0;// should also ajax get name and put in text field.
+            myThis.data_loaded.agreements_loaded = 0;
+            myThis.data_loaded.activities_loaded = 0;
+            myThis.data_loaded.degrees_loaded = 0;
+            myThis.$.ajax_degrees.go();
+            myThis.$.ajax_activities.go();
+            myThis.$.ajax_agreements.go();
+        }
+
+    },
+
+
+    setup_routing: function () {
+        page.base('/summary/map');
+        page('/:tenant_id', this.filter);
+        page('*', this.filter);
+        page({ hashbang: true });
     },
     setupMapFilters: function () {
 
@@ -169,6 +318,7 @@ Polymer('is-page-summary-map', {
             }
         });
 
+
         map.data.setStyle((feature) => {
             var countryCode = feature.getProperty('iso_a2');//feature.B;
             //var country = this.activity_location_counts.indexOf(countryCode);
@@ -227,9 +377,10 @@ Polymer('is-page-summary-map', {
                 //colorTemp = this.color(colorArray,(percent * -1));
                 //color = 'rgb(' + colorTemp.join() + ')';
 
-                percent = ((90 * percent) + 10) / 100;
+                percent = ((95 * percent) + 5) / 100;
                 var percentString = percent.toFixed(2);
-                color = 'rgba(0, 55, 0, ' + percentString + ')';
+                color = 'rgba(' + this.map_color.r + ', ' + this.map_color.g + ', ' + this.map_color.b + ', ' + percentString + ')';
+                //color = 'rgba(0, 55, 0, ' + percentString + ')';
             }// else {
             feature.setProperty('activity_count', activity ? activity.locationCount : 0);
             feature.setProperty('total_count', total ? total.locationCount : 0);
@@ -261,10 +412,10 @@ Polymer('is-page-summary-map', {
         // Set the fill color to red when the feature is clicked.
         // Stroke weight remains 3.
 
-        map.addListener('bounds_changed',(event) => {
-            this.$.info_box_detail_container.innerHTML = ""
-            this.countries_showing_details = [];
-        });
+        //map.addListener('bounds_changed',(event) => {
+        //    this.$.info_box_detail_container.innerHTML = ""
+        //    this.countries_showing_details = [];
+        //});
 
         map.data.addListener('click',(event) => {
 
@@ -275,7 +426,7 @@ Polymer('is-page-summary-map', {
             this.countries_showing_details.push(country_name);
 
             var elementContainer = this.$.info_box_detail_container;
-            var element:any = document.createElement("is-popup");
+            var element: any = document.createElement("is-popup");
             
             ////element.style.backgroundColor = 'lightgray';
             ////element.style.position = 'absolute';
@@ -302,9 +453,9 @@ Polymer('is-page-summary-map', {
 
             elementContainer.appendChild(element);
 
-            element.addEventListener('close', (event) => {
+            element.addEventListener('close',(event) => {
                 this.countries_showing_details.pop(event.target.country_name);
-                
+
             }, false)
 
             //element.addEventListener('dragstart', this.drag_start, false);
@@ -327,7 +478,7 @@ Polymer('is-page-summary-map', {
                 return place.code == event.feature.getProperty('iso_a2');
             })
             element.country_name = country_name;
-            element.content = event.feature.getProperty('name') + "<br /><a href='/summary/report/#!/" + event.feature.getProperty('iso_a2') + "'>Total: " + event.feature.getProperty('total_count') + "</a>"
+            element.content = "<b>" + event.feature.getProperty('name') + "</b><br /><a href='/summary/report/#!/" + event.feature.getProperty('iso_a2') + "'>Total: " + event.feature.getProperty('total_count') + "</a>"
             + "<br /><a href='/" + this.styledomain + "/agreements/#/table/country/" + event.feature.getProperty('iso_a2') + "/type/any/sort/start-desc/size/10/page/1/'>Agreements: " + event.feature.getProperty('agreement_count') + "</a>"
             + "<br /><a href='/" + this.styledomain + "/employees/table/?placeIds=" + country.id + "&placeNames='>Activities: " + event.feature.getProperty('activity_count') + "</a>"
             + "<br /><a href='/" + this.styledomain + "/employees/degrees/table/?countryCode=" + event.feature.getProperty('iso_a2') + "'>Degrees: " + event.feature.getProperty('degree_count') + "</a>";
@@ -364,103 +515,6 @@ Polymer('is-page-summary-map', {
         });
 
 
-        //this.agreement_location_counts.forEach((value, index, test) => {
-        //    var my_index = 0, count = 0;
-        //    var activity = this.activity_location_counts.filter(function (value2, index2, test2) {
-        //        if (value2.countryCode != value.countryCode) {
-        //            if (value2.locationCount > biggest_country && value2.countryCode != null) {
-        //                biggest_country = value2.locationCount;
-        //            }
-        //            return false;
-        //        } else {
-        //            my_index = index2
-        //            return true;
-        //        }
-        //    })[0];
-        //    if (activity) {
-        //        count = this.activity_location_counts[my_index].locationCount + value.locationCount;
-        //    } else {
-        //        count = value.locationCount;//this.activity_location_counts.push(value);
-        //    }
-
-        //    if (count > biggest_country) {
-        //        biggest_country = count;
-        //    }
-        //    //if (activity) {
-        //    //    this.activity_location_counts[my_index].locationCount = this.activity_location_counts[my_index].locationCount + value.locationCount;
-        //    //} else {
-        //    //    this.activity_location_counts.push(value);
-        //    //}
-
-        //});
-
-        //this.activity_location_counts.map( (value) => {
-        //    if(value.countryCode != null){
-        //        //var count = 0;
-        //        //var agreement = this.agreement_location_counts.filter(function (value2, index, test) {
-        //        //    if (value2.countryCode != value.countryCode) {
-        //        //        return false;
-        //        //    } else {
-        //        //        return true;
-        //        //    }
-        //        //})[0];
-        //        //if(agreement){
-        //        //    count = agreement.locationCount;
-        //        //}
-        //        //count = value.locationCount + count;
-
-        //        if (value.locationCount > biggest_country) {
-        //            biggest_country = value.locationCount;
-        //        }
-        //    }
-        //    return value;
-        //});
-
-        //this.agreement_location_counts.map((value) => {
-        //    if (value.countryCode != null) {
-        //        //var count = 0;
-        //        //var agreement = this.agreement_location_counts.filter(function (value2, index, test) {
-        //        //    if (value2.countryCode != value.countryCode) {
-        //        //        return false;
-        //        //    } else {
-        //        //        return true;
-        //        //    }
-        //        //})[0];
-        //        //if(agreement){
-        //        //    count = agreement.locationCount;
-        //        //}
-        //        //count = value.locationCount + count;
-
-        //        if (value.locationCount > biggest_activity) {
-        //            biggest_agreement = value.locationCount;
-        //        }
-        //    }
-        //    return value;
-        //});
-
-
-        //map.data.addListener('click', function (event) {
-        //});
-        //var world_geometry = new google.maps.FusionTablesLayer({
-        //    //query: {
-        //    //    select: 'geometry',
-        //    //    from: '1N2LBk4JHwWpOY4d9fobIn27lfnZ5MDy-NoqqRpk'
-        //    //},
-        //    query: {
-        //        select: 'geometry',
-        //        from: '1N2LBk4JHwWpOY4d9fobIn27lfnZ5MDy-NoqqRpk',
-        //        where: "ISO_2DIGIT IN ('US', 'GB', 'DE')"
-        //    },
-        //    map: map,
-        //    //suppressInfoWindows: true
-        //});
-        //var layer = new google.maps.FusionTablesLayer({
-        //    query: {
-        //        select: '\'Geocodable address\'',
-        //        from: '1mZ53Z70NsChnBMm-qEYmSDOvLXgrreLTkQUvvg'
-        //    }
-        //});
-        //layer.setMap(map);
     },
     selectCountry: function (event, detail, sender) {
         var index = sender.selectedIndex;
@@ -525,6 +579,12 @@ Polymer('is-page-summary-map', {
         this.$.ajax_agreements.go();
         this.$.ajax_degrees.go();
     },
+    new_tenant_idChanged: function (oldValue, newValue) {
+        page('#!/' + newValue);
+        //this.create_affiliation_select(newValue);
+        this.$.info_box_detail_container.innerHTML = ""
+        this.countries_showing_details = [];
+    },
     activitiesResponse: function (response) {
         this.isAjaxing = false;
 
@@ -558,6 +618,35 @@ Polymer('is-page-summary-map', {
         }
         this.data_loaded.degrees_loaded = 1;
     },
+    affiliations_response: function (response) {
+        this.isAjaxing = false;
+
+        if (!response.detail.response.error) {
+            var affiliations = response.detail.response;
+            this.affiliations = affiliations.map(function (affiliation) {
+                affiliation._id = affiliation.id;
+                //affiliation.text = affiliation.officialName;
+                var remove_me: any = _.find(affiliations, function (affiliation2: any, index: any) {
+                    return affiliation.parentId == affiliation2.id;
+                });
+                if (remove_me) {
+                    affiliation.text = affiliation.officialName.replace(", " + remove_me.officialName, "");
+                } else {
+                    affiliation.text = affiliation.officialName
+                }
+                //delete country.id, delete country.name, delete country.continentId, delete country.continentCode, delete country.continentName, delete country.center, delete country.box;
+                return affiliation;
+            })
+            this.$.cascading_ddl.item_selected = this.new_tenant_id;
+            //this.$.cascading_ddl2.item_selected = this.new_tenant_id;
+            //this.create_affiliation_select(this.new_tenant_id);
+
+        } else {
+
+            console.log(response.detail.response.error)
+        }
+
+    },
     //affiliationsResponse: function (response) {
     //    this.isAjaxing = false;
     //    this.affiliationCountLoaded = true;
@@ -582,6 +671,7 @@ Polymer('is-page-summary-map', {
         this.isAjaxing = false;
 
         if (!response.detail.response.error) {
+            _.insert(response.detail.response, 4, { code: 'AQ', id: 17, name: 'Antarctica' })
             this.countries = response.detail.response
         } else {
 

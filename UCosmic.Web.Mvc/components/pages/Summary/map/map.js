@@ -1,5 +1,6 @@
 Polymer('is-page-summary-map', {
     isAjaxing: false,
+    affiliations: undefined,
     color: function (c, n, i, d) {
         for (i = 3; i--; c[i] = d < 0 ? 0 : d > 255 ? 255 : d | 0)
             d = c[i] + n;
@@ -18,9 +19,58 @@ Polymer('is-page-summary-map', {
     selectedEstablishmentId: 0,
     is_showing_detail: false,
     countries_showing_details: [],
+    color_picker_opened: false,
+    map_color: { r: 0, g: 55, b: 0 },
+    close_full_screen: function (e) {
+        var _this = this;
+        this.fadeIn(this.$.overlay, 200, function () {
+            _this.$.map_canvas.style.position = '';
+            _this.$.map_canvas.style.height = '800px';
+            _this.$.map_canvas.style.width = '990px';
+            _this.$.map_canvas.style.marginRight = '8px';
+            _this.$.map_canvas.removeAttribute('fit');
+            _this.$.map_bottom_bar.style.position = 'relative';
+            _this.$.map_bottom_bar.style.bottom = '';
+            _this.$.map_bottom_bar.style.left = '';
+            _this.$.map_bottom_bar.style.width = '';
+            _this.$.open_full_screen.style.display = 'block';
+            _this.$.side_filter.style.top = '';
+            _this.$.side_filter.style.right = '';
+            _this.$.side_filter.is_full_screen = false;
+            _this.$.close_full_screen.style.display = 'none';
+            _this.setupMapFilters();
+            _this.setup_mouse_tracer(_this.$.map_canvas);
+            _this.fadeOut(_this.$.overlay, 500);
+        });
+    },
+    full_screen: function (e) {
+        var _this = this;
+        this.fadeIn(this.$.overlay, 200, function () {
+            _this.$.map_canvas.style.position = 'absolute';
+            _this.$.map_canvas.style.height = '';
+            _this.$.map_canvas.style.width = '';
+            _this.$.map_canvas.style.marginRight = '';
+            _this.$.map_canvas.setAttribute('fit', '');
+            _this.$.map_bottom_bar.style.position = 'absolute';
+            _this.$.map_bottom_bar.style.bottom = '20px';
+            _this.$.map_bottom_bar.style.left = '10px';
+            _this.$.map_bottom_bar.style.width = '900px';
+            _this.$.open_full_screen.style.display = 'none';
+            _this.$.side_filter.style.top = '25px';
+            _this.$.side_filter.style.right = '60px';
+            _this.$.side_filter.is_full_screen = true;
+            _this.$.close_full_screen.style.display = 'block';
+            _this.setupMapFilters();
+            _this.setup_mouse_tracer(_this.$.map_canvas);
+            _this.fadeOut(_this.$.overlay, 500);
+        });
+    },
     data_loaded: { agreements_loaded: 0, activities_loaded: 0, degrees_loaded: 0 },
     ready: function () {
         var _this = this;
+        _.insert = function (arr, index, item) {
+            arr.splice(index, 0, item);
+        };
         var observer = new ObjectObserver(this.data_loaded);
         observer.open(function (added, removed, changed, getOldValueFn) {
             Object.keys(changed).forEach(function (property) {
@@ -29,9 +79,44 @@ Polymer('is-page-summary-map', {
                 }
             });
         });
+        this.setup_routing();
+    },
+    open_color_picker: function () {
+        var _this = this;
+        if (this.$.color_picker_container.style.display != 'none') {
+            this.$.color_picker_container.style.transformOrigin = "left bottom";
+            this.shrink(this.$.color_picker_container, 200);
+            this.fadeOut(this.$.color_picker_container, 200, function () {
+                _this.$.open_color_picker.style.left = '';
+                _this.$.open_color_picker.style.visibility = "visible";
+            });
+            this.$.open_color_picker.icon = "editor:format-color-fill";
+        }
+        else {
+            if (!this.is_full_screen) {
+                this.$.open_color_picker.style.left = (parseInt(this.width) - 40) + 'px';
+            }
+            else {
+                this.$.open_color_picker.style.left = (parseInt(this.width) - 40 + 60) + 'px';
+            }
+            this.fadeIn(this.$.color_picker_container, 500);
+            this.$.color_picker_container.style.transformOrigin = "bottom left";
+            this.grow(this.$.color_picker_container, 500);
+            this.$.open_color_picker.icon = 'close';
+        }
+    },
+    color_picked: function (e) {
+        this.map_color = e.target.color.rgb;
+        this.setupMapFilters();
     },
     domReady: function () {
         this.setup_mouse_tracer();
+        if (!this.affiliations) {
+            this.$.ajax_affiliations.go();
+        }
+        else {
+            this.$.cascading_ddl.item_selected = this.new_tenant_id;
+        }
     },
     mouseX: function (evt) {
         if (!evt)
@@ -53,15 +138,35 @@ Polymer('is-page-summary-map', {
         else
             return 0;
     },
-    setup_mouse_tracer: function () {
+    setup_mouse_tracer: function (el) {
         var _this = this;
+        if (el === void 0) { el = document; }
         var offX = 15;
         var offY = 15;
-        document.addEventListener("mousemove", function (evt) {
+        el.addEventListener("mousemove", function (evt) {
             var obj = _this.$.info_box.style;
             obj.left = (parseInt(_this.mouseX(evt)) + offX) + 'px';
             obj.top = (parseInt(_this.mouseY(evt)) + offY) + 'px';
         });
+    },
+    filter: function (ctx, next) {
+        var myThis = document.querySelector("is-page-summary-map"), tenant_id = parseInt(ctx.params.tenant_id);
+        if (tenant_id != myThis.last_tenant_id) {
+            myThis.last_tenant_id = tenant_id;
+            myThis.new_tenant_id = tenant_id && tenant_id != 0 ? tenant_id : myThis.new_tenant_id ? myThis.new_tenant_id : myThis.tenant_id ? myThis.tenant_id : 0;
+            myThis.data_loaded.agreements_loaded = 0;
+            myThis.data_loaded.activities_loaded = 0;
+            myThis.data_loaded.degrees_loaded = 0;
+            myThis.$.ajax_degrees.go();
+            myThis.$.ajax_activities.go();
+            myThis.$.ajax_agreements.go();
+        }
+    },
+    setup_routing: function () {
+        page.base('/summary/map');
+        page('/:tenant_id', this.filter);
+        page('*', this.filter);
+        page({ hashbang: true });
     },
     setupMapFilters: function () {
         var _this = this;
@@ -182,9 +287,9 @@ Polymer('is-page-summary-map', {
                 if (percent < .01) {
                     percent = 0.01;
                 }
-                percent = ((90 * percent) + 10) / 100;
+                percent = ((95 * percent) + 5) / 100;
                 var percentString = percent.toFixed(2);
-                color = 'rgba(0, 55, 0, ' + percentString + ')';
+                color = 'rgba(' + _this.map_color.r + ', ' + _this.map_color.g + ', ' + _this.map_color.b + ', ' + percentString + ')';
             }
             feature.setProperty('activity_count', activity ? activity.locationCount : 0);
             feature.setProperty('total_count', total ? total.locationCount : 0);
@@ -196,10 +301,6 @@ Polymer('is-page-summary-map', {
                 strokeOpacity: 0.50,
                 fillOpacity: 1
             });
-        });
-        map.addListener('bounds_changed', function (event) {
-            _this.$.info_box_detail_container.innerHTML = "";
-            _this.countries_showing_details = [];
         });
         map.data.addListener('click', function (event) {
             var country_name = event.feature.getProperty('name');
@@ -217,7 +318,7 @@ Polymer('is-page-summary-map', {
                 return place.code == event.feature.getProperty('iso_a2');
             });
             element.country_name = country_name;
-            element.content = event.feature.getProperty('name') + "<br /><a href='/summary/report/#!/" + event.feature.getProperty('iso_a2') + "'>Total: " + event.feature.getProperty('total_count') + "</a>" + "<br /><a href='/" + _this.styledomain + "/agreements/#/table/country/" + event.feature.getProperty('iso_a2') + "/type/any/sort/start-desc/size/10/page/1/'>Agreements: " + event.feature.getProperty('agreement_count') + "</a>" + "<br /><a href='/" + _this.styledomain + "/employees/table/?placeIds=" + country.id + "&placeNames='>Activities: " + event.feature.getProperty('activity_count') + "</a>" + "<br /><a href='/" + _this.styledomain + "/employees/degrees/table/?countryCode=" + event.feature.getProperty('iso_a2') + "'>Degrees: " + event.feature.getProperty('degree_count') + "</a>";
+            element.content = "<b>" + event.feature.getProperty('name') + "</b><br /><a href='/summary/report/#!/" + event.feature.getProperty('iso_a2') + "'>Total: " + event.feature.getProperty('total_count') + "</a>" + "<br /><a href='/" + _this.styledomain + "/agreements/#/table/country/" + event.feature.getProperty('iso_a2') + "/type/any/sort/start-desc/size/10/page/1/'>Agreements: " + event.feature.getProperty('agreement_count') + "</a>" + "<br /><a href='/" + _this.styledomain + "/employees/table/?placeIds=" + country.id + "&placeNames='>Activities: " + event.feature.getProperty('activity_count') + "</a>" + "<br /><a href='/" + _this.styledomain + "/employees/degrees/table/?countryCode=" + event.feature.getProperty('iso_a2') + "'>Degrees: " + event.feature.getProperty('degree_count') + "</a>";
             _this.countries_showing_details = _.union(_this.countries_showing_details, [event.feature.getProperty('name')]);
             var offX = 15;
             var offY = 15;
@@ -301,6 +402,11 @@ Polymer('is-page-summary-map', {
         this.$.ajax_agreements.go();
         this.$.ajax_degrees.go();
     },
+    new_tenant_idChanged: function (oldValue, newValue) {
+        page('#!/' + newValue);
+        this.$.info_box_detail_container.innerHTML = "";
+        this.countries_showing_details = [];
+    },
     activitiesResponse: function (response) {
         this.isAjaxing = false;
         if (!response.detail.response.error) {
@@ -331,9 +437,33 @@ Polymer('is-page-summary-map', {
         }
         this.data_loaded.degrees_loaded = 1;
     },
+    affiliations_response: function (response) {
+        this.isAjaxing = false;
+        if (!response.detail.response.error) {
+            var affiliations = response.detail.response;
+            this.affiliations = affiliations.map(function (affiliation) {
+                affiliation._id = affiliation.id;
+                var remove_me = _.find(affiliations, function (affiliation2, index) {
+                    return affiliation.parentId == affiliation2.id;
+                });
+                if (remove_me) {
+                    affiliation.text = affiliation.officialName.replace(", " + remove_me.officialName, "");
+                }
+                else {
+                    affiliation.text = affiliation.officialName;
+                }
+                return affiliation;
+            });
+            this.$.cascading_ddl.item_selected = this.new_tenant_id;
+        }
+        else {
+            console.log(response.detail.response.error);
+        }
+    },
     countriesResponse: function (response) {
         this.isAjaxing = false;
         if (!response.detail.response.error) {
+            _.insert(response.detail.response, 4, { code: 'AQ', id: 17, name: 'Antarctica' });
             this.countries = response.detail.response;
         }
         else {
