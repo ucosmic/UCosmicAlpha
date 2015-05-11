@@ -1,0 +1,36 @@
+﻿
+<link rel="import" href="../../Polymer/bower_components/core-menu/core-menu.html">
+<link rel="import" href="../../Polymer/bower_components/paper-dropdown/paper-dropdown.html">
+<link rel="import" href="../../Polymer/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<core-style id="DDL">
+    .items-inner-container {
+    background-color: {{first}};
+    padding: 5px;
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: scroll;
+    }
+</core-style>
+<polymer-element name="is-ddl" attributes="selected,selectedid,list,label">
+    <template>
+        <link href="DDL.css" rel="stylesheet" />
+        <core-style ref="DDL"></core-style>
+
+        <paper-dropdown-menu flex label="{{label}}" style="margin-bottom:0;" core-select="{{select}}">
+            <paper-dropdown class="dropdown">
+                <core-menu class="menu">
+                    <template repeat="{{item, itemI in list}}">
+                        <paper-item on-click="{{select}}" on-mouseover="{{selectHover}}" on-mouseout="{{selectHoverLeave}}" data-id="{{item._id}}" class="list-item">
+                            {{item.text}}
+                        </paper-item>
+                    </template>
+                </core-menu>
+            </paper-dropdown>
+        </paper-dropdown-menu>
+
+    </template>
+    <script src="DDL.js"></script>
+
+</polymer-element>
+
+
