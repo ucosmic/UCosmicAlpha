@@ -1,0 +1,32 @@
+﻿
+<link rel="import" href="../../Polymer/bower_components/paper-shadow/paper-shadow.html" />
+<link rel="import" href="../../Polymer/bower_components/paper-icon-button/paper-icon-button.html" />
+<link rel="import" href="../../components/animations/animations.html" />
+<polymer-element name="is-side-filter" attributes="width has_space is_full_screen" extends="is-animations">
+    <template>
+
+        <link href="side_filter.css" rel="stylesheet" />
+        <div style="text-align:right;">
+            <paper-shadow z="2" id="menu_icon_shadow" class="tennant_colors" style="border-radius:10px; display:inline-block;">
+                <paper-icon-button icon="filter-list" id="menu_icon" on-click="{{toggle_menu}}"></paper-icon-button>
+            </paper-shadow>
+            <div id="container" layout vertical class="menu" style="text-align:left;display:none; position:relative; width:0;height:0; top:-40px;">
+                <paper-shadow z="2" style="border-radius:20px;">
+                    <div class="tennant_colors" style=" padding: 20px; border-radius: 20px;" layout vertical>
+                        <div style=" overflow:visible;position: absolute; width: 270px;" layout horizontal end-justified>
+                            <paper-icon-button style="position:relative; top:-16px;" icon="close" id="close_icon" on-click="{{toggle_menu}}"></paper-icon-button>
+                        </div>
+                        <shadow></shadow>
+                        
+
+                    </div>
+                </paper-shadow>
+                <div flex></div>
+            </div>
+        </div>
+    </template>
+    <script src="side_filter.js"></script>
+
+</polymer-element>
+
+
