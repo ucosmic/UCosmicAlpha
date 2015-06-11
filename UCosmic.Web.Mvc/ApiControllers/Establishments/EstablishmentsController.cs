@@ -14,6 +14,8 @@ using FluentValidation;
 using FluentValidation.Results;
 using UCosmic.Domain.Establishments;
 using UCosmic.Web.Mvc.Models;
+using System.Threading;
+using System.Net.Http.Headers;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
@@ -152,6 +154,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
             Debug.Assert(url != null);
             response.Headers.Location = new Uri(url);
 
+            new Thread(() =>
+            {
+                Run_Firebase_establishment_sync();
+            }).Start();
             return response;
         }
 
@@ -179,6 +185,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var response = Request.CreateResponse(HttpStatusCode.OK, "Establishment was successfully updated.");
             return response;
+
+            new Thread(() =>
+            {
+                Run_Firebase_establishment_sync();
+            }).Start();
         }
 
         [POST("{establishmentId:int}/validate-ceeb-code")]
@@ -263,6 +274,42 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     validationResult.Errors.First(forText).ErrorMessage, "text/plain");
 
             return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+
+        public async void Run_Firebase_establishment_sync()//(CancellationToken cancellationToken)
+        {
+
+
+            IList<EstablishmentListAllApiReturn> model = new List<EstablishmentListAllApiReturn>();
+
+            EstablishmentListAllRepository establishmentListRepository = new EstablishmentListAllRepository();
+            //AgreementTypesRepository AgreementTypesRepository = new AgreementTypesRepository();
+            model = establishmentListRepository.EstablishmentList_All_By_establishment();
+
+
+            using (var client = new HttpClient())
+            {
+                // New code:
+                client.BaseAddress = new Uri("https://ucosmic.firebaseio.com");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                foreach (EstablishmentListAllApiReturn establishment in model) // Loop through List with foreach.
+                {
+                    var xx = new { establishment = establishment.official_name };
+                    //client.PutAsJsonAsync("students/establishments/" + establishment.establishment + ".json", xx);
+                    try
+                    {
+                        //client.PutAsJsonAsync("students/establishments/" + establishment.establishment + ".json", xx);
+                        HttpResponseMessage response = await client.PutAsJsonAsync("Establishments/Establishments/" + establishment.establishment + ".json", xx);
+                    }
+                    catch (Exception e)
+                    {
+                        var x = e;
+                    }
+                }
+            }
         }
     }
 }
