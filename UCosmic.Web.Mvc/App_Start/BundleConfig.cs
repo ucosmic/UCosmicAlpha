@@ -42,11 +42,14 @@ namespace UCosmic.Web.Mvc
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                 "~/scripts/modernizr/modernizr-{version}.js"));
-            
+
             // bundles for layout (all pages)
             bundles.Add(new ScriptBundle("~/bundles/layout2").Include(
                 "~/components/polymer/bower_components/lodash/lodash.min.js",
                 "~/components/polymer/bower_components/webcomponentsjs/webcomponents.js"));
+            bundles.Add(new ScriptBundle("~/bundles/layout3").Include(
+                "~/components/polymer_1x/bower_components/lodash/lodash.min.js",
+                "~/components/polymer_1x/bower_components/webcomponentsjs/webcomponents-lite.min.js"));
 
             // bundles for layout (all pages)
             bundles.Add(new ScriptBundle("~/bundles/layout").Include(
