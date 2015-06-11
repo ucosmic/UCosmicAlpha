@@ -16,7 +16,8 @@ Polymer('polymer-content-home-has-domain-edit', {
         if (this.isAjaxing) {
             return;
         }
-        if (this.$.title.inputChange() && this.$.description.inputChange()) {
+        if (this.$.title.inputChange() &&
+            this.$.description.inputChange()) {
             if (this.links.length) {
                 this.isAjaxing = true;
                 this.$.ajax_addSection.method = 'POST';
@@ -90,6 +91,7 @@ Polymer('polymer-content-home-has-domain-edit', {
         this.$.ajax_addPhoto.contentType = null;
     },
     addPhotoResponse: function (response) {
+        //get url from response and post it up with section data
         var _this = this;
         if (!response.detail.response.error) {
             this.$.linkMessage.style.display = "none";

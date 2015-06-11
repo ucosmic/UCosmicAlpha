@@ -1,0 +1,26 @@
+﻿
+<link rel="import" href="../../../../components/Polymer_1x/bower_components/polymer/polymer.html">
+<dom-module id="is-page-student-new">
+    <!--attributes="styledomain, tenant_id, firebase_token"-->
+    <template>
+        <link href="new.css" rel="stylesheet" />
+        <input type="file" name="file_input" id="file_input" on-change="{{imageSelected}}" />
+        <!--<core-ajax url="/api/studentsa"
+                   params='{"Description":"test",
+                   "Links": "test",
+                   "Title": "test"}'
+                   handleas="json"
+                   method="post"
+                   on-core-response="{{student_import_response}}"
+                   on-core-error="{{ajax_error}}"
+                   id="ajax_student_import">
+        </core-ajax>-->
+        <input type="button" name="test" id="test" on-click="{{test}}" value="test" />
+    </template>
+    <script src="../../../models/students.js"></script>
+    <script src="../../../utilities/xlsx.full.min.js"></script>
+    <script src="new.js"></script>
+
+</dom-module>
+
+

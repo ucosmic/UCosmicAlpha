@@ -2,7 +2,8 @@ Polymer('polymer-content-home-has-domain-edit-add-link', {
     linkAdded: { url: "", text: "" },
     addedLink: false,
     addLink: function () {
-        if (this.$.linkText.inputChange() && this.$.url.inputChange()) {
+        if (this.$.linkText.inputChange() &&
+            this.$.url.inputChange()) {
             this.linkAdded.url = this.url;
             this.linkAdded.text = this.linkText;
             this.linkText = "";

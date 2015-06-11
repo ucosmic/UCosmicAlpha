@@ -1,3 +1,4 @@
+/// <reference path="../../typediff/mytypes.d.ts" />
 Polymer('polymer-content-edit-home-page', {
     cancel: 0,
     flasherUpdated: 0,
