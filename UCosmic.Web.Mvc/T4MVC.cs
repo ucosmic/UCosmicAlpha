@@ -39,6 +39,7 @@ public static class MVC
     public static UCosmic.Web.Mvc.Controllers.PeopleController People = new UCosmic.Web.Mvc.Controllers.T4MVC_PeopleController();
     public static UCosmic.Web.Mvc.Controllers.RepsController Reps = new UCosmic.Web.Mvc.Controllers.T4MVC_RepsController();
     public static UCosmic.Web.Mvc.Controllers.SamlMetadataController SamlMetadata = new UCosmic.Web.Mvc.Controllers.T4MVC_SamlMetadataController();
+    public static UCosmic.Web.Mvc.Controllers.StudentsController Students = new UCosmic.Web.Mvc.Controllers.T4MVC_StudentsController();
     public static UCosmic.Web.Mvc.Controllers.SummaryController Summary = new UCosmic.Web.Mvc.Controllers.T4MVC_SummaryController();
     public static UCosmic.Web.Mvc.Controllers.TenancyController Tenancy = new UCosmic.Web.Mvc.Controllers.T4MVC_TenancyController();
     public static UCosmic.Web.Mvc.Controllers.UsersController Users = new UCosmic.Web.Mvc.Controllers.T4MVC_UsersController();
@@ -2795,6 +2796,7 @@ namespace Links
                 public static readonly string linq_jquery_d_ts = Url("linq.jquery.d.ts");
             }
         
+            public static readonly string lodash_d_ts = Url("lodash.d.ts");
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class modernizr {
                 private const string URLPATH = "~/scripts/typings/modernizr";
@@ -2812,6 +2814,7 @@ namespace Links
             }
         
             public static readonly string myTypes_d_ts = Url("myTypes.d.ts");
+            public static readonly string page_d_ts = Url("page.d.ts");
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class sammyjs {
                 private const string URLPATH = "~/scripts/typings/sammyjs";
@@ -3154,6 +3157,9 @@ namespace Links
             private const string URLPATH = "~/content/countries";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string ne_countries_110m_json = Url("ne-countries-110m.json");
+            public static readonly string ne_countries_50m_json = Url("ne-countries-50m.json");
+            public static readonly string ne_v2_0_0_countries_geojson_zip = Url("ne-v2.0.0-countries-geojson.zip");
             public static readonly string world_countries_json = Url("world-countries.json");
         }
     

@@ -39,6 +39,7 @@ namespace T4MVC
                 public readonly string _GoogleMapsToolsOverlay = "_GoogleMapsToolsOverlay";
                 public readonly string _Layout = "_Layout";
                 public readonly string _Layout2 = "_Layout2";
+                public readonly string _Layout3 = "_Layout3";
                 public readonly string _LayoutCss = "_LayoutCss";
                 public readonly string _SampleSidebarNav = "_SampleSidebarNav";
                 public readonly string _SampleStylingBib = "_SampleStylingBib";
@@ -51,6 +52,7 @@ namespace T4MVC
             public readonly string _GoogleMapsToolsOverlay = "~/Views/Shared/_GoogleMapsToolsOverlay.cshtml";
             public readonly string _Layout = "~/Views/Shared/_Layout.cshtml";
             public readonly string _Layout2 = "~/Views/Shared/_Layout2.cshtml";
+            public readonly string _Layout3 = "~/Views/Shared/_Layout3.cshtml";
             public readonly string _LayoutCss = "~/Views/Shared/_LayoutCss.cshtml";
             public readonly string _SampleSidebarNav = "~/Views/Shared/_SampleSidebarNav.cshtml";
             public readonly string _SampleStylingBib = "~/Views/Shared/_SampleStylingBib.cshtml";
