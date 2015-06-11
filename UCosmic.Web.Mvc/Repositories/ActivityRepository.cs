@@ -121,9 +121,9 @@ namespace UCosmic.Repositories
                     string keywordValue = "";
 
                     if (keywords[keyword.Index].IndexOf("+") == 0 || keyword.Value.IndexOf("-") == 0)
-                        {
-                            sql += ")";
-                        }
+                    {
+                        sql += ")";
+                    }
 
                     if (keyword.Value.IndexOf("-") == 0)
                     {
@@ -142,8 +142,10 @@ namespace UCosmic.Repositories
                         sql += " " + or + " (iu.name not like '%" + keywordValue + "%' or iu.name is null)";
                         sql += " " + or + " (atag.text not like '%" + keywordValue + "%' or atag.text is null)";
                         sql += " " + or + " (av.title not like '%" + keywordValue + "%'  or av.title is null)" + or + " (av.contentsearchable not like '%" + keywordValue + "%'  or av.contentsearchable is null))";
-                        
-                    }else if(keyword.Value != "+"){
+
+                    }
+                    else if (keyword.Value != "+")
+                    {
                         keywordValue = keyword.Value;
                         if (keyword.Index > 0 && keywords[keyword.Index - 1].IndexOf("+") != 0)
                         {
@@ -160,9 +162,9 @@ namespace UCosmic.Repositories
                         sql += " " + or + " (people.lastname like '%" + keywordValue + "%')";
                         sql += " " + or + " (iu.name like '%" + keywordValue + "%')";
 
-                            sql += " " + or + " atag.text  like '%" + keywordValue + "%'";
-                            sql += " " + or + " av.title  like '%" + keywordValue + "%' " + or + " av.contentsearchable  like '%" + keywordValue + "%' )";
-                        
+                        sql += " " + or + " atag.text  like '%" + keywordValue + "%'";
+                        sql += " " + or + " av.title  like '%" + keywordValue + "%' " + or + " av.contentsearchable  like '%" + keywordValue + "%' )";
+
 
                     }
 
@@ -176,7 +178,7 @@ namespace UCosmic.Repositories
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
             string sql = "select distinct aa.revisionid as id,  startsOn, endsOn, people.revisionId as personId, av.title, " +
                   " CASE WHEN endsOn is not null THEN endsOn When ongoing = 1 then '2999-01-01 00:00:00.000' When startsOn is not null then startsOn ELSE '1901-01-01 00:00:00.000' End as lastDate, " +
-                  //" CASE When startsOn is not null THEN startsOn when endsOn is not null then endsOn ELSE '2999-01-01 00:00:00.000' End as firstDate, " +
+                //" CASE When startsOn is not null THEN startsOn when endsOn is not null then endsOn ELSE '2999-01-01 00:00:00.000' End as firstDate, " +
                   " CASE When startsOn is not null THEN startsOn ELSE '1901-01-01 00:00:00.000' End as firstDate, " +
                   " CASE When lastName is not null THEN lastName ELSE 'zzzzzzzz' End as lastNameSort, " +
                   " CASE When firstName is not null THEN firstName ELSE 'zzzzzzzz' End as firstNameSort, " +
@@ -216,46 +218,56 @@ namespace UCosmic.Repositories
             if (input != null)
             {
                 sql = AddSqlFilter(sql, input);
-                
+
                 string ascDesc = "desc";
                 string orderBy = input.OrderBy;
-                orderBy = orderBy.Replace("location", "locationName");
-                if (orderBy.IndexOf("asc") > -1)
+                if (orderBy != null)
                 {
-                    orderBy = orderBy.Replace("-asc", "");
-                    ascDesc = "asc";
-                }else{
-                    orderBy = orderBy.Replace("-desc", "");
-                }
-                if (orderBy.Contains("recency"))
-                {
-                    if (ascDesc.Contains("desc")){
-                        sql += " order by onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
-                    }else
+                    orderBy = orderBy.Replace("location", "locationName");
+                    if (orderBy.IndexOf("asc") > -1)
                     {
-                        sql += " order by onGoingSort asc, firstDate asc, lastDate asc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
+                        orderBy = orderBy.Replace("-asc", "");
+                        ascDesc = "asc";
                     }
+                    else
+                    {
+                        orderBy = orderBy.Replace("-desc", "");
+                    }
+                    if (orderBy.Contains("recency"))
+                    {
+                        if (ascDesc.Contains("desc"))
+                        {
+                            sql += " order by onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
+                        }
+                        else
+                        {
+                            sql += " order by onGoingSort asc, firstDate asc, lastDate asc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
+                        }
+                    }
+                    else if (orderBy.Contains("lastname"))
+                    {
+                        orderBy = "lastNameSort";
+                        sql += " order by " + orderBy + " " + ascDesc + ", firstNameSort asc, onGoingSort desc, lastDate desc, firstDate desc, locationName asc, av.title asc";
+                    }
+                    else if (orderBy.Contains("locationName"))
+                    {
+                        sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, lastDate desc, firstDate desc, lastNameSort asc, firstNameSort asc, av.title asc";
+                    }
+                    else if (orderBy.Contains("title"))
+                    {
+                        sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc, firstNameSort asc";
+                    }
+                    else
+                    {
+                        sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
+                    }
+
                 }
-                else if (orderBy.Contains("lastname"))
-                {
-                    orderBy = "lastNameSort";
-                    sql += " order by " + orderBy + " " + ascDesc + ", firstNameSort asc, onGoingSort desc, lastDate desc, firstDate desc, locationName asc, av.title asc";
-                }
-                else if (orderBy.Contains("locationName"))
-                {
-                    sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, lastDate desc, firstDate desc, lastNameSort asc, firstNameSort asc, av.title asc";
-                }
-                else if (orderBy.Contains("title"))
-                {
-                    sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc, firstNameSort asc";
-                }
-                else
-                {
-                    sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
-                }
-            }else{
+            }
+            else
+            {
                 sql += " order by onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
-                
+
             }
 
 
@@ -273,87 +285,87 @@ namespace UCosmic.Repositories
 
 
             //sql = sql.Replace("replaceMeOrderBy", "t." + orderBy);
-             
+
 
             IList<ActivityQueryResultModel> ActivityQueryResult = connectionFactory.SelectList<ActivityQueryResultModel>(DB.UCosmic, sql);
 
             return ActivityQueryResult;
         }
-    //    public IList<ActivityMapCountsApiQueryResultModel> ActivityMapCount_Water(ActivitySearchInputModel input, int? ancestorId)
-    //    {
-    //        SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
-    //        string sql = "select distinct aa.revisionid, pp1.revisionid as id, people.revisionId as personId, pp1.officialName as name, pp1.latitude, pp1.longitude, code = '' FROM [ActivitiesV2].[ActivityLocation] al" +
-    //              " inner join [ActivitiesV2].[ActivityValues] av on al.activityValuesId=av.revisionid" +
-    //              " left outer join [ActivitiesV2].[ActivityType] at on at.activityValuesId=av.revisionid" +
-    //              " left outer join [ActivitiesV2].[ActivityTag] atag on atag.activityValuesId=av.revisionid" +//may not have tags
-    //              " inner join Places.place pp1 on al.placeId=pp1.revisionid" +
-    //            //" left outer join Places.place pp2 on pp1.parentid=pp2.revisionid" + // may not need but would have to change filter
-    //              " inner join [ActivitiesV2].[Activity] aa on av.activityId=aa.revisionid" +
-    //              " inner join [People].Person people on aa.personId=people.revisionid" +
-    //              " left outer join people.affiliation pa on pa.personId=people.revisionid" +
-    //              " left outer join establishments.establishmentNode een on pa.establishmentid=een.offspringId" +
-    //              " inner join [identity].[user] iu on iu.personId=people.revisionid" +
-    //              " left outer join Places.GeoPlanetPlace gpp on gpp.placeId=pp1.revisionid " +
-    //              " left outer join Places.GeoPlanetPlaceBelongTo gppbt on gppbt.placeWoeId=gpp.woeid" +
-    //              " left outer join Places.GeoPlanetPlace gpp2 on gppbt.BelongToWoeId=gpp2.woeid" +
-    //              " left outer join Places.place pp2 on gpp2.placeId=pp2.revisionid " +
-    //              " where (pa.establishmentid=" + ancestorId + " or een.AncestorId=" + ancestorId + ") and pp1.isWater = 1 and aa.mode='public' and av.mode='public' and aa.EditSourceId is null";
-    //        if (input != null)
-    //        {
-    //            sql = AddSqlFilter(sql, input);
-    //        }
-    //        //if(Type == "country"){
-    //        //    sql += "pp1.isCountry = 1";
-    //        //}
-    //        IList<ActivityMapCountsApiQueryResultModel> ActivityMapCounts = connectionFactory.SelectList<ActivityMapCountsApiQueryResultModel>(DB.UCosmic, sql);
+        //    public IList<ActivityMapCountsApiQueryResultModel> ActivityMapCount_Water(ActivitySearchInputModel input, int? ancestorId)
+        //    {
+        //        SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
+        //        string sql = "select distinct aa.revisionid, pp1.revisionid as id, people.revisionId as personId, pp1.officialName as name, pp1.latitude, pp1.longitude, code = '' FROM [ActivitiesV2].[ActivityLocation] al" +
+        //              " inner join [ActivitiesV2].[ActivityValues] av on al.activityValuesId=av.revisionid" +
+        //              " left outer join [ActivitiesV2].[ActivityType] at on at.activityValuesId=av.revisionid" +
+        //              " left outer join [ActivitiesV2].[ActivityTag] atag on atag.activityValuesId=av.revisionid" +//may not have tags
+        //              " inner join Places.place pp1 on al.placeId=pp1.revisionid" +
+        //            //" left outer join Places.place pp2 on pp1.parentid=pp2.revisionid" + // may not need but would have to change filter
+        //              " inner join [ActivitiesV2].[Activity] aa on av.activityId=aa.revisionid" +
+        //              " inner join [People].Person people on aa.personId=people.revisionid" +
+        //              " left outer join people.affiliation pa on pa.personId=people.revisionid" +
+        //              " left outer join establishments.establishmentNode een on pa.establishmentid=een.offspringId" +
+        //              " inner join [identity].[user] iu on iu.personId=people.revisionid" +
+        //              " left outer join Places.GeoPlanetPlace gpp on gpp.placeId=pp1.revisionid " +
+        //              " left outer join Places.GeoPlanetPlaceBelongTo gppbt on gppbt.placeWoeId=gpp.woeid" +
+        //              " left outer join Places.GeoPlanetPlace gpp2 on gppbt.BelongToWoeId=gpp2.woeid" +
+        //              " left outer join Places.place pp2 on gpp2.placeId=pp2.revisionid " +
+        //              " where (pa.establishmentid=" + ancestorId + " or een.AncestorId=" + ancestorId + ") and pp1.isWater = 1 and aa.mode='public' and av.mode='public' and aa.EditSourceId is null";
+        //        if (input != null)
+        //        {
+        //            sql = AddSqlFilter(sql, input);
+        //        }
+        //        //if(Type == "country"){
+        //        //    sql += "pp1.isCountry = 1";
+        //        //}
+        //        IList<ActivityMapCountsApiQueryResultModel> ActivityMapCounts = connectionFactory.SelectList<ActivityMapCountsApiQueryResultModel>(DB.UCosmic, sql);
 
-    //        return ActivityMapCounts;
-    //    }
+        //        return ActivityMapCounts;
+        //    }
 
-    //    public IList<ActivityMapCountsApiQueryResultModel> ActivityMapCount_Continent(ActivitySearchInputModel input, int? ancestorId)
-    //    {
+        //    public IList<ActivityMapCountsApiQueryResultModel> ActivityMapCount_Continent(ActivitySearchInputModel input, int? ancestorId)
+        //    {
 
 
-    //        SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
-    //        string sql = "select distinct aa.revisionid, pp1.revisionid as id, people.revisionId as personId, pp1.latitude, pp1.longitude, pp1.isContinent, pp1.isWater, " +
-    //              " CASE WHEN (pp1.iswater = 1 and gnt.continentcode IS null) THEN 'WATER' WHEN pp1.isearth = 1 THEN 'GLOBAL' ELSE gnt.continentcode END as code, " +
-    //              " CASE WHEN (pp1.iswater = 1 and gnt.continentcode IS null) THEN 'Bodies Of Water' WHEN pp1.isearth = 1 THEN 'Global'  " +
-    //              " WHEN gnt.continentcode = 'AF' THEN 'Africa' " +
-    //              " WHEN gnt.continentcode = 'AN' THEN 'Antarctica' " +
-    //              " WHEN gnt.continentcode = 'AS' THEN 'Asia' " +
-    //              " WHEN gnt.continentcode = 'EU' THEN 'Europe' " +
-    //              " WHEN gnt.continentcode = 'NA' THEN 'North America' " +
-    //              " WHEN gnt.continentcode = 'OC' THEN 'Oceana' " +
-    //              " WHEN gnt.continentcode = 'SA' THEN 'South America'" +
-    //              " ELSE pp1.officialName END as name" +
-    //              " FROM [ActivitiesV2].[ActivityLocation] al" +
-    //              " inner join [ActivitiesV2].[ActivityValues] av on al.activityValuesId=av.revisionid" +
-    //              " left outer join [ActivitiesV2].[ActivityType] at on at.activityValuesId=av.revisionid" +
-    //              " left outer join [ActivitiesV2].[ActivityTag] atag on atag.activityValuesId=av.revisionid" +//may not have tags
-    //              " inner join Places.place pp1 on al.placeId=pp1.revisionid" +
-    //            //" left outer join Places.place pp2 on pp1.parentid=pp2.revisionid" +//may not have parent
-    //              " inner join [ActivitiesV2].[Activity] aa on av.activityId=aa.revisionid" +
-    //              " inner join [People].Person people on aa.personId=people.revisionid" +
-    //              " left outer join people.affiliation pa on pa.personId=people.revisionid" +
-    //              " left outer join establishments.establishmentNode een on pa.establishmentid=een.offspringId" +
-    //              " inner join [identity].[user] iu on iu.personId=people.revisionid" +
-    //              " inner join Places.geonamestoponym gnt on gnt.placeId=pp1.revisionid" +
-    //              " left outer join Places.GeoPlanetPlace gpp on gpp.placeId=pp1.revisionid " +
-    //              " left outer join Places.GeoPlanetPlaceBelongTo gppbt on gppbt.placeWoeId=gpp.woeid" +
-    //              " left outer join Places.GeoPlanetPlace gpp2 on gppbt.BelongToWoeId=gpp2.woeid" +
-    //              " left outer join Places.place pp2 on gpp2.placeId=pp2.revisionid " +
-    //              " where (pa.establishmentid=" + ancestorId + " or een.AncestorId=" + ancestorId + ") and aa.mode='public' and av.mode='public' and aa.EditSourceId is null" +
-    //              " and (pp1.isregion=0 or (pp1.isregion=1 and gnt.continentcode IS NOT null))";
-    //        if (input != null)
-    //        {
-    //            sql = AddSqlFilter(sql, input);
-    //        }
-    //        //if(Type == "country"){
-    //        //    sql += "pp1.isCountry = 1";
-    //        //}
-    //        IList<ActivityMapCountsApiQueryResultModel> ActivityMapCounts = connectionFactory.SelectList<ActivityMapCountsApiQueryResultModel>(DB.UCosmic, sql);
+        //        SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
+        //        string sql = "select distinct aa.revisionid, pp1.revisionid as id, people.revisionId as personId, pp1.latitude, pp1.longitude, pp1.isContinent, pp1.isWater, " +
+        //              " CASE WHEN (pp1.iswater = 1 and gnt.continentcode IS null) THEN 'WATER' WHEN pp1.isearth = 1 THEN 'GLOBAL' ELSE gnt.continentcode END as code, " +
+        //              " CASE WHEN (pp1.iswater = 1 and gnt.continentcode IS null) THEN 'Bodies Of Water' WHEN pp1.isearth = 1 THEN 'Global'  " +
+        //              " WHEN gnt.continentcode = 'AF' THEN 'Africa' " +
+        //              " WHEN gnt.continentcode = 'AN' THEN 'Antarctica' " +
+        //              " WHEN gnt.continentcode = 'AS' THEN 'Asia' " +
+        //              " WHEN gnt.continentcode = 'EU' THEN 'Europe' " +
+        //              " WHEN gnt.continentcode = 'NA' THEN 'North America' " +
+        //              " WHEN gnt.continentcode = 'OC' THEN 'Oceana' " +
+        //              " WHEN gnt.continentcode = 'SA' THEN 'South America'" +
+        //              " ELSE pp1.officialName END as name" +
+        //              " FROM [ActivitiesV2].[ActivityLocation] al" +
+        //              " inner join [ActivitiesV2].[ActivityValues] av on al.activityValuesId=av.revisionid" +
+        //              " left outer join [ActivitiesV2].[ActivityType] at on at.activityValuesId=av.revisionid" +
+        //              " left outer join [ActivitiesV2].[ActivityTag] atag on atag.activityValuesId=av.revisionid" +//may not have tags
+        //              " inner join Places.place pp1 on al.placeId=pp1.revisionid" +
+        //            //" left outer join Places.place pp2 on pp1.parentid=pp2.revisionid" +//may not have parent
+        //              " inner join [ActivitiesV2].[Activity] aa on av.activityId=aa.revisionid" +
+        //              " inner join [People].Person people on aa.personId=people.revisionid" +
+        //              " left outer join people.affiliation pa on pa.personId=people.revisionid" +
+        //              " left outer join establishments.establishmentNode een on pa.establishmentid=een.offspringId" +
+        //              " inner join [identity].[user] iu on iu.personId=people.revisionid" +
+        //              " inner join Places.geonamestoponym gnt on gnt.placeId=pp1.revisionid" +
+        //              " left outer join Places.GeoPlanetPlace gpp on gpp.placeId=pp1.revisionid " +
+        //              " left outer join Places.GeoPlanetPlaceBelongTo gppbt on gppbt.placeWoeId=gpp.woeid" +
+        //              " left outer join Places.GeoPlanetPlace gpp2 on gppbt.BelongToWoeId=gpp2.woeid" +
+        //              " left outer join Places.place pp2 on gpp2.placeId=pp2.revisionid " +
+        //              " where (pa.establishmentid=" + ancestorId + " or een.AncestorId=" + ancestorId + ") and aa.mode='public' and av.mode='public' and aa.EditSourceId is null" +
+        //              " and (pp1.isregion=0 or (pp1.isregion=1 and gnt.continentcode IS NOT null))";
+        //        if (input != null)
+        //        {
+        //            sql = AddSqlFilter(sql, input);
+        //        }
+        //        //if(Type == "country"){
+        //        //    sql += "pp1.isCountry = 1";
+        //        //}
+        //        IList<ActivityMapCountsApiQueryResultModel> ActivityMapCounts = connectionFactory.SelectList<ActivityMapCountsApiQueryResultModel>(DB.UCosmic, sql);
 
-    //        return ActivityMapCounts;
-    //    }
+        //        return ActivityMapCounts;
+        //    }
     }
 }
