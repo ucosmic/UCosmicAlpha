@@ -43,12 +43,14 @@ namespace UCosmic.Domain.Degrees
 
             if (query.EstablishmentId.HasValue)
             {
-                queryable = queryable.Where(x => x.Person.Affiliations.Any(y => y.IsDefault && y.EstablishmentId == query.EstablishmentId.Value));
+                queryable = queryable.Where(x => x.Person.Affiliations.Any(y => y.EstablishmentId == query.EstablishmentId.Value));
+                //queryable = queryable.Where(x => x.Person.Affiliations.Any(y => y.IsDefault && y.EstablishmentId == query.EstablishmentId.Value));
             }
             else if (!string.IsNullOrWhiteSpace(query.EstablishmentDomain))
             {
                 var establishment = _queries.Execute(new EstablishmentByDomain(query.EstablishmentDomain));
-                queryable = queryable.Where(x => x.Person.Affiliations.Any(y => y.IsDefault && y.EstablishmentId == establishment.RevisionId));
+                queryable = queryable.Where(x => x.Person.Affiliations.Any(y => y.EstablishmentId == establishment.RevisionId));
+                //queryable = queryable.Where(x => x.Person.Affiliations.Any(y => y.IsDefault && y.EstablishmentId == establishment.RevisionId));
             }
 
             if (query.AncestorId.HasValue)
