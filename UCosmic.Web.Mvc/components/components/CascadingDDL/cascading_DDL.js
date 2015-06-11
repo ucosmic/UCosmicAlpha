@@ -1,3 +1,4 @@
+/// <reference path="../../typediff/mytypes.d.ts" />
 Polymer('is-cascading-ddl', {
     ready: function () {
         this.$.list_container.setAttribute(this.layout_type, "");

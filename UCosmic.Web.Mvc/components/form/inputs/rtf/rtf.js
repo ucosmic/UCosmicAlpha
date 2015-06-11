@@ -1,3 +1,4 @@
+/// <reference path="../../../typediff/mytypes.d.ts" />
 Polymer('polymer-inputs-rtf', {
     errorMessage: "",
     isRTF: false,
@@ -5,7 +6,8 @@ Polymer('polymer-inputs-rtf', {
     ValidationClass: pValidation,
     isValidated: true,
     inputChange: function () {
-        var options = { isEmail: this.isEmail, value: this.$.input.value, name: this.name, isRequired: this.isRequired, valueCompared: this.comparedValue, nameCompared: this.nameCompared, min: this.min }, validation = new this.ValidationClass(options), message = validation.validate();
+        var options = { isEmail: this.isEmail, value: this.$.input.value, name: this.name, isRequired: this.isRequired,
+            valueCompared: this.comparedValue, nameCompared: this.nameCompared, min: this.min }, validation = new this.ValidationClass(options), message = validation.validate();
         if (message == "Ok") {
             this.$.input.style.border = "";
             this.$.inputMessage.style.display = "none";

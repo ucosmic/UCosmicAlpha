@@ -1,3 +1,12 @@
+/// <reference path="../../typediff/mytypes.d.ts" />
+//class activityCount{
+//    locationCount: number;
+//    type: string;
+//    typeCount: number;
+//    constructor(type: string = "", typeCount: number = 0, locationCount: number = 0){
+//        this.type = type;
+//        this.typeCount = typeCount;
+//        this.locationCount = locationCount;    }
 Polymer('is-auto-complete', {
     isAjaxing: false,
     selected: "",

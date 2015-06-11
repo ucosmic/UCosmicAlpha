@@ -1,3 +1,4 @@
+/// <reference path="../../typediff/mytypes.d.ts" />
 Polymer('is-ddl', {
     isAjaxing: false,
     lastSearch: "",
