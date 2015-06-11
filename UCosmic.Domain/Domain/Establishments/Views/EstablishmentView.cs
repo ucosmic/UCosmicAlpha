@@ -20,6 +20,7 @@ namespace UCosmic.Domain.Establishments
         public string CountryName { get; set; }
         public string CeebCode { get; set; }
         public string UCosmicCode { get; set; }
+        public bool IsDeleted { get; set; }
         public EstablishmentTypeView Type { get; set; }
         public IEnumerable<EstablishmentNameView> Names { get; set; }
         public IEnumerable<EstablishmentUrlView> Urls { get; set; }
