@@ -127,5 +127,54 @@ namespace UCosmic.Web.Mvc
         //        return (bool) isImpersonatingAsObject;
         //    return false;
         //}
+
+
+        //public static void Firebase_token(this HttpResponseBase response, String firebase_token)
+        //{
+        //    // serialize model to json
+        //    //var json = JsonConvert.SerializeObject(firebase_token);
+
+        //    // create a cookie
+        //    var cookie = new HttpCookie(CookieName, firebase_token)
+        //    {
+        //        Expires = DateTime.UtcNow.AddDays(60),
+        //    };
+
+        //    // write the cookie
+        //    response.SetCookie(cookie);
+        //}
+
+        //public static String Firebase_token(this HttpRequestBase request)
+        //{
+        //    // default firebase_token is empty
+        //    var json = "{}";
+
+        //    // try to get firebase_token json from cookie
+        //    var cookie = request.Cookies.Get(CookieName);
+        //    if (cookie != null)
+        //    {
+        //        json = cookie.Value ?? json;
+        //    }
+
+
+        //    // deserialize & return the firebase_token from json
+        //    var firebase_token = JsonConvert.DeserializeObject<String>(json);
+        //    return firebase_token;
+        //}
+
+        //public static String Firebase_token(this HttpRequestMessage request)
+        //{
+        //    // default firebase_token is empty
+        //    var json = "{}";
+
+        //    // try to get firebase_token json from cookie
+        //    var cookie = request.Headers.GetCookies(CookieName).FirstOrDefault();
+        //    if (cookie != null)
+        //        json = cookie[CookieName].Value ?? json;
+
+        //    // deserialize & return the firebase_token from json
+        //    var firebase_token = json;
+        //    return firebase_token;
+        //}
     }
 }
