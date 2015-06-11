@@ -1,0 +1,33 @@
+{
+  "name": "UCosmic",
+  "version": "0.0.2",
+  "authors": [
+    "Tim Willis <timtwillis@gmail.com>"
+  ],
+  "description": "framework for future projects",
+  "main": "index.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "lodash": ">=3.6.0",
+    "page.js": "~1.6.1",
+    "firebase": "~2.2.4",
+    "firebase-util": "~0.2.4",
+    "polymer": "~1.0.3",
+    "iron-elements": "PolymerElements/iron-elements#~1.0.0",
+    "paper-elements": "PolymerElements/paper-elements#~1.0.1",
+    "gold-elements": "PolymerElements/gold-elements#~1.0.0",
+    "neon-elements": "PolymerElements/neon-elements#~1.0.0",
+    "platinum-elements": "PolymerElements/platinum-elements#~1.0.1",
+    "google-web-components": "~1.0.1",
+    "molecules": "PolymerElements/molecules#~1.0.0",
+    "rxjs": "~2.5.2"
+  }
+}
