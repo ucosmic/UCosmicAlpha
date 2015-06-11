@@ -9,9 +9,15 @@ using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Identity;
 using UCosmic.Web.Mvc.Models;
+using System.Collections.Generic;
+using System.Web;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
+    public class Firebase_roles {
+        public string name {get; set;}
+        public int? for_establishment {get; set;}
+    }
     public partial class IdentityController : Controller
     {
         private readonly ISignUsers _userSigner;
@@ -138,7 +144,45 @@ namespace UCosmic.Web.Mvc.Controllers
             if (string.IsNullOrWhiteSpace(returnUrl) || returnUrl == "/")
                 returnUrl = _userSigner.DefaultSignedOnUrl;
 
-            //return Redirect(returnUrl);
+
+
+            //var query = new RolesGrantedToUserId(user.Grants, tenancy.UserId)
+            //{
+            //    OrderBy = new Dictionary<Expression<Func<Role, object>>, OrderByDirection>
+            //    {
+            //        { x => x.Name, OrderByDirection.Ascending },
+            //    },
+            //};
+            //var entities = _queryProcessor.Execute(query);
+            //var models = Mapper.Map<RoleApiModel[]>(entities);
+
+
+            var tokenGenerator = new Firebase.TokenGenerator("pXxnmMQ4YPK97bFKoN4JzGOJT40nOhM921z3JKl6");
+            IList<Firebase_roles> roles = new List<Firebase_roles>();
+            
+            if(user.Grants.Select(x => x.Role.Name == "Institutional Student Supervisor").Count() > 1){
+                roles.Add(new Firebase_roles{name = "Institutional Student Supervisor", for_establishment = user.TenantId});
+            }
+            if(user.Grants.Select(x => x.Role.Name == "Institutional Student Manager").Count() > 1){
+                roles.Add(new Firebase_roles{name = "Institutional Student Manager", for_establishment = user.TenantId});
+            }
+
+            var authPayload = new Dictionary<string, object>()
+            {
+              { "uid", "custom:" + tenancy.UserId },
+              { "role", roles }
+            };
+            string token = tokenGenerator.CreateToken(authPayload);
+            var cookie = new HttpCookie("firebase_token", token)
+            {
+                Expires = DateTime.UtcNow.AddDays(60),
+            };
+
+            // write the cookie
+            Response.SetCookie(cookie);
+            //Response.Firebase_token(token);
+            //ViewBag.firebase_token = token;
+
             return RedirectToAction(MVC.Tenancy.Tenant(tenancy.StyleDomain, returnUrl));
         }
 
