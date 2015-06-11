@@ -1,11 +1,18 @@
+/// <reference path="../../../../scripts/typings/lodash.d.ts" />
+/// <reference path="../../../typediff/mytypes.d.ts" />
+//class activityCount{
+//    locationCount: number;
+//    type: string;
+//    typeCount: number;
+//    constructor(type: string = "", typeCount: number = 0, locationCount: number = 0){
+//        this.type = type;
+//        this.typeCount = typeCount;
+//        this.locationCount = locationCount;    }
 Polymer('is-page-summary-map', {
     isAjaxing: false,
     affiliations: undefined,
-    color: function (c, n, i, d) {
-        for (i = 3; i--; c[i] = d < 0 ? 0 : d > 255 ? 255 : d | 0)
-            d = c[i] + n;
-        return c;
-    },
+    color: function (c, n, i, d) { for (i = 3; i--; c[i] = d < 0 ? 0 : d > 255 ? 255 : d | 0)
+        d = c[i] + n; return c; },
     activity_location_counts: [],
     agreement_location_counts: [],
     degree_location_counts: [],
@@ -21,6 +28,7 @@ Polymer('is-page-summary-map', {
     countries_showing_details: [],
     color_picker_opened: false,
     map_color: { r: 0, g: 55, b: 0 },
+    data_loaded: { agreements_loaded: 0, activities_loaded: 0, degrees_loaded: 0 },
     close_full_screen: function (e) {
         var _this = this;
         this.fadeIn(this.$.overlay, 200, function () {
@@ -65,7 +73,6 @@ Polymer('is-page-summary-map', {
             _this.fadeOut(_this.$.overlay, 500);
         });
     },
-    data_loaded: { agreements_loaded: 0, activities_loaded: 0, degrees_loaded: 0 },
     ready: function () {
         var _this = this;
         _.insert = function (arr, index, item) {
@@ -125,6 +132,8 @@ Polymer('is-page-summary-map', {
             return evt.pageX;
         else if (evt.clientX)
             return evt.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
+        else if (evt.jb.pageX)
+            return evt.jb.pageX;
         else
             return 0;
     },
@@ -135,10 +144,13 @@ Polymer('is-page-summary-map', {
             return evt.pageY;
         else if (evt.clientY)
             return evt.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
+        else if (evt.jb.pageY)
+            return evt.jb.pageY;
         else
             return 0;
     },
     setup_mouse_tracer: function (el) {
+        // Simple follow the mouse script
         var _this = this;
         if (el === void 0) { el = document; }
         var offX = 15;
@@ -181,14 +193,12 @@ Polymer('is-page-summary-map', {
                     { "color": "#1d8080" },
                     { "visibility": "off" }
                 ]
-            },
-            {
+            }, {
                 "featureType": "landscape.natural.terrain",
                 "stylers": [
                     { "visibility": "off" }
                 ]
-            },
-            {
+            }, {
                 "featureType": "administrative",
                 "stylers": [
                     { "visibility": "off" }
@@ -318,12 +328,21 @@ Polymer('is-page-summary-map', {
                 return place.code == event.feature.getProperty('iso_a2');
             });
             element.country_name = country_name;
-            element.content = "<b>" + event.feature.getProperty('name') + "</b><br /><a href='/summary/report/#!/" + event.feature.getProperty('iso_a2') + "'>Total: " + event.feature.getProperty('total_count') + "</a>" + "<br /><a href='/" + _this.styledomain + "/agreements/#/table/country/" + event.feature.getProperty('iso_a2') + "/type/any/sort/start-desc/size/10/page/1/'>Agreements: " + event.feature.getProperty('agreement_count') + "</a>" + "<br /><a href='/" + _this.styledomain + "/employees/table/?placeIds=" + country.id + "&placeNames='>Activities: " + event.feature.getProperty('activity_count') + "</a>" + "<br /><a href='/" + _this.styledomain + "/employees/degrees/table/?countryCode=" + event.feature.getProperty('iso_a2') + "'>Degrees: " + event.feature.getProperty('degree_count') + "</a>";
+            element.content = "<b>" + event.feature.getProperty('name') + "</b><br /><a href='/summary/report/#!/" + event.feature.getProperty('iso_a2') + "'>Total: " + event.feature.getProperty('total_count') + "</a>"
+                + "<br /><a href='/" + _this.styledomain + "/agreements/#/table/country/" + event.feature.getProperty('iso_a2') + "/type/any/sort/start-desc/size/10/page/1/'>Agreements: " + event.feature.getProperty('agreement_count') + "</a>"
+                + "<br /><a href='/" + _this.styledomain + "/employees/table/?placeIds=" + country.id + "&placeNames='>Activities: " + event.feature.getProperty('activity_count') + "</a>"
+                + "<br /><a href='/" + _this.styledomain + "/employees/degrees/table/?countryCode=" + event.feature.getProperty('iso_a2') + "'>Degrees: " + event.feature.getProperty('degree_count') + "</a>";
             _this.countries_showing_details = _.union(_this.countries_showing_details, [event.feature.getProperty('name')]);
             var offX = 15;
             var offY = 15;
-            element.style.left = (parseInt(_this.mouseX(event.nb)) + offX) + 'px';
-            element.style.top = (parseInt(_this.mouseY(event.nb)) + offY) + 'px';
+            if (event.nb) {
+                element.style.left = (parseInt(_this.mouseX(event.nb)) + offX) + 'px';
+                element.style.top = (parseInt(_this.mouseY(event.nb)) + offY) + 'px';
+            }
+            else {
+                element.style.left = (parseInt(_this.mouseX(event)) + offX) + 'px';
+                element.style.top = (parseInt(_this.mouseY(event)) + offY) + 'px';
+            }
         });
         map.data.addListener('mouseover', function (event) {
             _this.$.info_box.innerHTML = event.feature.getProperty('name') + "<br />Total: " + event.feature.getProperty('total_count');

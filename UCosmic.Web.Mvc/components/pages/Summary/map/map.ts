@@ -31,6 +31,7 @@ Polymer('is-page-summary-map', {
     countries_showing_details: [],
     color_picker_opened: false,
     map_color: { r: 0, g: 55, b: 0 },
+    data_loaded: { agreements_loaded: 0, activities_loaded: 0, degrees_loaded: 0 },
     close_full_screen: function (e) {
         this.fadeIn(this.$.overlay, 200,() => {
             this.$.map_canvas.style.position = ''; //height: 800px; width: 990px; margin - right: 8px;
@@ -111,7 +112,6 @@ Polymer('is-page-summary-map', {
 
 
     },
-    data_loaded: { agreements_loaded: 0, activities_loaded: 0, degrees_loaded: 0 },
     ready: function () {
 
         _.insert = function (arr, index, item) {
@@ -185,12 +185,14 @@ Polymer('is-page-summary-map', {
         if (!evt) evt = window.event;
         if (evt.pageX) return evt.pageX;
         else if (evt.clientX) return evt.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
+        else if (evt.jb.pageX) return evt.jb.pageX
         else return 0;
     },
     mouseY: function (evt) {
         if (!evt) evt = window.event;
         if (evt.pageY) return evt.pageY;
         else if (evt.clientY) return evt.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
+        else if (evt.jb.pageY) return evt.jb.pageY
         else return 0;
     },
     setup_mouse_tracer: function (el = document) {
@@ -491,10 +493,19 @@ Polymer('is-page-summary-map', {
 
             var offX = 15;          // X offset from mouse position
             var offY = 15;          // Y offset from mouse position
+            //var mouseX = this.mouseX(event.nb);
+            //var mouseY = this.mouseY(event.nb);
             
             //obj.visibility = 'visible';
-            element.style.left = (parseInt(this.mouseX(event.nb)) + offX) + 'px';
-            element.style.top = (parseInt(this.mouseY(event.nb)) + offY) + 'px';
+            //element.style.left = (mouseX + offX) + 'px';
+            //element.style.top = (mouseY + offY) + 'px';
+            if (event.nb) {
+                element.style.left = (parseInt(this.mouseX(event.nb)) + offX) + 'px';
+                element.style.top = (parseInt(this.mouseY(event.nb)) + offY) + 'px';
+            } else {
+                element.style.left = (parseInt(this.mouseX(event)) + offX) + 'px';
+                element.style.top = (parseInt(this.mouseY(event)) + offY) + 'px';
+            }
             //element.style.display = 'block';
         });
         //map.addListener('click',(event) => {
