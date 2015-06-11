@@ -1,135 +1,149 @@
-﻿@{
+﻿
+<link rel="import" href="~/components/pages/Student/New/new.html">
+@{
     ViewBag.Title = "Import Student Activities";
+    ViewBag.Title = "Summary - Report";
+    var tenancy = Request.Tenancy();
+    var styleDomain = tenancy != null ? tenancy.StyleDomain : "default";
+    var tenantId = tenancy != null ? tenancy.TenantId : 0;
+    var hasStyleDomain = !string.IsNullOrWhiteSpace(styleDomain) && !"default".Equals(styleDomain, StringComparison.OrdinalIgnoreCase);
 }
-
 <div class="fixed content" data-current-module="students">
     <header>
         <h1>@ViewBag.Title</h1>
     </header>
-   
+
     <form action="" method="post" enctype="multipart/form-data">
+        @*<label for="file1">Filename:</label>
+            <input type="file" name="file" id="file" />
 
-        <label for="file1">Filename:</label>
-        <input type="file" name="file" id="file" />
+            <input type="submit" />*@
 
-        <input type="submit" />
     </form>
+    <is-page-student-new id="new_student_page" styledomain="@styleDomain" tenant_id="@tenantId" firebase_token="@ViewBag.firebase_token"></is-page-student-new>
+    @ViewBag.test
     <hr />
-
     <div>
-            @if (ViewBag.ui != null)
+        @if (ViewBag.ui != null)
+        {
+
+            <p><strong>@ViewBag.ui.success students added successfully</strong></p>
+
+
+            if (ViewBag.ui.nullID != 0)
             {
-
-                <p><strong>@ViewBag.ui.success students added successfully</strong></p>
-                
-
-                if (ViewBag.ui.nullID != 0)
+                if (ViewBag.ui.nullID == 1)
                 {
-                    if (ViewBag.ui.nullID == 1)
-                    {
-                        <p><strong>1 entry did not have a valid externalID</strong></p>
-                    }
-                    else
-                    {
-                        <p><strong>@ViewBag.ui.nullID students did not have a valid externalID:</strong></p>
-                    }
-
-                    
+                    <p><strong>1 entry did not have a valid externalID</strong></p>
+                }
+                else
+                {
+                    <p><strong>@ViewBag.ui.nullID students did not have a valid externalID:</strong></p>
                 }
 
-
-                if (ViewBag.ui.noEstablishmentList.Count != 0)
-                {
-                    if (ViewBag.ui.noEstablishmentList.Count == 1)
-                    {
-                        <p><strong>The following student did not have a valid uCosmicStudentAffiliation 
-                        or uCosmicStudentAffiliationCode:</strong></p>
-                    }
-                    else
-                    {
-                        <p><strong>The following @ViewBag.ui.noEstablishmentList.Count students did not 
-                           have a valid uCosmicStudentAffiliation or uCosmicStudentAffiliationCode:</strong></p>
-                    }
-
-                    <ul>
-                        @foreach (String student in ViewBag.ui.noEstablishmentList)
-                        {
-                            <li>@student</li>
-                        }
-                    </ul>
-                }
-
-                if (ViewBag.ui.noInstitutionList.Count != 0)
-                {
-                    if (ViewBag.ui.noInstitutionList.Count == 1)
-                    {
-                        <p>
-                            <strong>
-                                The following student did not have a valid uCosmicAffiliation
-                                or uCosmicAffiliationCode:
-                            </strong>
-                        </p>
-                    }
-                    else
-                    {
-                        <p>
-                            <strong>
-                                The following @ViewBag.ui.noEstablishmentList.Count students did not
-                                have a valid uCosmicAffiliation or uCosmicAffiliationCode:
-                            </strong>
-                        </p>
-                    }
-
-                    <ul>
-                        @foreach (String student in ViewBag.ui.noInstitutionList)
-                        {
-                            <li>@student</li>
-                        }
-                    </ul>
-                }
-
-                if (ViewBag.ui.duplicateList.Count != 0)
-                {
-                    if (ViewBag.ui.duplicateList.Count == 1)
-                    {
-                        <p><strong>The following student is a duplicate:</strong></p>
-                    }
-                    else
-                    {
-                        <p><strong>The following @ViewBag.ui.duplicateList.Count students were duplicates:</strong></p>
-                    }
-
-                    <ul>
-                        @foreach (String student in ViewBag.ui.duplicateList)
-                        {
-                            <li>@student</li>
-                        }
-                    </ul>
-                }
-
-                if (ViewBag.ui.noPlaceList.Count > 0)
-                {
-                    <p><strong>The following @ViewBag.ui.noPlaceList.Count students did not have a valid country. Please check the country and try again...</strong></p>
-                    <ul>
-                        @foreach (String student in ViewBag.ui.noPlaceList)
-                        {
-                            <li>@student</li>
-                        }
-                    </ul>
-                }
-
-                if (ViewBag.ui.failureList.Count != 0)
-                {
-                    <p><strong>The following @ViewBag.ui.failureList.Count failed for unknown reasons. Please contact support@ucosmic.com for more information:</strong></p>
-                    <ul>
-                        @foreach (String student in ViewBag.ui.failureList)
-                        {
-                            <li>@student</li>
-                        }
-                    </ul>
-                }
 
             }
-</div>
 
+
+            if (ViewBag.ui.noEstablishmentList.Count != 0)
+            {
+                if (ViewBag.ui.noEstablishmentList.Count == 1)
+                {
+                    <p>
+                        <strong>
+                            The following student did not have a valid uCosmicStudentAffiliation
+                            or uCosmicStudentAffiliationCode:
+                        </strong>
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        <strong>
+                            The following @ViewBag.ui.noEstablishmentList.Count students did not
+                            have a valid uCosmicStudentAffiliation or uCosmicStudentAffiliationCode:
+                        </strong>
+                    </p>
+                }
+
+                <ul>
+                    @foreach (String student in ViewBag.ui.noEstablishmentList)
+                    {
+                        <li>@student</li>
+                    }
+                </ul>
+            }
+
+            if (ViewBag.ui.noInstitutionList.Count != 0)
+            {
+                if (ViewBag.ui.noInstitutionList.Count == 1)
+                {
+                    <p>
+                        <strong>
+                            The following student did not have a valid uCosmicAffiliation
+                            or uCosmicAffiliationCode:
+                        </strong>
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        <strong>
+                            The following @ViewBag.ui.noEstablishmentList.Count students did not
+                            have a valid uCosmicAffiliation or uCosmicAffiliationCode:
+                        </strong>
+                    </p>
+                }
+
+                <ul>
+                    @foreach (String student in ViewBag.ui.noInstitutionList)
+                    {
+                        <li>@student</li>
+                    }
+                </ul>
+            }
+
+            if (ViewBag.ui.duplicateList.Count != 0)
+            {
+                if (ViewBag.ui.duplicateList.Count == 1)
+                {
+                    <p><strong>The following student is a duplicate:</strong></p>
+                }
+                else
+                {
+                    <p><strong>The following @ViewBag.ui.duplicateList.Count students were duplicates:</strong></p>
+                }
+
+                <ul>
+                    @foreach (String student in ViewBag.ui.duplicateList)
+                    {
+                        <li>@student</li>
+                    }
+                </ul>
+            }
+
+            if (ViewBag.ui.noPlaceList.Count > 0)
+            {
+                <p><strong>The following @ViewBag.ui.noPlaceList.Count students did not have a valid country. Please check the country and try again...</strong></p>
+                <ul>
+                    @foreach (String student in ViewBag.ui.noPlaceList)
+                    {
+                        <li>@student</li>
+                    }
+                </ul>
+            }
+
+            if (ViewBag.ui.failureList.Count != 0)
+            {
+                <p><strong>The following @ViewBag.ui.failureList.Count failed for unknown reasons. Please contact support@ucosmic.com for more information:</strong></p>
+                <ul>
+                    @foreach (String student in ViewBag.ui.failureList)
+                    {
+                        <li>@student</li>
+                    }
+                </ul>
+            }
+
+        }
+    </div>
 </div>
