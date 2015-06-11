@@ -68,6 +68,8 @@ namespace UCosmic.Domain.Establishments
             if (query.Id.HasValue)
                 view = view.Where(x => x.Id == query.Id.Value);
 
+            view = view.Where(x => !x.IsDeleted);
+
             view = view.OrderBy(query.OrderBy);
 
             var pagedResults = new PagedQueryResult<EstablishmentView>(view, query.PageSize, query.PageNumber);
