@@ -11,8 +11,17 @@ namespace UCosmic.Web.Mvc.Models
         public int termId {get; set;}
         public int placeId {get; set;}
         public int programId { get; set; }
-        public int? establishmentId { get; set; } //maybe make this optional?
-        public int? foreignEstablishmentId { get; set; } //maybe make this optional?
+        public int? institutionId { get; set; } //Institution handling the study abroad
+        public int? studentEstablishmentId { get; set; } //Student's Campus
+        public int? foreignEstablishmentId { get; set; } //Where the student is going
     }
+
+  /*  public class Student
+    {
+        public IList<StudentAffiliationData> affiliation;
+        public IList<StudentInformationData> info;
+        public IList<StudentLevelData> level;
+        public IList<StudentMobilityData>
+    }*/
 
 }
