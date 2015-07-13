@@ -292,7 +292,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
                 foreach (EstablishmentListAllApiReturn establishment in model) // Loop through List with foreach.
                 {
-                    var xx = new { establishment = establishment.official_name };
+                    var xx = new { establishment = establishment.official_name, parent_id = establishment.parent_id };
                     //client.PutAsJsonAsync("students/establishments/" + establishment.establishment + ".json", xx);
                     try
                     {

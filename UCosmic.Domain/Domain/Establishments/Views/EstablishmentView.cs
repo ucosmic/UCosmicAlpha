@@ -42,7 +42,7 @@ namespace UCosmic.Domain.Establishments
         {
             Id = entity.RevisionId;
             ParentId = entity.Parent == null ? (int?)null : entity.Parent.RevisionId;
-
+            IsDeleted = entity.IsDeleted;
             OfficialName = entity.Names.Single(e => e.IsOfficialName).Text;
 
             var officialUrl = entity.Urls.SingleOrDefault(e => e.IsOfficialUrl);
