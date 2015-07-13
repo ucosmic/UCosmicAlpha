@@ -72,7 +72,7 @@ namespace UCosmic.Web.Mvc.Controllers
 
                 foreach (EstablishmentListAllApiReturn establishment in model) // Loop through List with foreach.
                 {
-                    var xx = new { establishment = establishment.official_name };
+                    var xx = new { establishment = establishment.official_name, parent_id = establishment.parent_id };
                     //client.PutAsJsonAsync("students/establishments/" + establishment.establishment + ".json", xx);
                     try
                     {
@@ -174,6 +174,28 @@ namespace UCosmic.Web.Mvc.Controllers
 
             }
         }
+        [GET("/students/test")]
+        public virtual async Task<ActionResult> test()
+        {
+            //new Thread(() =>
+            //{
+            //    Run_Firebase_country_sync();
+            //}).Start();
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://ucosmic.firebaseio.com");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response = await client.GetAsync("Places/Countries.json");
+                if (response.IsSuccessStatusCode)
+                {
+                    var countries = response.Content.ReadAsStringAsync().Result;
+                }
+                ViewBag.firebase_token = Request.Cookies.Get("firebase_token") != null ? Request.Cookies.Get("firebase_token").Value : null;
+                return View("new", "_Layout3");
+
+            }
+        }
 
         public async void Run_Firebase_program_sync()//(CancellationToken cancellationToken)
         {
@@ -234,45 +256,6 @@ namespace UCosmic.Web.Mvc.Controllers
             //var url = "https://ucosmic.firebaseio.com/.json";
             return View("new", "_Layout3");
         }
-        //public async Task RunAsync()
-        //{
-        //    using (var client = new HttpClient())
-        //    {
-        //        // New code:
-        //        client.BaseAddress = new Uri("https://ucosmic.firebaseio.com/.json");
-        //        client.DefaultRequestHeaders.Accept.Clear();
-        //        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-        //        HttpResponseMessage response = await client.GetAsync("");
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            //var x = response.Content;
-        //            //var product = await response.Content.ReadAsAsync<String>();
-        //            //Console.WriteLine("{0}\t${1}\t{2}", product.Name, product.Price, product.Category);
-        //            //var errorMessage = await response.Content.ReadAsStringAsync();
-        //            firebase = response.Content.ReadAsStringAsync().Result;
-        //            //return errorMessage;
-        //            //var dataObjects = await response.Content.ReadAsAsync<IEnumerable<DataObject>>();
-        //            //foreach (var d in dataObjects)
-        //            //{
-        //            //    Console.WriteLine("{0}", d.test);
-        //            //}
-        //        }
-        //        else
-        //        {
-        //            //return "";
-        //        }
-
-        //    }
-        //}
-        //[GET("/students/new")]
-        //public virtual ActionResult New()
-        //{
-        //    //RunAsync().Wait();
-        //    ViewBag.firebase_token = Request.Cookies.Get("firebase_token") != null ? Request.Cookies.Get("firebase_token").Value : null;
-        //    //var url = "https://ucosmic.firebaseio.com/.json";
-        //    return View("new", "_Layout3");
-        //}
 
         [POST("/students/new")]
         public virtual ActionResult New(HttpPostedFileBase file)
@@ -291,92 +274,11 @@ namespace UCosmic.Web.Mvc.Controllers
                 var rows_changed = repository.uploadStudents(data);
                 ViewBag.Success = rows_changed.success;
                 ViewBag.Failure = rows_changed.success;
-                //int[] rows_changed = repository.uploadStudents(data);
-                //ViewBag.Success = rows_changed[0];
-                //ViewBag.Failure = rows_changed[1];
+
             }
             return View();
         }
 
-
-        //[POST("/students/new")]
-        //[Authorize(Roles = RoleName.AgreementManagers)]
-        //public HttpResponseMessage Post(int agreementId, [FromBody] AgreementFileApiModel model)
-        //{
-        //    model.AgreementId = agreementId;
-        //    var command = new CreateFile(User)
-        //    {
-        //        FileData = model.FileMedium == null ? null : new CreateFile.FileDataWrapper
-        //        {
-        //            FileName = model.FileMedium.FileName,
-        //            MimeType = model.FileMedium.ContentType,
-        //            Content = model.FileMedium.Content,
-        //        },
-        //    };
-        //    Mapper.Map(model, command);
-
-        //    try
-        //    {
-        //        _createHandler.Handle(command);
-        //    }
-        //    catch (ValidationException ex)
-        //    {
-        //        Func<ValidationFailure, bool> forName = x => x.PropertyName == command.PropertyName(y => y.FileData.FileName);
-        //        Func<ValidationFailure, bool> forContent = x => x.PropertyName == command.PropertyName(y => y.FileData.Content);
-        //        if (ex.Errors.Any(forName))
-        //            return Request.CreateResponse(HttpStatusCode.UnsupportedMediaType,
-        //                ex.Errors.First(forName).ErrorMessage, "text/plain");
-        //        if (ex.Errors.Any(forContent))
-        //            return Request.CreateResponse(HttpStatusCode.RequestEntityTooLarge,
-        //                ex.Errors.First(forContent).ErrorMessage, "text/plain");
-        //    }
-
-        //    var url = Url.Link(null, new
-        //    {
-        //        controller = "AgreementFiles",
-        //        action = "Get",
-        //        agreementId,
-        //        fileId = command.CreatedFileId,
-        //    });
-        //    Debug.Assert(url != null);
-        //    var successPayload = new
-        //    {
-        //        message = string.Format("File '{0}' was successfully attached.", model.CustomName),
-        //        location = url, // TODO: when IE8 dies, no need to do this (it is a workaround for kendo + IE only)
-        //    };
-        //    var successJson = JsonConvert.SerializeObject(successPayload);
-        //    var response = Request.CreateResponse(HttpStatusCode.Created, successJson, "text/plain");
-        //    response.Headers.Location = new Uri(url);
-        //    return response;
-        //}
-
-        //[POST("files/validate")]
-        //[Authorize(Roles = RoleName.AgreementManagers)]
-        //public HttpResponseMessage ValidatePost([FromBody] FileUploadValidationModel model)
-        //{
-        //    var command = new CreateFile(User)
-        //    {
-        //        FileData = new CreateFile.FileDataWrapper
-        //        {
-        //            FileName = model.Name,
-        //            Content = model.Length.HasValue ? new byte[model.Length.Value] : new byte[0],
-        //        },
-        //    };
-        //    var validationResult = _createValidator.Validate(command);
-
-        //    var forProperties = new List<Func<ValidationFailure, bool>>
-        //    {
-        //        x => x.PropertyName == command.PropertyName(y => y.FileData.FileName),
-        //    };
-        //    if (model.Length.HasValue)
-        //        forProperties.Add(x => x.PropertyName == command.PropertyName(y => y.FileData.Content));
-        //    foreach (var forProperty in forProperties)
-        //        if (validationResult.Errors.Any(forProperty))
-        //            return Request.CreateResponse(HttpStatusCode.BadRequest,
-        //                validationResult.Errors.First(forProperty).ErrorMessage, "text/plain");
-
-        //    return Request.CreateResponse(HttpStatusCode.OK);
-        //}
 
 
         [GET("{domain}/students/table/")]
@@ -415,38 +317,6 @@ namespace UCosmic.Web.Mvc.Controllers
                 return HttpNotFound();
             }
         }
-
-
-
-        //[GET("/api/students/")]
-        //public virtual JsonResult getTableJson(StudentQueryParameters param)
-        //{
-        //    Establishment establishment = null;
-
-        //    var tenancy = Request.Tenancy() ?? new Tenancy();
-        //    if (tenancy.TenantId.HasValue)
-        //    {
-        //        establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
-        //    }
-        //    else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
-        //    {
-        //        establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
-        //    }
-
-        //    param.FInstitution = establishment.OfficialName;
-
-        //    StudentActivityRepository students = new StudentActivityRepository();    
-        //    IList<StudentActivity> content = students.getStudentActivities(param);
-        //    bool tracksForeign=false;
-        //    if (content.Count > 0)
-        //    {
-        //        //if either local or foreign establishment name is null, the institution does not track foreign universities
-        //        tracksForeign = ((content.FirstOrDefault().localEstablishmentName == null) || 
-        //                         (content.FirstOrDefault().foreignEstablishmentName == null)) ? false : true;
-        //    }
-        //    StudentPager s = new StudentPager(content,param.page,param.pageSize,students.getStudentActivityCount(param), param.orderBy,param.orderDirection, tracksForeign);
-        //    return Json(s, JsonRequestBehavior.AllowGet);
-        //}
 
 
         [GET("{domain}/students/map")]
