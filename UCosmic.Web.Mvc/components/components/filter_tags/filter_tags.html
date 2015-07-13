@@ -1,0 +1,47 @@
+﻿<link rel="import" href="../../Polymer_1x/bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../Polymer_1x/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../Polymer_1x/bower_components/neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="../../Polymer_1x/bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../../Polymer_1x/bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../Polymer_1x/bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../resources/icons/filter_tags.html">
+
+<dom-module id="is-filter_tags">
+    <link href="filter_tags.css" rel="stylesheet" />
+    <template>
+
+        <paper-material elevation="2" id="filter_tags_button" class="tennant_colors" on-click="toggle">
+            <div style="padding: 0 0 0 8px;">Filter Tags(<span>[[tags_count]]</span>)<paper-icon-button icon="filter_tags:apps"></paper-icon-button></div>
+        </paper-material>
+        <div style="height: 40px;">
+            <div style="display: inline-block">
+                <div class="layout vertical filter_container" id="filter_container" style="text-align:left; position:relative;  bottom:30px; left: 20px;">
+                    <paper-material elevation="2" id="filter" style="border-radius:20px; width:310px; right: 20px;">
+                        <div class="tennant_colors layout vertical" style=" padding: 20px; border-radius: 20px;">
+                            <div style=" overflow:visible;position: absolute; width: 270px;" class="layout horizontal end-justified">
+                                <paper-icon-button style="position:relative; top:-16px;  right: -16px;" icon="filter_tags:close" id="close_icon" on-click="toggle"></paper-icon-button>
+                            </div>
+                            <div style="margin-top: 20px; height:inherit">
+                                <template is="dom-repeat" items="[[tags]]" as="tag" id="tags">
+                                    <paper-item class="list-item">
+                                        <span>[[tag.text]]</span>
+                                        <iron-icon icon="filter_tags:remove-circle-outline" on-click="remove_tag">
+                                        </iron-icon>
+                                    </paper-item>
+                                </template>
+                                <template is="dom-if" if="{{!tags_count}}">
+                                    No Tags
+                                </template>
+                            </div>
+                        </div>
+                    </paper-material>
+                    <div class="flex"></div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <script src="filter_tags.js"></script>
+
+</dom-module>
+
+

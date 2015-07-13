@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,mBAAmB;EACf,aAAa,EAAE,IAAI;EACjB,OAAO,EAAE,YAAY;;EAEjB,KAAK,EAAE,KAAK;EAClB,MAAM,EAAE,OAAO",
+"sources": ["filter_tags.scss"],
+"names": [],
+"file": "filter_tags.css"
+}
