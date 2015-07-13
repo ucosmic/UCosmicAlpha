@@ -1,3 +1,4 @@
+//import ElRelativeToEl = require("../ElRelativeToEl");
 Polymer('polymer-notification', {
     ready: function () {
     },
