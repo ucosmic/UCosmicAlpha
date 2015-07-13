@@ -1,6 +1,5 @@
 ﻿/// <reference path="../../scripts/typings/lodash.d.ts" />
 /// <reference path="../typediff/mytypes.d.ts" />
- 
 module Students {
     interface I_Excel_Options {
         mobility_status: string;
@@ -9,11 +8,11 @@ module Students {
         mobility_establishment: string;//that created it
         mobility_country: string;
         mobility_program: string;
-        mobility_student_foreign_establishment: string;
-        mobility_student_establishment: string;
+        mobility_affiliation: string;
+        mobility_sub_affiliation: string;
+        mobility_foreign_affiliation: string;
         mobility_student: string;
         student: string;
-        student_establishment: string;
         student_external_id: string; 
     }
     //interface I_Excel_Options {
@@ -134,11 +133,11 @@ module Students {
         mobility_establishment: string;//that created it
         mobility_country: string;
         mobility_program: string;
-        mobility_student_foreign_establishment: string;
-        mobility_student_establishment: string;
+        mobility_affiliation: string;
+        mobility_sub_affiliation: string;
+        mobility_foreign_affiliation: string;
         mobility_student: string;
         student: string;
-        student_establishment: string;
         student_external_id: string; 
         constructor(options: I_Excel_Options) {
 
@@ -149,11 +148,12 @@ module Students {
             this.mobility_term = options.mobility_term;
             this.mobility_country = options.mobility_country;
             this.mobility_program = options.mobility_program;
-            this.mobility_student_foreign_establishment = options.mobility_student_foreign_establishment;
-            this.mobility_student_establishment = options.mobility_student_establishment;
+            this.mobility_affiliation = options.mobility_affiliation;
+            this.mobility_sub_affiliation = options.mobility_sub_affiliation;
+            this.mobility_foreign_affiliation = options.mobility_foreign_affiliation;
             this.mobility_student = options.mobility_student; 
             this.student_external_id = options.student_external_id;
-            this.student_establishment = options.student_establishment;
+
         }
     }
     //export class Excel {
@@ -226,7 +226,6 @@ module Students {
         uCosmicStudentAffiliation: string;
         uCosmicForiegnAffiliation: string;
         constructor(country: string, uCosmicStudentAffiliation?: string, uCosmicForiegnAffiliation?: string, uCosmicAffiliation?: string) {
-
             this.uCosmicAffiliation = uCosmicAffiliation;
             this.country = country;
             this.uCosmicStudentAffiliation = uCosmicStudentAffiliation;

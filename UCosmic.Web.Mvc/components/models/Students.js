@@ -52,11 +52,11 @@ var Students;
             this.mobility_term = options.mobility_term;
             this.mobility_country = options.mobility_country;
             this.mobility_program = options.mobility_program;
-            this.mobility_student_foreign_establishment = options.mobility_student_foreign_establishment;
-            this.mobility_student_establishment = options.mobility_student_establishment;
+            this.mobility_affiliation = options.mobility_affiliation;
+            this.mobility_sub_affiliation = options.mobility_sub_affiliation;
+            this.mobility_foreign_affiliation = options.mobility_foreign_affiliation;
             this.mobility_student = options.mobility_student;
             this.student_external_id = options.student_external_id;
-            this.student_establishment = options.student_establishment;
         }
         return Excel;
     })();
