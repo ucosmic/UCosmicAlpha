@@ -1,0 +1,30 @@
+﻿<link rel="import" href="../../Polymer_1x/bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../Polymer_1x/bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../Polymer_1x/bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../resources/icons/autoDDL.html">
+<dom-module id="is-auto-ddl">
+    <link href="autoDDL.css" rel="stylesheet" />
+    <template>
+        <div style="margin-left:20px;" class="layout vertical" tabindex="-1">
+            <paper-input label="{{label}}" style="padding-bottom: 2px;" on-keyup="listSearch" id="selectedInput" on-blur="leaveSearch" on-focus="fire_search" on-keydown="selectedKeyPress" value="{{selected}}"></paper-input>
+            <div id="itemsContainer" style="height:0; z-index:10;">
+                <template is="dom-if" if="{{list.length}}">
+                    <div id="itemsInnerContainer" class="items-inner-container" on-mouseout="selectHoverLeave2">
+                        <template is="dom-repeat" items="{{list}}" as="item" id="items">
+                            <paper-item on-click="select" on-mouseover="selectHover" tabindex="-1" on-mouseout="selectHoverLeave" data-id="{{item._id}}" class="list-item">
+                                <span>{{item.text}}</span>
+                                <iron-icon icon="autoDDL:add-circle-outline">
+                                </iron-icon>
+                            </paper-item>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+    </template>
+    <script src="autoDDL.js"></script>
+
+</dom-module>
+
+
