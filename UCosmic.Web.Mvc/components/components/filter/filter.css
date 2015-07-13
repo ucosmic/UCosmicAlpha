@@ -1,0 +1,22 @@
+.is-filter a {
+  text-decoration: none; }
+
+.action_bar_text {
+  margin: 10px; }
+
+#filter {
+  position: relative;
+  bottom: 10px;
+  visibility: hidden;
+  border-radius: 10px; }
+
+#filter_button {
+  border-radius: 10px;
+  display: inline-block;
+  /*z-index: 2;*/
+  float: right; }
+
+.filter_container {
+  z-index: -1; }
+
+/*# sourceMappingURL=filter.css.map */

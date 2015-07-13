@@ -1,0 +1,12 @@
+.is-filter a {
+  text-decoration: none; }
+
+.action_bar_text {
+  margin: 10px; }
+
+#filter {
+  position: relative;
+  bottom: 10px;
+  visibility: hidden; }
+
+/*# sourceMappingURL=menu_nav.css.map */
