@@ -17,7 +17,7 @@ namespace UCosmic.Repositories
         {
 
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
-            string sql = "select aa.revisionid as id, pp.officialname, eat.type  FROM [ActivitiesV2].[ActivityLocation] al" +
+            string sql = "select distinct aa.revisionid as id, pp.officialname, eat.type  FROM [ActivitiesV2].[ActivityLocation] al" +
                   " inner join [ActivitiesV2].[ActivityValues] av on al.activityValuesId=av.revisionid" +
                   " inner join Places.place pp on al.placeId=pp.revisionid" +
                   " inner join [ActivitiesV2].[Activity] aa on av.activityId=aa.revisionid" +
@@ -90,7 +90,7 @@ namespace UCosmic.Repositories
               "inner join establishments.establishmentLocation eel on eel.revisionId = ee.revisionid " +
               "inner join establishments.establishmentLocationInPlace eelip on eelip.establishmentLocationId = eel.revisionId " +
               "inner join places.place pp on pp.revisionid = eelip.placeId and pp.iscountry = 1 " +
-              "where aa.status != 'inactive' and pp.officialName is not NULL and aap.isowner = 1 and aap.establishmentid = " + EstablishmentId;
+              "where aa.status != 'inactive' and aa.visibility = 'Public' and pp.officialName is not NULL and aap.isowner = 1 and aap.establishmentid = " + EstablishmentId;
             if (PlaceId > 0)
             {
                 sql += " and pp.revisionid=" + PlaceId;
