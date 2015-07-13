@@ -68,7 +68,8 @@ var Agreements;
             PublicView.prototype._bindData = function () {
                 var _this = this;
                 var deferred = $.Deferred();
-                $.get(App.Routes.WebApi.Agreements.get(this.agreementId)).done(function (response) {
+                $.get(App.Routes.WebApi.Agreements.get(this.agreementId))
+                    .done(function (response) {
                     var mapping = {
                         participants: {
                             create: function (options) {
@@ -77,11 +78,14 @@ var Agreements;
                         },
                     };
                     ko.mapping.fromJS(response, mapping, _this);
-                    _this.participants(Enumerable.From(_this.participants()).OrderBy(function (x) {
+                    _this.participants(Enumerable.From(_this.participants())
+                        .OrderBy(function (x) {
                         return x.isOwner;
-                    }).ThenBy(function (x) {
+                    })
+                        .ThenBy(function (x) {
                         return x.establishmentTranslatedName;
-                    }).ToArray());
+                    })
+                        .ToArray());
                     _this.isBound(true);
                     deferred.resolve();
                 });
@@ -110,20 +114,18 @@ var Agreements;
             };
             PublicView.prototype._bindMap = function () {
                 var _this = this;
-                var partners = Enumerable.From(this.participants()).Where(function (x) {
-                    return !x.isOwner;
-                }).ToArray();
-                var centers = Enumerable.From(partners).Where(function (x) {
-                    return x.center && x.center.hasValue;
-                }).Select(function (x) {
-                    return x.center;
-                }).ToArray();
-                var latLngs = Enumerable.From(centers).Select(function (x) {
-                    return new google.maps.LatLng(x.latitude, x.longitude);
-                }).ToArray();
+                var partners = Enumerable.From(this.participants())
+                    .Where(function (x) { return !x.isOwner; }).ToArray();
+                var centers = Enumerable.From(partners)
+                    .Where(function (x) { return x.center && x.center.hasValue; })
+                    .Select(function (x) { return x.center; }).ToArray();
+                var latLngs = Enumerable.From(centers)
+                    .Select(function (x) { return new google.maps.LatLng(x.latitude, x.longitude); })
+                    .ToArray();
                 var bounds = new google.maps.LatLngBounds();
                 $.each(latLngs, function (index, latLng) {
-                    var title = Enumerable.From(partners).Single(function (x) {
+                    var title = Enumerable.From(partners)
+                        .Single(function (x) {
                         return x.center && x.center == centers[index];
                     }).establishmentTranslatedName;
                     var options = {
@@ -137,7 +139,8 @@ var Agreements;
                 });
                 if (centers.length == 1) {
                     this._googleMap.setCenter(latLngs[0]);
-                    var partner = Enumerable.From(partners).Single(function (x) {
+                    var partner = Enumerable.From(partners)
+                        .Single(function (x) {
                         return x.center && x.center == centers[0];
                     });
                     var zoom = partner.googleMapZoomLevel;
@@ -171,11 +174,14 @@ var Agreements;
             PublicView.prototype.createMap = function () {
                 var self = this;
                 function initialize() {
-                    var partners = Enumerable.From(self.participants()).Where(function (x) {
+                    var partners = Enumerable.From(self.participants())
+                        .Where(function (x) {
                         return !x.isOwner;
-                    }).ToArray(), centers = Enumerable.From(self.participants()).Select(function (x) {
+                    }).ToArray(), centers = Enumerable.From(self.participants())
+                        .Select(function (x) {
                         return x.center;
-                    }).ToArray(), LatLngList = Enumerable.From(centers).Select(function (x) {
+                    }).ToArray(), LatLngList = Enumerable.From(centers)
+                        .Select(function (x) {
                         return new google.maps.LatLng(x.latitude, x.longitude);
                     }).ToArray(), map;
                     var bounds = new google.maps.LatLngBounds();
@@ -192,7 +198,8 @@ var Agreements;
             };
             PublicView.prototype.populateContacts = function () {
                 var _this = this;
-                $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId)).done(function (response) {
+                $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId))
+                    .done(function (response) {
                     ko.mapping.fromJS(response, _this.contacts);
                 });
             };

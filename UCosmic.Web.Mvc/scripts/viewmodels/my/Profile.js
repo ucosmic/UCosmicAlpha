@@ -19,19 +19,22 @@ var People;
             }
             AffiliatedEstablishmentEditor.prototype._getOptionsCaption = function (options) {
                 var _this = this;
-                var isFirst = Enumerable.From(options).All(function (x) {
+                var isFirst = Enumerable.From(options)
+                    .All(function (x) {
                     return x.parentId == _this.owner.owner.defaultAffiliation.establishmentId;
                 });
                 var caption = isFirst ? '[Select main affiliation]' : '[Select sub-affiliation or leave empty]';
                 return caption;
             };
             AffiliatedEstablishmentEditor.prototype._getSelectOptions = function (options) {
-                var selectOptions = Enumerable.From(options).Select(function (x) {
+                var selectOptions = Enumerable.From(options)
+                    .Select(function (x) {
                     return {
                         text: x.contextName || x.officialName,
                         value: x.id,
                     };
-                }).ToArray();
+                })
+                    .ToArray();
                 return selectOptions;
             };
             AffiliatedEstablishmentEditor.prototype._onSelectedValueChanged = function (newValue) {
@@ -42,7 +45,8 @@ var People;
                 else {
                     var index = Enumerable.From(siblingEditors).IndexOf(this);
                     var ancestors = siblingEditors.slice(0, index).reverse();
-                    var ancestor = Enumerable.From(ancestors).FirstOrDefault(undefined, function (x) {
+                    var ancestor = Enumerable.From(ancestors)
+                        .FirstOrDefault(undefined, function (x) {
                         return x.select.value() && x.select.value() > 0;
                     });
                     if (ancestor) {
@@ -82,7 +86,8 @@ var People;
                 this.lastEstablishmentId = ko.computed(function () {
                     var establishmentEditors = _this.establishmentEditors();
                     if (establishmentEditors.length) {
-                        var lastEstablishmentEditor = Enumerable.From(establishmentEditors).LastOrDefault(undefined, function (x) {
+                        var lastEstablishmentEditor = Enumerable.From(establishmentEditors)
+                            .LastOrDefault(undefined, function (x) {
                             return x.select.value() && x.select.value() > 0;
                         });
                         if (lastEstablishmentEditor)
@@ -146,7 +151,8 @@ var People;
                         validator: function (value) {
                             if (value < 1)
                                 return true;
-                            var duplicateSiblingAffiliation = Enumerable.From(_this.owner.editableAffiliations()).FirstOrDefault(undefined, function (x) {
+                            var duplicateSiblingAffiliation = Enumerable.From(_this.owner.editableAffiliations())
+                                .FirstOrDefault(undefined, function (x) {
                                 return x !== _this && x.establishmentId() == value;
                             });
                             return typeof duplicateSiblingAffiliation === 'undefined';
@@ -170,9 +176,11 @@ var People;
                     jobTitles: this.jobTitles(),
                 };
                 this.saveSpinner.start();
-                People.Servers.PutAffiliation(data, this.establishmentId() || data.establishmentId).done(function () {
+                People.Servers.PutAffiliation(data, this.establishmentId() || data.establishmentId)
+                    .done(function () {
                     _this.owner.affiliationData.reload();
-                }).fail(function (xhr) {
+                })
+                    .fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to save your affiliation', true);
                     _this.saveSpinner.stop();
                 });
@@ -221,16 +229,19 @@ var People;
             };
             Affiliation.prototype._purge = function () {
                 var _this = this;
-                People.Servers.DeleteAffiliation(this.establishmentId()).done(function () {
+                People.Servers.DeleteAffiliation(this.establishmentId())
+                    .done(function () {
                     _this.owner.affiliationData.reload();
-                }).fail(function (xhr) {
+                })
+                    .fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to delete your affiliation', true);
                     _this.purgeSpinner.stop();
                 });
             };
             Affiliation.prototype.bindEstablishmentEditors = function (establishmentId) {
                 var _this = this;
-                this.owner.establishmentData.ready().done(function (offspring) {
+                this.owner.establishmentData.ready()
+                    .done(function (offspring) {
                     _this._bindEstablishmentEditors(establishmentId, offspring);
                 });
             };
@@ -246,7 +257,9 @@ var People;
             Affiliation.prototype._bindEstablishmentEditor = function (establishmentId, offspring, isLast) {
                 if (isLast === void 0) { isLast = false; }
                 var establishment = this._getEstablishmentById(establishmentId, offspring);
-                var options = this._getEstablishmentEditorOptions(establishment ? !isLast ? establishment.parentId : establishment.id : this.owner.defaultAffiliation.establishmentId, offspring);
+                var options = this._getEstablishmentEditorOptions(establishment
+                    ? !isLast ? establishment.parentId : establishment.id
+                    : this.owner.defaultAffiliation.establishmentId, offspring);
                 if (options.length) {
                     var editor = new AffiliatedEstablishmentEditor(this, options, !isLast ? establishment : undefined);
                     if (!isLast) {
@@ -262,24 +275,30 @@ var People;
                 return establishment;
             };
             Affiliation.prototype._getEstablishmentById = function (establishmentId, offspring) {
-                var establishment = Enumerable.From(offspring).SingleOrDefault(undefined, function (x) {
+                var establishment = Enumerable.From(offspring)
+                    .SingleOrDefault(undefined, function (x) {
                     return x.id == establishmentId;
                 });
                 return establishment;
             };
             Affiliation.prototype._getEstablishmentEditorOptions = function (parentId, offspring) {
-                var options = Enumerable.From(offspring).Where(function (x) {
+                var options = Enumerable.From(offspring)
+                    .Where(function (x) {
                     return x.parentId == parentId;
-                }).OrderBy(function (x) {
+                })
+                    .OrderBy(function (x) {
                     return x.rank;
-                }).ThenBy(function (x) {
+                })
+                    .ThenBy(function (x) {
                     return x.contextName || x.officialName;
-                }).ToArray();
+                })
+                    .ToArray();
                 return options;
             };
             Affiliation.prototype._loadFacultyRankOptions = function () {
                 var _this = this;
-                this.owner.employeeSettingsData.ready().done(function (settings) {
+                this.owner.employeeSettingsData.ready()
+                    .done(function (settings) {
                     _this._bindFacultyRankOptions(settings);
                 });
             };
@@ -299,15 +318,18 @@ var People;
                 }
             };
             Affiliation.prototype._getFacultyRankSelectOptions = function (settings) {
-                var options = Enumerable.From(settings.facultyRanks).OrderBy(function (x) {
+                var options = Enumerable.From(settings.facultyRanks)
+                    .OrderBy(function (x) {
                     return x.rank;
-                }).Select(function (x) {
+                })
+                    .Select(function (x) {
                     var selectOption = {
                         text: x.text,
                         value: x.facultyRankId,
                     };
                     return selectOption;
-                }).ToArray();
+                })
+                    .ToArray();
                 return options;
             };
             Affiliation.prototype._computeJobTitles = function () {
@@ -358,7 +380,8 @@ var People;
                 this.affiliationsSpinner = new App.Spinner({ delay: 400, runImmediately: true, });
                 this.isEditingAffiliation = ko.computed(function () {
                     var editableAffiliations = _this.editableAffiliations();
-                    var editingAffiliation = Enumerable.From(editableAffiliations).FirstOrDefault(undefined, function (x) {
+                    var editingAffiliation = Enumerable.From(editableAffiliations)
+                        .FirstOrDefault(undefined, function (x) {
                         return x.isEditing();
                     });
                     return typeof editingAffiliation !== 'undefined';
@@ -378,14 +401,19 @@ var People;
             Profile.prototype._loadAffiliationData = function () {
                 var _this = this;
                 var promise = $.Deferred();
-                People.Servers.GetAffiliationsByPerson().done(function (affiliations) {
-                    _this.defaultAffiliation = Enumerable.From(affiliations).Single(function (x) {
+                People.Servers.GetAffiliationsByPerson()
+                    .done(function (affiliations) {
+                    _this.defaultAffiliation = Enumerable.From(affiliations)
+                        .Single(function (x) {
                         return x.isDefault;
                     });
                     _this.preferredTitle(_this.defaultAffiliation.jobTitles);
-                    var editableAffiliations = Enumerable.From(affiliations).Except([_this.defaultAffiliation]).OrderBy(function (x) {
+                    var editableAffiliations = Enumerable.From(affiliations)
+                        .Except([_this.defaultAffiliation])
+                        .OrderBy(function (x) {
                         return x.affiliationId;
-                    }).ToArray();
+                    })
+                        .ToArray();
                     ko.mapping.fromJS(editableAffiliations, {
                         create: function (options) {
                             return new Affiliation(_this, options.data);
@@ -400,14 +428,16 @@ var People;
             };
             Profile.prototype._loadEstablishmentData = function () {
                 var promise = $.Deferred();
-                Establishments.Servers.GetOffspring(this.defaultAffiliation.establishmentId).done(function (offspring) {
+                Establishments.Servers.GetOffspring(this.defaultAffiliation.establishmentId)
+                    .done(function (offspring) {
                     promise.resolve(offspring);
                 });
                 return promise;
             };
             Profile.prototype._loadEmployeeSettingsData = function () {
                 var promise = $.Deferred();
-                Employees.Servers.GetSettingsByPerson().done(function (settings) {
+                Employees.Servers.GetSettingsByPerson()
+                    .done(function (settings) {
                     promise.resolve(settings);
                 });
                 return promise;
@@ -424,12 +454,18 @@ var People;
                     return this._loadPromise;
                 this._loadPromise = $.Deferred();
                 var viewModelPact = $.Deferred();
-                $.get('/api/user/person').done(function (data, textStatus, jqXHR) {
+                $.get('/api/user/person')
+                    .done(function (data, textStatus, jqXHR) {
                     viewModelPact.resolve(data);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
+                })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
                     viewModelPact.reject(jqXHR, textStatus, errorThrown);
                 });
                 viewModelPact.done(function (viewModel) {
+                    //this.facultyRanks(facultyRanks); // populate the faculty ranks menu
+                    //if (facultyRanks.length == 0) {
+                    //    this.facultyRankId(null);
+                    //}
                     ko.mapping.fromJS(viewModel, { ignore: "id" }, _this);
                     _this.personId = viewModel.id;
                     _this._originalValues = viewModel;
@@ -454,7 +490,8 @@ var People;
                         }
                     }
                     _this._loadPromise.resolve();
-                }).fail(function (xhr, textStatus, errorThrown) {
+                })
+                    .fail(function (xhr, textStatus, errorThrown) {
                     _this._loadPromise.reject(xhr, textStatus, errorThrown);
                 });
                 return this._loadPromise;
@@ -466,9 +503,11 @@ var People;
                 if (tabName === "activities") {
                     if (this._activitiesViewModel == null) {
                         this._activitiesViewModel = new Activities.ViewModels.ActivityList();
-                        this._activitiesViewModel.load().done(function () {
+                        this._activitiesViewModel.load()
+                            .done(function () {
                             ko.applyBindings(_this._activitiesViewModel, $("#activities")[0]);
-                        }).fail(function (jqXhr, textStatus, errorThrown) {
+                        })
+                            .fail(function (jqXhr, textStatus, errorThrown) {
                             alert(textStatus + "|" + errorThrown);
                         });
                     }
@@ -479,9 +518,11 @@ var People;
                 else if (tabName === "geographic-expertise") {
                     if (this._geographicExpertisesViewModel == null) {
                         this._geographicExpertisesViewModel = new RootViewModels.GeographicExpertises.GeographicExpertiseList(this.personId);
-                        this._geographicExpertisesViewModel.load().done(function () {
+                        this._geographicExpertisesViewModel.load()
+                            .done(function () {
                             ko.applyBindings(_this._geographicExpertisesViewModel, $("#geographic-expertises")[0]);
-                        }).fail(function (jqXhr, textStatus, errorThrown) {
+                        })
+                            .fail(function (jqXhr, textStatus, errorThrown) {
                             alert(textStatus + "|" + errorThrown);
                         });
                     }
@@ -492,9 +533,11 @@ var People;
                 else if (tabName === "language-expertise") {
                     if (this._languageExpertisesViewModel == null) {
                         this._languageExpertisesViewModel = new RootViewModels.LanguageExpertises.LanguageExpertiseList(this.personId);
-                        this._languageExpertisesViewModel.load().done(function () {
+                        this._languageExpertisesViewModel.load()
+                            .done(function () {
                             ko.applyBindings(_this._languageExpertisesViewModel, $("#language-expertises")[0]);
-                        }).fail(function (jqXhr, textStatus, errorThrown) {
+                        })
+                            .fail(function (jqXhr, textStatus, errorThrown) {
                             alert(textStatus + "|" + errorThrown);
                         });
                     }
@@ -505,9 +548,11 @@ var People;
                 else if (tabName === "formal-education") {
                     if (this._degreesViewModel == null) {
                         this._degreesViewModel = new RootViewModels.Degrees.DegreeList(this.personId);
-                        this._degreesViewModel.load().done(function () {
+                        this._degreesViewModel.load()
+                            .done(function () {
                             ko.applyBindings(_this._degreesViewModel, $("#degrees")[0]);
-                        }).fail(function (jqXhr, textStatus, errorThrown) {
+                        })
+                            .fail(function (jqXhr, textStatus, errorThrown) {
                             alert(textStatus + "|" + errorThrown);
                         });
                     }
@@ -518,9 +563,11 @@ var People;
                 else if (tabName === "affiliations") {
                     if (this._internationalAffiliationsViewModel == null) {
                         this._internationalAffiliationsViewModel = new RootViewModels.InternationalAffiliations.InternationalAffiliationList(this.personId);
-                        this._internationalAffiliationsViewModel.load().done(function () {
+                        this._internationalAffiliationsViewModel.load()
+                            .done(function () {
                             ko.applyBindings(_this._internationalAffiliationsViewModel, $("#international-affiliations")[0]);
-                        }).fail(function (jqXhr, textStatus, errorThrown) {
+                        })
+                            .fail(function (jqXhr, textStatus, errorThrown) {
                             alert(textStatus + " |" + errorThrown);
                         });
                     }
@@ -582,11 +629,14 @@ var People;
                         url: '/api/user/person',
                         type: 'PUT',
                         data: apiModel
-                    }).done(function (responseText, statusText, xhr) {
+                    })
+                        .done(function (responseText, statusText, xhr) {
                         App.flasher.flash(responseText);
                         _this.stopEditing();
-                    }).fail(function () {
-                    }).always(function () {
+                    })
+                        .fail(function () {
+                    })
+                        .always(function () {
                         _this.saveSpinner.stop();
                     });
                 }
@@ -629,37 +679,29 @@ var People;
                 $.ajax({
                     url: App.Routes.WebApi.My.Photo.del(),
                     type: 'DELETE'
-                }).always(function () {
+                })
+                    .always(function () {
                     _this.photoDeleteSpinner.stop();
-                }).done(function (response, statusText, xhr) {
+                })
+                    .done(function (response, statusText, xhr) {
                     if (typeof response === 'string')
                         App.flasher.flash(response);
                     _this.hasPhoto(false);
-                    _this.photoSrc(App.Routes.WebApi.My.Photo.get({ maxSide: 128, refresh: new Date().toUTCString() }));
-                }).fail(function () {
+                    _this.photoSrc(App.Routes.WebApi.My.Photo
+                        .get({ maxSide: 128, refresh: new Date().toUTCString() }));
+                })
+                    .fail(function () {
                     _this.photoUploadError(Profile.photoUploadUnexpectedErrorMessage);
                 });
             };
             Profile.prototype._setupRouting = function () {
                 var _this = this;
-                this._sammy.route('get', '#/', function () {
-                    _this._startTab('activities');
-                });
-                this._sammy.route('get', '#/activities', function () {
-                    _this._startTab('activities');
-                });
-                this._sammy.route('get', '#/geographic-expertise', function () {
-                    _this._startTab('geographic-expertise');
-                });
-                this._sammy.route('get', '#/language-expertise', function () {
-                    _this._startTab('language-expertise');
-                });
-                this._sammy.route('get', '#/formal-education', function () {
-                    _this._startTab('formal-education');
-                });
-                this._sammy.route('get', '#/affiliations', function () {
-                    _this._startTab('affiliations');
-                });
+                this._sammy.route('get', '#/', function () { _this._startTab('activities'); });
+                this._sammy.route('get', '#/activities', function () { _this._startTab('activities'); });
+                this._sammy.route('get', '#/geographic-expertise', function () { _this._startTab('geographic-expertise'); });
+                this._sammy.route('get', '#/language-expertise', function () { _this._startTab('language-expertise'); });
+                this._sammy.route('get', '#/formal-education', function () { _this._startTab('formal-education'); });
+                this._sammy.route('get', '#/affiliations', function () { _this._startTab('affiliations'); });
             };
             Profile.prototype._setupValidation = function () {
                 this.displayName.extend({
@@ -692,9 +734,7 @@ var People;
                 var _this = this;
                 var tabstrip = $('#tabstrip');
                 tabstrip.kendoTabStrip({
-                    select: function (e) {
-                        _this.tabClickHandler(e);
-                    },
+                    select: function (e) { _this.tabClickHandler(e); },
                     animation: false
                 }).show();
                 this.$nameSalutation.subscribe(function (newValue) {
@@ -746,9 +786,11 @@ var People;
                                         name: e.files[0].name,
                                         length: e.files[0].size
                                     }
-                                }).done(function () {
+                                })
+                                    .done(function () {
                                     _this.photoUploadError(undefined);
-                                }).fail(function (xhr) {
+                                })
+                                    .fail(function (xhr) {
                                     _this.photoUploadError(xhr.responseText);
                                     e.preventDefault();
                                     _this.photoUploadSpinner.stop();
@@ -763,11 +805,13 @@ var People;
                                         App.flasher.flash(e.response.message);
                                     }
                                     _this.hasPhoto(true);
-                                    _this.photoSrc(App.Routes.WebApi.My.Photo.get({ maxSide: 128, refresh: new Date().toUTCString() }));
+                                    _this.photoSrc(App.Routes.WebApi.My.Photo
+                                        .get({ maxSide: 128, refresh: new Date().toUTCString() }));
                                 }
                             },
                             error: function (e) {
-                                if (e.XMLHttpRequest.responseText && e.XMLHttpRequest.responseText.length < 1000) {
+                                if (e.XMLHttpRequest.responseText &&
+                                    e.XMLHttpRequest.responseText.length < 1000) {
                                     _this.photoUploadError(e.XMLHttpRequest.responseText);
                                 }
                                 else {

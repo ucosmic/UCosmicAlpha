@@ -26,9 +26,13 @@ var App;
             $nextFrame.animate({ left: negativeFrameWidth }, this.settings.speed, function () {
                 $nextFrame.css({ left: 0 });
             });
-            $nextFrame.attr('data-side-swiper', 'on').data('side-swiper', 'on');
+            $nextFrame.attr('data-side-swiper', 'on')
+                .data('side-swiper', 'on');
             $currentFrame.animate({ left: negativeFrameWidth }, this.settings.speed, function () {
-                $currentFrame.hide().css({ left: 0 }).attr('data-side-swiper', 'off').data('side-swiper', 'off');
+                $currentFrame.hide()
+                    .css({ left: 0 })
+                    .attr('data-side-swiper', 'off')
+                    .data('side-swiper', 'off');
                 if (callback)
                     callback();
             });
@@ -44,8 +48,13 @@ var App;
             $currentFrame.animate({ left: this.settings.frameWidth }, this.settings.speed, function () {
                 $currentFrame.css({ position: 'relative' });
             });
-            $prevFrame.css({ left: negativeFrameWidth }).attr('data-side-swiper', 'on').data('side-swiper', 'on').show().animate({ left: 0 }, this.settings.speed, function () {
-                $currentFrame.hide().attr('data-side-swiper', 'off').data('side-swiper', 'off');
+            $prevFrame.css({ left: negativeFrameWidth })
+                .attr('data-side-swiper', 'on').data('side-swiper', 'on')
+                .show()
+                .animate({ left: 0 }, this.settings.speed, function () {
+                $currentFrame.hide()
+                    .attr('data-side-swiper', 'off')
+                    .data('side-swiper', 'off');
                 if (callback)
                     callback();
             });

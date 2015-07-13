@@ -79,7 +79,8 @@ var People;
                 var _this = this;
                 ko.computed(function () {
                     var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
-                    $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
+                    $.get(App.Routes.WebApi.Countries.get())
+                        .done(function (response) {
                         var emptyValue = {
                             code: '-1',
                             name: '[Without country]'
@@ -89,7 +90,8 @@ var People;
                         _this.countryCode(_this.modelData.countryCode);
                         _this.hasInitialized = true;
                     });
-                }).extend({ throttle: 1 });
+                })
+                    .extend({ throttle: 1 });
             };
             ActivityInputModel.prototype._purge = function (expertiseId) {
                 var _this = this;

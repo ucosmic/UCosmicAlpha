@@ -199,7 +199,8 @@ var Agreements;
                         },
                         error: function (xhr, statusText, errorThrown) {
                             if (xhr.status === 400) {
-                                _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                                _this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                    .html(xhr.responseText.replace('\n', '<br /><br />'));
                                 _this.establishmentItemViewModel.$genericAlertDialog.dialog({
                                     title: 'Alert Message',
                                     dialogClass: 'jquery-ui',
@@ -207,9 +208,7 @@ var Agreements;
                                     resizable: false,
                                     modal: true,
                                     buttons: {
-                                        'Ok': function () {
-                                            _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                        }
+                                        'Ok': function () { _this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
                                     }
                                 });
                             }
@@ -258,13 +257,16 @@ var Agreements;
                 $("#addAContact").fadeIn(500);
                 if (this.agreementIsEdit()) {
                     var url = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
-                    $.post(url, data).done(function (response, statusText, xhr) {
+                    $.post(url, data)
+                        .done(function (response, statusText, xhr) {
                         var myUrl = xhr.getResponseHeader('Location');
                         data.id = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
                         _this.contacts.push(ko.mapping.fromJS(data));
-                    }).fail(function (xhr, statusText, errorThrown) {
+                    })
+                        .fail(function (xhr, statusText, errorThrown) {
                         if (xhr.status === 400) {
-                            _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                            _this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                .html(xhr.responseText.replace('\n', '<br /><br />'));
                             _this.establishmentItemViewModel.$genericAlertDialog.dialog({
                                 title: 'Alert Message',
                                 dialogClass: 'jquery-ui',
@@ -272,9 +274,7 @@ var Agreements;
                                 resizable: false,
                                 modal: true,
                                 buttons: {
-                                    'Ok': function () {
-                                        _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                    }
+                                    'Ok': function () { _this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
                                 }
                             });
                         }
@@ -334,7 +334,9 @@ var Agreements;
         };
         Contacts.prototype.removeContact = function (me, e) {
             var _this = this;
-            if (confirm('Are you sure you want to remove "' + me.firstName() + " " + me.lastName() + '" as a contact from this agreement?')) {
+            if (confirm('Are you sure you want to remove "' +
+                me.firstName() + " " + me.lastName() +
+                '" as a contact from this agreement?')) {
                 var url = "";
                 if (this.agreementIsEdit()) {
                     url = App.Routes.WebApi.Agreements.Contacts.del(this.agreementId, me.id());
@@ -488,7 +490,8 @@ var Agreements;
                         },
                         error: function (xhr, statusText, errorThrown) {
                             if (xhr.status === 400) {
-                                _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                                _this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                    .html(xhr.responseText.replace('\n', '<br /><br />'));
                                 _this.establishmentItemViewModel.$genericAlertDialog.dialog({
                                     title: 'Alert Message',
                                     dialogClass: 'jquery-ui',
@@ -496,9 +499,7 @@ var Agreements;
                                     resizable: false,
                                     modal: true,
                                     buttons: {
-                                        'Ok': function () {
-                                            _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                        }
+                                        'Ok': function () { _this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
                                     }
                                 });
                             }
@@ -524,7 +525,8 @@ var Agreements;
                             },
                             error: function (xhr, statusText, errorThrown) {
                                 if (xhr.status === 400) {
-                                    _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                                    _this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                        .html(xhr.responseText.replace('\n', '<br /><br />'));
                                     _this.establishmentItemViewModel.$genericAlertDialog.dialog({
                                         title: 'Alert Message',
                                         dialogClass: 'jquery-ui',
@@ -532,9 +534,7 @@ var Agreements;
                                         resizable: false,
                                         modal: true,
                                         buttons: {
-                                            'Ok': function () {
-                                                _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                            }
+                                            'Ok': function () { _this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
                                         }
                                     });
                                 }
@@ -618,7 +618,8 @@ var Agreements;
         };
         Contacts.prototype.populateContacts = function () {
             var _this = this;
-            $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId)).done(function (response) {
+            $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId))
+                .done(function (response) {
                 ko.mapping.fromJS(response, _this.contacts);
                 _this.deferredPopContacts.resolve();
             });

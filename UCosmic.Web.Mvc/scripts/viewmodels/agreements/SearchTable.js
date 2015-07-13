@@ -7,7 +7,8 @@ var Agreements;
                 var _this = this;
                 this.settings = settings;
                 this.keyword = ko.observable(sessionStorage.getItem(SearchTable.KeywordSessionKey) || '');
-                this.keywordThrottled = ko.computed(this.keyword).extend({ throttle: 400 });
+                this.keywordThrottled = ko.computed(this.keyword)
+                    .extend({ throttle: 400 });
                 this.countryCode = ko.observable(sessionStorage.getItem(SearchTable.CountrySessionKey) || 'any');
                 this.typeCode = ko.observable(sessionStorage.getItem(SearchTable.TypeSessionKey) || 'any');
                 this.pager = new App.Pager(sessionStorage.getItem(SearchTable.PageNumberSessionKey) || 1, sessionStorage.getItem(SearchTable.PageSizeSessionKey) || 10);
@@ -47,7 +48,8 @@ var Agreements;
                     var typeCode = _this.typeCode();
                     _this.pager.input.pageNumberText("1");
                 });
-                this.routeFormat = '#/{0}/country/{5}/type/{1}/sort/{2}/size/{3}/page/{4}/'.format(this.settings.route).replace('{5}', '{0}');
+                this.routeFormat = '#/{0}/country/{5}/type/{1}/sort/{2}/size/{3}/page/{4}/'
+                    .format(this.settings.route).replace('{5}', '{0}');
                 this._isActivated = ko.observable(false);
                 this._route = ko.computed(function () {
                     return _this._computeRoute();
@@ -78,7 +80,8 @@ var Agreements;
                     }
                     url = url += "Table/" + countryCode + "/" + typeCode + "/" + keyword;
                 }
-                $.get(url).done(function (response) {
+                $.get(url)
+                    .done(function (response) {
                     ko.mapping.fromJS(response, {}, _this.summary);
                 });
             };
@@ -97,7 +100,8 @@ var Agreements;
             SearchTable.prototype._loadCountryOptions = function () {
                 var _this = this;
                 var deferred = $.Deferred();
-                $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
+                $.get(App.Routes.WebApi.Countries.get())
+                    .done(function (response) {
                     var options = response.slice(0);
                     var any = {
                         code: 'any',
@@ -116,7 +120,8 @@ var Agreements;
             SearchTable.prototype._loadAgreementTypes = function () {
                 var _this = this;
                 var deferred = $.Deferred();
-                $.get("/api/agreements/agreement-types/0/").done(function (response) {
+                $.get("/api/agreements/agreement-types/0/")
+                    .done(function (response) {
                     var options = response.slice(0);
                     var any = {
                         code: 'any',
@@ -201,7 +206,8 @@ var Agreements;
                 if (!this._isActivated())
                     return;
                 var requestHistory = this._requestHistory();
-                var lastRequest = requestHistory.length ? Enumerable.From(requestHistory).Last() : null;
+                var lastRequest = requestHistory.length
+                    ? Enumerable.From(requestHistory).Last() : null;
                 var thisRequest = this._currentRequest();
                 if (!lastRequest || !this._areRequestsAligned(thisRequest, lastRequest)) {
                     this._requestHistory.push(thisRequest);
@@ -209,7 +215,8 @@ var Agreements;
                 }
             };
             SearchTable.prototype._load = function () {
-                this._request().done(function () {
+                this._request()
+                    .done(function () {
                 });
             };
             SearchTable.prototype._request = function () {
@@ -227,7 +234,8 @@ var Agreements;
                     this.$results.fadeTo(200, 0.5);
                 }
                 this._loadSummary(lastRequest.countryCode, lastRequest.typeCode, lastRequest.keyword);
-                $.get(App.Routes.WebApi.Agreements.Search.get(this.settings.domain), lastRequest).done(function (response) {
+                $.get(App.Routes.WebApi.Agreements.Search.get(this.settings.domain), lastRequest)
+                    .done(function (response) {
                     var currentRequest = _this._currentRequest();
                     if (_this._areRequestsAligned(thisRequest, currentRequest)) {
                         if (response.itemTotal < 1 && thisRequest.pageNumber != 1) {
@@ -236,7 +244,8 @@ var Agreements;
                         else if (response.pageNumber != thisRequest.pageNumber) {
                             _this._fixOverflowedPageNumber(thisRequest, response.pageNumber);
                         }
-                        response.items = Enumerable.From(response.items).Select(function (x) {
+                        response.items = Enumerable.From(response.items)
+                            .Select(function (x) {
                             return new TableRow(x, _this);
                         }).ToArray();
                         _this.pager.apply(response);
@@ -247,9 +256,11 @@ var Agreements;
                     else {
                         deferred.reject();
                     }
-                }).fail(function (xhr) {
+                })
+                    .fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to load agreement data, please try again', true);
-                }).always(function () {
+                })
+                    .always(function () {
                     _this.spinner.stop();
                     _this._restoreResultOpactity();
                     setTimeout(function () {
@@ -265,7 +276,8 @@ var Agreements;
                     if (!this._areRequestsAligned(request, requests[i], true))
                         break;
                     requestToFix = requests[i];
-                    if (this._requestHistory().length > 1 && this._areRequestsAligned(request, requests[i - 1], true)) {
+                    if (this._requestHistory().length > 1 &&
+                        this._areRequestsAligned(request, requests[i - 1], true)) {
                         this._requestHistory.pop();
                     }
                 }
@@ -273,7 +285,11 @@ var Agreements;
             };
             SearchTable.prototype._areRequestsAligned = function (first, second, ignorePageNumber) {
                 if (ignorePageNumber === void 0) { ignorePageNumber = false; }
-                var aligned = first.keyword === second.keyword && first.countryCode === second.countryCode && first.typeCode === second.typeCode && first.orderBy === second.orderBy && first.pageSize === second.pageSize;
+                var aligned = first.keyword === second.keyword
+                    && first.countryCode === second.countryCode
+                    && first.typeCode === second.typeCode
+                    && first.orderBy === second.orderBy
+                    && first.pageSize === second.pageSize;
                 if (!ignorePageNumber)
                     aligned = aligned && first.pageNumber === second.pageNumber;
                 return aligned;
@@ -315,9 +331,11 @@ var Agreements;
                     return countries && countries.length > 0;
                 });
                 this.partners = ko.computed(function () {
-                    return Enumerable.From(_this.participants()).Where(function (x) {
+                    return Enumerable.From(_this.participants())
+                        .Where(function (x) {
                         return !x.isOwner();
-                    }).ToArray();
+                    })
+                        .ToArray();
                 });
                 this.startsOnFormatted = ko.computed(function () {
                     var startsOn = _this.startsOn();

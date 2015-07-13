@@ -35,13 +35,17 @@ var Establishments;
                     callback(true);
                 }
                 else if (!this._isAwaitingResponse && vm.value()) {
-                    var route = App.Routes.WebApi.Establishments.Urls.validateValue(vm.ownerId(), vm.id());
+                    var route = App.Routes.WebApi.Establishments.Urls
+                        .validateValue(vm.ownerId(), vm.id());
                     this._isAwaitingResponse = true;
-                    $.post(route, vm.serializeData()).always(function () {
+                    $.post(route, vm.serializeData())
+                        .always(function () {
                         _this._isAwaitingResponse = false;
-                    }).done(function () {
+                    })
+                        .done(function () {
                         callback(true);
-                    }).fail(function (xhr) {
+                    })
+                        .fail(function (xhr) {
                         callback({ isValid: false, message: xhr.responseText });
                     });
                 }
@@ -126,7 +130,8 @@ var Establishments;
                 };
                 this.mutationError = function (xhr) {
                     if (xhr.status === 400) {
-                        _this.owner.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                        _this.owner.$genericAlertDialog.find('p.content')
+                            .html(xhr.responseText.replace('\n', '<br /><br />'));
                         _this.owner.$genericAlertDialog.dialog({
                             title: 'Alert Message',
                             dialogClass: 'jquery-ui',
@@ -134,9 +139,7 @@ var Establishments;
                             resizable: false,
                             modal: true,
                             buttons: {
-                                'Ok': function () {
-                                    _this.owner.$genericAlertDialog.dialog('close');
-                                }
+                                'Ok': function () { _this.owner.$genericAlertDialog.dialog('close'); }
                             }
                         });
                     }
@@ -152,7 +155,8 @@ var Establishments;
             Url.prototype.clickOfficialUrlCheckbox = function () {
                 var _this = this;
                 if (this.originalValues.isOfficialUrl) {
-                    this.owner.$genericAlertDialog.find('p.content').html('In order to choose a different official URL for this establishment, edit the URL you wish to make the new official URL.');
+                    this.owner.$genericAlertDialog.find('p.content')
+                        .html('In order to choose a different official URL for this establishment, edit the URL you wish to make the new official URL.');
                     this.owner.$genericAlertDialog.dialog({
                         title: 'Alert Message',
                         dialogClass: 'jquery-ui',
@@ -160,9 +164,7 @@ var Establishments;
                         resizable: false,
                         modal: true,
                         buttons: {
-                            'Ok': function () {
-                                _this.owner.$genericAlertDialog.dialog('close');
-                            }
+                            'Ok': function () { _this.owner.$genericAlertDialog.dialog('close'); }
                         }
                     });
                 }
@@ -191,14 +193,16 @@ var Establishments;
                             url: App.Routes.WebApi.Establishments.Urls.put(this.owner.id, this.id()),
                             type: 'PUT',
                             data: this.serializeData()
-                        }).done(this.mutationSuccess).fail(this.mutationError);
+                        })
+                            .done(this.mutationSuccess).fail(this.mutationError);
                     }
                     else if (this.owner.id) {
                         $.ajax({
                             url: App.Routes.WebApi.Establishments.Urls.post(this.owner.id),
                             type: 'POST',
                             data: this.serializeData()
-                        }).done(this.mutationSuccess).fail(this.mutationError);
+                        })
+                            .done(this.mutationSuccess).fail(this.mutationError);
                     }
                 }
                 return false;
@@ -219,7 +223,8 @@ var Establishments;
                 if (this.owner.editingUrl())
                     return;
                 if (this.isOfficialUrl() && this.owner.urls().length > 1) {
-                    this.owner.$genericAlertDialog.find('p.content').html('You cannot delete an establishment\'s official URL.<br />To delete this URL, first assign another URL as official.');
+                    this.owner.$genericAlertDialog.find('p.content')
+                        .html('You cannot delete an establishment\'s official URL.<br />To delete this URL, first assign another URL as official.');
                     this.owner.$genericAlertDialog.dialog({
                         title: 'Alert Message',
                         dialogClass: 'jquery-ui',
@@ -227,9 +232,7 @@ var Establishments;
                         resizable: false,
                         modal: true,
                         buttons: {
-                            'Ok': function () {
-                                _this.owner.$genericAlertDialog.dialog('close');
-                            }
+                            'Ok': function () { _this.owner.$genericAlertDialog.dialog('close'); }
                         }
                     });
                     return;
@@ -254,7 +257,9 @@ var Establishments;
                                 $.ajax({
                                     url: App.Routes.WebApi.Establishments.Urls.del(_this.owner.id, _this.id()),
                                     type: 'DELETE'
-                                }).done(_this.mutationSuccess).fail(_this.mutationError);
+                                })
+                                    .done(_this.mutationSuccess)
+                                    .fail(_this.mutationError);
                             }
                         },
                         {

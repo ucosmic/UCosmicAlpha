@@ -116,7 +116,9 @@ var App;
                 var inputTop = e.sender.wrapper.offset().top;
                 var windowHeight = $(window).outerHeight();
                 var scrollTop = $(window).scrollTop();
-                var targetHeight = (ulTop < inputTop) ? inputTop - scrollTop - 20 : windowHeight - ulTop + scrollTop - 20;
+                var targetHeight = (ulTop < inputTop)
+                    ? inputTop - scrollTop - 20
+                    : windowHeight - ulTop + scrollTop - 20;
                 if (ulHeight != targetHeight) {
                     e.sender.options.height = targetHeight;
                     e.sender.refresh();

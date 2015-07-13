@@ -1,3 +1,5 @@
+/// <reference path="models.d.ts" />
+/// <reference path="serviceapimodel.d.ts" />
 var Languages;
 (function (Languages) {
     var ViewModels;
@@ -65,18 +67,10 @@ var Languages;
             };
             Search.prototype._applySubscriptions = function () {
                 var _this = this;
-                this.pager.input.pageSizeText.subscribe(function (newValue) {
-                    _this._submitForm();
-                });
-                this.pager.input.pageNumberText.subscribe(function (newValue) {
-                    _this._submitForm();
-                });
-                this.languageCode.subscribe(function (newValue) {
-                    _this._submitForm();
-                });
-                this.orderBy.subscribe(function (newValue) {
-                    _this._submitForm();
-                });
+                this.pager.input.pageSizeText.subscribe(function (newValue) { _this._submitForm(); });
+                this.pager.input.pageNumberText.subscribe(function (newValue) { _this._submitForm(); });
+                this.languageCode.subscribe(function (newValue) { _this._submitForm(); });
+                this.orderBy.subscribe(function (newValue) { _this._submitForm(); });
             };
             Search.prototype._submitForm = function () {
                 if (this.loadingSpinner.isVisible())
@@ -105,11 +99,15 @@ var Languages;
                         x.officialName = x.contextName ? x.contextName : x.officialName && x.officialName.indexOf(',') > -1 ? x.officialName.substring(0, x.officialName.indexOf(',')) : x.officialName;
                         return x;
                     });
-                    var options = Enumerable.From(response).Where("x => x.parentId==" + parentId).OrderBy(function (x) {
+                    var options = Enumerable.From(response)
+                        .Where("x => x.parentId==" + parentId)
+                        .OrderBy(function (x) {
                         return x.rank;
-                    }).ThenBy(function (x) {
+                    })
+                        .ThenBy(function (x) {
                         return x.contextName || x.officialName;
-                    }).Select("x =>  {value: x.id, text: x.officialName}").ToArray();
+                    })
+                        .Select("x =>  {value: x.id, text: x.officialName}").ToArray();
                     if (options.length > 0) {
                         options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
                         this.affiliations.unshift(ko.mapping.fromJS([{ options: options, value: previousParentId.toString() }])()[0]);
@@ -144,11 +142,13 @@ var Languages;
                 else {
                     var settings = settings || {};
                     settings.url = '/api/establishments/' + this.mainCampus + '/offspring';
-                    $.ajax(settings).done(function (response) {
+                    $.ajax(settings)
+                        .done(function (response) {
                         promise.resolve(response);
                         sessionStorage.setItem('campuses' + _this.mainCampus, JSON.stringify(response));
                         _this._createEstablishmentSelects(response);
-                    }).fail(function (xhr) {
+                    })
+                        .fail(function (xhr) {
                         promise.reject(xhr);
                     });
                 }
@@ -157,15 +157,18 @@ var Languages;
             Search.prototype._loadTenancyData = function () {
                 var _this = this;
                 var deferred = $.Deferred();
-                $.when(Establishments.Servers.Single(this.tenantId), Establishments.Servers.GetChildren(this.tenantId)).done(function (parentData, childData) {
+                $.when(Establishments.Servers.Single(this.tenantId), Establishments.Servers.GetChildren(this.tenantId))
+                    .done(function (parentData, childData) {
                     childData = childData || [];
-                    var tenants = Enumerable.From(childData).OrderBy(function (x) {
+                    var tenants = Enumerable.From(childData)
+                        .OrderBy(function (x) {
                         return x.rank;
                     }).ToArray();
                     tenants.unshift(parentData);
                     _this.tenantOptions([]);
                     if (childData.length) {
-                        var options = Enumerable.From(tenants).Select(function (x) {
+                        var options = Enumerable.From(tenants)
+                            .Select(function (x) {
                             var option = {
                                 value: x.id,
                                 text: x.contextName || x.officialName,
@@ -203,7 +206,8 @@ var Languages;
                     });
                     if (childData.length)
                         _this.hasTenancyData(true);
-                }).fail(function (xhr) {
+                })
+                    .fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
                     deferred.reject();
                 });

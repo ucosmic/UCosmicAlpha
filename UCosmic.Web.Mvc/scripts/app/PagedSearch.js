@@ -58,7 +58,8 @@ var App;
             this.showStatus = ko.computed(function () {
                 return _this.hasItems() && !_this.spinner.isVisible();
             });
-            this.throttledKeyword = ko.computed(this.keyword).extend({ throttle: 400 });
+            this.throttledKeyword = ko.computed(this.keyword)
+                .extend({ throttle: 400 });
         }
         PagedSearch.prototype.nextPage = function () {
             if (this.nextEnabled()) {

@@ -11,7 +11,8 @@ var Activities;
             function ActivityTypeSearchTestCheckBox(activityType, settings) {
                 this.activityType = activityType;
                 this.settings = settings;
-                this.isChecked = ko.observable(!this.settings.input.activityTypeIds || !this.settings.input.activityTypeIds.length || Enumerable.From(this.settings.input.activityTypeIds).Contains(this.activityType.activityTypeId.toString()));
+                this.isChecked = ko.observable(!this.settings.input.activityTypeIds || !this.settings.input.activityTypeIds.length ||
+                    Enumerable.From(this.settings.input.activityTypeIds).Contains(this.activityType.activityTypeId.toString()));
             }
             return ActivityTypeSearchTestCheckBox;
         })();
@@ -22,12 +23,8 @@ var Activities;
                 this.settings = settings;
                 this.orderBy = ko.observable(this.settings.input.orderBy);
                 this.pivot = ko.observable(this.settings.input.pivot);
-                this.isActivitiesChecked = ko.computed(function () {
-                    return _this.pivot() != 2 /* people */;
-                });
-                this.isPeopleChecked = ko.computed(function () {
-                    return _this.pivot() == 2 /* people */;
-                });
+                this.isActivitiesChecked = ko.computed(function () { return _this.pivot() != DataGraphPivotTest.people; });
+                this.isPeopleChecked = ko.computed(function () { return _this.pivot() == DataGraphPivotTest.people; });
                 this.loadingSpinner = new App.Spinner();
                 this.hasTenancyData = ko.observable(false);
                 this.hasEstablishmentSelects = ko.observable(false);
@@ -87,16 +84,19 @@ var Activities;
                 this.keyword(this.settings.input.keyword);
                 this.since(this.settings.input.since);
                 this.until(this.settings.input.until);
-                this.activityTypeCheckBoxes = ko.observableArray(Enumerable.From(this.settings.activityTypes).Select(function (x) {
+                this.activityTypeCheckBoxes = ko.observableArray(Enumerable.From(this.settings.activityTypes)
+                    .Select(function (x) {
                     return new ActivityTypeSearchTestCheckBox(x, _this.settings);
                 }).ToArray());
                 this.isCheckAllActivityTypesDisabled = ko.computed(function () {
-                    return Enumerable.From(_this.activityTypeCheckBoxes()).All(function (x) {
+                    return Enumerable.From(_this.activityTypeCheckBoxes())
+                        .All(function (x) {
                         return x.isChecked();
                     });
                 });
                 this.isUncheckAllActivityTypesDisabled = ko.computed(function () {
-                    return Enumerable.From(_this.activityTypeCheckBoxes()).All(function (x) {
+                    return Enumerable.From(_this.activityTypeCheckBoxes())
+                        .All(function (x) {
                         return !x.isChecked();
                     });
                 });
@@ -120,11 +120,15 @@ var Activities;
                         x.officialName = x.contextName ? x.contextName : x.officialName && x.officialName.indexOf(',') > -1 ? x.officialName.substring(0, x.officialName.indexOf(',')) : x.officialName;
                         return x;
                     });
-                    var options = Enumerable.From(response).Where("x => x.parentId==" + parentId).OrderBy(function (x) {
+                    var options = Enumerable.From(response)
+                        .Where("x => x.parentId==" + parentId)
+                        .OrderBy(function (x) {
                         return x.rank;
-                    }).ThenBy(function (x) {
+                    })
+                        .ThenBy(function (x) {
                         return x.contextName || x.officialName;
-                    }).Select("x =>  {value: x.id, text: x.officialName}").ToArray();
+                    })
+                        .Select("x =>  {value: x.id, text: x.officialName}").ToArray();
                     if (options.length > 0) {
                         options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
                         this.affiliations.unshift(ko.mapping.fromJS([{ options: options, value: previousParentId.toString() }])()[0]);
@@ -155,11 +159,13 @@ var Activities;
                     $.when(this.searchMap.dataDefered).done(function () {
                         var settings = settings || {};
                         settings.url = '/api/establishments/' + _this.mainCampus + '/offspring';
-                        $.ajax(settings).done(function (response) {
+                        $.ajax(settings)
+                            .done(function (response) {
                             promise.resolve(response);
                             sessionStorage.setItem('campuses' + _this.mainCampus, JSON.stringify(response));
                             _this._createEstablishmentSelects(response);
-                        }).fail(function (xhr) {
+                        })
+                            .fail(function (xhr) {
                             promise.reject(xhr);
                         });
                     });
@@ -169,15 +175,18 @@ var Activities;
             MapSearch.prototype._loadTenancyData = function () {
                 var _this = this;
                 $.when(this.searchMap.dataDefered).done(function () {
-                    $.when(Activities.Servers.Single(_this.settings.tenantId), Activities.Servers.GetChildren(_this.settings.tenantId)).done(function (parentData, childData) {
+                    $.when(Activities.Servers.Single(_this.settings.tenantId), Activities.Servers.GetChildren(_this.settings.tenantId))
+                        .done(function (parentData, childData) {
                         childData = childData || [];
-                        var tenants = Enumerable.From(childData).OrderBy(function (x) {
+                        var tenants = Enumerable.From(childData)
+                            .OrderBy(function (x) {
                             return x.rank;
                         }).ToArray();
                         tenants.unshift(parentData);
                         _this.tenantOptions([]);
                         if (childData.length) {
-                            var options = Enumerable.From(tenants).Select(function (x) {
+                            var options = Enumerable.From(tenants)
+                                .Select(function (x) {
                                 var option = {
                                     value: x.id,
                                     text: x.contextName || x.officialName,
@@ -211,7 +220,8 @@ var Activities;
                         });
                         if (childData.length)
                             _this.hasTenancyData(true);
-                    }).fail(function (xhr) {
+                    })
+                        .fail(function (xhr) {
                         App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
                     });
                 });
@@ -229,6 +239,7 @@ var Activities;
                 });
             };
             MapSearch.prototype._applyKendo = function () {
+                //#region DatePickers
                 var _this = this;
                 var kendoSince = this.$since.data('kendoDatePicker');
                 kendoSince.element.val(this.settings.input.since);
@@ -258,7 +269,9 @@ var Activities;
                         }
                     },
                 });
-                var hasPlace = (this.settings.input.placeIds && this.settings.input.placeIds.length && this.settings.input.placeNames && this.settings.input.placeNames.length && this.settings.input.placeIds[0] && this.settings.input.placeNames[0]) ? true : false;
+                var hasPlace = (this.settings.input.placeIds && this.settings.input.placeIds.length
+                    && this.settings.input.placeNames && this.settings.input.placeNames.length
+                    && this.settings.input.placeIds[0] && this.settings.input.placeNames[0]) ? true : false;
                 var dataSource = hasPlace ? 'server' : 'empty';
                 var checkDataSource = function (widget) {
                     var inputVal = $.trim(widget.input.val());
@@ -307,7 +320,8 @@ var Activities;
                             e.preventDefault();
                             return;
                         }
-                        if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length || _this.settings.input.placeIds[0] != dataItem.placeId) {
+                        if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length ||
+                            _this.settings.input.placeIds[0] != dataItem.placeId) {
                             e.sender.input.val(dataItem.officialName);
                             _this.$location.val(dataItem.officialName);
                             _this.$placeIds.val(dataItem.placeId);
@@ -326,7 +340,8 @@ var Activities;
                             e.sender.input.val(dataItem.officialName);
                             _this.$location.val(dataItem.officialName);
                             _this.$placeIds.val(dataItem.placeId);
-                            if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length || _this.settings.input.placeIds[0] != dataItem.placeId) {
+                            if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length ||
+                                _this.settings.input.placeIds[0] != dataItem.placeId) {
                                 _this._submitForm();
                             }
                         }
@@ -340,9 +355,7 @@ var Activities;
                                 input.attr('name', 'placeNames');
                                 _this.$location.attr('name', '');
                                 input.on('keydown', function () {
-                                    setTimeout(function () {
-                                        checkDataSource(widget);
-                                    }, 0);
+                                    setTimeout(function () { checkDataSource(widget); }, 0);
                                 });
                                 if (hasPlace && inputVal) {
                                     widget.search(inputVal);
@@ -362,9 +375,7 @@ var Activities;
                             if (value) {
                                 var dataSource = e.sender.dataSource;
                                 var data = dataSource.data();
-                                var hasClearer = Enumerable.From(data).Any(function (x) {
-                                    return x.placeId == -1;
-                                });
+                                var hasClearer = Enumerable.From(data).Any(function (x) { return x.placeId == -1; });
                                 if (!hasClearer) {
                                     dataSource.add({ officialName: '[Clear current selection]', placeId: -1 });
                                     _this.stopAutocompleteInfiniteLoop = true;
@@ -382,9 +393,7 @@ var Activities;
             };
             MapSearch.prototype._applySubscriptions = function () {
                 var _this = this;
-                this.orderBy.subscribe(function (newValue) {
-                    _this._submitForm();
-                });
+                this.orderBy.subscribe(function (newValue) { _this._submitForm(); });
                 var myThis = this;
                 $('input[name="placeNames"]').bind("change keyup input", function () {
                     if (this.value == "") {
@@ -420,12 +429,14 @@ var Activities;
                 }
             };
             MapSearch.prototype.checkAllActivityTypes = function () {
-                Enumerable.From(this.activityTypeCheckBoxes()).ForEach(function (x) {
+                Enumerable.From(this.activityTypeCheckBoxes())
+                    .ForEach(function (x) {
                     x.isChecked(true);
                 });
             };
             MapSearch.prototype.uncheckAllActivityTypes = function () {
-                Enumerable.From(this.activityTypeCheckBoxes()).ForEach(function (x) {
+                Enumerable.From(this.activityTypeCheckBoxes())
+                    .ForEach(function (x) {
                     x.isChecked(false);
                 });
             };

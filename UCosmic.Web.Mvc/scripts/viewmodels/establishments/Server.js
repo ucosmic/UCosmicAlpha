@@ -6,9 +6,11 @@ var Establishments;
             var deferred = $.Deferred();
             settings = settings || {};
             settings.url = Routes.Api.Establishments.single(establishmentId);
-            $.ajax(settings).done(function (response) {
+            $.ajax(settings)
+                .done(function (response) {
                 deferred.resolve(response);
-            }).fail(function (xhr) {
+            })
+                .fail(function (xhr) {
                 deferred.reject(xhr);
             });
             return deferred.promise();
@@ -18,9 +20,11 @@ var Establishments;
             var deferred = $.Deferred();
             settings = settings || {};
             settings.url = Routes.Api.Establishments.children(parentId);
-            $.ajax(settings).done(function (response) {
+            $.ajax(settings)
+                .done(function (response) {
                 deferred.resolve(response);
-            }).fail(function (xhr) {
+            })
+                .fail(function (xhr) {
                 deferred.reject(xhr);
             });
             return deferred.promise();
@@ -30,9 +34,11 @@ var Establishments;
             var promise = $.Deferred();
             settings = settings || {};
             settings.url = Routes.Api.Establishments.offspring(ancestorId);
-            $.ajax(settings).done(function (response) {
+            $.ajax(settings)
+                .done(function (response) {
                 promise.resolve(response);
-            }).fail(function (xhr) {
+            })
+                .fail(function (xhr) {
                 promise.reject(xhr);
             });
             return promise;

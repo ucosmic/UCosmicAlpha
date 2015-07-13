@@ -24,9 +24,14 @@ var App;
                     this._element = elementOrId;
                 }
                 this._log('Set map canvas element, id is "{0}".', $(this._element).attr('id'));
-                this.zoom = ko.observable(this._options.zoom || this._options.zoom == 0 ? this._options.zoom : 1);
-                this.lat = ko.observable(this._options.center ? Map._reducePrecision(this._options.center.lat(), this._settings.maxPrecision) : Map.defaultCenter.lat());
-                this.lng = ko.observable(this._options.center ? Map._reducePrecision(this._options.center.lng(), this._settings.maxPrecision) : Map.defaultCenter.lng());
+                this.zoom = ko.observable(this._options.zoom || this._options.zoom == 0
+                    ? this._options.zoom : 1);
+                this.lat = ko.observable(this._options.center
+                    ? Map._reducePrecision(this._options.center.lat(), this._settings.maxPrecision)
+                    : Map.defaultCenter.lat());
+                this.lng = ko.observable(this._options.center
+                    ? Map._reducePrecision(this._options.center.lng(), this._settings.maxPrecision)
+                    : Map.defaultCenter.lng());
                 this.lng.subscribe(function (newValue) {
                     if (newValue) {
                     }
@@ -82,7 +87,8 @@ var App;
                     isDirty = true;
                 }
                 var bounds = this.map.getBounds();
-                if (settings.bounds && !Map.isEmptyBounds(settings.bounds) && !Map.areBoundsEqual(bounds, settings.bounds)) {
+                if (settings.bounds && !Map.isEmptyBounds(settings.bounds) &&
+                    !Map.areBoundsEqual(bounds, settings.bounds)) {
                     this.map.fitBounds(settings.bounds);
                     isDirty = true;
                 }
@@ -126,7 +132,8 @@ var App;
                 });
             };
             Map.isValidZoom = function (zoom) {
-                return typeof zoom !== 'undefined' && !isNaN(zoom) && zoom >= 0;
+                return typeof zoom !== 'undefined'
+                    && !isNaN(zoom) && zoom >= 0;
             };
             Map.prototype._centerChanged = function () {
                 var center = this.map.getCenter();
@@ -141,7 +148,8 @@ var App;
                 });
             };
             Map.areCentersEqual = function (center1, center2, precision) {
-                return Map.areNumbersEqualy(center1.lat(), center2.lat(), precision) && Map.areNumbersEqualy(center1.lng(), center2.lng(), precision);
+                return Map.areNumbersEqualy(center1.lat(), center2.lat(), precision)
+                    && Map.areNumbersEqualy(center1.lng(), center2.lng(), precision);
             };
             Map.areNumbersEqualy = function (coordinate1, coordinate2, preceision) {
                 coordinate1 = Map._reducePrecision(coordinate1, preceision);
@@ -172,7 +180,8 @@ var App;
                 var ne2 = bounds2.getNorthEast();
                 var sw1 = bounds1.getSouthWest();
                 var sw2 = bounds2.getSouthWest();
-                return ne1.lat() == ne2.lat() && ne1.lng() == ne2.lng() && sw1.lat() == sw2.lat() && sw1.lng() == sw2.lng();
+                return ne1.lat() == ne2.lat() && ne1.lng() == ne2.lng()
+                    && sw1.lat() == sw2.lat() && sw1.lng() == sw2.lng();
             };
             Map.prototype._draggingChanged = function (isDragging) {
                 this.isDragging(isDragging);

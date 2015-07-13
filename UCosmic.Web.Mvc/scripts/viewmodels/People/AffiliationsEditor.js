@@ -18,19 +18,22 @@ var People;
             }
             AffiliatedEstablishmentEditorSpike.prototype._getOptionsCaption = function (options) {
                 var _this = this;
-                var isFirst = Enumerable.From(options).All(function (x) {
+                var isFirst = Enumerable.From(options)
+                    .All(function (x) {
                     return x.parentId == _this.owner.owner.defaultAffiliation.establishmentId;
                 });
                 var caption = isFirst ? '[Select main affiliation]' : '[Select sub-affiliation or leave empty]';
                 return caption;
             };
             AffiliatedEstablishmentEditorSpike.prototype._getSelectOptions = function (options) {
-                var selectOptions = Enumerable.From(options).Select(function (x) {
+                var selectOptions = Enumerable.From(options)
+                    .Select(function (x) {
                     return {
                         text: x.contextName || x.officialName,
                         value: x.id,
                     };
-                }).ToArray();
+                })
+                    .ToArray();
                 return selectOptions;
             };
             AffiliatedEstablishmentEditorSpike.prototype._onSelectedValueChanged = function (newValue) {
@@ -41,7 +44,8 @@ var People;
                 else {
                     var index = Enumerable.From(siblingEditors).IndexOf(this);
                     var ancestors = siblingEditors.slice(0, index).reverse();
-                    var ancestor = Enumerable.From(ancestors).FirstOrDefault(undefined, function (x) {
+                    var ancestor = Enumerable.From(ancestors)
+                        .FirstOrDefault(undefined, function (x) {
                         return x.select.value() && x.select.value() > 0;
                     });
                     if (ancestor) {
@@ -81,7 +85,8 @@ var People;
                 this.lastEstablishmentId = ko.computed(function () {
                     var establishmentEditors = _this.establishmentEditors();
                     if (establishmentEditors.length) {
-                        var lastEstablishmentEditor = Enumerable.From(establishmentEditors).LastOrDefault(undefined, function (x) {
+                        var lastEstablishmentEditor = Enumerable.From(establishmentEditors)
+                            .LastOrDefault(undefined, function (x) {
                             return x.select.value() && x.select.value() > 0;
                         });
                         if (lastEstablishmentEditor)
@@ -148,7 +153,8 @@ var People;
                         validator: function (value) {
                             if (value < 1)
                                 return true;
-                            var duplicateSiblingAffiliation = Enumerable.From(_this.owner.editableAffiliations()).FirstOrDefault(undefined, function (x) {
+                            var duplicateSiblingAffiliation = Enumerable.From(_this.owner.editableAffiliations())
+                                .FirstOrDefault(undefined, function (x) {
                                 return x !== _this && x.establishmentId() == value;
                             });
                             return typeof duplicateSiblingAffiliation === 'undefined';
@@ -172,11 +178,13 @@ var People;
                     jobTitles: this.jobTitles(),
                 };
                 this.saveSpinner.start();
-                People.Servers.PutAffiliation(data, this.establishmentId() || data.establishmentId).done(function () {
+                People.Servers.PutAffiliation(data, this.establishmentId() || data.establishmentId)
+                    .done(function () {
                     _this.owner.affiliationData.reload();
                     _this.owner.cancelClicked = false;
                     _this.owner.$edit_affiliations_dialog.data("kendoWindow").close();
-                }).fail(function (xhr) {
+                })
+                    .fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to save your affiliation', true);
                     _this.saveSpinner.stop();
                 });
@@ -224,16 +232,19 @@ var People;
             };
             AffiliationSpike.prototype._purge = function () {
                 var _this = this;
-                People.Servers.DeleteAffiliation(this.establishmentId()).done(function () {
+                People.Servers.DeleteAffiliation(this.establishmentId())
+                    .done(function () {
                     _this.owner.affiliationData.reload();
-                }).fail(function (xhr) {
+                })
+                    .fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to delete your affiliation', true);
                     _this.purgeSpinner.stop();
                 });
             };
             AffiliationSpike.prototype.bindEstablishmentEditors = function (establishmentId) {
                 var _this = this;
-                this.owner.establishmentData.ready().done(function (offspring) {
+                this.owner.establishmentData.ready()
+                    .done(function (offspring) {
                     _this._bindEstablishmentEditors(establishmentId, offspring);
                 });
             };
@@ -249,7 +260,9 @@ var People;
             AffiliationSpike.prototype._bindEstablishmentEditor = function (establishmentId, offspring, isLast) {
                 if (isLast === void 0) { isLast = false; }
                 var establishment = this._getEstablishmentById(establishmentId, offspring);
-                var options = this._getEstablishmentEditorOptions(establishment ? !isLast ? establishment.parentId : establishment.id : this.owner.defaultAffiliation.establishmentId, offspring);
+                var options = this._getEstablishmentEditorOptions(establishment
+                    ? !isLast ? establishment.parentId : establishment.id
+                    : this.owner.defaultAffiliation.establishmentId, offspring);
                 if (options.length) {
                     var editor = new AffiliatedEstablishmentEditorSpike(this, options, !isLast ? establishment : undefined);
                     if (!isLast) {
@@ -263,24 +276,30 @@ var People;
                 return establishment;
             };
             AffiliationSpike.prototype._getEstablishmentById = function (establishmentId, offspring) {
-                var establishment = Enumerable.From(offspring).SingleOrDefault(undefined, function (x) {
+                var establishment = Enumerable.From(offspring)
+                    .SingleOrDefault(undefined, function (x) {
                     return x.id == establishmentId;
                 });
                 return establishment;
             };
             AffiliationSpike.prototype._getEstablishmentEditorOptions = function (parentId, offspring) {
-                var options = Enumerable.From(offspring).Where(function (x) {
+                var options = Enumerable.From(offspring)
+                    .Where(function (x) {
                     return x.parentId == parentId;
-                }).OrderBy(function (x) {
+                })
+                    .OrderBy(function (x) {
                     return x.rank;
-                }).ThenBy(function (x) {
+                })
+                    .ThenBy(function (x) {
                     return x.contextName || x.officialName;
-                }).ToArray();
+                })
+                    .ToArray();
                 return options;
             };
             AffiliationSpike.prototype._loadFacultyRankOptions = function () {
                 var _this = this;
-                this.owner.employeeSettingsData.ready().done(function (settings) {
+                this.owner.employeeSettingsData.ready()
+                    .done(function (settings) {
                     _this._bindFacultyRankOptions(settings);
                 });
             };
@@ -296,15 +315,18 @@ var People;
                 }
             };
             AffiliationSpike.prototype._getFacultyRankSelectOptions = function (settings) {
-                var options = Enumerable.From(settings.facultyRanks).OrderBy(function (x) {
+                var options = Enumerable.From(settings.facultyRanks)
+                    .OrderBy(function (x) {
                     return x.rank;
-                }).Select(function (x) {
+                })
+                    .Select(function (x) {
                     var selectOption = {
                         text: x.text,
                         value: x.facultyRankId,
                     };
                     return selectOption;
-                }).ToArray();
+                })
+                    .ToArray();
                 return options;
             };
             AffiliationSpike.prototype._computeJobTitles = function () {
@@ -331,7 +353,8 @@ var People;
                 this.affiliationsSpinner = new App.Spinner({ delay: 400, runImmediately: true, });
                 this.isEditingAffiliation = ko.computed(function () {
                     var editableAffiliations = _this.editableAffiliations();
-                    var editingAffiliation = Enumerable.From(editableAffiliations).FirstOrDefault(undefined, function (x) {
+                    var editingAffiliation = Enumerable.From(editableAffiliations)
+                        .FirstOrDefault(undefined, function (x) {
                         return x.isEditing();
                     });
                     return typeof editingAffiliation !== 'undefined';
@@ -378,7 +401,8 @@ var People;
                         $("html, body").css("overflow", "");
                         _this.isEditMode(false);
                         var editableAffiliations = _this.editableAffiliations();
-                        var editingAffiliation = Enumerable.From(editableAffiliations).FirstOrDefault(undefined, function (x) {
+                        var editingAffiliation = Enumerable.From(editableAffiliations)
+                            .FirstOrDefault(undefined, function (x) {
                             return x.isEditing();
                         });
                         if (_this.cancelClicked) {
@@ -400,14 +424,19 @@ var People;
             AffiliationsEditor.prototype._loadAffiliationData = function () {
                 var _this = this;
                 var promise = $.Deferred();
-                People.Servers.GetAffiliationsByPerson().done(function (affiliations) {
-                    _this.defaultAffiliation = Enumerable.From(affiliations).Single(function (x) {
+                People.Servers.GetAffiliationsByPerson()
+                    .done(function (affiliations) {
+                    _this.defaultAffiliation = Enumerable.From(affiliations)
+                        .Single(function (x) {
                         return x.isDefault;
                     });
                     _this.preferredTitle(_this.defaultAffiliation.jobTitles);
-                    var editableAffiliations = Enumerable.From(affiliations).Except([_this.defaultAffiliation]).OrderBy(function (x) {
+                    var editableAffiliations = Enumerable.From(affiliations)
+                        .Except([_this.defaultAffiliation])
+                        .OrderBy(function (x) {
                         return x.affiliationId;
-                    }).ToArray();
+                    })
+                        .ToArray();
                     ko.mapping.fromJS(editableAffiliations, {
                         create: function (options) {
                             return new AffiliationSpike(_this, options.data);
@@ -422,14 +451,16 @@ var People;
             };
             AffiliationsEditor.prototype._loadEstablishmentData = function () {
                 var promise = $.Deferred();
-                Establishments.Servers.GetOffspring(this.defaultAffiliation.establishmentId).done(function (offspring) {
+                Establishments.Servers.GetOffspring(this.defaultAffiliation.establishmentId)
+                    .done(function (offspring) {
                     promise.resolve(offspring);
                 });
                 return promise;
             };
             AffiliationsEditor.prototype._loadEmployeeSettingsData = function () {
                 var promise = $.Deferred();
-                Employees.Servers.GetSettingsByPerson().done(function (settings) {
+                Employees.Servers.GetSettingsByPerson()
+                    .done(function (settings) {
                     promise.resolve(settings);
                 });
                 return promise;

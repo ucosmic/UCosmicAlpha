@@ -10,10 +10,12 @@ var App;
             var _this = this;
             if (!this._isLoading) {
                 this._isLoading = true;
-                this.loader().done(function (data) {
+                this.loader()
+                    .done(function (data) {
                     _this.cached = data;
                     _this._promise.resolve(_this.cached);
-                }).fail(function (xhr) {
+                })
+                    .fail(function (xhr) {
                     _this._promise.reject();
                 });
             }

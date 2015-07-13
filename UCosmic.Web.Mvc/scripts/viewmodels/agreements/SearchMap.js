@@ -11,12 +11,8 @@ var Agreements;
                 this.lng = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LngSessionKey)) || SearchMap.defaultMapCenter.lng());
                 this.detailPreference = ko.observable(sessionStorage.getItem(SearchMap.DetailPrefSessionKey));
                 this.detailPreferenceChecked = ko.computed({
-                    read: function () {
-                        return _this.detailPreference() == '_blank';
-                    },
-                    write: function (value) {
-                        _this.detailPreference(value ? '_blank' : '');
-                    },
+                    read: function () { return _this.detailPreference() == '_blank'; },
+                    write: function (value) { _this.detailPreference(value ? '_blank' : ''); },
                 });
                 this.continentCode = ko.observable(sessionStorage.getItem(SearchMap.ContinentSessionKey) || 'any');
                 this.countryCode = ko.observable(sessionStorage.getItem(SearchMap.CountrySessionKey) || 'any');
@@ -71,7 +67,8 @@ var Agreements;
                     return _this._computeContinentOptions();
                 });
                 this.typeOptions = ko.observableArray([{ code: 'any', name: '[Loading...]' }]);
-                this.routeFormat = '#/{0}/continent/{7}/country/{1}/type/{2}/place/{3}/zoom/{4}/latitude/{5}/longitude/{6}/'.format(this.settings.route).replace('{7}', '{0}');
+                this.routeFormat = '#/{0}/continent/{7}/country/{1}/type/{2}/place/{3}/zoom/{4}/latitude/{5}/longitude/{6}/'
+                    .format(this.settings.route).replace('{7}', '{0}');
                 this._isActivated = ko.observable(false);
                 this.loadViewport = 0;
                 this._route = ko.computed(function () {
@@ -107,7 +104,9 @@ var Agreements;
                         var idles = _this._map.idles();
                         setTimeout(function () {
                             if (idles == _this._map.idles() && !_this._map.isDragging() && _this._isActivated()) {
-                                if (_this.zoom() != _this._map.zoom() || !SearchMap._areCoordinatesEqualEnough(_this.lat(), _this._map.lat()) || !SearchMap._areCoordinatesEqualEnough(_this.lng(), _this._map.lng())) {
+                                if (_this.zoom() != _this._map.zoom()
+                                    || !SearchMap._areCoordinatesEqualEnough(_this.lat(), _this._map.lat())
+                                    || !SearchMap._areCoordinatesEqualEnough(_this.lng(), _this._map.lng())) {
                                     _this.lat(_this._map.lat());
                                     _this.lng(_this._map.lng());
                                     _this.zoom(_this._map.zoom());
@@ -133,7 +132,8 @@ var Agreements;
                     var countryCode = 'any';
                     url = url += "Table/" + countryCode + "/" + typeCode + "/" + keyword;
                 }
-                $.get(url).done(function (response) {
+                $.get(url)
+                    .done(function (response) {
                     ko.mapping.fromJS(response, {}, _this.summary);
                 });
             };
@@ -147,9 +147,9 @@ var Agreements;
             };
             SearchMap.prototype._computeCountryOptions = function () {
                 var options = [{
-                    code: this.countryCode(),
-                    name: '[Loading...]',
-                }];
+                        code: this.countryCode(),
+                        name: '[Loading...]',
+                    }];
                 var countries = this.countries();
                 if (countries && countries.length) {
                     var anyCountry = {
@@ -163,19 +163,22 @@ var Agreements;
                     options = countries.slice(0);
                     var continentCode = this.continentCode();
                     if (continentCode != 'any' && continentCode != 'none') {
-                        options = Enumerable.From(options).Where(function (x) {
+                        options = Enumerable.From(options)
+                            .Where(function (x) {
                             return x.continentCode == continentCode;
                         }).ToArray();
                     }
-                    options = Enumerable.From([anyCountry]).Concat(options).Concat([noCountry]).ToArray();
+                    options = Enumerable.From([anyCountry])
+                        .Concat(options)
+                        .Concat([noCountry]).ToArray();
                 }
                 return options;
             };
             SearchMap.prototype._computeContinentOptions = function () {
                 var options = [{
-                    code: this.continentCode(),
-                    name: '[Loading...]',
-                }];
+                        code: this.continentCode(),
+                        name: '[Loading...]',
+                    }];
                 var countries = this.countries();
                 if (countries && countries.length) {
                     var anyContinent = {
@@ -186,24 +189,31 @@ var Agreements;
                         code: 'none',
                         name: '[Without continent]',
                     };
-                    options = Enumerable.From(countries).Select(function (x) {
+                    options = Enumerable.From(countries)
+                        .Select(function (x) {
                         return {
                             code: x.continentCode,
                             name: x.continentName
                         };
-                    }).Distinct(function (x) {
+                    })
+                        .Distinct(function (x) {
                         return x.code;
-                    }).OrderBy(function (x) {
+                    })
+                        .OrderBy(function (x) {
                         return x.name;
-                    }).ToArray();
-                    options = Enumerable.From([anyContinent]).Concat(options).Concat([noContinent]).ToArray();
+                    })
+                        .ToArray();
+                    options = Enumerable.From([anyContinent])
+                        .Concat(options)
+                        .Concat([noContinent]).ToArray();
                 }
                 return options;
             };
             SearchMap.prototype._loadCountryOptions = function () {
                 var _this = this;
                 var deferred = $.Deferred();
-                $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
+                $.get(App.Routes.WebApi.Countries.get())
+                    .done(function (response) {
                     _this.countries(response);
                     deferred.resolve();
                 });
@@ -212,7 +222,8 @@ var Agreements;
             SearchMap.prototype._loadAgreementTypes = function () {
                 var _this = this;
                 var deferred = $.Deferred();
-                $.get("/api/agreements/agreement-types/0/").done(function (response) {
+                $.get("/api/agreements/agreement-types/0/")
+                    .done(function (response) {
                     var options = response.slice(0);
                     var any = {
                         code: 'any',
@@ -234,7 +245,8 @@ var Agreements;
             };
             SearchMap.prototype._runSammy = function () {
                 var viewModel = this;
-                var beforeRegex = new RegExp('\\{0}'.format(this.routeFormat.format('(.*)', '(.*)', '(.*)', '(.*)', '(.*)', '(.*)').replace(/\//g, '\\/')));
+                var beforeRegex = new RegExp('\\{0}'.format(this.routeFormat.format('(.*)', '(.*)', '(.*)', '(.*)', '(.*)', '(.*)')
+                    .replace(/\//g, '\\/')));
                 this.sammy.before(beforeRegex, function () {
                     var e = this;
                     return viewModel._onBeforeRoute(e);
@@ -255,7 +267,10 @@ var Agreements;
                 var oldLat = this.lat();
                 var oldLng = this.lng();
                 var allowRoute = true;
-                if (this._scopeHistory().length > 1 && parseInt(e.params['zoom']) == this.zoom() && this._areFloatsEqualEnough(parseFloat(newLat), oldLat) && this._areFloatsEqualEnough(parseFloat(newLng), oldLng)) {
+                if (this._scopeHistory().length > 1 &&
+                    parseInt(e.params['zoom']) == this.zoom() &&
+                    this._areFloatsEqualEnough(parseFloat(newLat), oldLat) &&
+                    this._areFloatsEqualEnough(parseFloat(newLng), oldLng)) {
                     return false;
                 }
                 return allowRoute;
@@ -351,9 +366,12 @@ var Agreements;
                 if (!this._isActivated())
                     return;
                 var scopeHistory = this._scopeHistory();
-                var lastScope = scopeHistory.length ? Enumerable.From(scopeHistory).Last() : null;
+                var lastScope = scopeHistory.length
+                    ? Enumerable.From(scopeHistory).Last() : null;
                 var thisScope = this._currentScope();
-                if (!lastScope || lastScope.countryCode != thisScope.countryCode || lastScope.continentCode != thisScope.continentCode || (!isNaN(lastScope.placeId) && lastScope.placeId != thisScope.placeId) || lastScope.typeCode != thisScope.typeCode) {
+                if (!lastScope || lastScope.countryCode != thisScope.countryCode ||
+                    lastScope.continentCode != thisScope.continentCode ||
+                    (!isNaN(lastScope.placeId) && lastScope.placeId != thisScope.placeId) || lastScope.typeCode != thisScope.typeCode) {
                     this._scopeHistory.push(thisScope);
                     $.when(this._map.ready()).then(function () {
                         _this._map.triggerResize();
@@ -376,9 +394,12 @@ var Agreements;
                 if (!this._isActivated() || this.loadViewport)
                     return;
                 var viewportHistory = this._viewportHistory();
-                var lastViewport = viewportHistory.length ? Enumerable.From(viewportHistory).Last() : null;
+                var lastViewport = viewportHistory.length
+                    ? Enumerable.From(viewportHistory).Last() : null;
                 var thisViewport = this._currentViewport();
-                if (!lastViewport || lastViewport.zoom != thisViewport.zoom || !SearchMap._areCoordinatesEqualEnough(lastViewport.center.lat(), thisViewport.center.lat()) || !SearchMap._areCoordinatesEqualEnough(lastViewport.center.lng(), thisViewport.center.lng())) {
+                if (!lastViewport || lastViewport.zoom != thisViewport.zoom ||
+                    !SearchMap._areCoordinatesEqualEnough(lastViewport.center.lat(), thisViewport.center.lat()) ||
+                    !SearchMap._areCoordinatesEqualEnough(lastViewport.center.lng(), thisViewport.center.lng())) {
                     this._viewportHistory.push(thisViewport);
                     $.when(this._map.ready()).then(function () {
                         _this._map.setViewport(thisViewport).then(function () {
@@ -411,7 +432,8 @@ var Agreements;
                             _this._requestPlaces('countries');
                             _this._requestPlaces('');
                         }, 0);
-                    }).always(function () {
+                    })
+                        .always(function () {
                         _this.spinner.stop();
                     });
                 }
@@ -419,7 +441,8 @@ var Agreements;
                     var partnersReceived = this._requestPartners();
                     $.when(partnersReceived).done(function () {
                         _this._receivePartners();
-                    }).always(function () {
+                    })
+                        .always(function () {
                         _this.spinner.stop();
                     });
                 }
@@ -435,8 +458,11 @@ var Agreements;
                         });
                     });
                 }
-                else if ((placeType == 'continents' && !this._continentsResponse) || (placeType == 'countries' && !this._countriesResponse) || (!placeType && !this._placesResponse)) {
-                    $.get(this.settings.partnerPlacesApi.format(placeType)).done(function (response) {
+                else if ((placeType == 'continents' && !this._continentsResponse) ||
+                    (placeType == 'countries' && !this._countriesResponse) ||
+                    (!placeType && !this._placesResponse)) {
+                    $.get(this.settings.partnerPlacesApi.format(placeType))
+                        .done(function (response) {
                         if (placeType == 'continents') {
                             _this._continentsResponse = ko.observableArray(response);
                         }
@@ -447,7 +473,8 @@ var Agreements;
                             _this._placesResponse = ko.observableArray(response);
                         }
                         deferred.resolve();
-                    }).fail(function (xhr) {
+                    })
+                        .fail(function (xhr) {
                         App.Failures.message(xhr, 'while trying to load agreement map data', true);
                         deferred.reject();
                     });
@@ -458,7 +485,11 @@ var Agreements;
                 return deferred;
             };
             SearchMap.prototype._receivePlaces = function (placeType) {
-                var places = placeType == 'continents' ? this._continentsResponse() : placeType == 'countries' ? this._countriesResponse() : this._placesResponse();
+                var places = placeType == 'continents'
+                    ? this._continentsResponse()
+                    : placeType == 'countries'
+                        ? this._countriesResponse()
+                        : this._placesResponse();
                 if (this.typeCode() != 'any') {
                     var type = this.typeCode();
                     places = places.map(function (x) {
@@ -481,15 +512,23 @@ var Agreements;
                 }
                 if (placeType == 'countries') {
                     var continentCode = this.continentCode();
-                    places = Enumerable.From(places).Where(function (x) {
-                        return continentCode == 'none' ? !x.id : x.continentCode == continentCode;
-                    }).ToArray();
+                    places = Enumerable.From(places)
+                        .Where(function (x) {
+                        return continentCode == 'none'
+                            ? !x.id
+                            : x.continentCode == continentCode;
+                    })
+                        .ToArray();
                 }
                 if (!placeType) {
                     var countryCode = this.countryCode();
-                    places = Enumerable.From(places).Where(function (x) {
-                        return countryCode == 'none' ? !x.countryId : x.countryCode == countryCode;
-                    }).ToArray();
+                    places = Enumerable.From(places)
+                        .Where(function (x) {
+                        return countryCode == 'none'
+                            ? !x.countryId
+                            : x.countryCode == countryCode;
+                    })
+                        .ToArray();
                 }
                 this._updateStatus(placeType, places);
                 this._plotMarkers(placeType, places);
@@ -502,10 +541,13 @@ var Agreements;
             };
             SearchMap.prototype._plotMarkers = function (placeType, places) {
                 var _this = this;
-                var scaler = placeType == 'countries' ? this._getMarkerIconScaler(placeType, this._countriesResponse()) : this._getMarkerIconScaler(placeType, places);
+                var scaler = placeType == 'countries'
+                    ? this._getMarkerIconScaler(placeType, this._countriesResponse())
+                    : this._getMarkerIconScaler(placeType, places);
                 var continentCode = this.continentCode();
                 if (placeType == 'countries' && !places.length && continentCode != 'none') {
-                    var continent = Enumerable.From(this._continentsResponse()).SingleOrDefault(undefined, function (x) {
+                    var continent = Enumerable.From(this._continentsResponse())
+                        .SingleOrDefault(undefined, function (x) {
                         return x.continentCode == continentCode;
                     });
                     if (continent) {
@@ -514,30 +556,33 @@ var Agreements;
                 }
                 var countryCode = this.countryCode();
                 if (!placeType && !places.length && countryCode != 'none') {
-                    var country = Enumerable.From(this.countryOptions()).SingleOrDefault(undefined, function (x) {
+                    var country = Enumerable.From(this.countryOptions())
+                        .SingleOrDefault(undefined, function (x) {
                         return x.code == countryCode;
                     });
                     if (country) {
                         places = [{
-                            id: country.id,
-                            agreementCount: 0,
-                            agreementTypes: [],
-                            name: country.name,
-                            center: country.center,
-                            boundingBox: country.box,
-                            isCountry: true,
-                            countryCode: country.code,
-                            continentCode: country.continentCode,
-                        }];
+                                id: country.id,
+                                agreementCount: 0,
+                                agreementTypes: [],
+                                name: country.name,
+                                center: country.center,
+                                boundingBox: country.box,
+                                isCountry: true,
+                                countryCode: country.code,
+                                continentCode: country.continentCode,
+                            }];
                     }
                 }
                 var markers = [];
                 $.each(places, function (i, place) {
                     if (!place.agreementCount)
                         return;
-                    var title = '{0} - {1} agreement{2}\r\nClick for more information'.format(place.name, place.agreementCount, place.agreementCount == 1 ? '' : 's');
+                    var title = '{0} - {1} agreement{2}\r\nClick for more information'
+                        .format(place.name, place.agreementCount, place.agreementCount == 1 ? '' : 's');
                     if (!placeType)
-                        title = '{0} agreement{1}\r\nClick for more information'.format(place.agreementCount, place.agreementCount == 1 ? '' : 's');
+                        title = '{0} agreement{1}\r\nClick for more information'
+                            .format(place.agreementCount, place.agreementCount == 1 ? '' : 's');
                     var options = {
                         position: Places.Utils.convertToLatLng(place.center),
                         title: title,
@@ -625,18 +670,23 @@ var Agreements;
                     }
                 });
                 this._map.replaceMarkers(markers);
-                var singleMarkers = Enumerable.From(markers).Where(function (x) {
+                var singleMarkers = Enumerable.From(markers)
+                    .Where(function (x) {
                     var agreementId = x.get('ucosmic_agreement_id');
                     return !isNaN(agreementId) && agreementId > 0;
-                }).ToArray();
+                })
+                    .ToArray();
                 if (singleMarkers.length) {
-                    var agreementIds = Enumerable.From(singleMarkers).Select(function (x) {
+                    var agreementIds = Enumerable.From(singleMarkers)
+                        .Select(function (x) {
                         return parseInt(x.get('ucosmic_agreement_id'));
                     }).ToArray();
-                    $.get(this.settings.partnersApi, { agreementIds: agreementIds, }).done(function (response) {
+                    $.get(this.settings.partnersApi, { agreementIds: agreementIds, })
+                        .done(function (response) {
                         $.each(singleMarkers, function (i, singleMarker) {
                             var agreementId = parseInt(singleMarker.get('ucosmic_agreement_id'));
-                            var partners = Enumerable.From(response).Where(function (x) {
+                            var partners = Enumerable.From(response)
+                                .Where(function (x) {
                                 return x.agreementId == agreementId;
                             }).ToArray();
                             if (!partners.length)
@@ -664,7 +714,8 @@ var Agreements;
                     var continentCode = this.continentCode();
                     if (!places.length) {
                         if (continentCode && this._continentsResponse) {
-                            var continent = Enumerable.From(this._continentsResponse()).SingleOrDefault(undefined, function (x) {
+                            var continent = Enumerable.From(this._continentsResponse())
+                                .SingleOrDefault(undefined, function (x) {
                                 return x.continentCode == continentCode;
                             });
                             if (continent && continent.boundingBox && continent.boundingBox.hasValue) {
@@ -678,7 +729,8 @@ var Agreements;
                             settings.bounds = Places.Utils.convertToLatLngBounds(country.boundingBox);
                     }
                     else {
-                        var latLngs = Enumerable.From(places).Select(function (x) {
+                        var latLngs = Enumerable.From(places)
+                            .Select(function (x) {
                             return new google.maps.LatLng(x.center.latitude, x.center.longitude);
                         }).ToArray();
                         $.each(latLngs, function (index, latLng) {
@@ -690,7 +742,8 @@ var Agreements;
                     var countryCode = this.countryCode();
                     if (!places.length) {
                         if (countryCode && this.countryOptions) {
-                            var countryOption = Enumerable.From(this.countryOptions()).SingleOrDefault(undefined, function (x) {
+                            var countryOption = Enumerable.From(this.countryOptions())
+                                .SingleOrDefault(undefined, function (x) {
                                 return x.code == countryCode;
                             });
                             if (countryOption && countryOption.box && countryOption.box.hasValue) {
@@ -704,7 +757,8 @@ var Agreements;
                             settings.bounds = Places.Utils.convertToLatLngBounds(country.boundingBox);
                     }
                     else {
-                        var latLngs = Enumerable.From(places).Select(function (x) {
+                        var latLngs = Enumerable.From(places)
+                            .Select(function (x) {
                             return new google.maps.LatLng(x.center.latitude, x.center.longitude);
                         }).ToArray();
                         $.each(latLngs, function (index, latLng) {
@@ -732,7 +786,8 @@ var Agreements;
                     this.zoom(this._map.zoom());
                     isDirty = true;
                 }
-                isDirty = isDirty || (this.settings.activationRoute && this.sammy.getLocation().indexOf(this.settings.activationRoute) < 0);
+                isDirty = isDirty || (this.settings.activationRoute
+                    && this.sammy.getLocation().indexOf(this.settings.activationRoute) < 0);
                 if (isDirty) {
                     this.setLocation();
                 }
@@ -748,7 +803,8 @@ var Agreements;
                 this.status.partnerCount('?');
                 this.lastStatusRequestedCount += 1;
                 lastStatusRequestedCountLocal = this.lastStatusRequestedCount;
-                $.get(url).done(function (response) {
+                $.get(url)
+                    .done(function (response) {
                     if (lastStatusRequestedCountLocal == _this.lastStatusRequestedCount) {
                         _this.status.agreementCount(response.agreementCount.toString());
                         _this.status.partnerCount(response.partnerCount.toString());
@@ -767,7 +823,8 @@ var Agreements;
                         this.status.countryCount('unknown continent');
                     }
                     else {
-                        var continent = Enumerable.From(this.continentOptions()).SingleOrDefault(undefined, function (x) {
+                        var continent = Enumerable.From(this.continentOptions())
+                            .SingleOrDefault(undefined, function (x) {
                             return x.code == continentCode;
                         });
                         if (continent && continent.name) {
@@ -781,7 +838,8 @@ var Agreements;
                         this.status.countryCount('unknown country');
                     }
                     else {
-                        var country = Enumerable.From(this.countryOptions()).SingleOrDefault(undefined, function (x) {
+                        var country = Enumerable.From(this.countryOptions())
+                            .SingleOrDefault(undefined, function (x) {
                             return x.code == countryCode;
                         });
                         if (country && country.name) {
@@ -794,12 +852,8 @@ var Agreements;
                 if (!places || !places.length)
                     return new Scaler({ min: 0, max: 1, }, { min: 16, max: 16, });
                 var from = {
-                    min: Enumerable.From(places).Min(function (x) {
-                        return x.agreementCount;
-                    }),
-                    max: Enumerable.From(places).Max(function (x) {
-                        return x.agreementCount;
-                    }),
+                    min: Enumerable.From(places).Min(function (x) { return x.agreementCount; }),
+                    max: Enumerable.From(places).Max(function (x) { return x.agreementCount; }),
                 };
                 var into = { min: 24, max: 48 };
                 if (!placeType)
@@ -845,7 +899,8 @@ var Agreements;
                 }
                 else {
                     var placeId = this.placeId();
-                    var place = Enumerable.From(this._placesResponse()).SingleOrDefault(undefined, function (x) {
+                    var place = Enumerable.From(this._placesResponse())
+                        .SingleOrDefault(undefined, function (x) {
                         return x.id == placeId;
                     });
                     if (!place || !place.agreementCount) {
@@ -856,10 +911,12 @@ var Agreements;
                         this.spinner.stop();
                     }
                     else {
-                        $.get(this.settings.partnersApi, { agreementIds: place.agreementIds, }).done(function (response) {
+                        $.get(this.settings.partnersApi, { agreementIds: place.agreementIds, })
+                            .done(function (response) {
                             _this._partnersResponse = ko.observableArray(response);
                             deferred.resolve();
-                        }).fail(function (xhr) {
+                        })
+                            .fail(function (xhr) {
                             App.Failures.message(xhr, 'while trying to load agreement partner data', true);
                             deferred.reject();
                         });
@@ -870,9 +927,11 @@ var Agreements;
             SearchMap.prototype._receivePartners = function () {
                 var _this = this;
                 var allPartners = this._partnersResponse();
-                var uniquePartners = Enumerable.From(allPartners).Distinct(function (x) {
+                var uniquePartners = Enumerable.From(allPartners)
+                    .Distinct(function (x) {
                     return x.establishmentId;
-                }).ToArray();
+                })
+                    .ToArray();
                 var viewportSettings = {
                     bounds: new google.maps.LatLngBounds(),
                 };
@@ -897,14 +956,17 @@ var Agreements;
                 var markers = [];
                 var scaler = this._getMarkerIconScaler('', this._placesResponse());
                 $.each(uniquePartners, function (i, partner) {
-                    var agreements = Enumerable.From(allPartners).Where(function (x) {
+                    var agreements = Enumerable.From(allPartners)
+                        .Where(function (x) {
                         return x.establishmentId == partner.establishmentId;
-                    }).Distinct(function (x) {
+                    })
+                        .Distinct(function (x) {
                         return x.agreementId;
                     }).ToArray();
                     var options = {
                         position: Places.Utils.convertToLatLng(partner.center),
-                        title: '{0} - {1} agreement{2}'.format(partner.establishmentTranslatedName, agreements.length, agreements.length == 1 ? '' : 's'),
+                        title: '{0} - {1} agreement{2}'
+                            .format(partner.establishmentTranslatedName, agreements.length, agreements.length == 1 ? '' : 's'),
                         clickable: true,
                         cursor: 'pointer',
                     };
@@ -924,9 +986,11 @@ var Agreements;
                         }
                         else {
                             _this.infoWindowContent.partner(partner);
-                            _this.infoWindowContent.agreements(Enumerable.From(agreements).OrderByDescending(function (x) {
+                            _this.infoWindowContent.agreements(Enumerable.From(agreements)
+                                .OrderByDescending(function (x) {
                                 return x.agreementStartsOn;
-                            }).ToArray());
+                            })
+                                .ToArray());
                             var content = _this.$infoWindow.html();
                             var options = {
                                 content: $.trim(content),
@@ -940,7 +1004,8 @@ var Agreements;
                 if (markers.length == 1) {
                     google.maps.event.trigger(markers[0], 'click');
                 }
-                this.status.agreementCount(Enumerable.From(allPartners).Distinct(function (x) {
+                this.status.agreementCount(Enumerable.From(allPartners)
+                    .Distinct(function (x) {
                     return x.agreementId;
                 }).Count().toString());
                 this.status.partnerCount(uniquePartners.length.toString());

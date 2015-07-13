@@ -96,7 +96,8 @@ var Agreements;
                         this.map.activate();
                     }
                     else {
-                        this.map.triggerMapResize().done(function () {
+                        this.map.triggerMapResize()
+                            .done(function () {
                             _this._hasMapBeenResizedOnce = true;
                             _this.map.activate();
                         });

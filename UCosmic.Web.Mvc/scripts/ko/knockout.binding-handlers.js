@@ -35,7 +35,8 @@ ko.bindingHandlers.multilineText = {
     update: function (element, valueAccessor) {
         var text = ko.utils.unwrapObservable(valueAccessor());
         if (text) {
-            text = text.replace('\r\n', '<br />').replace('\n\r', '<br />').replace('\n', '<br />').replace('\r', '<br />');
+            text = text.replace('\r\n', '<br />').replace('\n\r', '<br />')
+                .replace('\n', '<br />').replace('\r', '<br />');
             ko.utils.setHtml(element, text);
         }
         else {
@@ -129,9 +130,7 @@ ko.bindingHandlers.fadeVisible = {
                 ed.onPaste.add(function (ed, evt) {
                     var doc = ed.getDoc();
                     if (ko.isWriteableObservable(modelValue)) {
-                        setTimeout(function () {
-                            modelValue(ed.getContent({ format: 'raw' }));
-                        }, 10);
+                        setTimeout(function () { modelValue(ed.getContent({ format: 'raw' })); }, 10);
                     }
                 });
                 ed.onInit.add(function (ed, evt) {

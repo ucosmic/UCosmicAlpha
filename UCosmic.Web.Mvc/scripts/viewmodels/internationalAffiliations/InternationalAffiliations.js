@@ -20,12 +20,14 @@ var ViewModels;
                 affiliationSearchInput.orderBy = "";
                 affiliationSearchInput.pageNumber = 1;
                 affiliationSearchInput.pageSize = App.Constants.int32Max;
-                $.get(App.Routes.WebApi.InternationalAffiliations.get(), affiliationSearchInput).done(function (data, textStatus, jqXHR) {
+                $.get(App.Routes.WebApi.InternationalAffiliations.get(), affiliationSearchInput)
+                    .done(function (data, textStatus, jqXHR) {
                     {
                         ko.mapping.fromJS(data, {}, _this);
                         deferred.resolve();
                     }
-                }).fail(function (jqXhr, textStatus, errorThrown) {
+                })
+                    .fail(function (jqXhr, textStatus, errorThrown) {
                     {
                         deferred.reject(jqXhr, textStatus, errorThrown);
                     }
@@ -37,8 +39,7 @@ var ViewModels;
                     async: false,
                     type: "DELETE",
                     url: App.Routes.WebApi.InternationalAffiliations.del(affiliationId),
-                    success: function (data, textStatus, jqXHR) {
-                    },
+                    success: function (data, textStatus, jqXHR) { },
                     error: function (jqXHR, textStatus, errorThrown) {
                         alert(textStatus);
                     }
@@ -52,16 +53,14 @@ var ViewModels;
                     modal: true,
                     buttons: [
                         {
-                            text: "Yes, confirm delete",
-                            click: function () {
+                            text: "Yes, confirm delete", click: function () {
                                 viewModel.deleteAffiliationById(data.id());
                                 $(this).dialog("close");
                                 location.href = App.Routes.Mvc.My.Profile.get("international-affiliation");
                             }
                         },
                         {
-                            text: "No, cancel delete",
-                            click: function () {
+                            text: "No, cancel delete", click: function () {
                                 $(this).dialog("close");
                             }
                         },

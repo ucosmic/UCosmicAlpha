@@ -18,13 +18,17 @@ var ViewModels;
                     return;
                 }
                 if (!this._isAwaitingResponse) {
-                    var route = App.Routes.WebApi.Identity.Users.Roles.validateGrant(vm.id(), vm.selectedRoleOption());
+                    var route = App.Routes.WebApi.Identity.Users.Roles
+                        .validateGrant(vm.id(), vm.selectedRoleOption());
                     this._isAwaitingResponse = true;
-                    $.post(route).always(function () {
+                    $.post(route)
+                        .always(function () {
                         _this._isAwaitingResponse = false;
-                    }).done(function () {
+                    })
+                        .done(function () {
                         callback(true);
-                    }).fail(function (xhr) {
+                    })
+                        .fail(function (xhr) {
                         callback({ isValid: false, message: xhr.responseText });
                     });
                 }
@@ -48,13 +52,17 @@ var ViewModels;
                     return;
                 }
                 if (!this._isAwaitingResponse) {
-                    var route = App.Routes.WebApi.Identity.Users.Roles.validateRevoke(vm.id(), vm.roleToRevoke());
+                    var route = App.Routes.WebApi.Identity.Users.Roles
+                        .validateRevoke(vm.id(), vm.roleToRevoke());
                     this._isAwaitingResponse = true;
-                    $.post(route).always(function () {
+                    $.post(route)
+                        .always(function () {
                         _this._isAwaitingResponse = false;
-                    }).done(function () {
+                    })
+                        .done(function () {
                         callback(true);
-                    }).fail(function (xhr) {
+                    })
+                        .fail(function (xhr) {
                         callback({ isValid: false, message: xhr.responseText });
                     });
                 }
@@ -138,7 +146,8 @@ var ViewModels;
                     validRoleRevoke: this
                 });
                 this.isValidating = ko.computed(function () {
-                    return _this.selectedRoleOption.isValidating() || _this.roleToRevoke.isValidating();
+                    return _this.selectedRoleOption.isValidating()
+                        || _this.roleToRevoke.isValidating();
                 });
                 this.selectedRoleOption.subscribe(function (newValue) {
                     _this.roleToRevoke(undefined);
@@ -154,11 +163,14 @@ var ViewModels;
                     pageSize: Math.pow(2, 32) / 2 - 1,
                     orderBy: 'name-asc'
                 };
-                $.get(App.Routes.WebApi.Identity.Roles.get(), queryParameters).done(function (response, statusText, xhr) {
+                $.get(App.Routes.WebApi.Identity.Roles.get(), queryParameters)
+                    .done(function (response, statusText, xhr) {
                     deferred.resolve(response, statusText, xhr);
-                }).fail(function (xhr, statusText, errorThrown) {
+                })
+                    .fail(function (xhr, statusText, errorThrown) {
                     deferred.reject(xhr, statusText, errorThrown);
-                }).always(function () {
+                })
+                    .always(function () {
                     _this.roleSpinner.stop();
                 });
                 return deferred;
@@ -185,7 +197,9 @@ var ViewModels;
                         dataSource: roleData,
                         dataTextField: 'name',
                         dataValueField: 'id',
-                        template: '#if (data.id) {# <div><strong>${ data.name }</strong></div>\r\n' + '#} else {#<div>${ data.name }</div>\r\n #}#' + '#if (data.description) {# <div><small>${ data.description }</small></div> #}#'
+                        template: '#if (data.id) {# <div><strong>${ data.name }</strong></div>\r\n' +
+                            '#} else {#<div>${ data.name }</div>\r\n #}#' +
+                            '#if (data.description) {# <div><small>${ data.description }</small></div> #}#'
                     });
                 }
             };
@@ -213,11 +227,14 @@ var ViewModels;
                 var _this = this;
                 this.roleSpinner.start();
                 var deferred = $.Deferred();
-                $.get(App.Routes.WebApi.Identity.Users.Roles.get(this.id())).done(function (response, statusText, xhr) {
+                $.get(App.Routes.WebApi.Identity.Users.Roles.get(this.id()))
+                    .done(function (response, statusText, xhr) {
                     deferred.resolve(response, statusText, xhr);
-                }).fail(function (xhr, statusText, errorThrown) {
+                })
+                    .fail(function (xhr, statusText, errorThrown) {
                     deferred.reject(xhr, statusText, errorThrown);
-                }).always(function () {
+                })
+                    .always(function () {
                     _this.roleSpinner.stop();
                 });
                 return deferred;
@@ -241,7 +258,8 @@ var ViewModels;
             SearchResult.prototype.showRoleEditor = function () {
                 var _this = this;
                 this.isEditingRoles(true);
-                this._pullRoleOptions().done(function (response) {
+                this._pullRoleOptions()
+                    .done(function (response) {
                     _this._loadRoleOptions(response);
                 });
             };
@@ -254,9 +272,7 @@ var ViewModels;
                 this.roleSpinner.start();
                 this.roleToRevoke(undefined);
                 if (this.isValidating()) {
-                    setTimeout(function () {
-                        _this.grantRole();
-                    }, 50);
+                    setTimeout(function () { _this.grantRole(); }, 50);
                     return;
                 }
                 if (!this.isValid()) {
@@ -268,18 +284,22 @@ var ViewModels;
                 $.ajax({
                     url: url,
                     type: 'PUT'
-                }).done(function (response, textStatus, xhr) {
+                })
+                    .done(function (response, textStatus, xhr) {
                     App.flasher.flash(response);
                     _this.roleOptions.remove(function (item) {
                         return item.id() == _this.selectedRoleOption();
                     });
-                    _this.pullRoleGrants().done(function (response) {
+                    _this.pullRoleGrants()
+                        .done(function (response) {
                         _this.loadRoleGrants(response);
-                        _this._pullRoleOptions().done(function (response) {
+                        _this._pullRoleOptions()
+                            .done(function (response) {
                             _this._loadRoleOptions(response);
                         });
                     });
-                }).fail(function (xhr, textStatus, errorThrown) {
+                })
+                    .fail(function (xhr, textStatus, errorThrown) {
                     _this.isGrantError(true);
                     _this.grantErrorText('An unexpected error occurred while trying to grant access.');
                     _this.roleSpinner.stop();
@@ -290,9 +310,7 @@ var ViewModels;
                 this.roleSpinner.start();
                 this.roleToRevoke(roleId);
                 if (this.isValidating()) {
-                    setTimeout(function () {
-                        _this.revokeRole(roleId);
-                    }, 50);
+                    setTimeout(function () { _this.revokeRole(roleId); }, 50);
                     return;
                 }
                 if (!this.isValid()) {
@@ -304,16 +322,20 @@ var ViewModels;
                 $.ajax({
                     url: url,
                     type: 'DELETE'
-                }).done(function (response, textStatus, xhr) {
+                })
+                    .done(function (response, textStatus, xhr) {
                     App.flasher.flash(response);
                     _this.roleToRevoke(undefined);
-                    _this.pullRoleGrants().done(function (response) {
+                    _this.pullRoleGrants()
+                        .done(function (response) {
                         _this.loadRoleGrants(response);
-                        _this._pullRoleOptions().done(function (response) {
+                        _this._pullRoleOptions()
+                            .done(function (response) {
                             _this._loadRoleOptions(response);
                         });
                     });
-                }).fail(function (xhr, textStatus, errorThrown) {
+                })
+                    .fail(function (xhr, textStatus, errorThrown) {
                     _this.isRevokeError(true);
                     _this.grantErrorText('An unexpected error occurred while trying to revoke access.');
                     _this.roleSpinner.stop();
@@ -350,14 +372,17 @@ var ViewModels;
                                 $.ajax({
                                     type: "DELETE",
                                     url: App.Routes.WebApi.Identity.Users.del(_this.id()),
-                                }).done(function () {
+                                })
+                                    .done(function () {
                                     _this._owner._pullResults().done(function (response) {
                                         _this._owner._loadResults(response);
                                         _this.$confirmPurgeDialog.dialog('close');
                                     });
-                                }).fail(function (xhr) {
+                                })
+                                    .fail(function (xhr) {
                                     App.Failures.message(xhr, 'while trying to delete this user', true);
-                                }).always(function () {
+                                })
+                                    .always(function () {
                                     _this.deleteSpinner.stop();
                                     disableButtons(false);
                                 });

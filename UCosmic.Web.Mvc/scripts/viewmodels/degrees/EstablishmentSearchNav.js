@@ -93,7 +93,8 @@ var ViewModels;
                             if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + _this.sammyUrl + "#/new/") > 0) {
                                 var $addEstablishment = $("#add_establishment"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("#establishment_search"), $obj2 = $("#degree_editor"), time = 500;
                                 _this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
-                                $.when(deferred, deferred2).done(function () {
+                                $.when(deferred, deferred2)
+                                    .done(function () {
                                     $addEstablishment.css("visibility", "").hide().fadeIn(500, function () {
                                         if (!_this.hasBoundItem) {
                                             var $cancelAddEstablishment = $("#cancelAddEstablishment");
@@ -106,7 +107,8 @@ var ViewModels;
                                                 if (!_this.establishmentItemViewModel.id || _this.establishmentItemViewModel.id === 0) {
                                                     var me = _this.establishmentItemViewModel, officialName = _this.establishmentItemViewModel.names()[0], officialUrl = _this.establishmentItemViewModel.urls()[0], location = _this.establishmentItemViewModel.location;
                                                     _this.establishmentItemViewModel.validatingSpinner.start();
-                                                    if (officialName.text.isValidating() || officialUrl.value.isValidating() || _this.establishmentItemViewModel.ceebCode.isValidating() || _this.establishmentItemViewModel.uCosmicCode.isValidating()) {
+                                                    if (officialName.text.isValidating() || officialUrl.value.isValidating() ||
+                                                        _this.establishmentItemViewModel.ceebCode.isValidating() || _this.establishmentItemViewModel.uCosmicCode.isValidating()) {
                                                         setTimeout(function () {
                                                             var waitResult = _this.establishmentItemViewModel.submitToCreate(formElement);
                                                             return false;
@@ -131,12 +133,14 @@ var ViewModels;
                                                         data.officialUrl = officialUrl.serializeData();
                                                         data.location = location.serializeData();
                                                         _this.establishmentItemViewModel.createSpinner.start();
-                                                        $.post(url, data).done(function (response, statusText, xhr) {
+                                                        $.post(url, data)
+                                                            .done(function (response, statusText, xhr) {
                                                             _this.establishmentItemViewModel.createSpinner.stop();
                                                             $("#add_establishment").fadeOut(500, function () {
                                                             });
                                                             var establishmentId = parseInt(xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1));
-                                                            $.get(App.Routes.WebApi.Establishments.get(establishmentId)).done(function (response) {
+                                                            $.get(App.Routes.WebApi.Establishments.get(establishmentId))
+                                                                .done(function (response) {
                                                                 App.flasher.flash("Institution Created.");
                                                                 _this.institutionId(response.id);
                                                                 _this.institutionOfficialName(response.officialName);
@@ -149,10 +153,12 @@ var ViewModels;
                                                                 officialUrl.errors.showAllMessages(false);
                                                                 _this.establishmentItemViewModel.isValidationSummaryVisible(false);
                                                                 _this.establishmentSearchViewModel.sammy.setLocation("my/degrees/" + _this.sammyUrl + "");
-                                                            }).fail(function (xhr) {
+                                                            })
+                                                                .fail(function (xhr) {
                                                                 App.Failures.message(xhr, xhr.responseText, true);
                                                             });
-                                                        }).fail(function (xhr) {
+                                                        })
+                                                            .fail(function (xhr) {
                                                             App.Failures.message(xhr, xhr.responseText, true);
                                                         });
                                                     }
@@ -176,7 +182,8 @@ var ViewModels;
                                 var establishment_search = $("#establishment_search"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("#degree_editor"), $obj2 = $("#add_establishment"), time = 500;
                                 _this.lastURL = 'asdf';
                                 _this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
-                                $.when(deferred, deferred2).done(function () {
+                                $.when(deferred, deferred2)
+                                    .done(function () {
                                     establishment_search.css("visibility", "").hide().fadeIn(500);
                                 });
                                 if (sessionStorage.getItem("addest") === "yes") {
@@ -215,7 +222,8 @@ var ViewModels;
                                 _this.lastURL = "#/index";
                                 _this.establishmentSearchViewModel.sammy.setLocation('#/index');
                                 _this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
-                                $.when(deferred, deferred2).done(function () {
+                                $.when(deferred, deferred2)
+                                    .done(function () {
                                     $("#degree_editor").fadeIn(500).promise().done(function () {
                                         $(_this).show();
                                     });

@@ -33,7 +33,9 @@ var Agreements;
         }
         Participants.prototype.removeParticipant = function (establishmentResultViewModel, e) {
             var _this = this;
-            if (confirm('Are you sure you want to remove "' + establishmentResultViewModel.establishmentTranslatedName() + '" as a participant from this agreement?')) {
+            if (confirm('Are you sure you want to remove "' +
+                establishmentResultViewModel.establishmentTranslatedName() +
+                '" as a participant from this agreement?')) {
                 var self = this;
                 if (this.agreementIsEdit()) {
                     if (ko.dataFor(e.target).isOwner()) {
@@ -112,7 +114,8 @@ var Agreements;
         };
         Participants.prototype.populateParticipants = function () {
             var _this = this;
-            $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId)).done(function (response) {
+            $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId))
+                .done(function (response) {
                 _this.receiveParticipants(response);
                 _this.dfdPopParticipants.resolve();
             });

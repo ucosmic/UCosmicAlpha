@@ -53,7 +53,8 @@ var Agreements;
                 if (_this.contactPhoneTextValue().length > 0) {
                     if (_this.contactId()) {
                         var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(_this.agreementId, _this.contactId()), data = { id: "0", type: '', contactId: _this.contactId(), value: _this.contactPhoneTextValue() };
-                        $.post(url, data).done(function (response, statusText, xhr) {
+                        $.post(url, data)
+                            .done(function (response, statusText, xhr) {
                             var myUrl = xhr.getResponseHeader('Location');
                             data.id = myUrl.substring(myUrl.lastIndexOf("/") + 1);
                             _this.contactPhones.push(data);
@@ -65,9 +66,11 @@ var Agreements;
                                     data: ko.mapping.toJS(_this.phoneTypes())
                                 })
                             });
-                        }).fail(function (xhr, statusText, errorThrown) {
+                        })
+                            .fail(function (xhr, statusText, errorThrown) {
                             if (xhr.status === 400) {
-                                _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                                _this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                    .html(xhr.responseText.replace('\n', '<br /><br />'));
                                 _this.establishmentItemViewModel.$genericAlertDialog.dialog({
                                     title: 'Alert Message',
                                     dialogClass: 'jquery-ui',
@@ -75,9 +78,7 @@ var Agreements;
                                     resizable: false,
                                     modal: true,
                                     buttons: {
-                                        'Ok': function () {
-                                            _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                        }
+                                        'Ok': function () { _this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
                                     }
                                 });
                             }

@@ -19,10 +19,12 @@ var ViewModels;
                 expertiseSearchInput.orderBy = "";
                 expertiseSearchInput.pageNumber = 1;
                 expertiseSearchInput.pageSize = App.Constants.int32Max;
-                $.get(App.Routes.WebApi.My.Degrees.get(), expertiseSearchInput).done(function (data, textStatus, jqXHR) {
+                $.get(App.Routes.WebApi.My.Degrees.get(), expertiseSearchInput)
+                    .done(function (data, textStatus, jqXHR) {
                     ko.mapping.fromJS(data, {}, _this);
                     deferred.resolve();
-                }).fail(function (xhr) {
+                })
+                    .fail(function (xhr) {
                     App.Failures.message(xhr, 'while loading your degrees', true);
                 });
                 return deferred;
@@ -32,8 +34,7 @@ var ViewModels;
                     async: false,
                     type: "DELETE",
                     url: App.Routes.WebApi.My.Degrees.del(expertiseId),
-                    success: function (data, textStatus, jqXHR) {
-                    },
+                    success: function (data, textStatus, jqXHR) { },
                     error: function (xhr) {
                         App.Failures.message(xhr, 'while deleting your degree', true);
                     }
@@ -47,16 +48,14 @@ var ViewModels;
                     modal: true,
                     buttons: [
                         {
-                            text: "Yes, confirm delete",
-                            click: function () {
+                            text: "Yes, confirm delete", click: function () {
                                 viewModel.deleteEducationById(data.id());
                                 $(this).dialog("close");
                                 location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
                             }
                         },
                         {
-                            text: "No, cancel delete",
-                            click: function () {
+                            text: "No, cancel delete", click: function () {
                                 $(this).dialog("close");
                             }
                         },

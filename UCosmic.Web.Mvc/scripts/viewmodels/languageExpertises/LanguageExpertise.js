@@ -38,9 +38,7 @@ var ViewModels;
                 });
                 this.languageDroplist = $("#" + languageInputId).data("kendoDropDownList");
                 if (this.languageId() == null) {
-                    this.languageDroplist.select(function (dataItem) {
-                        return dataItem.name === "Other";
-                    });
+                    this.languageDroplist.select(function (dataItem) { return dataItem.name === "Other"; });
                 }
                 $("#" + speakingInputId).kendoDropDownList({
                     animation: false,
@@ -80,6 +78,9 @@ var ViewModels;
                 });
             };
             LanguageExpertise.prototype.setupValidation = function () {
+                //ko.validation.rules['otherRequired'] = {
+                //    validator: (val: any, otherVal: any): boolean => {
+                //        debugger;
                 this.languageId.extend({
                     notEqual: {
                         params: 0,
@@ -90,41 +91,31 @@ var ViewModels;
             };
             LanguageExpertise.prototype.setupSubscriptions = function () {
                 var _this = this;
-                this.languageId.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
-                });
-                this.other.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
-                });
-                this.dialect.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
-                });
-                this.speakingProficiency.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
-                });
-                this.listeningProficiency.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
-                });
-                this.readingProficiency.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
-                });
-                this.writingProficiency.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
-                });
+                this.languageId.subscribe(function (newValue) { _this.dirtyFlag(true); });
+                this.other.subscribe(function (newValue) { _this.dirtyFlag(true); });
+                this.dialect.subscribe(function (newValue) { _this.dirtyFlag(true); });
+                this.speakingProficiency.subscribe(function (newValue) { _this.dirtyFlag(true); });
+                this.listeningProficiency.subscribe(function (newValue) { _this.dirtyFlag(true); });
+                this.readingProficiency.subscribe(function (newValue) { _this.dirtyFlag(true); });
+                this.writingProficiency.subscribe(function (newValue) { _this.dirtyFlag(true); });
             };
             LanguageExpertise.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
                 var proficienciesPact = $.Deferred();
-                $.get(App.Routes.WebApi.LanguageExpertise.Proficiencies.get()).done(function (data, textStatus, jqXHR) {
+                $.get(App.Routes.WebApi.LanguageExpertise.Proficiencies.get())
+                    .done(function (data, textStatus, jqXHR) {
                     proficienciesPact.resolve(data);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
+                })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
                     proficienciesPact.reject(jqXHR, textStatus, errorThrown);
                 });
                 var languagesPact = $.Deferred();
-                $.get(App.Routes.WebApi.Languages.get()).done(function (data, textStatus, jqXHR) {
+                $.get(App.Routes.WebApi.Languages.get())
+                    .done(function (data, textStatus, jqXHR) {
                     languagesPact.resolve(data);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
+                })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
                     languagesPact.reject(jqXHR, textStatus, errorThrown);
                 });
                 if (this.id() == 0) {
@@ -138,12 +129,14 @@ var ViewModels;
                     this.listeningProficiency = ko.observable(0);
                     this.readingProficiency = ko.observable(0);
                     this.writingProficiency = ko.observable(0);
-                    $.when(languagesPact, proficienciesPact).done(function (languages, proficiencyInfo, data) {
+                    $.when(languagesPact, proficienciesPact)
+                        .done(function (languages, proficiencyInfo, data) {
                         _this.languageList = languages;
                         _this.languageList.push({ name: "Other", code: "", id: 0 });
                         _this.proficiencyInfo = proficiencyInfo;
                         deferred.resolve();
-                    }).fail(function (xhr, textStatus, errorThrown) {
+                    })
+                        .fail(function (xhr, textStatus, errorThrown) {
                         deferred.reject(xhr, textStatus, errorThrown);
                     });
                 }
@@ -152,20 +145,18 @@ var ViewModels;
                     $.ajax({
                         type: "GET",
                         url: App.Routes.WebApi.LanguageExpertise.get(this.id()),
-                        success: function (data, textStatus, jqXhr) {
-                            dataPact.resolve(data);
-                        },
-                        error: function (jqXhr, textStatus, errorThrown) {
-                            dataPact.reject(jqXhr, textStatus, errorThrown);
-                        },
+                        success: function (data, textStatus, jqXhr) { dataPact.resolve(data); },
+                        error: function (jqXhr, textStatus, errorThrown) { dataPact.reject(jqXhr, textStatus, errorThrown); },
                     });
-                    $.when(languagesPact, proficienciesPact, dataPact).done(function (languages, proficiencyInfo, data) {
+                    $.when(languagesPact, proficienciesPact, dataPact)
+                        .done(function (languages, proficiencyInfo, data) {
                         _this.languageList = languages;
                         _this.languageList.push({ name: "Other", code: "", id: 0 });
                         _this.proficiencyInfo = proficiencyInfo;
                         ko.mapping.fromJS(data, {}, _this);
                         deferred.resolve();
-                    }).fail(function (xhr, textStatus, errorThrown) {
+                    })
+                        .fail(function (xhr, textStatus, errorThrown) {
                         deferred.reject(xhr, textStatus, errorThrown);
                     });
                 }
@@ -200,7 +191,9 @@ var ViewModels;
                     writingProficiency: this.writingProficiency,
                 };
                 var model = ko.mapping.toJS(mapSource);
-                var url = (viewModel.id() == 0) ? App.Routes.WebApi.LanguageExpertise.post() : App.Routes.WebApi.LanguageExpertise.put(viewModel.id());
+                var url = (viewModel.id() == 0) ?
+                    App.Routes.WebApi.LanguageExpertise.post() :
+                    App.Routes.WebApi.LanguageExpertise.put(viewModel.id());
                 var type = (viewModel.id() == 0) ? "POST" : "PUT";
                 $.ajax({
                     type: type,

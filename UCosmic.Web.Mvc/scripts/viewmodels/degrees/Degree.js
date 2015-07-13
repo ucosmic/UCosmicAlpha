@@ -14,6 +14,7 @@ var ViewModels;
                 this.id = ko.observable(degreeId);
             };
             Degree.prototype.setupWidgets = function (institutionSelectorId) {
+                //this.institutionSelectorId = institutionSelectorId;
                 var _this = this;
                 $("#" + institutionSelectorId).kendoAutoComplete({
                     minLength: 3,
@@ -70,19 +71,10 @@ var ViewModels;
             };
             Degree.prototype.setupSubscriptions = function () {
                 var _this = this;
-                this.title.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
-                });
-                this.fieldOfStudy.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
-                });
-                this.yearAwarded.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
-                });
-                this.institutionId.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
-                    _this.almaMaterErrorMsg('');
-                });
+                this.title.subscribe(function (newValue) { _this.dirtyFlag(true); });
+                this.fieldOfStudy.subscribe(function (newValue) { _this.dirtyFlag(true); });
+                this.yearAwarded.subscribe(function (newValue) { _this.dirtyFlag(true); });
+                this.institutionId.subscribe(function (newValue) { _this.dirtyFlag(true); _this.almaMaterErrorMsg(''); });
             };
             Degree.prototype.load = function () {
                 var _this = this;
@@ -108,19 +100,17 @@ var ViewModels;
                     $.ajax({
                         type: "GET",
                         url: App.Routes.WebApi.My.Degrees.get(this.id()),
-                        success: function (data, textStatus, jqXhr) {
-                            dataPact.resolve(data);
-                        },
-                        error: function (jqXhr, textStatus, errorThrown) {
-                            dataPact.reject(jqXhr, textStatus, errorThrown);
-                        },
+                        success: function (data, textStatus, jqXhr) { dataPact.resolve(data); },
+                        error: function (jqXhr, textStatus, errorThrown) { dataPact.reject(jqXhr, textStatus, errorThrown); },
                     });
-                    $.when(dataPact).done(function (data) {
+                    $.when(dataPact)
+                        .done(function (data) {
                         ko.mapping.fromJS(data, {}, _this);
                         _this.institutionOfficialNameDoesNotMatchTranslation = ko.observable(!((_this.institutionOfficialName() === _this.institutionTranslatedName()) || _this.institutionOfficialName() == undefined));
                         _this.almaMaterButtonText = ko.observable('Change my alma mater');
                         deferred.resolve();
-                    }).fail(function (xhr, textStatus, errorThrown) {
+                    })
+                        .fail(function (xhr, textStatus, errorThrown) {
                         deferred.reject(xhr, textStatus, errorThrown);
                     });
                 }
@@ -154,7 +144,9 @@ var ViewModels;
                     institutionId: this.institutionId
                 };
                 var model = ko.mapping.toJS(mapSource);
-                var url = (viewModel.id() == 0) ? App.Routes.WebApi.My.Degrees.post() : App.Routes.WebApi.My.Degrees.put(viewModel.id());
+                var url = (viewModel.id() == 0) ?
+                    App.Routes.WebApi.My.Degrees.post() :
+                    App.Routes.WebApi.My.Degrees.put(viewModel.id());
                 var type = (viewModel.id() == 0) ? "POST" : "PUT";
                 $.ajax({
                     type: type,

@@ -7,7 +7,8 @@ var Agreements;
         FileListPopulator.prototype.populate = function (agreementId, deferredPopFiles) {
             var _this = this;
             deferredPopFiles = ((deferredPopFiles) ? deferredPopFiles : $.Deferred());
-            $.get(App.Routes.WebApi.Agreements.Files.get(agreementId)).done(function (response) {
+            $.get(App.Routes.WebApi.Agreements.Files.get(agreementId))
+                .done(function (response) {
                 $.each(response, function (i, item) {
                     _this.files.push(ko.mapping.fromJS({
                         id: item.id,

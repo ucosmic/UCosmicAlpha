@@ -1,4 +1,4 @@
-﻿import RootViewModels = ViewModels;
+﻿import RootViewModels = ViewModels; 
 
 module People.ViewModels {
 

@@ -14,7 +14,8 @@ var Activities;
                 $.ajax({
                     url: itemsUrl,
                     cache: false,
-                }).done(function (data) {
+                })
+                    .done(function (data) {
                     var mapping = {
                         items: {
                             create: function (options) {
@@ -47,22 +48,22 @@ var Activities;
                     var mode = _this.mode();
                     if (!mode)
                         return false;
-                    return mode == 1 /* draft */;
+                    return mode == ViewModels.ActivityMode.draft;
                 });
                 this.isPublished = ko.computed(function () {
                     var mode = _this.mode();
                     if (!mode)
                         return false;
-                    return mode == 2 /* published */;
+                    return mode == ViewModels.ActivityMode.published;
                 });
                 this.datesText = ko.computed(function () {
                     return _this._computeDatesText();
                 });
                 this._owner = owner;
                 if (data.types && data.types.length)
-                    data.types = Enumerable.From(data.types).OrderBy(function (x) {
-                        return x.rank;
-                    }).ToArray();
+                    data.types = Enumerable.From(data.types)
+                        .OrderBy(function (x) { return x.rank; })
+                        .ToArray();
                 var mapping = {};
                 ko.mapping.fromJS(data, mapping, this);
             }
@@ -138,12 +139,15 @@ var Activities;
                                 $.ajax({
                                     type: 'DELETE',
                                     url: $('#activity_api').text().format(_this.activityId()),
-                                }).done(function () {
+                                })
+                                    .done(function () {
                                     $dialog.dialog('close');
                                     _this._owner.items.remove(_this);
-                                }).fail(function (xhr) {
+                                })
+                                    .fail(function (xhr) {
                                     App.Failures.message(xhr, 'while trying to delete your activity', true);
-                                }).always(function () {
+                                })
+                                    .always(function () {
                                     $.each($buttons, function () {
                                         $(this).removeAttr('disabled');
                                     });
@@ -157,8 +161,7 @@ var Activities;
                                 $dialog.dialog('close');
                             },
                             'data-css-link': true
-                        }
-                    ]
+                        }]
                 });
             };
             return ActivityListItem;

@@ -75,21 +75,11 @@ var ViewModels;
             };
             InternationalAffiliation.prototype.setupSubscriptions = function () {
                 var _this = this;
-                this.from.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
-                });
-                this.to.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
-                });
-                this.onGoing.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
-                });
-                this.institution.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
-                });
-                this.position.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
-                });
+                this.from.subscribe(function (newValue) { _this.dirtyFlag(true); });
+                this.to.subscribe(function (newValue) { _this.dirtyFlag(true); });
+                this.onGoing.subscribe(function (newValue) { _this.dirtyFlag(true); });
+                this.institution.subscribe(function (newValue) { _this.dirtyFlag(true); });
+                this.position.subscribe(function (newValue) { _this.dirtyFlag(true); });
             };
             InternationalAffiliation.prototype.load = function () {
                 var _this = this;
@@ -113,14 +103,11 @@ var ViewModels;
                     $.ajax({
                         type: "GET",
                         url: App.Routes.WebApi.InternationalAffiliations.get(this.id()),
-                        success: function (data, textStatus, jqXhr) {
-                            dataPact.resolve(data);
-                        },
-                        error: function (jqXhr, textStatus, errorThrown) {
-                            dataPact.reject(jqXhr, textStatus, errorThrown);
-                        },
+                        success: function (data, textStatus, jqXhr) { dataPact.resolve(data); },
+                        error: function (jqXhr, textStatus, errorThrown) { dataPact.reject(jqXhr, textStatus, errorThrown); },
                     });
-                    $.when(dataPact).done(function (data) {
+                    $.when(dataPact)
+                        .done(function (data) {
                         ko.mapping.fromJS(data, {}, _this);
                         for (var i = 0; i < _this.locations().length; i += 1) {
                             _this.initialLocations.push({
@@ -130,7 +117,8 @@ var ViewModels;
                             _this.selectedLocationValues.push(_this.locations()[i].placeId());
                         }
                         deferred.resolve();
-                    }).fail(function (xhr, textStatus, errorThrown) {
+                    })
+                        .fail(function (xhr, textStatus, errorThrown) {
                         deferred.reject(xhr, textStatus, errorThrown);
                     });
                 }
@@ -166,7 +154,9 @@ var ViewModels;
                     });
                 }
                 var model = ko.mapping.toJS(mapSource);
-                var url = (viewModel.id() == 0) ? App.Routes.WebApi.InternationalAffiliations.post() : App.Routes.WebApi.InternationalAffiliations.put(viewModel.id());
+                var url = (viewModel.id() == 0) ?
+                    App.Routes.WebApi.InternationalAffiliations.post() :
+                    App.Routes.WebApi.InternationalAffiliations.put(viewModel.id());
                 var type = (viewModel.id() == 0) ? "POST" : "PUT";
                 $.ajax({
                     type: type,

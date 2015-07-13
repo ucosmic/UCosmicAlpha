@@ -24,8 +24,7 @@ var Establishments;
                 this.countryCode = ko.observable();
                 this.lenses = ko.observableArray([
                     { text: 'Table', value: 'table' },
-                    { text: 'List', value: 'list' }
-                ]);
+                    { text: 'List', value: 'list' }]);
                 this.lens = ko.observable();
                 this.$itemsPage = undefined;
                 this.sideSwiper = new App.SideSwiper({
@@ -57,7 +56,8 @@ var Establishments;
                 var _this = this;
                 ko.computed(function () {
                     var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
-                    $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
+                    $.get(App.Routes.WebApi.Countries.get())
+                        .done(function (response) {
                         var emptyValue = {
                             code: '-1',
                             name: '[Without country]'
@@ -67,7 +67,8 @@ var Establishments;
                         if (lastCountryCode && lastCountryCode !== _this.countryCode())
                             _this.countryCode(lastCountryCode);
                     });
-                }).extend({ throttle: 1 });
+                })
+                    .extend({ throttle: 1 });
             };
             Search.prototype._setupPagingSubscriptions = function () {
                 var _this = this;
@@ -103,7 +104,8 @@ var Establishments;
                 if (trail.length > 1 && trail[trail.length - 2] === sammyContext.path) {
                     trail.pop();
                     this.swipeCallback = function () {
-                        clone = _this.$itemsPage.clone(true).removeAttr('data-bind').data('bind', undefined).removeAttr('id');
+                        clone = _this.$itemsPage.clone(true)
+                            .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
                         clone.appendTo(_this.$itemsPage.parent());
                         _this.$itemsPage.attr('data-side-swiper', 'off').hide();
                         _this.lockAnimation();
@@ -117,7 +119,8 @@ var Establishments;
                 }
                 else if (trail.length > 0) {
                     this.swipeCallback = function () {
-                        clone = _this.$itemsPage.clone(true).removeAttr('data-bind').data('bind', undefined).removeAttr('id');
+                        clone = _this.$itemsPage.clone(true)
+                            .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
                         clone.insertBefore(_this.$itemsPage);
                         _this.$itemsPage.attr('data-side-swiper', 'off').hide();
                         _this.lockAnimation();
@@ -181,7 +184,8 @@ var Establishments;
                     countryCode: this.countryCode(),
                     keyword: this.throttledKeyword(),
                     orderBy: this.orderBy()
-                }).done(function (response) {
+                })
+                    .done(function (response) {
                     _this.receiveResults(response);
                 });
             };

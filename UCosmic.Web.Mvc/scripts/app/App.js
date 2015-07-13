@@ -20,7 +20,8 @@ var App;
                     return null;
             if (reason !== '')
                 reason = ' ' + reason;
-            var format = 'UCosmic experienced an unexpected error{0}. If this continues to happen, ' + 'please use the Feedback & Support link on this page to report it.';
+            var format = 'UCosmic experienced an unexpected error{0}. If this continues to happen, ' +
+                'please use the Feedback & Support link on this page to report it.';
             var message = format.format(reason);
             if (autoAlert)
                 alert(message);
@@ -56,9 +57,7 @@ var App;
         return WindowScroller;
     })();
     App.WindowScroller = WindowScroller;
-    $(function () {
-        App.WindowScroller.init();
-    });
+    $(function () { App.WindowScroller.init(); });
     var SidebarFixedScroller = (function () {
         function SidebarFixedScroller() {
         }
@@ -97,9 +96,7 @@ var App;
         };
         return SidebarFixedScroller;
     })();
-    $(function () {
-        SidebarFixedScroller.init();
-    });
+    $(function () { SidebarFixedScroller.init(); });
     var Obtruders;
     (function (Obtruders) {
         function autosize(selector) {
@@ -149,9 +146,7 @@ var App;
         return Obtruder;
     })();
     App.Obtruder = Obtruder;
-    $(function () {
-        App.Obtruder.obtrude(document);
-    });
+    $(function () { App.Obtruder.obtrude(document); });
     function deparam(params, coerce) {
         if (coerce === void 0) { coerce = false; }
         var obj = {}, coerce_types = { 'true': !0, 'false': !1, 'null': null };
@@ -169,12 +164,17 @@ var App;
             if (param.length === 2) {
                 val = decode(param[1]);
                 if (coerce) {
-                    val = val && !isNaN(val) ? +val : val === 'undefined' ? undefined : coerce_types[val] !== undefined ? coerce_types[val] : val;
+                    val = val && !isNaN(val) ? +val
+                        : val === 'undefined' ? undefined
+                            : coerce_types[val] !== undefined ? coerce_types[val]
+                                : val;
                 }
                 if (keys_last) {
                     for (; i <= keys_last; i++) {
                         key = keys[i] === '' ? cur.length : keys[i];
-                        cur = cur[key] = i < keys_last ? cur[key] || (keys[i + 1] && isNaN(Number(keys[i + 1])) ? {} : []) : val;
+                        cur = cur[key] = i < keys_last
+                            ? cur[key] || (keys[i + 1] && isNaN(Number(keys[i + 1])) ? {} : [])
+                            : val;
                     }
                 }
                 else {
@@ -190,7 +190,9 @@ var App;
                 }
             }
             else if (key) {
-                obj[key] = coerce ? undefined : '';
+                obj[key] = coerce
+                    ? undefined
+                    : '';
             }
         });
         return obj;

@@ -9,23 +9,22 @@ var Activities;
                 this.orderBy = ko.observable(this.settings.input.orderBy);
                 this.keyword = ko.observable(this.settings.input.keyword);
                 this.pivot = ko.observable(this.settings.input.pivot);
-                this.isActivitiesChecked = ko.computed(function () {
-                    return _this.pivot() != 2 /* people */;
-                });
-                this.isPeopleChecked = ko.computed(function () {
-                    return _this.pivot() == 2 /* people */;
-                });
+                this.isActivitiesChecked = ko.computed(function () { return _this.pivot() != ViewModels.DataGraphPivot.people; });
+                this.isPeopleChecked = ko.computed(function () { return _this.pivot() == ViewModels.DataGraphPivot.people; });
                 this.loadingSpinner = new App.Spinner();
-                this.activityTypeCheckBoxes = ko.observableArray(Enumerable.From(this.settings.activityTypes).Select(function (x) {
+                this.activityTypeCheckBoxes = ko.observableArray(Enumerable.From(this.settings.activityTypes)
+                    .Select(function (x) {
                     return new ViewModels.ActivityTypeSearchCheckBox(x, _this.settings);
                 }).ToArray());
                 this.isCheckAllActivityTypesDisabled = ko.computed(function () {
-                    return Enumerable.From(_this.activityTypeCheckBoxes()).All(function (x) {
+                    return Enumerable.From(_this.activityTypeCheckBoxes())
+                        .All(function (x) {
                         return x.isChecked();
                     });
                 });
                 this.isUncheckAllActivityTypesDisabled = ko.computed(function () {
-                    return Enumerable.From(_this.activityTypeCheckBoxes()).All(function (x) {
+                    return Enumerable.From(_this.activityTypeCheckBoxes())
+                        .All(function (x) {
                         return !x.isChecked();
                     });
                 });
@@ -45,6 +44,7 @@ var Activities;
                 this._applySubscriptions();
             };
             Map.prototype._applyKendo = function () {
+                //#region DatePickers
                 var _this = this;
                 var kendoSince = this.$since.data('kendoDatePicker');
                 kendoSince.element.val(this.settings.input.since);
@@ -74,7 +74,9 @@ var Activities;
                         }
                     },
                 });
-                var hasPlace = (this.settings.input.placeIds && this.settings.input.placeIds.length && this.settings.input.placeNames && this.settings.input.placeNames.length && this.settings.input.placeIds[0] && this.settings.input.placeNames[0]) ? true : false;
+                var hasPlace = (this.settings.input.placeIds && this.settings.input.placeIds.length
+                    && this.settings.input.placeNames && this.settings.input.placeNames.length
+                    && this.settings.input.placeIds[0] && this.settings.input.placeNames[0]) ? true : false;
                 var dataSource = hasPlace ? 'server' : 'empty';
                 var checkDataSource = function (widget) {
                     var inputVal = $.trim(widget.input.val());
@@ -122,7 +124,8 @@ var Activities;
                             e.preventDefault();
                             return;
                         }
-                        if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length || _this.settings.input.placeIds[0] != dataItem.placeId) {
+                        if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length ||
+                            _this.settings.input.placeIds[0] != dataItem.placeId) {
                             e.sender.input.val(dataItem.officialName);
                             _this.$location.val(dataItem.officialName);
                             _this.$placeIds.val(dataItem.placeId);
@@ -140,7 +143,8 @@ var Activities;
                             e.sender.input.val(dataItem.officialName);
                             _this.$location.val(dataItem.officialName);
                             _this.$placeIds.val(dataItem.placeId);
-                            if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length || _this.settings.input.placeIds[0] != dataItem.placeId) {
+                            if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length ||
+                                _this.settings.input.placeIds[0] != dataItem.placeId) {
                                 _this._submitForm();
                             }
                         }
@@ -153,9 +157,7 @@ var Activities;
                             input.attr('name', 'placeNames');
                             _this.$location.attr('name', '');
                             input.on('keydown', function () {
-                                setTimeout(function () {
-                                    checkDataSource(widget);
-                                }, 0);
+                                setTimeout(function () { checkDataSource(widget); }, 0);
                             });
                             if (hasPlace && inputVal) {
                                 widget.search(inputVal);
@@ -175,9 +177,7 @@ var Activities;
                         if (value) {
                             var dataSource = e.sender.dataSource;
                             var data = dataSource.data();
-                            var hasClearer = Enumerable.From(data).Any(function (x) {
-                                return x.placeId == -1;
-                            });
+                            var hasClearer = Enumerable.From(data).Any(function (x) { return x.placeId == -1; });
                             if (!hasClearer)
                                 dataSource.add({ officialName: '[Clear current selection]', placeId: -1 });
                         }
@@ -188,9 +188,7 @@ var Activities;
             };
             Map.prototype._applySubscriptions = function () {
                 var _this = this;
-                this.orderBy.subscribe(function (newValue) {
-                    _this._submitForm();
-                });
+                this.orderBy.subscribe(function (newValue) { _this._submitForm(); });
             };
             Map.prototype._submitForm = function () {
                 if (this.loadingSpinner.isVisible())
@@ -206,12 +204,14 @@ var Activities;
                     this.search();
             };
             Map.prototype.checkAllActivityTypes = function () {
-                Enumerable.From(this.activityTypeCheckBoxes()).ForEach(function (x) {
+                Enumerable.From(this.activityTypeCheckBoxes())
+                    .ForEach(function (x) {
                     x.isChecked(true);
                 });
             };
             Map.prototype.uncheckAllActivityTypes = function () {
-                Enumerable.From(this.activityTypeCheckBoxes()).ForEach(function (x) {
+                Enumerable.From(this.activityTypeCheckBoxes())
+                    .ForEach(function (x) {
                     x.isChecked(false);
                 });
             };

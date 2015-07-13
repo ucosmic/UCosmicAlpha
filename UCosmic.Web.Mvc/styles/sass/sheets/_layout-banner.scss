@@ -216,7 +216,6 @@ body {
         @include border-box;
         @include ie-box-shadow;
         background-color: $nav-bib-bg-color;
-        z-index: 100;
         &.hide {
             display: none;
         }

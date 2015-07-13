@@ -37,52 +37,28 @@ var ViewModels;
             function FacultyAndStaff(institutionInfo) {
                 this.geochartCustomPlaces = [
                     {
-                        name: 'Antarctica',
-                        id: 'antarctica',
-                        activityCount: 0,
-                        peopleCount: 0
+                        name: 'Antarctica', id: 'antarctica', activityCount: 0, peopleCount: 0
                     },
                     {
-                        name: 'Southern Ocean',
-                        id: 'southernOcean',
-                        activityCount: 0,
-                        peopleCount: 0
+                        name: 'Southern Ocean', id: 'southernOcean', activityCount: 0, peopleCount: 0
                     },
                     {
-                        name: 'Indian Ocean',
-                        id: 'indianOcean',
-                        activityCount: 0,
-                        peopleCount: 0
+                        name: 'Indian Ocean', id: 'indianOcean', activityCount: 0, peopleCount: 0
                     },
                     {
-                        name: 'Pacific Ocean',
-                        id: 'pacificOcean',
-                        activityCount: 0,
-                        peopleCount: 0
+                        name: 'Pacific Ocean', id: 'pacificOcean', activityCount: 0, peopleCount: 0
                     },
                     {
-                        name: 'Atlantic Ocean',
-                        id: 'atlanticOcean',
-                        activityCount: 0,
-                        peopleCount: 0
+                        name: 'Atlantic Ocean', id: 'atlanticOcean', activityCount: 0, peopleCount: 0
                     },
                     {
-                        name: 'Gulf of Mexico',
-                        id: 'gulfOfMexico',
-                        activityCount: 0,
-                        peopleCount: 0
+                        name: 'Gulf of Mexico', id: 'gulfOfMexico', activityCount: 0, peopleCount: 0
                     },
                     {
-                        name: 'Caribbean Sea',
-                        id: 'caribbean',
-                        activityCount: 0,
-                        peopleCount: 0
+                        name: 'Caribbean Sea', id: 'caribbean', activityCount: 0, peopleCount: 0
                     },
                     {
-                        name: 'Arctic Ocean',
-                        id: 'arcticOcean',
-                        activityCount: 0,
-                        peopleCount: 0
+                        name: 'Arctic Ocean', id: 'arcticOcean', activityCount: 0, peopleCount: 0
                     },
                 ];
                 this.activityTableRows = ko.observableArray([
@@ -94,10 +70,10 @@ var ViewModels;
                         activityTitle: '',
                         activityTypeIds: [],
                         activityTypes: [{
-                            rank: 0,
-                            iconName: '',
-                            toolTip: ''
-                        }],
+                                rank: 0,
+                                iconName: '',
+                                toolTip: ''
+                            }],
                         activityDate: ''
                     }
                 ]);
@@ -111,10 +87,10 @@ var ViewModels;
                         placeOfficialName: '',
                         activityTypeIds: [],
                         activityTypes: [{
-                            rank: 0,
-                            iconName: '',
-                            toolTip: ''
-                        }],
+                                rank: 0,
+                                iconName: '',
+                                toolTip: ''
+                            }],
                     }
                 ]);
                 this.activityColumnSort = [
@@ -173,15 +149,15 @@ var ViewModels;
                 this.heatmapPeopleDataTable = null;
                 this.activityResults = ko.mapping.fromJS({
                     placeResults: [{
-                        officialName: '',
-                        results: []
-                    }]
+                            officialName: '',
+                            results: []
+                        }]
                 });
                 this.peopleResults = ko.mapping.fromJS({
                     placeResults: [{
-                        officialName: '',
-                        results: []
-                    }]
+                            officialName: '',
+                            results: []
+                        }]
                 });
                 this.pointmapActivityMarkers = null;
                 this.pointmapPeopleMarkers = null;
@@ -235,14 +211,10 @@ var ViewModels;
                     placeholder: "[Select Country/Location]"
                 });
                 $("#" + fromDatePickerId).kendoDatePicker({
-                    open: function (e) {
-                        this.options.format = "MM/dd/yyyy";
-                    }
+                    open: function (e) { this.options.format = "MM/dd/yyyy"; }
                 });
                 $("#" + toDatePickerId).kendoDatePicker({
-                    open: function (e) {
-                        this.options.format = "MM/dd/yyyy";
-                    }
+                    open: function (e) { this.options.format = "MM/dd/yyyy"; }
                 });
                 this.establishmentDropListId = establishmentDropListId;
                 this.campusDropListId = campusDropListId;
@@ -355,12 +327,8 @@ var ViewModels;
             FacultyAndStaff.prototype.setupSubscriptions = function () {
                 var _this = this;
                 this.removeSubscriptions();
-                this.subscriptions.push(this.selectedPlace.subscribe(function (newValue) {
-                    _this.selectMap('heatmap');
-                }));
-                this.subscriptions.push(this.mapRegion.subscribe(function (newValue) {
-                    _this.heatmapOptions["region"] = newValue;
-                }));
+                this.subscriptions.push(this.selectedPlace.subscribe(function (newValue) { _this.selectMap('heatmap'); }));
+                this.subscriptions.push(this.mapRegion.subscribe(function (newValue) { _this.heatmapOptions["region"] = newValue; }));
                 this.subscriptions.push(this.searchType.subscribe(function (newValue) {
                     _this.selectSearchType(newValue);
                     if (_this.mapType() === 'pointmap') {
@@ -528,9 +496,11 @@ var ViewModels;
                 var _this = this;
                 var deferred = $.Deferred();
                 if (this.globalActivityCountData == null) {
-                    this.getActivityDataTable(null).done(function () {
+                    this.getActivityDataTable(null)
+                        .done(function () {
                         deferred.resolve(_this._getHeatmapActivityDataTable());
-                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                    })
+                        .fail(function (jqXHR, textStatus, errorThrown) {
                         deferred.reject(jqXHR, textStatus, errorThrown);
                     });
                 }
@@ -558,10 +528,13 @@ var ViewModels;
                             var officialName = placeCounts[i].officialName;
                             var count = placeCounts[i].count;
                             var j = -1;
-                            if ((officialName === "North Atlantic Ocean") || (officialName === "South Atlantic Ocean")) {
+                            if ((officialName === "North Atlantic Ocean") ||
+                                (officialName === "South Atlantic Ocean")) {
                                 j = this.getCustomPlaceIndexByName("Atlantic Ocean");
                             }
-                            else if ((officialName === "North Pacific Ocean") || (officialName === "Pacific Ocean") || (officialName === "South Pacific Ocean")) {
+                            else if ((officialName === "North Pacific Ocean") ||
+                                (officialName === "Pacific Ocean") ||
+                                (officialName === "South Pacific Ocean")) {
                                 j = this.getCustomPlaceIndexByName("Pacific Ocean");
                             }
                             else if (officialName === "Arctic Ocean") {
@@ -595,7 +568,8 @@ var ViewModels;
                 var _this = this;
                 var deferred = $.Deferred();
                 if (this.globalPeopleCountData == null) {
-                    this.getPeopleDataTable(null).done(function () {
+                    this.getPeopleDataTable(null)
+                        .done(function () {
                         deferred.resolve(_this._getHeatmapPeopleDataTable());
                     });
                 }
@@ -623,10 +597,13 @@ var ViewModels;
                             var officialName = placeCounts[i].officialName;
                             var count = placeCounts[i].count;
                             var j = -1;
-                            if ((officialName === "North Atlantic Ocean") || (officialName === "South Atlantic Ocean")) {
+                            if ((officialName === "North Atlantic Ocean") ||
+                                (officialName === "South Atlantic Ocean")) {
                                 j = this.getCustomPlaceIndexByName("Atlantic Ocean");
                             }
-                            else if ((officialName === "North Pacific Ocean") || (officialName === "Pacific Ocean") || (officialName === "South Pacific Ocean")) {
+                            else if ((officialName === "North Pacific Ocean") ||
+                                (officialName === "Pacific Ocean") ||
+                                (officialName === "South Pacific Ocean")) {
                                 j = this.getCustomPlaceIndexByName("Pacific Ocean");
                             }
                             else if (officialName === "Arctic Ocean") {
@@ -686,16 +663,19 @@ var ViewModels;
                 var _this = this;
                 var deferred = $.Deferred();
                 if (placeOfficialName == null) {
-                    this.getGlobalActivityCounts().done(function (counts) {
+                    this.getGlobalActivityCounts()
+                        .done(function (counts) {
                         deferred.resolve(_this._getActivityDataTable(null));
-                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                    })
+                        .fail(function (jqXHR, textStatus, errorThrown) {
                         deferred.reject(jqXHR, textStatus, errorThrown);
                     });
                 }
                 else {
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
-                        if ((this.placeActivityCountData == null) || (this.placeActivityCountData.placeId != placeId)) {
+                        if ((this.placeActivityCountData == null) ||
+                            (this.placeActivityCountData.placeId != placeId)) {
                             $.ajax({
                                 type: "GET",
                                 async: true,
@@ -785,16 +765,19 @@ var ViewModels;
                 var _this = this;
                 var deferred = $.Deferred();
                 if (placeOfficialName == null) {
-                    this.getGlobalPeopleCounts().done(function (counts) {
+                    this.getGlobalPeopleCounts()
+                        .done(function (counts) {
                         deferred.resolve(_this._getPeopleDataTable(null));
-                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                    })
+                        .fail(function (jqXHR, textStatus, errorThrown) {
                         deferred.reject(jqXHR, textStatus, errorThrown);
                     });
                 }
                 else {
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
-                        if ((this.placePeopleCountData == null) || (this.placePeopleCountData.placeId != placeId)) {
+                        if ((this.placePeopleCountData == null) ||
+                            (this.placePeopleCountData.placeId != placeId)) {
                             $.ajax({
                                 type: "GET",
                                 async: true,
@@ -875,7 +858,8 @@ var ViewModels;
                 else {
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
-                        if ((this.placeActivityTrendData == null) || (this.placeActivityTrendData.placeId != placeId)) {
+                        if ((this.placeActivityTrendData == null) ||
+                            (this.placeActivityTrendData.placeId != placeId)) {
                             $.ajax({
                                 type: "GET",
                                 async: true,
@@ -952,7 +936,8 @@ var ViewModels;
                 else {
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
-                        if ((this.placePeopleTrendData == null) || (this.placePeopleTrendData.placeId != placeId)) {
+                        if ((this.placePeopleTrendData == null) ||
+                            (this.placePeopleTrendData.placeId != placeId)) {
                             $.ajax({
                                 type: "GET",
                                 async: true,
@@ -1096,10 +1081,12 @@ var ViewModels;
                     this.pointmapActivityMarkers = null;
                 }
                 if (this.pointmapActivityMarkers == null) {
-                    this.advancedSearch().done(function (results) {
+                    this.advancedSearch()
+                        .done(function (results) {
                         _this.sortActivitiesByColumnIndex(_this.activitySortColumnIndex);
                         deferred.resolve(_this._getPointmapActivityMarkers(results));
-                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                    })
+                        .fail(function (jqXHR, textStatus, errorThrown) {
                         deferred.reject(jqXHR, textStatus, errorThrown);
                     });
                 }
@@ -1114,7 +1101,12 @@ var ViewModels;
                 if ((placeResults != null) && (placeResults.length > 0)) {
                     for (var i = 0; i < placeResults.length; i += 1) {
                         if (placeResults[i].results.length > 0) {
-                            var iconURL = "/api/graphics/circle" + "?side=18&opacity=" + "&strokeColor=" + $("#mapMarkerColor").css("background-color") + "&fillColor=" + $("#mapMarkerColor").css("background-color") + "&textColor=" + $("#mapMarkerColor").css("color") + "&text=" + placeResults[i].results.length.toString();
+                            var iconURL = "/api/graphics/circle" +
+                                "?side=18&opacity=" +
+                                "&strokeColor=" + $("#mapMarkerColor").css("background-color") +
+                                "&fillColor=" + $("#mapMarkerColor").css("background-color") +
+                                "&textColor=" + $("#mapMarkerColor").css("color") +
+                                "&text=" + placeResults[i].results.length.toString();
                             var marker = new google.maps.Marker({
                                 position: new google.maps.LatLng(placeResults[i].lat, placeResults[i].lng),
                                 map: null,
@@ -1150,10 +1142,12 @@ var ViewModels;
                     this.pointmapPeopleMarkers = null;
                 }
                 if (this.pointmapPeopleMarkers == null) {
-                    this.advancedSearch().done(function (results) {
+                    this.advancedSearch()
+                        .done(function (results) {
                         _this.sortPeopleByColumnIndex(_this.peopleSortColumnIndex);
                         deferred.resolve(_this._getPointmapPeopleMarkers(results));
-                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                    })
+                        .fail(function (jqXHR, textStatus, errorThrown) {
                         deferred.reject(jqXHR, textStatus, errorThrown);
                     });
                 }
@@ -1169,7 +1163,12 @@ var ViewModels;
                     if ((placeResults != null) && (placeResults.length > 0)) {
                         for (var i = 0; i < placeResults.length; i += 1) {
                             if (placeResults[i].peopleCount > 0) {
-                                var iconURL = "/api/graphics/circle" + "?side=18&opacity=" + "&strokeColor=" + $("#mapMarkerColor").css("background-color") + "&fillColor=" + $("#mapMarkerColor").css("background-color") + "&textColor=" + $("#mapMarkerColor").css("color") + "&text=" + placeResults[i].peopleCount.toString();
+                                var iconURL = "/api/graphics/circle" +
+                                    "?side=18&opacity=" +
+                                    "&strokeColor=" + $("#mapMarkerColor").css("background-color") +
+                                    "&fillColor=" + $("#mapMarkerColor").css("background-color") +
+                                    "&textColor=" + $("#mapMarkerColor").css("color") +
+                                    "&text=" + placeResults[i].peopleCount.toString();
                                 var marker = new google.maps.Marker({
                                     position: new google.maps.LatLng(placeResults[i].lat, placeResults[i].lng),
                                     map: null,
@@ -1239,9 +1238,11 @@ var ViewModels;
                 var deferred = $.Deferred();
                 this.loadSpinner.start();
                 var typesPact = $.Deferred();
-                $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get()).done(function (data, textStatus, jqXHR) {
+                $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get())
+                    .done(function (data, textStatus, jqXHR) {
                     typesPact.resolve(data);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
+                })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
                     typesPact.reject(jqXHR, textStatus, errorThrown);
                 });
                 var placesPact = $.Deferred();
@@ -1250,12 +1251,8 @@ var ViewModels;
                     data: { isCountry: true },
                     dataType: 'json',
                     url: App.Routes.WebApi.Places.get(),
-                    success: function (data, textStatus, jqXhr) {
-                        placesPact.resolve(data);
-                    },
-                    error: function (jqXhr, textStatus, errorThrown) {
-                        placesPact.reject(jqXhr, textStatus, errorThrown);
-                    },
+                    success: function (data, textStatus, jqXhr) { placesPact.resolve(data); },
+                    error: function (jqXhr, textStatus, errorThrown) { placesPact.reject(jqXhr, textStatus, errorThrown); },
                 });
                 var watersPact = $.Deferred();
                 $.ajax({
@@ -1263,23 +1260,22 @@ var ViewModels;
                     data: { isWater: true },
                     dataType: 'json',
                     url: App.Routes.WebApi.Places.get(),
-                    success: function (data, textStatus, jqXhr) {
-                        watersPact.resolve(data);
-                    },
-                    error: function (jqXhr, textStatus, errorThrown) {
-                        watersPact.reject(jqXhr, textStatus, errorThrown);
-                    },
+                    success: function (data, textStatus, jqXhr) { watersPact.resolve(data); },
+                    error: function (jqXhr, textStatus, errorThrown) { watersPact.reject(jqXhr, textStatus, errorThrown); },
                 });
-                $.when(typesPact, placesPact, watersPact).done(function (types, places, waters) {
+                $.when(typesPact, placesPact, watersPact)
+                    .done(function (types, places, waters) {
                     _this.activityTypes = ko.mapping.fromJS(types);
                     for (var i = 0; i < _this.activityTypes().length; i += 1) {
                         _this.activityTypes()[i].checked = ko.observable(true);
                     }
                     _this.places = places.concat(waters);
                     deferred.resolve();
-                }).fail(function (xhr, textStatus, errorThrown) {
+                })
+                    .fail(function (xhr, textStatus, errorThrown) {
                     deferred.reject(xhr, textStatus, errorThrown);
-                }).always(function () {
+                })
+                    .always(function () {
                 });
                 return deferred;
             };
@@ -1330,19 +1326,19 @@ var ViewModels;
                     }
                     if (this.heatmap == null) {
                         this.heatmap = new this.google.visualization.GeoChart($('#heatmap')[0]);
-                        this.google.visualization.events.addListener(this.heatmap, 'select', function () {
-                            _this.heatmapSelectHandler();
-                        });
+                        this.google.visualization.events.addListener(this.heatmap, 'select', function () { _this.heatmapSelectHandler(); });
                     }
                     this.loadSpinner.start();
                     if (this.searchType() === 'activities') {
-                        this.getActivityDataTable(this.selectedPlace()).done(function (dataTable) {
+                        this.getActivityDataTable(this.selectedPlace())
+                            .done(function (dataTable) {
                             _this.barchart.draw(dataTable, _this.barchartActivityOptions);
                             if (_this.selectedPlace() != null) {
                                 _this.totalCount(_this.placeActivityCountData.count);
                                 _this.totalPlaceCount(_this.placeActivityCountData.countOfPlaces);
                             }
-                            _this.getHeatmapActivityDataTable().done(function (dataTable) {
+                            _this.getHeatmapActivityDataTable()
+                                .done(function (dataTable) {
                                 _this.heatmap.draw(dataTable, _this.heatmapOptions);
                                 if (_this.selectedPlace() == null) {
                                     _this.totalCount(_this.globalActivityCountData.count);
@@ -1352,21 +1348,25 @@ var ViewModels;
                             });
                             _this.loadSpinner.stop();
                         });
-                        this.getActivityTrendDataTable(this.selectedPlace()).done(function (dataTable) {
+                        this.getActivityTrendDataTable(this.selectedPlace())
+                            .done(function (dataTable) {
                             _this.linechart.draw(dataTable, _this.linechartActivityOptions);
                         });
-                        this.getDegreeCount(this.selectedPlace()).done(function (count) {
+                        this.getDegreeCount(this.selectedPlace())
+                            .done(function (count) {
                             _this.degreeCount(count);
                         });
                     }
                     else {
-                        this.getPeopleDataTable(this.selectedPlace()).done(function (dataTable) {
+                        this.getPeopleDataTable(this.selectedPlace())
+                            .done(function (dataTable) {
                             _this.barchart.draw(dataTable, _this.barchartPeopleOptions);
                             if (_this.selectedPlace() != null) {
                                 _this.totalCount(_this.placePeopleCountData.count);
                                 _this.totalPlaceCount(_this.placePeopleCountData.countOfPlaces);
                             }
-                            _this.getHeatmapPeopleDataTable().done(function (dataTable) {
+                            _this.getHeatmapPeopleDataTable()
+                                .done(function (dataTable) {
                                 _this.heatmap.draw(dataTable, _this.heatmapOptions);
                                 if (_this.selectedPlace() == null) {
                                     _this.totalCount(_this.globalPeopleCountData.count);
@@ -1376,10 +1376,12 @@ var ViewModels;
                             });
                             _this.loadSpinner.stop();
                         });
-                        this.getPeopleTrendDataTable(this.selectedPlace()).done(function (dataTable) {
+                        this.getPeopleTrendDataTable(this.selectedPlace())
+                            .done(function (dataTable) {
                             _this.linechart.draw(dataTable, _this.linechartPeopleOptions);
                         });
-                        this.getDegreePeopleCount(this.selectedPlace()).done(function (count) {
+                        this.getDegreePeopleCount(this.selectedPlace())
+                            .done(function (count) {
                             _this.degreeCount(count);
                         });
                     }
@@ -1470,14 +1472,16 @@ var ViewModels;
             };
             FacultyAndStaff.prototype.getPlaceId = function (officialName) {
                 var i = 0;
-                while ((i < this.places.length) && (officialName !== this.places[i].officialName)) {
+                while ((i < this.places.length) &&
+                    (officialName !== this.places[i].officialName)) {
                     i += 1;
                 }
                 return (i < this.places.length) ? this.places[i].id : null;
             };
             FacultyAndStaff.prototype.getCustomPlaceIndexByName = function (officialName) {
                 var i = 0;
-                while ((i < this.geochartCustomPlaces.length) && (officialName !== this.geochartCustomPlaces[i].name)) {
+                while ((i < this.geochartCustomPlaces.length) &&
+                    (officialName !== this.geochartCustomPlaces[i].name)) {
                     i += 1;
                 }
                 return (i < this.geochartCustomPlaces.length) ? i : -1;
@@ -1511,7 +1515,8 @@ var ViewModels;
                     }
                 }
                 var tags = null;
-                if ((this.tags() != null) && (this.tags().length > 0)) {
+                if ((this.tags() != null)
+                    && (this.tags().length > 0)) {
                     tags = this.tags().split(',');
                 }
                 var fromDate = null;
@@ -1588,10 +1593,12 @@ var ViewModels;
                 var _this = this;
                 this.loadSpinner.start();
                 if (this.searchType() === 'activities') {
-                    this.getPointmapActivityMarkers(updateMarkers).done(function () {
+                    this.getPointmapActivityMarkers(updateMarkers)
+                        .done(function () {
                         _this.hidePointmapPeopleMarkers();
                         _this.showPointmapActivityMarkers();
-                    }).always(function () {
+                    })
+                        .always(function () {
                         _this.loadSpinner.stop();
                         if (_this.activityResults.placeResults().length == 0) {
                             $("#noResults").dialog();
@@ -1599,10 +1606,12 @@ var ViewModels;
                     });
                 }
                 else {
-                    this.getPointmapPeopleMarkers(updateMarkers).done(function () {
+                    this.getPointmapPeopleMarkers(updateMarkers)
+                        .done(function () {
                         _this.hidePointmapActivityMarkers();
                         _this.showPointmapPeopleMarkers();
-                    }).always(function () {
+                    })
+                        .always(function () {
                         _this.loadSpinner.stop();
                         if (_this.activityResults.placeResults().length == 0) {
                             $("#noResults").dialog();
@@ -1612,7 +1621,8 @@ var ViewModels;
             };
             FacultyAndStaff.prototype.handleActivityTableColumnClick = function (element, column) {
                 var colIndex = 0;
-                while ((colIndex < this.activityColumnSort.length) && (this.activityColumnSort[colIndex].name !== column)) {
+                while ((colIndex < this.activityColumnSort.length) &&
+                    (this.activityColumnSort[colIndex].name !== column)) {
                     colIndex += 1;
                 }
                 if (colIndex < this.activityColumnSort.length) {
@@ -1625,7 +1635,8 @@ var ViewModels;
                     return;
                 this.sortSpinner.start();
                 var activityTypeRanks = ko.toJS(this.activityResults.activityTypeRanks);
-                var unsorted = Enumerable.From(this.activityResults.placeResults()).SelectMany(function (placeResult) {
+                var unsorted = Enumerable.From(this.activityResults.placeResults())
+                    .SelectMany(function (placeResult) {
                     var flatResults = new Array();
                     for (var i = 0; i < placeResult.results().length; i += 1) {
                         var flatResult = ko.toJS(placeResult.results()[i]);
@@ -1719,7 +1730,8 @@ var ViewModels;
             };
             FacultyAndStaff.prototype.handlePeopleTableColumnClick = function (element, column) {
                 var colIndex = 0;
-                while ((colIndex < this.peopleColumnSort.length) && (this.peopleColumnSort[colIndex].name !== column)) {
+                while ((colIndex < this.peopleColumnSort.length) &&
+                    (this.peopleColumnSort[colIndex].name !== column)) {
                     colIndex += 1;
                 }
                 if (colIndex < this.peopleColumnSort.length) {
@@ -1732,7 +1744,8 @@ var ViewModels;
                     return;
                 this.sortSpinner.start();
                 var activityTypeRanks = ko.toJS(this.activityResults.activityTypeRanks);
-                var unsorted = Enumerable.From(this.activityResults.placeResults()).SelectMany(function (placeResult) {
+                var unsorted = Enumerable.From(this.activityResults.placeResults())
+                    .SelectMany(function (placeResult) {
                     var flatResults = new Array();
                     for (var i = 0; i < placeResult.results().length; i += 1) {
                         var flatResult = ko.toJS(placeResult.results()[i]);

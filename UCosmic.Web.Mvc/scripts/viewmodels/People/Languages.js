@@ -30,7 +30,8 @@ var People;
                     ]);
                     var options = {
                         hAxis: {
-                            ticks: [{ v: 0, f: "None" }, { v: 1, f: "Elementary" }, { v: 2, f: "Limited" }, { v: 3, f: "General" }, { v: 4, f: "Advanced" }, { v: 5, f: "Fluent" }],
+                            ticks: [{ v: 0, f: "None" }, { v: 1, f: "Elementary" }, { v: 2, f: "Limited" }, { v: 3, f: "General" },
+                                { v: 4, f: "Advanced" }, { v: 5, f: "Fluent" }],
                             minValue: 0,
                             maxValue: 5,
                             viewWindowMode: 'maximized',

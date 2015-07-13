@@ -43,9 +43,11 @@ var People;
                     return this._loadPromise;
                 this._loadPromise = $.Deferred();
                 var viewModelPact = $.Deferred();
-                $.get('/api/user/person').done(function (data, textStatus, jqXHR) {
+                $.get('/api/user/person')
+                    .done(function (data, textStatus, jqXHR) {
                     viewModelPact.resolve(data);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
+                })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
                     viewModelPact.reject(jqXHR, textStatus, errorThrown);
                 });
                 viewModelPact.done(function (viewModel) {
@@ -58,7 +60,8 @@ var People;
                     _this._setupDisplayNameDerivation();
                     _this._setupCardComputeds();
                     _this._loadPromise.resolve();
-                }).fail(function (xhr, textStatus, errorThrown) {
+                })
+                    .fail(function (xhr, textStatus, errorThrown) {
                     _this._loadPromise.reject(xhr, textStatus, errorThrown);
                 });
                 return this._loadPromise;
@@ -94,12 +97,15 @@ var People;
                         url: '/api/user/person',
                         type: 'PUT',
                         data: apiModel
-                    }).done(function (responseText, statusText, xhr) {
+                    })
+                        .done(function (responseText, statusText, xhr) {
                         App.flasher.flash(responseText);
                         _this.stopEditing();
                         _this.$edit_personal_info_dialog.data("kendoWindow").close();
-                    }).fail(function () {
-                    }).always(function () {
+                    })
+                        .fail(function () {
+                    })
+                        .always(function () {
                         _this.saveSpinner.stop();
                     });
                 }
@@ -143,14 +149,18 @@ var People;
                 $.ajax({
                     url: App.Routes.WebApi.My.Photo.del(),
                     type: 'DELETE'
-                }).always(function () {
+                })
+                    .always(function () {
                     _this.photoDeleteSpinner.stop();
-                }).done(function (response, statusText, xhr) {
+                })
+                    .done(function (response, statusText, xhr) {
                     if (typeof response === 'string')
                         App.flasher.flash(response);
                     _this.hasPhoto(false);
-                    _this.photoSrc(App.Routes.WebApi.My.Photo.get({ maxSide: 128, refresh: new Date().toUTCString() }));
-                }).fail(function () {
+                    _this.photoSrc(App.Routes.WebApi.My.Photo
+                        .get({ maxSide: 128, refresh: new Date().toUTCString() }));
+                })
+                    .fail(function () {
                     _this.photoUploadError(PersonalInfoEditor.photoUploadUnexpectedErrorMessage);
                 });
             };
@@ -231,9 +241,11 @@ var People;
                                 name: e.files[0].name,
                                 length: e.files[0].size
                             }
-                        }).done(function () {
+                        })
+                            .done(function () {
                             _this.photoUploadError(undefined);
-                        }).fail(function (xhr) {
+                        })
+                            .fail(function (xhr) {
                             _this.photoUploadError(xhr.responseText);
                             e.preventDefault();
                             _this.photoUploadSpinner.stop();
@@ -248,11 +260,13 @@ var People;
                                 App.flasher.flash(e.response.message);
                             }
                             _this.hasPhoto(true);
-                            _this.photoSrc(App.Routes.WebApi.My.Photo.get({ maxSide: 128, refresh: new Date().toUTCString() }));
+                            _this.photoSrc(App.Routes.WebApi.My.Photo
+                                .get({ maxSide: 128, refresh: new Date().toUTCString() }));
                         }
                     },
                     error: function (e) {
-                        if (e.XMLHttpRequest.responseText && e.XMLHttpRequest.responseText.length < 1000) {
+                        if (e.XMLHttpRequest.responseText &&
+                            e.XMLHttpRequest.responseText.length < 1000) {
                             _this.photoUploadError(e.XMLHttpRequest.responseText);
                         }
                         else {

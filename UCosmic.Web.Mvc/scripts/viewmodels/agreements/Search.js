@@ -74,7 +74,8 @@ var Agreements;
                 var _this = this;
                 ko.computed(function () {
                     var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
-                    $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
+                    $.get(App.Routes.WebApi.Countries.get())
+                        .done(function (response) {
                         var emptyValue = {
                             code: '-1',
                             name: '[Without country]'
@@ -84,7 +85,8 @@ var Agreements;
                         if (lastCountryCode && lastCountryCode !== _this.countryCode())
                             _this.countryCode(lastCountryCode);
                     });
-                }).extend({ throttle: 1 });
+                })
+                    .extend({ throttle: 1 });
             };
             Search.prototype._setupPagingSubscriptions = function () {
                 var _this = this;
@@ -169,13 +171,15 @@ var Agreements;
             Search.prototype._requestResults = function () {
                 var _this = this;
                 this.optionsEnabled(false);
-                if (this.pageSize() === undefined || this.orderBy() === undefined || this.pageNumber() === undefined || this.keyword() !== this.throttledKeyword())
+                if (this.pageSize() === undefined || this.orderBy() === undefined || this.pageNumber() === undefined
+                    || this.keyword() !== this.throttledKeyword())
                     return;
                 this.lockAnimation();
                 this.spinner.start();
                 this.deferredFadeInOut = $.Deferred();
                 this.deferredFadeInOut2 = $.Deferred();
-                $.when(this.deferredFadeInOut2).done(function () {
+                $.when(this.deferredFadeInOut2)
+                    .done(function () {
                     _this.spinner.stop();
                     _this.$searchResults.fadeIn(400, function () {
                         _this.unlockAnimation();
@@ -197,8 +201,10 @@ var Agreements;
                     countryCode: this.countryCode(),
                     keyword: this.throttledKeyword(),
                     orderBy: this.orderBy(),
-                }).done(function (response) {
-                    $.when(_this.deferredFadeInOut).done(function () {
+                })
+                    .done(function (response) {
+                    $.when(_this.deferredFadeInOut)
+                        .done(function () {
                         _this._receiveResults(response);
                     });
                 });

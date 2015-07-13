@@ -8,9 +8,11 @@ var Employees;
             settings.url = Routes.Api.Employees.places(tenantId);
             if (data)
                 settings.data = data;
-            $.ajax(settings).done(function (response) {
+            $.ajax(settings)
+                .done(function (response) {
                 promise.resolve(response);
-            }).fail(function (xhr) {
+            })
+                .fail(function (xhr) {
                 promise.reject(xhr);
             });
             return promise;
@@ -20,9 +22,11 @@ var Employees;
             var promise = $.Deferred();
             settings = settings || {};
             settings.url = Routes.Api.Employees.Activities.counts(tenantId);
-            $.ajax(settings).done(function (response) {
+            $.ajax(settings)
+                .done(function (response) {
                 promise.resolve(response);
-            }).fail(function (xhr) {
+            })
+                .fail(function (xhr) {
                 promise.reject(xhr);
             });
             return promise;
@@ -33,9 +37,11 @@ var Employees;
             var promise = $.Deferred();
             settings = settings || {};
             settings.url = Routes.Api.Employees.Settings.byPerson(personId);
-            $.ajax(settings).done(function (response) {
+            $.ajax(settings)
+                .done(function (response) {
                 promise.resolve(response);
-            }).fail(function (xhr) {
+            })
+                .fail(function (xhr) {
                 if (xhr.status === 404)
                     promise.resolve(null);
                 else

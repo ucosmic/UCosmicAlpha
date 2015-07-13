@@ -44,9 +44,11 @@ var ViewModels;
                     }).done(function (response, statusText, xhr) {
                         alert('User create successfully');
                         location.href = '/users/';
-                    }).fail(function (response, statusText, xhr) {
+                    })
+                        .fail(function (response, statusText, xhr) {
                         _this.errorMessage(xhr.responseText);
-                    }).always(function (response, statusText, xhr) {
+                    })
+                        .always(function (response, statusText, xhr) {
                         _this.isAjaxing = false;
                         _this.saveSpinner.stop();
                     });
@@ -64,12 +66,8 @@ var ViewModels;
                     async: false,
                     url: App.Routes.WebApi.Identity.Users.validateName(this.id()),
                     data: { name: this.name() },
-                    success: function (data, textStatus, jqXhr) {
-                        _this.errorMessage(null);
-                    },
-                    error: function (jqXhr, textStatus, errorThrown) {
-                        _this.errorMessage(jqXhr.responseText);
-                    },
+                    success: function (data, textStatus, jqXhr) { _this.errorMessage(null); },
+                    error: function (jqXhr, textStatus, errorThrown) { _this.errorMessage(jqXhr.responseText); },
                 });
                 if (this.errorMessage() != null) {
                     this.saveSpinner.stop();

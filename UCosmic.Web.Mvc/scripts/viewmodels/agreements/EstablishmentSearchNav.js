@@ -108,9 +108,14 @@ var Agreements;
                         var $asideRootSearch = $("#asideRootSearch"), $asideParentSearch = $("#asideParentSearch");
                         if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + _this.editOrNewUrl.val + "#/new/") > 0) {
                             var $addEstablishment = $("#add_establishment");
-                            deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("#establishment_search"), $obj2 = $("[data-current-module=agreements]"), time = 500;
+                            deferred = $.Deferred(),
+                                deferred2 = $.Deferred(),
+                                $obj = $("#establishment_search"),
+                                $obj2 = $("[data-current-module=agreements]"),
+                                time = 500;
                             _this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
-                            $.when(deferred, deferred2).done(function () {
+                            $.when(deferred, deferred2)
+                                .done(function () {
                                 $("#establishment_page").find("aside").find("li").removeClass("current");
                                 $("#nav_names").addClass("current");
                                 $addEstablishment.css("visibility", "").hide().fadeIn(500, function () {
@@ -125,7 +130,8 @@ var Agreements;
                                             if (!_this.establishmentItemViewModel.id || _this.establishmentItemViewModel.id === 0) {
                                                 var me = _this.establishmentItemViewModel, officialName = _this.establishmentItemViewModel.names()[0], officialUrl = _this.establishmentItemViewModel.urls()[0], location = _this.establishmentItemViewModel.location;
                                                 _this.establishmentItemViewModel.validatingSpinner.start();
-                                                if (officialName.text.isValidating() || officialUrl.value.isValidating() || _this.establishmentItemViewModel.ceebCode.isValidating() || _this.establishmentItemViewModel.uCosmicCode.isValidating()) {
+                                                if (officialName.text.isValidating() || officialUrl.value.isValidating() ||
+                                                    _this.establishmentItemViewModel.ceebCode.isValidating() || _this.establishmentItemViewModel.uCosmicCode.isValidating()) {
                                                     setTimeout(function () {
                                                         var waitResult = _this.establishmentItemViewModel.submitToCreate(formElement);
                                                         return false;
@@ -150,19 +156,22 @@ var Agreements;
                                                     data.officialUrl = officialUrl.serializeData();
                                                     data.location = location.serializeData();
                                                     _this.establishmentItemViewModel.createSpinner.start();
-                                                    $.post(url, data).done(function (response, statusText, xhr) {
+                                                    $.post(url, data)
+                                                        .done(function (response, statusText, xhr) {
                                                         _this.establishmentItemViewModel.createSpinner.stop();
                                                         $("#add_establishment").fadeOut(500, function () {
                                                         });
                                                         var establishmentId = parseInt(xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1));
-                                                        $.get(App.Routes.WebApi.Establishments.get(establishmentId)).done(function (response) {
+                                                        $.get(App.Routes.WebApi.Establishments.get(establishmentId))
+                                                            .done(function (response) {
                                                             App.flasher.flash("Establishment Created.");
                                                             var myParticipant = new InstitutionalAgreementParticipantModel(false, response.id, response.officialName, response.translatedName), alreadyExist = false;
                                                             $.ajax({
                                                                 url: App.Routes.WebApi.Agreements.Participants.isOwner(myParticipant.establishmentId()),
                                                                 type: 'GET',
                                                                 async: false
-                                                            }).done(function (response) {
+                                                            })
+                                                                .done(function (response) {
                                                                 myParticipant.isOwner(response);
                                                                 if (_this.agreementIsEdit()) {
                                                                     var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId, myParticipant.establishmentId());
@@ -194,7 +203,8 @@ var Agreements;
                                                                 officialUrl.errors.showAllMessages(false);
                                                                 _this.establishmentItemViewModel.isValidationSummaryVisible(false);
                                                                 _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl.val + "");
-                                                            }).fail(function () {
+                                                            })
+                                                                .fail(function () {
                                                                 if (_this.agreementIsEdit()) {
                                                                     var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId, myParticipant.establishmentId());
                                                                     $.ajax({
@@ -214,7 +224,8 @@ var Agreements;
                                                                 }
                                                                 _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl.val + "");
                                                             });
-                                                        }).fail(function (xhr, statusText, errorThrown) {
+                                                        })
+                                                            .fail(function (xhr, statusText, errorThrown) {
                                                             App.Failures.message(xhr, xhr.responseText, true);
                                                         });
                                                     });
@@ -268,7 +279,8 @@ var Agreements;
                                             url: App.Routes.WebApi.Agreements.Participants.isOwner(myParticipant.establishmentId()),
                                             type: 'GET',
                                             async: false
-                                        }).done(function (response) {
+                                        })
+                                            .done(function (response) {
                                             myParticipant.isOwner(response);
                                             if (_this.agreementIsEdit()) {
                                                 var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId, myParticipant.establishmentId());
@@ -288,7 +300,8 @@ var Agreements;
                                                 _this.participants.participants.push(myParticipant);
                                             }
                                             _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl.val + "");
-                                        }).fail(function () {
+                                        })
+                                            .fail(function () {
                                             if (_this.agreementIsEdit()) {
                                                 var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId, myParticipant.establishmentId());
                                                 $.ajax({
@@ -324,7 +337,8 @@ var Agreements;
                             lastURL = "#/index";
                             _this.establishmentSearchViewModel.sammy.setLocation('#/index');
                             _this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
-                            $.when(deferred, deferred2).done(function () {
+                            $.when(deferred, deferred2)
+                                .done(function () {
                                 $("[data-current-module=agreements]").fadeIn(500).promise().done(function () {
                                     $("[data-current-module=agreements]").find("aside").find("li").removeClass("current");
                                     $("#nav_participants").addClass("current");

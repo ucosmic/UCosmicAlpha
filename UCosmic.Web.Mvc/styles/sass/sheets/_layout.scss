@@ -16,6 +16,6 @@ html {
     }
 }
 
-@import 'layout-banner';
-@import 'layout-content';
-@import 'layout-footer';
+@import '_layout-banner'; 
+@import '_layout-content';
+@import '_layout-footer'; 

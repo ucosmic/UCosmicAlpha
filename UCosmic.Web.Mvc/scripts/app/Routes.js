@@ -1,3 +1,6 @@
+// DO NOT CREATE ANY NEW ROUTES HERE, THIS FILE IS FROZEN.
+// WE NOW GENERATE ROUTES FROM SERVER_SIDE MVC ACTIONS
+// USING @Url.HttpRouteUrl. SEE OTHER ROUTE FILES FOR MORE.
 var App;
 (function (App) {
     var Routes;
@@ -181,13 +184,15 @@ var App;
                         return Names.get(establishmentId);
                     };
                     Names.put = function (establishmentId, establishmentNameId) {
-                        return makeUrl('establishments/' + establishmentId + '/names/' + establishmentNameId);
+                        return makeUrl('establishments/' + establishmentId + '/names/'
+                            + establishmentNameId);
                     };
                     Names.del = function (establishmentId, establishmentNameId) {
                         return Names.put(establishmentId, establishmentNameId);
                     };
                     Names.validateText = function (establishmentId, establishmentNameId) {
-                        return makeUrl('establishments/' + establishmentId + '/names/' + establishmentNameId + '/validate-text');
+                        return makeUrl('establishments/' + establishmentId + '/names/'
+                            + establishmentNameId + '/validate-text');
                     };
                     return Names;
                 })();
@@ -205,13 +210,15 @@ var App;
                         return Urls.get(establishmentId);
                     };
                     Urls.put = function (establishmentId, establishmentUrlId) {
-                        return makeUrl('establishments/' + establishmentId + '/urls/' + establishmentUrlId);
+                        return makeUrl('establishments/' + establishmentId + '/urls/'
+                            + establishmentUrlId);
                     };
                     Urls.del = function (establishmentId, establishmentUrlId) {
                         return Urls.put(establishmentId, establishmentUrlId);
                     };
                     Urls.validateValue = function (establishmentId, establishmentUrlId) {
-                        return makeUrl('establishments/' + establishmentId + '/urls/' + establishmentUrlId + '/validate-value');
+                        return makeUrl('establishments/' + establishmentId + '/urls/'
+                            + establishmentUrlId + '/validate-value');
                     };
                     return Urls;
                 })();

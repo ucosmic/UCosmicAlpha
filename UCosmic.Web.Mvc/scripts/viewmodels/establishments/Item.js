@@ -14,13 +14,17 @@ var Establishments;
             CeebCodeValidator.prototype.validator = function (val, vm, callback) {
                 var _this = this;
                 if (this._isValidatable(vm)) {
-                    var route = App.Routes.WebApi.Establishments.validateCeebCode(vm.id);
+                    var route = App.Routes.WebApi.Establishments
+                        .validateCeebCode(vm.id);
                     this._isAwaitingResponse = true;
-                    $.post(route, vm.serializeData()).always(function () {
+                    $.post(route, vm.serializeData())
+                        .always(function () {
                         _this._isAwaitingResponse = false;
-                    }).done(function () {
+                    })
+                        .done(function () {
                         callback(true);
-                    }).fail(function (xhr) {
+                    })
+                        .fail(function (xhr) {
                         callback({ isValid: false, message: xhr.responseText });
                     });
                 }
@@ -31,13 +35,15 @@ var Establishments;
             CeebCodeValidator.prototype._isValidatable = function (vm) {
                 var originalValues = vm.originalValues();
                 if (vm.id && vm.id !== 0)
-                    return !this._isAwaitingResponse && vm && vm.ceebCode() && originalValues && originalValues.ceebCode !== vm.ceebCode();
+                    return !this._isAwaitingResponse && vm && vm.ceebCode() && originalValues
+                        && originalValues.ceebCode !== vm.ceebCode();
                 return vm && vm.ceebCode() && !this._isAwaitingResponse;
             };
             CeebCodeValidator.prototype._isOk = function (vm) {
                 var originalValues = vm.originalValues();
                 if (vm.id && vm.id !== 0)
-                    return vm && vm.ceebCode() !== undefined && originalValues && originalValues.ceebCode == vm.ceebCode();
+                    return vm && vm.ceebCode() !== undefined && originalValues
+                        && originalValues.ceebCode == vm.ceebCode();
                 return false;
             };
             return CeebCodeValidator;
@@ -55,13 +61,17 @@ var Establishments;
             UCosmicCodeValidator.prototype.validator = function (val, vm, callback) {
                 var _this = this;
                 if (this._isValidatable(vm)) {
-                    var route = App.Routes.WebApi.Establishments.validateUCosmicCode(vm.id);
+                    var route = App.Routes.WebApi.Establishments
+                        .validateUCosmicCode(vm.id);
                     this._isAwaitingResponse = true;
-                    $.post(route, vm.serializeData()).always(function () {
+                    $.post(route, vm.serializeData())
+                        .always(function () {
                         _this._isAwaitingResponse = false;
-                    }).done(function () {
+                    })
+                        .done(function () {
                         callback(true);
-                    }).fail(function (xhr) {
+                    })
+                        .fail(function (xhr) {
                         callback({ isValid: false, message: xhr.responseText });
                     });
                 }
@@ -72,13 +82,15 @@ var Establishments;
             UCosmicCodeValidator.prototype._isValidatable = function (vm) {
                 var originalValues = vm.originalValues();
                 if (vm.id && vm.id !== 0)
-                    return !this._isAwaitingResponse && vm && vm.uCosmicCode() && originalValues && originalValues.uCosmicCode !== vm.uCosmicCode();
+                    return !this._isAwaitingResponse && vm && vm.uCosmicCode() && originalValues
+                        && originalValues.uCosmicCode !== vm.uCosmicCode();
                 return vm && vm.uCosmicCode() && !this._isAwaitingResponse;
             };
             UCosmicCodeValidator.prototype._isOk = function (vm) {
                 var originalValues = vm.originalValues();
                 if (vm.id && vm.id !== 0)
-                    return vm && vm.uCosmicCode() !== undefined && originalValues && originalValues.uCosmicCode == vm.uCosmicCode();
+                    return vm && vm.uCosmicCode() !== undefined && originalValues
+                        && originalValues.uCosmicCode == vm.uCosmicCode();
                 return false;
             };
             return UCosmicCodeValidator;
@@ -96,13 +108,17 @@ var Establishments;
             ParentIdValidator.prototype.validator = function (val, vm, callback) {
                 var _this = this;
                 if (this._isValidatable(vm)) {
-                    var route = App.Routes.WebApi.Establishments.validateParentId(vm.id);
+                    var route = App.Routes.WebApi.Establishments
+                        .validateParentId(vm.id);
                     this._isAwaitingResponse = true;
-                    $.post(route, vm.serializeData()).always(function () {
+                    $.post(route, vm.serializeData())
+                        .always(function () {
                         _this._isAwaitingResponse = false;
-                    }).done(function () {
+                    })
+                        .done(function () {
                         callback(true);
-                    }).fail(function (xhr) {
+                    })
+                        .fail(function (xhr) {
                         callback({ isValid: false, message: xhr.responseText });
                     });
                 }
@@ -113,13 +129,15 @@ var Establishments;
             ParentIdValidator.prototype._isValidatable = function (vm) {
                 var originalValues = vm.originalValues();
                 if (vm.id && vm.id !== 0)
-                    return !this._isAwaitingResponse && vm && vm.parentId() && originalValues && originalValues.parentId !== vm.parentId();
+                    return !this._isAwaitingResponse && vm && vm.parentId() && originalValues
+                        && originalValues.parentId !== vm.parentId();
                 return false;
             };
             ParentIdValidator.prototype._isOk = function (vm) {
                 var originalValues = vm.originalValues();
                 if (vm.id && vm.id !== 0)
-                    return vm && vm.parentId() && originalValues && originalValues.parentId == vm.parentId();
+                    return vm && vm.parentId() && originalValues
+                        && originalValues.parentId == vm.parentId();
                 return true;
             };
             return ParentIdValidator;
@@ -153,9 +171,7 @@ var Establishments;
                 this.editingUrl = ko.observable(0);
                 this.urlsSpinner = new App.Spinner({ runImmediately: true, });
                 this.sideSwiper = new App.SideSwiper({
-                    frameWidth: 980,
-                    speed: 'fast',
-                    root: '#establishment_page'
+                    frameWidth: 980, speed: 'fast', root: '#establishment_page'
                 });
                 this.parentSearch = new ViewModels.Search(false);
                 this.sammy = Sammy();
@@ -213,16 +229,25 @@ var Establishments;
                         _this.uCosmicCode($.trim(_this.uCosmicCode()));
                 });
                 this.isTypeIdSaveDisabled = ko.computed(function () {
-                    var isTypeIdSaveDisabled = _this.typeId.isValidating() || _this.uCosmicCode.isValidating() || _this.ceebCode.isValidating() || _this.typeIdSaveSpinner.isVisible() || _this.typeIdValidatingSpinner.isVisible() || _this.typeId.error || _this.ceebCode.error || _this.uCosmicCode.error;
+                    var isTypeIdSaveDisabled = _this.typeId.isValidating()
+                        || _this.uCosmicCode.isValidating()
+                        || _this.ceebCode.isValidating()
+                        || _this.typeIdSaveSpinner.isVisible()
+                        || _this.typeIdValidatingSpinner.isVisible()
+                        || _this.typeId.error
+                        || _this.ceebCode.error
+                        || _this.uCosmicCode.error;
                     return isTypeIdSaveDisabled ? true : false;
                 });
                 this.parentId.extend({
                     validEstablishmentParentId: this
                 });
                 var categoriesPact = $.Deferred();
-                $.get(App.Routes.WebApi.Establishments.Categories.get()).done(function (data, textStatus, jqXHR) {
+                $.get(App.Routes.WebApi.Establishments.Categories.get())
+                    .done(function (data, textStatus, jqXHR) {
                     categoriesPact.resolve(data);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
+                })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
                     categoriesPact.reject(jqXHR, textStatus, errorThrown);
                 });
                 var viewModelPact = this._loadScalars();
@@ -252,7 +277,8 @@ var Establishments;
             Item.prototype.requestNames = function (callback) {
                 var _this = this;
                 this.namesSpinner.start();
-                $.get(App.Routes.WebApi.Establishments.Names.get(this.id)).done(function (response) {
+                $.get(App.Routes.WebApi.Establishments.Names.get(this.id))
+                    .done(function (response) {
                     _this.receiveNames(response);
                     if (callback)
                         callback(response);
@@ -278,7 +304,8 @@ var Establishments;
             Item.prototype._initNamesComputeds = function () {
                 var _this = this;
                 ko.computed(function () {
-                    $.getJSON(App.Routes.WebApi.Languages.get()).done(function (response) {
+                    $.getJSON(App.Routes.WebApi.Languages.get())
+                        .done(function (response) {
                         var emptyValue = {
                             code: undefined,
                             name: '[Language Neutral]'
@@ -308,7 +335,8 @@ var Establishments;
             Item.prototype.requestUrls = function (callback) {
                 var _this = this;
                 this.urlsSpinner.start();
-                $.get(App.Routes.WebApi.Establishments.Urls.get(this.id)).done(function (response) {
+                $.get(App.Routes.WebApi.Establishments.Urls.get(this.id))
+                    .done(function (response) {
                     _this.receiveUrls(response);
                     if (callback)
                         callback(response);
@@ -356,7 +384,8 @@ var Establishments;
                     var officialName = this.names()[0];
                     var officialUrl = this.urls()[0];
                     var location = this.location;
-                    if (officialName.text.isValidating() || officialUrl.value.isValidating() || this.ceebCode.isValidating() || this.uCosmicCode.isValidating()) {
+                    if (officialName.text.isValidating() || officialUrl.value.isValidating() ||
+                        this.ceebCode.isValidating() || this.uCosmicCode.isValidating()) {
                         setTimeout(function () {
                             var waitResult = _this.submitToCreate(formElement);
                             return false;
@@ -381,7 +410,8 @@ var Establishments;
                         data.officialUrl = officialUrl.serializeData();
                         data.location = location.serializeData();
                         this.createSpinner.start();
-                        $.post(url, data).done(function (response, statusText, xhr) {
+                        $.post(url, data)
+                            .done(function (response, statusText, xhr) {
                             _this.names()[0].text("");
                             _this.urls()[0].value("");
                             _this.names()[0].selectedLanguageCode("");
@@ -394,8 +424,10 @@ var Establishments;
                             _this.errors.showAllMessages(false);
                             officialUrl.errors.showAllMessages(false);
                             _this.isValidationSummaryVisible(false);
-                            window.location.href = App.Routes.Mvc.Establishments.created({ location: xhr.getResponseHeader('Location') });
-                        }).fail(function (xhr, statusText, errorThrown) {
+                            window.location.href = App.Routes.Mvc.Establishments
+                                .created({ location: xhr.getResponseHeader('Location') });
+                        })
+                            .fail(function (xhr, statusText, errorThrown) {
                             _this.createSpinner.stop();
                             App.Failures.message(xhr, xhr.responseText, true);
                         });
@@ -413,7 +445,8 @@ var Establishments;
                     url: url,
                     type: 'PUT',
                     data: data
-                }).done(function (response, statusText, xhr) {
+                })
+                    .done(function (response, statusText, xhr) {
                     $(window).scrollTop(0);
                     App.flasher.flash(response);
                 });
@@ -430,9 +463,11 @@ var Establishments;
             Item.prototype._loadScalars = function () {
                 var deferred = $.Deferred();
                 if (this.id) {
-                    $.get(App.Routes.WebApi.Establishments.get(this.id)).done(function (response, textStatus, jqXHR) {
+                    $.get(App.Routes.WebApi.Establishments.get(this.id))
+                        .done(function (response, textStatus, jqXHR) {
                         deferred.resolve(response);
-                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                    })
+                        .fail(function (jqXHR, textStatus, errorThrown) {
                         deferred.reject(jqXHR, textStatus, errorThrown);
                     });
                 }
@@ -477,9 +512,11 @@ var Establishments;
                         url: url,
                         type: 'PUT',
                         data: data
-                    }).always(function () {
+                    })
+                        .always(function () {
                         _this.typeIdSaveSpinner.stop();
-                    }).done(function (response, statusText, xhr) {
+                    })
+                        .done(function (response, statusText, xhr) {
                         App.flasher.flash(response);
                         _this.typeIdSaveSpinner.stop();
                         _this.clickToCancelTypeIdEdit();
@@ -555,7 +592,10 @@ var Establishments;
                     return _this.parentId() !== undefined && _this.parentId() > 0;
                 });
                 this.isParentIdSaveDisabled = ko.computed(function () {
-                    var isParentIdSaveDisabled = _this.parentId.isValidating() || _this.parentIdSaveSpinner.isVisible() || _this.parentIdValidatingSpinner.isVisible() || _this.parentId.error;
+                    var isParentIdSaveDisabled = _this.parentId.isValidating()
+                        || _this.parentIdSaveSpinner.isVisible()
+                        || _this.parentIdValidatingSpinner.isVisible()
+                        || _this.parentId.error;
                     return isParentIdSaveDisabled ? true : false;
                 });
                 this.parentId.subscribe(function (newValue) {
@@ -564,7 +604,8 @@ var Establishments;
                     }
                     else {
                         var url = App.Routes.WebApi.Establishments.get();
-                        $.get(url, { id: newValue }).done(function (response) {
+                        $.get(url, { id: newValue })
+                            .done(function (response) {
                             if (response && response.items && response.items.length) {
                                 var parent = response.items[0];
                                 _this.parentEstablishment(new ViewModels.SearchResult(parent, _this.parentSearch));
@@ -607,9 +648,11 @@ var Establishments;
                         url: url,
                         type: 'PUT',
                         data: data
-                    }).always(function () {
+                    })
+                        .always(function () {
                         _this.parentIdSaveSpinner.stop();
-                    }).done(function (response, statusText, xhr) {
+                    })
+                        .done(function (response, statusText, xhr) {
                         App.flasher.flash(response);
                         _this.parentIdSaveSpinner.stop();
                         var originalValues = _this.originalValues();

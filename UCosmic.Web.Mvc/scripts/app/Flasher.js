@@ -42,9 +42,7 @@ var App;
             this.isDismissing = ko.observable();
             this.isDismissed = ko.observable();
             this.$element = undefined;
-            ko.computed(function () {
-                init(_this);
-            });
+            ko.computed(function () { init(_this); });
         }
         Flasher.prototype.flash = function (text) {
             this.text(undefined);

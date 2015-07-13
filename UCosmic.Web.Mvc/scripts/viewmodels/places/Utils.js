@@ -74,7 +74,8 @@ var Places;
             if (places && places.length > 0) {
                 for (var i = 0; i < places.length; i++) {
                     var place = places[i];
-                    if (!place.isEarth && !place.isContinent && !place.isCountry && !place.isAdmin1 && !place.isAdmin2 && !place.isAdmin3)
+                    if (!place.isEarth && !place.isContinent && !place.isCountry &&
+                        !place.isAdmin1 && !place.isAdmin2 && !place.isAdmin3)
                         subAdmins[subAdmins.length] = place;
                 }
             }

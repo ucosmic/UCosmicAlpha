@@ -44,11 +44,14 @@ var ViewModels;
                     url: App.Routes.WebApi.Identity.Users.get(),
                     data: queryParameters,
                     cache: false
-                }).done(function (response, statusText, xhr) {
+                })
+                    .done(function (response, statusText, xhr) {
                     deferred.resolve(response, statusText, xhr);
-                }).fail(function (xhr, statusText, errorThrown) {
+                })
+                    .fail(function (xhr, statusText, errorThrown) {
                     deferred.reject(xhr, statusText, errorThrown);
-                }).always(function () {
+                })
+                    .always(function () {
                     _this.spinner.stop();
                     _this.nextForceDisabled(false);
                     _this.prevForceDisabled(false);
@@ -76,9 +79,11 @@ var ViewModels;
                 ko.computed(function () {
                     if (_this.pageSize() === undefined || _this.orderBy() === undefined)
                         return;
-                    _this._pullResults().done(function (response) {
+                    _this._pullResults()
+                        .done(function (response) {
                         _this._loadResults(response);
-                    }).fail(function () {
+                    })
+                        .fail(function () {
                     });
                 }).extend({ throttle: 250 });
             };
@@ -159,7 +164,8 @@ var ViewModels;
             };
             Search.prototype.applySession = function () {
                 this.keyword(sessionStorage.getItem(Search.KeywordSessionKey) || this.keyword());
-                this.pageSize(parseInt(window.sessionStorage.getItem('UserSearchPageSize')) || Number(this.pageSize()));
+                this.pageSize(parseInt(window.sessionStorage.getItem('UserSearchPageSize'))
+                    || Number(this.pageSize()));
                 this.orderBy(sessionStorage.getItem(Search.OrderBySessionKey) || this.orderBy());
             };
             Search.prototype.nextPage = function () {

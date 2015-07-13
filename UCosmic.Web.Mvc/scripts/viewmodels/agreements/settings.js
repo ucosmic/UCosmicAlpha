@@ -138,9 +138,11 @@ var Agreements;
                 $.ajax({
                     url: eval(url),
                     type: 'GET'
-                }).done(function (result) {
+                })
+                    .done(function (result) {
                     _this.processSettings(result);
-                }).fail(function (xhr) {
+                })
+                    .fail(function (xhr) {
                     App.Failures.message(xhr, xhr.responseText, true);
                 });
             };

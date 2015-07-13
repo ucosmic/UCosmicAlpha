@@ -193,7 +193,8 @@ var Agreements;
                     error: function (xhr, statusText, errorThrown) {
                         _this.spinner.stop();
                         if (xhr.status === 400) {
-                            _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                            _this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                .html(xhr.responseText.replace('\n', '<br /><br />'));
                             _this.establishmentItemViewModel.$genericAlertDialog.dialog({
                                 title: 'Alert Message',
                                 dialogClass: 'jquery-ui',
@@ -201,9 +202,7 @@ var Agreements;
                                 resizable: false,
                                 modal: true,
                                 buttons: {
-                                    'Ok': function () {
-                                        _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                    }
+                                    'Ok': function () { _this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
                                 }
                             });
                         }
@@ -248,7 +247,8 @@ var Agreements;
                     error: function (xhr, statusText, errorThrown) {
                         _this.spinner.stop();
                         if (xhr.status === 400) {
-                            _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                            _this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                .html(xhr.responseText.replace('\n', '<br /><br />'));
                             _this.establishmentItemViewModel.$genericAlertDialog.dialog({
                                 title: 'Alert Message',
                                 dialogClass: 'jquery-ui',
@@ -256,9 +256,7 @@ var Agreements;
                                 resizable: false,
                                 modal: true,
                                 buttons: {
-                                    'Ok': function () {
-                                        _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                    }
+                                    'Ok': function () { _this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
                                 }
                             });
                         }

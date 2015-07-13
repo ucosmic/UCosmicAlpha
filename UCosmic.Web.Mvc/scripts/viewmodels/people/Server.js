@@ -7,9 +7,11 @@ var People;
             var promise = $.Deferred();
             settings = settings || {};
             settings.url = Routes.Api.People.Affiliations.plural(personId);
-            $.ajax(settings).done(function (response) {
+            $.ajax(settings)
+                .done(function (response) {
                 promise.resolve(response);
-            }).fail(function (xhr) {
+            })
+                .fail(function (xhr) {
                 promise.reject(xhr);
             });
             return promise;
@@ -22,9 +24,11 @@ var People;
             settings.type = 'PUT';
             settings.url = Routes.Api.People.Affiliations.single(establishmentId, personId);
             settings.data = data;
-            $.ajax(settings).done(function (response, status, xhr) {
+            $.ajax(settings)
+                .done(function (response, status, xhr) {
                 promise.resolve(xhr);
-            }).fail(function (xhr) {
+            })
+                .fail(function (xhr) {
                 promise.reject(xhr);
             });
             return promise;
@@ -36,9 +40,11 @@ var People;
             settings = settings || {};
             settings.type = 'DELETE';
             settings.url = Routes.Api.People.Affiliations.single(establishmentId, personId);
-            $.ajax(settings).done(function (response, status, xhr) {
+            $.ajax(settings)
+                .done(function (response, status, xhr) {
                 promise.resolve(xhr);
-            }).fail(function (xhr) {
+            })
+                .fail(function (xhr) {
                 promise.reject(xhr);
             });
             return promise;

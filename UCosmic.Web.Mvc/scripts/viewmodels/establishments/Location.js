@@ -69,20 +69,24 @@ var Establishments;
             Location.prototype._initComputedsAndSubscriptions = function () {
                 var _this = this;
                 this.toolsMarkerLat = ko.computed(function () {
-                    return _this.mapTools() && _this.mapTools().markerLatLng() ? _this.mapTools().markerLatLng().lat() : null;
+                    return _this.mapTools() && _this.mapTools().markerLatLng()
+                        ? _this.mapTools().markerLatLng().lat() : null;
                 });
                 this.toolsMarkerLng = ko.computed(function () {
-                    return _this.mapTools() && _this.mapTools().markerLatLng() ? _this.mapTools().markerLatLng().lng() : null;
+                    return _this.mapTools() && _this.mapTools().markerLatLng()
+                        ? _this.mapTools().markerLatLng().lng() : null;
                 });
                 this.$mapCanvas.subscribe(function (newValue) {
                     if (!_this.map)
                         _this.initMap();
                 });
                 ko.computed(function () {
-                    $.get(App.Routes.WebApi.Places.get(), { isContinent: true }).done(function (response) {
+                    $.get(App.Routes.WebApi.Places.get(), { isContinent: true })
+                        .done(function (response) {
                         _this.continents(response);
                     });
-                }).extend({ throttle: 1 });
+                })
+                    .extend({ throttle: 1 });
                 this.continentName = ko.computed(function () {
                     var continentId = _this.continentId();
                     if (!continentId)
@@ -94,7 +98,8 @@ var Establishments;
                     return _this.countries().length > 0 ? '[Unspecified]' : '[Loading...]';
                 });
                 ko.computed(function () {
-                    $.get(App.Routes.WebApi.Places.get(), { isCountry: true }).done(function (response) {
+                    $.get(App.Routes.WebApi.Places.get(), { isCountry: true })
+                        .done(function (response) {
                         _this.countries(response);
                         if (_this._countryId) {
                             var countryId = _this._countryId;
@@ -102,7 +107,8 @@ var Establishments;
                             _this.countryId(countryId);
                         }
                     });
-                }).extend({ throttle: 1 });
+                })
+                    .extend({ throttle: 1 });
                 this.countryName = ko.computed(function () {
                     var countryId = _this.countryId();
                     if (!countryId)
@@ -172,7 +178,8 @@ var Establishments;
                     return !_this.admin2sLoading() ? '[Unspecified]' : '[Loading...]';
                 }).extend({ throttle: 400 });
                 this.showAdmin2Input = ko.computed(function () {
-                    return _this.countryId() && _this.admin1Id() && (_this.admin2s().length > 0 || _this.admin2sLoading());
+                    return _this.countryId() && _this.admin1Id()
+                        && (_this.admin2s().length > 0 || _this.admin2sLoading());
                 });
                 this.admin2Id.subscribe(function (newValue) {
                     if (newValue && _this.admin2s().length == 0)
@@ -199,7 +206,8 @@ var Establishments;
                     return !_this.admin3sLoading() ? '[Unspecified]' : '[Loading...]';
                 }).extend({ throttle: 400 });
                 this.showAdmin3Input = ko.computed(function () {
-                    return _this.countryId() && _this.admin1Id() && _this.admin2Id() && (_this.admin3s().length > 0 || _this.admin3sLoading());
+                    return _this.countryId() && _this.admin1Id() && _this.admin2Id()
+                        && (_this.admin3s().length > 0 || _this.admin3sLoading());
                 });
                 this.admin3Id.subscribe(function (newValue) {
                     if (newValue && _this.admin3s().length == 0)
@@ -254,21 +262,26 @@ var Establishments;
                 });
                 this.$mapCanvas().on('marker_dragend marker_created', function () {
                     var latLng = _this.mapTools().markerLatLng();
-                    var route = App.Routes.WebApi.Places.ByCoordinates.get(latLng.lat(), latLng.lng());
+                    var route = App.Routes.WebApi.Places.ByCoordinates
+                        .get(latLng.lat(), latLng.lng());
                     _this.loadSpinner.start();
-                    $.get(route).done(function (response) {
+                    $.get(route)
+                        .done(function (response) {
                         if (response && response.length) {
                             _this.allowCountryFitBounds = false;
                             _this.fillPlacesHierarchy(response);
                         }
-                    }).always(function () {
+                    })
+                        .always(function () {
                         _this.loadSpinner.stop();
-                    }).fail(function (arg1, arg2, arg3, arg4, arg5) {
+                    })
+                        .fail(function (arg1, arg2, arg3, arg4, arg5) {
                     });
                 });
                 if (this.ownerId) {
                     this.isLoaded(false);
-                    $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId)).done(function (response) {
+                    $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId))
+                        .done(function (response) {
                         gm.event.addListenerOnce(_this.map, 'idle', function () {
                             _this.loadMapZoom(response);
                             _this.loadMapMarker(response);
@@ -346,7 +359,8 @@ var Establishments;
             };
             Location.prototype.loadAdmin1s = function (countryId) {
                 var _this = this;
-                var admin1Url = App.Routes.WebApi.Places.get();
+                var admin1Url = App.Routes.WebApi.Places
+                    .get();
                 this.admin1sLoading(true);
                 $.ajax({
                     type: 'GET',
@@ -368,7 +382,8 @@ var Establishments;
             };
             Location.prototype.loadAdmin2s = function (admin1Id) {
                 var _this = this;
-                var admin2Url = App.Routes.WebApi.Places.get();
+                var admin2Url = App.Routes.WebApi.Places
+                    .get();
                 this.admin2sLoading(true);
                 $.ajax({
                     type: 'GET',
@@ -390,7 +405,8 @@ var Establishments;
             };
             Location.prototype.loadAdmin3s = function (admin2Id) {
                 var _this = this;
-                var admin3Url = App.Routes.WebApi.Places.get();
+                var admin3Url = App.Routes.WebApi.Places
+                    .get();
                 this.admin3sLoading(true);
                 $.ajax({
                     type: 'GET',
@@ -426,12 +442,15 @@ var Establishments;
                     url: App.Routes.WebApi.Establishments.Locations.put(me.ownerId),
                     type: 'PUT',
                     data: me.serializeData()
-                }).always(function () {
+                })
+                    .always(function () {
                     me.saveSpinner.stop();
-                }).done(function (response, statusText, xhr) {
+                })
+                    .done(function (response, statusText, xhr) {
                     App.flasher.flash(response);
                     _this.isEditing(false);
-                }).fail(function (arg1, arg2, arg3) {
+                })
+                    .fail(function (arg1, arg2, arg3) {
                 });
             };
             Location.prototype.serializeData = function () {
@@ -481,7 +500,8 @@ var Establishments;
                 if (!this.ownerId)
                     return;
                 this.isLoaded(false);
-                $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId)).done(function (response) {
+                $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId))
+                    .done(function (response) {
                     _this.map.setZoom(1);
                     _this.loadMapZoom(response);
                     _this.mapTools().destroyMarker();

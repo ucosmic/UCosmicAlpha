@@ -39,12 +39,8 @@ var App;
                     this.$markerAddButton.hide();
                 else
                     this.$markerRemoveButton.hide();
-                this.$markerAddButton.on('click', undefined, this, function (e) {
-                    _this.createMarker(e);
-                });
-                this.$markerRemoveButton.on('click', undefined, this, function (e) {
-                    _this.removeMarker(e);
-                });
+                this.$markerAddButton.on('click', undefined, this, function (e) { _this.createMarker(e); });
+                this.$markerRemoveButton.on('click', undefined, this, function (e) { _this.removeMarker(e); });
                 this.$element.show();
             };
             ToolsOverlay.prototype.onRemove = function () {
@@ -81,7 +77,8 @@ var App;
             ToolsOverlay.prototype.createMarker = function (e) {
                 var _this = this;
                 this.getMap().setOptions({ draggableCursor: 'pointer' });
-                var pointX = this.$element.position().left + this.$markerAddButton.position().left + (this.$markerAddButton.outerWidth() / 2);
+                var pointX = this.$element.position().left + this.$markerAddButton.position().left
+                    + (this.$markerAddButton.outerWidth() / 2);
                 var pointY = this.$markerAddButton.outerHeight();
                 var $dragIcon = this.$element.find('.marker img.drag-icon');
                 var dragAnchor = new gm.Point(0, 0);
@@ -110,8 +107,7 @@ var App;
                     _this.getMap().setOptions({ draggableCursor: undefined });
                     _this.marker.setMap(null);
                     var overlayView = new gm.OverlayView();
-                    overlayView.draw = function () {
-                    };
+                    overlayView.draw = function () { };
                     overlayView.setMap(_this.getMap());
                     var pixels = overlayView.getProjection().fromLatLngToContainerPixel(e.latLng);
                     var dragOffset = new gm.Point(0, 0);
