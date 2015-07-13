@@ -1,8 +1,14 @@
+/// <reference path="../../../../scripts/typings/lodash.d.ts" />
+/// <reference path="../../../typediff/mytypes.d.ts" />
+/// <reference path="../../../../scripts/typings/page.d.ts" />
 Polymer('is-page-summary-report', {
     isAjaxing: false,
     activityTypeCounts: [],
     agreementTypeCounts: [],
     establishmentSearch: "",
+    lastEstablishmentSearch: "",
+    selectedEstablishmentId: 0,
+    last_selected_establishment_id: -1,
     selectedCountry: 0,
     selectedCountryCode: 'any',
     selectedPlaceId: 0,
@@ -14,9 +20,6 @@ Polymer('is-page-summary-report', {
     activity_total_agreement_count: 0,
     expertiseCountLoaded: false,
     affiliationCountLoaded: false,
-    lastEstablishmentSearch: "",
-    selectedEstablishmentId: 0,
-    last_selected_establishment_id: -1,
     degreeCountsLoaded: false,
     agreementTypeCountsLoaded: false,
     activityTypeCountsLoaded: false,
@@ -53,6 +56,9 @@ Polymer('is-page-summary-report', {
             if (!myThis.selectedEstablishmentId) {
                 myThis.$.ajax_activities.go();
                 myThis.activityTypeCountsLoaded = false;
+            }
+            else {
+                myThis.activityTypeCountsLoaded = true;
             }
             myThis.$.ajax_agreements.go();
             myThis.$.ajax_degrees.go();
@@ -130,13 +136,9 @@ Polymer('is-page-summary-report', {
         this.isAjaxing = false;
         this.activityTypeCountsLoaded = true;
         if (!response.detail.response.error) {
-            this.activityTypeCounts = response.detail.response;
-            this.activity_total_location_count = _.sum(this.activityTypeCounts, function (activity) {
-                return activity.locationCount;
-            });
-            this.activity_total_activity_count = _.sum(this.activityTypeCounts, function (activity) {
-                return activity.typeCount;
-            });
+            this.activityTypeCounts = response.detail.response.activitySummaryTypes;
+            this.activity_total_location_count = response.detail.response.totalLocations;
+            this.activity_total_activity_count = response.detail.response.totalActivities;
         }
         else {
             console.log(response.detail.response.error);

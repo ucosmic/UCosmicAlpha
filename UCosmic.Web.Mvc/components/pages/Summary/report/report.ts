@@ -1,16 +1,6 @@
 ﻿/// <reference path="../../../../scripts/typings/lodash.d.ts" />
 /// <reference path="../../../typediff/mytypes.d.ts" />
 /// <reference path="../../../../scripts/typings/page.d.ts" />
-//class activityCount{
-//    locationCount: number;
-//    type: string;
-//    typeCount: number;
-//    constructor(type: string = "", typeCount: number = 0, locationCount: number = 0){
-//        this.type = type;
-//        this.typeCount = typeCount;
-//        this.locationCount = locationCount;    }
-
-//}
 
 
 Polymer('is-page-summary-report', {
@@ -18,6 +8,9 @@ Polymer('is-page-summary-report', {
     activityTypeCounts: [],
     agreementTypeCounts: [],
     establishmentSearch: "",
+    lastEstablishmentSearch: "",
+    selectedEstablishmentId: 0,
+    last_selected_establishment_id: -1,
     selectedCountry: 0,
     selectedCountryCode: 'any',
     selectedPlaceId: 0,
@@ -27,12 +20,8 @@ Polymer('is-page-summary-report', {
     agreement_total_agreement_count: 0,
     activity_total_location_count: 0,
     activity_total_agreement_count: 0,
-    //root_tenant_id: -1,
     expertiseCountLoaded: false,
     affiliationCountLoaded: false,
-    lastEstablishmentSearch: "",
-    selectedEstablishmentId: 0,
-    last_selected_establishment_id: -1,
     degreeCountsLoaded: false,
     agreementTypeCountsLoaded: false,
     activityTypeCountsLoaded: false,
@@ -81,9 +70,11 @@ Polymer('is-page-summary-report', {
             myThis.selectedPlaceName = country ? country.text : undefined;
             myThis.selectedCountryCode = country ? country.code : 'any';
 
-            if (!myThis.selectedEstablishmentId) {
+            if (!myThis.selectedEstablishmentId ) {
                 myThis.$.ajax_activities.go();
                 myThis.activityTypeCountsLoaded = false;
+            }else{
+                myThis.activityTypeCountsLoaded = true
             }
             myThis.$.ajax_agreements.go();
             myThis.$.ajax_degrees.go();
@@ -250,13 +241,15 @@ Polymer('is-page-summary-report', {
         this.activityTypeCountsLoaded = true;
 
         if (!response.detail.response.error) {
-            this.activityTypeCounts = response.detail.response;
-            this.activity_total_location_count = _.sum(this.activityTypeCounts, function (activity: any) {
-                return activity.locationCount;
-            });
-            this.activity_total_activity_count = _.sum(this.activityTypeCounts, function (activity: any) {
-                return activity.typeCount;
-            });
+            this.activityTypeCounts = response.detail.response.activitySummaryTypes;
+            this.activity_total_location_count = response.detail.response.totalLocations
+            this.activity_total_activity_count = response.detail.response.totalActivities
+            //this.activity_total_location_count = _.sum(this.activityTypeCounts, function (activity: any) {
+                //return activity.locationCount;
+            //});
+            //this.activity_total_activity_count = _.sum(this.activityTypeCounts, function (activity: any) {
+                //return activity.typeCount;
+            //});
         } else {
 
             console.log(response.detail.response.error)
@@ -391,82 +384,3 @@ Polymer('is-page-summary-report', {
 
 }); 
 
-
-//var establishmentData = new App.DataCacher<Establishments.ApiModels.ScalarEstablishment[]>(
-//    (): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> => {
-//        return this._loadEstablishmentData();
-//    });
-
-//        private _createEstablishmentSelects(response): void {
-
-//    var parentId = this.settings.input.ancestorId;
-//    if(!parentId) {
-//    parentId = this.settings.new_tenant_id;
-//}
-//var previousParentId = 0;
-//while (true) {
-
-//    response.map(function (x, index, array) {
-//        x.officialName = x.contextName ? x.contextName : x.officialName && x.officialName.indexOf(',') > -1 ? x.officialName.substring(0, x.officialName.indexOf(',')) : x.officialName;
-//        return x;
-//    });
-
-//    var options: any = Enumerable.From(response)
-//        .Where("x => x.parentId==" + parentId)
-//        .OrderBy(function (x: Establishments.ApiModels.ScalarEstablishment): number {
-//        return x.rank; // sort by rank, then by name
-//    })
-//        .ThenBy(function (x: Establishments.ApiModels.ScalarEstablishment): string {
-//        return x.contextName || x.officialName;
-//    })
-//        .Select("x =>  {value: x.id, text: x.officialName}").ToArray();
-
-//    if (options.length > 0) {
-//        options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
-//        this.affiliations.unshift(ko.mapping.fromJS([{ options: options, value: previousParentId.toString() }])()[0]);
-//    }
-//    previousParentId = parentId;
-//    var parentCheck = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
-//    if (parentCheck[0] != undefined) {
-//        parentId = parentCheck[0].parentId;
-//    } else {
-//        this.hasEstablishmentSelects(true);
-//        return;
-//    }
-//}
-
-//        }
-
-//        private _loadEstablishmentData(): JQueryPromise < Establishments.ApiModels.ScalarEstablishment[] > {
-//    var promise: JQueryDeferred<Establishments.ApiModels.ScalarEstablishment[]> = $.Deferred();
-//    //var mainCampus = this.settings.new_tenant_id;
-
-//    if(!this.mainCampus) {
-//    this.mainCampus = this.settings.new_tenant_id;
-//}
-
-//var temp = sessionStorage.getItem('campuses' + this.mainCampus);
-//if (temp) {
-//    var response = $.parseJSON(temp);
-//    this._createEstablishmentSelects(response);
-//    //this._ConstructMapData();
-//} else {
-
-//    var settings = settings || {};
-//    settings.url = '/api/establishments/' + this.mainCampus + '/offspring';
-//    $.ajax(settings)
-//        .done((response: ApiModels.ScalarEstablishment[]): void => {
-//        promise.resolve(response);
-//        sessionStorage.setItem('campuses' + this.mainCampus, JSON.stringify(response));
-
-//        this._createEstablishmentSelects(response);
-//        //this._ConstructMapData();
-
-//    })
-//        .fail((xhr: JQueryXHR): void => {
-//        promise.reject(xhr);
-//    });
-//}
-
-//return promise;
-//        }

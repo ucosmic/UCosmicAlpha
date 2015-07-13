@@ -10,7 +10,7 @@
 <link rel="import" href="../../../components/side_filter/side_filter.html">
 <link rel="import" href="../../../Polymer/bower_components/core-localstorage/core-localstorage.html">
 <script src="../../../Polymer/bower_components/page.js/page.js"></script>
-<polymer-element name="is-page-summary-report" attributes="styledomain, tenant_id">
+<polymer-element name="is-page-summary-report" attributes="style_domain, tenant_id">
     <template>
         <link href="report.css" rel="stylesheet" />
         <div layout horizontal>
@@ -22,7 +22,7 @@
                             <template repeat="{{agreementTypeCount, agreementTypeCountI in agreementTypeCounts}}">
                                 <div style="margin-bottom:4px;">
                                     <b>{{agreementTypeCount.typeCount}}</b>
-                                    <a href="/{{styledomain}}/agreements/#/table/country/{{selectedCountryCode}}/type/{{agreementTypeCount.type}}/sort/start-desc/size/10/page/1/">{{agreementTypeCount.type}}</a>
+                                    <a href="/{{style_domain}}/agreements/#/table/country/{{selectedCountryCode}}/type/{{agreementTypeCount.type}}/sort/start-desc/size/10/page/1/">{{agreementTypeCount.type}}</a>
                                     <template if="{{agreementTypeCount.typeCount > 1}}">
                                         agreements
                                     </template>
@@ -56,8 +56,11 @@
                                 </template>
                             </div>
                         </template>
-                        <template if="{{agreementTypeCounts.length == 0 && agreementTypeCountsLoaded}}">
+                        <template if="{{agreementTypeCounts.length == 0 && agreementTypeCountsLoaded && establishmentSearch == ''}}">
                             <div>You do not have any agreements for the selected location</div>
+                        </template>
+                        <template if="{{agreementTypeCounts.length == 0 && agreementTypeCountsLoaded && establishmentSearch != ''}}">
+                            <div>You do not have any agreements for the selected establishment</div>
                         </template>
                         <template if="{{!agreementTypeCountsLoaded}}">
                             <div>Loading...</div>
@@ -68,11 +71,11 @@
                 <section style="position:relative; ">
                     <h3 style="display:block; margin-bottom:4px;">Faculty & Staff Activities</h3>
                     <div style=" font-size:1.2em;">
-                        <template if="{{activityTypeCountsLoaded && activity_total_activity_count > 0}}">
+                        <template if="{{activityTypeCountsLoaded && activity_total_activity_count > 0 && establishmentSearch == ''}}">
                             <template repeat="{{activityTypeCount, activityTypeCountI in activityTypeCounts}}">
                                 <div style="margin-bottom:4px;">
                                     <b>{{activityTypeCount.typeCount}}</b>
-                                    <a href="/{{styledomain}}/employees/table/?activityTypeIds={{activityTypeCount.typeId}}&placeIds={{selectedPlaceId}}&placeNames={{selectedPlaceName}}">{{activityTypeCount.type}}</a>
+                                    <a href="/{{style_domain}}/employees/table/?activityTypeIds={{activityTypeCount.typeId}}&placeIds={{selectedPlaceId}}&placeNames={{selectedPlaceName}}">{{activityTypeCount.type}}</a>
                                     <template if="{{activityTypeCount.typeCount > 1}}">
                                         activities
                                     </template>
@@ -92,7 +95,7 @@
                             <div style="margin-top:12px;">
                                 <b>{{activity_total_activity_count}} <a style="text-decoration:none;">Total</a></b>
                                 <template if="{{activity_total_activity_count > 1}}">
-                                    activitys
+                                    activities
                                 </template>
                                 <template if="{{activity_total_activity_count == 1}}">
                                     activity
@@ -110,7 +113,7 @@
                             <div>You do not have any activities for the selected location</div>
                         </template>
                         <template if="{{activityTypeCounts.length == 0 && activityTypeCountsLoaded && establishmentSearch != ''}}">
-                            <div>Activities are not associated with establishments.</div>
+                            <div>You do not have any activities for the selected establishment</div>
                         </template>
                         <template if="{{!activityTypeCountsLoaded}}">
                             <div>Loading...</div>
@@ -120,27 +123,27 @@
 
                 <section style="position:relative; ">
                     <h3 style="margin-bottom:4px;">Faculty & Staff Degrees</h3>
-                    <template if="{{degrees.degreeCount != 0 && degreeCountsLoaded}}">
-                        <div style=" font-size:1.2em;">
-                            <b>{{degrees.personCount}}</b>
-                            <template if="{{degrees.personCount > 1}}">
-                                people
-                            </template>
-                            <template if="{{degrees.personCount == 1}}">
-                                person
-                            </template>
-                            with
+                    <div style=" font-size:1.2em;">
+                        <template if="{{degrees.degreeCount != 0 && degreeCountsLoaded}}">
                             <template if="{{selectedCountryCode != 'any'}}">
-                                <a href="/{{styledomain}}/employees/degrees/table/?countryCode={{selectedCountryCode}}">{{degrees.degreeCount}}</a>
+                                <a href="/{{style_domain}}/employees/degrees/table/?countryCode={{selectedCountryCode}}">{{degrees.degreeCount}}</a>
                             </template>
                             <template if="{{selectedCountryCode == 'any'}}">
-                                <a href="/{{styledomain}}/employees/degrees/table/">{{degrees.degreeCount}}</a>
+                                <a href="/{{style_domain}}/employees/degrees/table/">{{degrees.degreeCount}}</a>
                             </template>
                             <template if="{{degrees.degreeCount > 1}}">
                                 degrees
                             </template>
                             <template if="{{degrees.degreeCount == 1}}">
                                 degree
+                            </template>
+                            earned by
+                            <b>{{degrees.personCount}}</b>
+                            <template if="{{degrees.personCount > 1}}">
+                                people
+                            </template>
+                            <template if="{{degrees.personCount == 1}}">
+                                person
                             </template>
                             from
                             <b>{{degrees.establishmentCount}}</b>
@@ -150,14 +153,14 @@
                             <template if="{{degrees.establishmentCount == 1}}">
                                 institution.
                             </template>
-                        </div>
-                    </template>
-                    <template if="{{degrees.degreeCount == 0 && degreeCountsLoaded}}">
-                        <div>You do not have any degrees for the selected location</div>
-                    </template>
-                    <template if="{{!degreeCountsLoaded}}">
-                        <div>Loading...</div>
-                    </template>
+                        </template>
+                        <template if="{{degrees.degreeCount == 0 && degreeCountsLoaded}}">
+                            <div>You do not have any degrees for the selected location</div>
+                        </template>
+                        <template if="{{!degreeCountsLoaded}}">
+                            <div>Loading...</div>
+                        </template>
+                    </div>
                 </section>
             </div>
             <is-side-filter width="300px" has_space="true">
