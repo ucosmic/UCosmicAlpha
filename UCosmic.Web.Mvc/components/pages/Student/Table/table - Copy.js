@@ -2,7 +2,6 @@
 /// <reference path="../../../typediff/mytypes.d.ts" />
 /// <reference path="../../../models/students.ts" />
 /// <reference path="../../../../scripts/typings/lodash.d.ts" />
-var Student_Table = Students;
 Polymer({
     is: "is-page-student-table",
     properties: {
@@ -119,10 +118,6 @@ Polymer({
             type: Array,
             notify: true,
         },
-        student_list: {
-            type: Array,
-            notify: true,
-        },
         level_list: {
             type: Array,
             notify: true,
@@ -153,8 +148,8 @@ Polymer({
                 { value: 'affiliation_name-asc', text: 'Affiliation Z-A' },
                 { value: 'foreign_affiliation_name-desc', text: 'Foreign Affiliation A-Z' },
                 { value: 'foreign_affiliation_name-asc', text: 'Foreign Affiliation Z-A' },
-                { value: 'country_name-desc', text: 'country A-Z' },
-                { value: 'country_name-asc', text: 'country Z-A' },
+                { value: 'country_official_name-desc', text: 'country A-Z' },
+                { value: 'country_official_name-asc', text: 'country Z-A' },
                 { value: 'program_name-desc', text: 'program A-Z' },
                 { value: 'program_name-asc', text: 'program Z-A' },
                 { value: 'level_name-desc', text: 'level A-Z' },
@@ -188,13 +183,51 @@ Polymer({
     fire_students_mobilities_join: null,
     fire_countries: null,
     fire_norm: null,
-    is_routing_setup: false,
     lastEstablishmentSearch: "",
     last_selected_establishment_id: -1,
     data_loaded: { mobilities: 0, establishments: 0, countries: 0, tags: 0, programs: 0 },
     controller: null,
     created: function () {
+        var _this = this;
         this.controller = this;
+        this.fire_students = new Firebase("https://UCosmic.firebaseio.com/Students");
+        this.fire_students_students = new Firebase("https://UCosmic.firebaseio.com/Students/Students");
+        this.fire_students_mobilities = new Firebase("https://UCosmic.firebaseio.com/Students/Mobilities");
+        this.fire_students_terms = new Firebase("https://UCosmic.firebaseio.com/Students/Terms");
+        this.fire_students_programs = new Firebase("https://UCosmic.firebaseio.com/Students/Programs");
+        this.fire_students_levels = new Firebase("https://UCosmic.firebaseio.com/Students/Levels");
+        this.fire_countries = new Firebase("https://UCosmic.firebaseio.com/Places/Countries");
+        this.fire_establishments = new Firebase("https://UCosmic.firebaseio.com/Establishments/Establishments");
+        this.fire_countries.once("value", function (snapshot) {
+            _this.country_list = _.map(snapshot.val(), function (value, index) {
+                if (value) {
+                    var object = { _id: index, text: value.country };
+                    return object;
+                }
+            });
+        }, function (errorObject) {
+            console.log("The read failed: " + errorObject.code);
+        });
+        this.fire_students_programs.once("value", function (snapshot) {
+            _this.program_list = _.map(snapshot.val(), function (value, index) {
+                if (value) {
+                    var object = { _id: index, text: value.name };
+                    return object;
+                }
+            });
+        }, function (errorObject) {
+            console.log("The read failed: " + errorObject.code);
+        });
+        this.fire_students_levels.once("value", function (snapshot) {
+            _this.level_list = _.map(snapshot.val(), function (value, index) {
+                if (value) {
+                    var object = { _id: index, text: value.name };
+                    return object;
+                }
+            });
+        }, function (errorObject) {
+            console.log("The read failed: " + errorObject.code);
+        });
     },
     attached: function () {
         if (this.firebase_token) {
@@ -213,7 +246,7 @@ Polymer({
             case "term": return mobility.term_name;
             case "status": return mobility.status;
             case "affiliation": return mobility.affiliation_name;
-            case "country": return mobility.country_name;
+            case "country": return mobility.country_official_name;
             case "level": return mobility.level_name;
             case "program": return mobility.program_name;
             case "sub_affiliation": return mobility.sub_affiliation_name;
@@ -222,41 +255,10 @@ Polymer({
         }
     },
     tenant_id_changed: function (nsad) {
-        var _this = this;
-        var worker = new Worker('/components/resources/js/student_table.js');
-        worker.postMessage('go');
-        worker.addEventListener('message', function (e) {
-            var call_start_setup_filter = function (value) {
-                _this.mobilities = _.uniq(_.union(JSON.parse(value), _this.mobilities), 'key');
-                _this.start_setup_filter();
-            };
-            if (e.data.type == 'mobility_list') {
-                call_start_setup_filter(e.data.value);
-            }
-            else if (e.data.type == 'term_list') {
-                _this.term_list = JSON.parse(e.data.value);
-            }
-            else if (e.data.type == 'establishment_list') {
-                _this.establishment_list = JSON.parse(e.data.value);
-            }
-            else if (e.data.type == 'country_list') {
-                _this.country_list = JSON.parse(e.data.value);
-            }
-            else if (e.data.type == 'level_list') {
-                _this.level_list = JSON.parse(e.data.value);
-            }
-            else if (e.data.type == 'program_list') {
-                _this.program_list = JSON.parse(e.data.value);
-            }
-        }, false);
+        this.join_refs();
     },
     start_setup_filter: _.after(2, function () {
-        if (!this.is_routing_setup) {
-            this.setup_routing();
-        }
-        else {
-            this.filter_table(this);
-        }
+        this.setup_routing();
     }),
     student_table_storage_compute: function (mobilities, establishment_list, country_list, program_list, level_list, tags, columns) {
         this.student_table_storage = {
@@ -354,6 +356,32 @@ Polymer({
             });
             _this.start_setup_filter();
         }
+    },
+    join_refs: function (_this) {
+        _this = this;
+        var norm = new Firebase.util.NormalizedCollection([_this.fire_students_mobilities, 'Mobilities'], [_this.fire_students_students, 'Students', 'Mobilities.student'], [_this.fire_students_levels, 'Levels', 'Mobilities.level'], [_this.fire_students_terms, 'Terms', 'Mobilities.term'], [_this.fire_countries, 'Countries', 'Mobilities.country'], [_this.fire_students_programs, 'Programs', 'Mobilities.program']);
+        norm.select('Mobilities.student', 'Mobilities.level', 'Mobilities.term', 'Mobilities.establishment', 'Mobilities.country', 'Mobilities.program', 'Mobilities.status', 'Mobilities.foreign_affiliation', 'Mobilities.affiliation', 'Mobilities.sub_affiliation', 'Students.external_id', { key: 'Levels.name', alias: 'level_name' }, 'Levels.rank', 'Terms.start_date', 'Terms.end_date', { key: 'Terms.name', alias: 'term_name' }, { key: 'Countries.country', alias: 'country_official_name' }, { key: 'Programs.name', alias: 'program_name' });
+        var ref = norm.ref();
+        var load_data = _.after(2, function (_this) {
+            _this._load_mobility_data(_this);
+        });
+        this.fire_establishments.once("value", function (snapshot) {
+            _this.establishment_list = _.map(snapshot.val(), function (value, index) {
+                if (value) {
+                    var object = { _id: index, text: value.establishment };
+                    return object;
+                }
+            });
+            load_data(_this);
+        }, function (errorObject) {
+            console.log("The read failed: " + errorObject.code);
+        });
+        ref.orderByChild("establishment").equalTo('3306').once("value", function (snapshot) {
+            _this.mobility_snapshot = _.toArray(snapshot.val());
+            load_data(_this);
+        }, function (errorObject) {
+            console.log("The read failed: " + errorObject.code);
+        });
     },
     tags_changed: function (new_value, old_value) {
         if (old_value) {
@@ -511,7 +539,6 @@ Polymer({
         page('/:page/:page_count/:affiliation/:continent/:country/:program/:level/:status/:start_date/:end_date/:order_by/:asc_desc', this.navigate);
         page('*', this.navigate);
         page({ hashbang: true });
-        this.is_routing_setup = true;
     },
     leaveEstablishmentSearch: function (event, detail, sender) {
         var _this = this;
