@@ -18,6 +18,7 @@ namespace UCosmic.Repositories
     public class EstablishmentListAllApiReturn
     {
         public int establishment;
+        public int parent_id;
         public string official_name;
     }
     public class EstablishmentListRepository// : ISummaryRepository
@@ -46,7 +47,7 @@ namespace UCosmic.Repositories
 
 
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
-            string sql = "SELECT ee.[RevisionId] as establishment," +
+            string sql = "SELECT ee.[RevisionId] as establishment, ee.parentid as parent_id, " +
 	            "Case when en.translationtolanguageid=1 then [text] else officialName end as official_name " +
                 "FROM [UCosmicPreview].[Establishments].[Establishment] ee " +
                 "left join establishments.establishmentname en on en.forestablishmentid = ee.revisionid and en.translationtolanguageid=1 " +
