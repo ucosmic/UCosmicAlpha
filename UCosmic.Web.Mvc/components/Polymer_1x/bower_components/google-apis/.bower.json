@@ -1,6 +1,6 @@
 {
   "name": "google-apis",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Web components to load Google API libraries",
   "homepage": "https://googlewebcomponents.github.io/google-apis",
   "main": "google-apis.html",
@@ -11,8 +11,7 @@
   "license": "Apache2",
   "ignore": [
     "/.*",
-    "/test/",
-    "/demo/"
+    "/test/"
   ],
   "keywords": [
     "web-component",
@@ -28,11 +27,11 @@
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0"
   },
-  "_release": "1.0.0",
+  "_release": "1.0.2",
   "_resolution": {
     "type": "version",
-    "tag": "1.0.0",
-    "commit": "81f4afff46487de7994520d07ceec28aac5a6b3d"
+    "tag": "v1.0.2",
+    "commit": "7e8a931dd8ad48adc9d82dfe6e6f8a60b7c946c4"
   },
   "_source": "git://github.com/GoogleWebComponents/google-apis.git",
   "_target": "^1.0.0",

@@ -1,6 +1,6 @@
 {
   "name": "google-castable-video",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "authors": [
     "Thorsten Schaeff <thorsten.schaeff@gmail.com>"
   ],
@@ -16,8 +16,7 @@
   "homepage": "https://github.com/GoogleWebComponents/google-castable-video",
   "ignore": [
     "/.*",
-    "/test/",
-    "/demo/"
+    "/test/"
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^1.0.0"

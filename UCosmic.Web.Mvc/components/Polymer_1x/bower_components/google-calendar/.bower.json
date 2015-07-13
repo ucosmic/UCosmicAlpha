@@ -1,6 +1,6 @@
 {
   "name": "google-calendar",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "homepage": "https://googlewebcomponents.github.io/google-calendar",
   "description": "Web components for working with Google Calendar",
   "main": "google-calendar.html",
@@ -10,8 +10,7 @@
   "license": "Apache2",
   "ignore": [
     "/.*",
-    "/test/",
-    "/demo/"
+    "/test/"
   ],
   "keywords": [
     "web-component",
@@ -29,11 +28,11 @@
     "web-component-tester": "*",
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0"
   },
-  "_release": "1.0.0",
+  "_release": "1.0.1",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.0",
-    "commit": "8d019b0488bab3dc02b39ee255780a74d8149aad"
+    "tag": "v1.0.1",
+    "commit": "ba1807e1698ef901c104c8908318e887dd049fff"
   },
   "_source": "git://github.com/GoogleWebComponents/google-calendar.git",
   "_target": "^1.0.0",
