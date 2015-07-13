@@ -1,4 +1,6 @@
-﻿//interface ZeptoCollection {
+﻿/// <reference path="rx/rx.all.d.ts" />
+
+//interface ZeptoCollection {
 //    fadeIn: any;
 //    fadeOut: any;
 //    length: number;
@@ -34,6 +36,23 @@ interface Window {
     chrome: string;
 }
 
+declare module _ {
+    interface LoDashStatic {
+        insert: any;
+        sum: any;
+        slice: any;
+    }
+
+    interface LoDashObjectWrapper<T> {
+        reverse: any;
+    }
+}
+declare module Rx {
+    export module DOM {
+        function click(element: Element): Observable<{}>;
+        function keyup(element: Element): Observable<{}>;
+    }
+}
 //interface HTMLElement {
 //    value: any;
 //}
@@ -44,3 +63,6 @@ declare var EventSource: any;
 declare var next: any;
 declare var CoreStyle: any;
 declare var Animation: any;
+declare var XLSX: any;
+declare var Firebase: any;
+declare var is_animations: any;

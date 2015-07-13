@@ -1,12 +1,11 @@
+/// <reference path="../typediff/mytypes.d.ts" />
 Polymer('polymer-basePopup', {
     closeIt: false,
     closeItChanged: function (oldValue, newValue) {
         if (newValue == true) {
             var that = this;
             this.showHide = "hide";
-            setTimeout(function () {
-                that.hide = true;
-            }, 500);
+            setTimeout(function () { that.hide = true; }, 500);
         }
         else {
             this.hide = false;
