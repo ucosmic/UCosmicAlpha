@@ -11,7 +11,8 @@
     }
 }
 @*@(Styles.Render(Styles.Render(string.Format("~/styles/tenants/{0}/main", tenant)).ToString().Replace("%20", " ").Replace("layout.css\"", "layout.css\"  shim-shadowdom")))*@
-@Html.Raw(Styles.Render(string.Format("~/styles/tenants/{0}/main", tenant)).ToString().Replace("%20", " ").Replace("layout.css\"", "layout.css\"  shim-shadowdom"))
+@*@Html.Raw(Styles.Render(string.Format("~/styles/tenants/{0}/main", tenant)).ToString().Replace("%20", " ").Replace("layout.css\"", "layout.css\"  shim-shadowdom"))*@
+@Html.Raw(Styles.Render(string.Format("~/styles/tenants/{0}/main", tenant)).ToString().Replace("%20", " ").Replace("stylesheet\"", "stylesheet\" shim-shadowdom"))
 <!--[if lt IE 9]>
 @Styles.Render(string.Format("~/styles/tenants/{0}/ie8", tenant))
 <![endif]-->
