@@ -4,7 +4,7 @@
     <!--attributes="styledomain, tenant_id, firebase_token"-->
     <template>
         <link href="new.css" rel="stylesheet" />
-        <input type="file" name="file_input" id="file_input" on-change="{{imageSelected}}" />
+        <input type="file" name="file_input" id="file_input" on-change="handleFile" />
         <!--<core-ajax url="/api/studentsa"
                    params='{"Description":"test",
                    "Links": "test",
@@ -19,7 +19,7 @@
     </template>
     <script src="../../../models/students.js"></script>
     <script src="../../../utilities/xlsx.full.min.js"></script>
-    <script src="new.js"></script>
+    <script src="new_2.js"></script>
 
 </dom-module>
 

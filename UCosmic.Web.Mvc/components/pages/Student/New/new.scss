@@ -10,7 +10,7 @@ h1, h2, h3, h4, h5, h6{
 .on-left {
     float: left;
 }
-header {
+/*header {
     margin: 0 0 16px;
     padding: 0;
     vertical-align: text-top;
@@ -25,7 +25,7 @@ header {
     :first-child {
         margin-top: 0 !important;
     }
-}
+}*/
 .group:after {
     content: "";
     clear: both;
