@@ -1,0 +1,44 @@
+﻿
+<link rel="import" href="../../Polymer_1x/bower_components/paper-input/paper-input.html">
+
+    <dom-module id="is-auto_complete">
+    <template>
+        <link href="autoComplete.css" rel="stylesheet" />
+
+        <div style="margin-left:20px;" flex layout vertical>
+            <!--<paper-input-decorator style="padding-bottom: 2px;" floatinglabel layout vertical label="Type and choose an establishment">
+                <input is="iron-input" on-keyup="listSearch" id="selectedInput" on-blur="leaveSearch" bind-value="selected">
+            </paper-input-decorator>-->
+            <paper-input label="{{label}}" style="padding-bottom: 2px;" on-keyup="listSearch" id="selectedInput" on-blur="leaveSearch" bind-value="selected"></paper-input>
+            <div id="firstItemInListContainer" style="height:0; z-index:10;">
+                <template is="dom-if" if="{{firstItemInList}}">
+                    <div id="firstItemInListItem" style="color:rgba(1,1,1,.3); border-radius: 5px; position:relative;top:-24px;">
+                        <div on-click="selectFirstItemInList" data-id="{{firstItemInList._id}}" class="first-list-item">{{firstItemInListText}}</div>
+                    </div>
+                </template>
+            </div>
+            <div style="height:0; z-index:10;">
+                <!--<template is="dom-if" if="{{secondToN_list.length > 0}}">-->
+                <template is="dom-if" if="{{secondToN_list.length}}">
+                    <div style="background-color:gray;padding: 5px;border-radius: 5px">
+                        <template is="dom-repeat" items="{{secondToN_list}}" as="item">
+                            <div on-click="{{select}}" data-id="{{item._id}}" class="list-item">{{item.text}}</div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!--<core-ajax url="{{url}}"
+                   handleas="json"
+                   on-core-response="{{response}}"
+                   on-core-error="{{error}}"
+                   id="ajax_list">
+        </core-ajax>-->
+
+    </template>
+    <script src="autoComplete.js"></script>
+
+</dom-module>
+
+
