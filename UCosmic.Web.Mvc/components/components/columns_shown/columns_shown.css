@@ -1,0 +1,11 @@
+#columns_shown_button {
+  border-radius: 10px;
+  display: inline-block;
+  /*z-index: 2;*/
+  float: right;
+  cursor: pointer; }
+
+.unchecked {
+  color: red; }
+
+/*# sourceMappingURL=columns_shown.css.map */

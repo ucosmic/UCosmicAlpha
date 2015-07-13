@@ -1,0 +1,56 @@
+﻿<link rel="import" href="../../Polymer_1x/bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../Polymer_1x/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../Polymer_1x/bower_components/neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="../../Polymer_1x/bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../../Polymer_1x/bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../Polymer_1x/bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../resources/icons/columns_shown.html">
+
+<dom-module id="is-columns_shown">
+    <link href="columns_shown.css" rel="stylesheet" />
+    <template>
+
+        <paper-material elevation="2" id="columns_shown_button" class="tennant_colors" on-click="toggle" style="z-index:1">
+            <div style="padding: 0 0 0 8px;">Columns(<span>[[columns_count]]</span>)<paper-icon-button icon="columns_shown:view-column"></paper-icon-button></div>
+        </paper-material>
+        <div style="height: 40px;">
+            <div style="display: inline-block; height: 0px;">
+                <div class="layout vertical " id="column_container" style="text-align:left; position:relative;  bottom:30px; left: 20px;">
+                    <paper-material elevation="2" id="filter" style="border-radius:20px; width:200px; right: 20px;">
+                        <div class="tennant_colors layout vertical" style=" padding: 20px; border-radius: 20px;">
+                            <div style=" overflow:visible;position: absolute; width: 270px;" class="layout horizontal end-justified">
+                                <paper-icon-button style="position:relative; top:-16px; right: 100px;" icon="columns_shown:close" id="close_icon" on-click="toggle"></paper-icon-button>
+                            </div>
+                            <div style="margin-top: 20px; height:inherit">
+                                <template is="dom-repeat" items="[[columns]]" as="column" id="columns">
+                                    <template is="dom-if" if="{{column.is_shown}}">
+                                        <paper-item class="list-item">
+                                            <span>[[column.text]]</span>
+                                            <iron-icon icon="columns_shown:remove-circle-outline" on-click="remove_column">
+                                            </iron-icon>
+                                        </paper-item>
+                                    </template>
+                                    <template is="dom-if" if="{{!column.is_shown}}">
+                                        <paper-item class="list-item unchecked">
+                                            <span>[[column.text]]</span>
+                                            <iron-icon icon="columns_shown:add-circle-outline" on-click="add_column">
+                                            </iron-icon>
+                                        </paper-item>
+                                    </template>
+                                </template>
+                                <!--<template is="dom-if" if="{{!columns_count}}">
+                                    No Columns
+                                </template>-->
+                            </div>
+                        </div>
+                    </paper-material>
+                    <div class="flex"></div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <script src="columns_shown.js"></script>
+
+</dom-module>
+
+
