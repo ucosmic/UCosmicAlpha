@@ -1,48 +1,4 @@
 .is-page-student-table {
-    .level_1{
-    }
-    .page_content{
-        width: 800px;
-        padding: 0 20px 20px 0;
-        margin-right: 20px;
-    }
-    .items div, .items2 div {
-        padding: 6px 10px;
-    }
-/*.items > .item:nth-child(even) {
-    background-color: #bb3333;
-}
-
-.items > .items2:nth-child(odd) > .item:nth-child(even),
-.items > .items2:nth-child(even) > .item:nth-child(odd) {
-    background-color: #bb3333;
-}*/
-        .items > .item:nth-of-type(even){
-            background-color: #dddddd;
-        }
-        .items > .item:nth-of-type(odd){
-            background-color: #F3F3F3;
-        }
-        .items2 > .item2:nth-of-type(even){
-            background-color: #aeaeae;
-        }
-        .items2 > .item2:nth-of-type(odd){
-            background-color: #cacaca;
-        }
-/*.items {
-    background-color:#dddddd;
-}
-.item:nth-child(odd) {
-    background-color:#F3F3F3;
-}
-.items2 {    
-    margin-left:1em;
-}
-.item2:nth-child(odd) {
-    background-color:#333;
-    color:white;
-}*/
-
     table {
         width: 900px;
         }

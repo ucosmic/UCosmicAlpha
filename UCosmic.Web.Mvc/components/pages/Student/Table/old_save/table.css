@@ -1,0 +1,68 @@
+.is-page-student-table {
+    /*.table {
+        display: table;
+        width: 900px;
+    }
+
+    p {
+        margin: 0 !important;
+    }
+
+    .title {
+        display: table-caption;
+        text-align: center;
+        font-weight: bold;
+        font-size: larger;
+    }
+
+    .heading {
+        display: table-row;
+        font-weight: bold;
+        text-align: left;
+    }
+    .row {
+        display: table-row;
+    }
+    
+    .row:nth-child(even) .cell {
+        background-color: #dddddd;
+    }
+    .row:nth-child(odd) .cell {
+        background-color: #F3F3F3;
+    }
+    .row:hover .cell {
+        background-color: transparent;
+    }
+
+    
+
+    .cell {
+        display: table-cell;
+        border: solid 1px white;
+        padding: 4px;
+    }
+
+    .row:hover {
+        background-color: yellow;
+    }*/ }
+  .is-page-student-table table {
+    width: 900px; }
+  .is-page-student-table tr:nth-child(even) td {
+    background-color: #dddddd; }
+  .is-page-student-table tr:nth-child(odd) td {
+    background-color: #F3F3F3; }
+  .is-page-student-table tr:hover td {
+    background-color: transparent; }
+  .is-page-student-table tbody tr:hover {
+    background-color: yellow; }
+  .is-page-student-table td, .is-page-student-table th {
+    border: solid 1px white;
+    padding: 4px;
+    /*padding-left: 5px;
+    padding-right: 5px;*/ }
+  .is-page-student-table th {
+    font-weight: bold;
+    text-align: left;
+    padding: 8px 4px; }
+
+/*# sourceMappingURL=table.css.map */

@@ -1,0 +1,203 @@
+﻿<!--<polymer-element name="is-page-student-table" attributes="styledomain, tenant_id, firebase_token">-->
+<link rel="import" href="../../../../components/Polymer_1x/bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../components/Polymer_1x/bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../../../../components/Polymer_1x/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../components/components/filter/filter.html">
+<link rel="import" href="../../../../components/components/autoDDL_1x/autoDDL.html">
+<link rel="import" href="../../../../components/components/filter_tags/filter_tags.html">
+<link rel="import" href="../../../../components/components/columns_shown/columns_shown.html">
+<script src="../../../Polymer/bower_components/page.js/page.js"></script>
+<!--<link rel="import" href="../../../../components/behaviors/pagination/pagination.html">-->
+<dom-module id="is-page-student-table">
+    <link href="table.css" rel="stylesheet" />
+    <template>
+        <div class="layout horizontal">
+            <div class="layout vertical flex">
+                <div class="layout horizontal flex" style="margin:0 60px 20px 0; ">
+                    <div class="layout vertical flex">
+                        <div id="summary_statement">
+                            Showing <span>[[mobilities_filtered_count]]</span> student mobilities from <span>[[mobilities_filtered_establishment_count]]</span> establishments from <span>[[mobilities_filtered_country_count]]</span> countries.
+                        </div>
+                        <div id="paging" class="tenant_colors">
+                            <span on-click="previous"><< Previous</span>
+                            |
+                            <span on-click="next">Next >></span>
+                        </div>
+                    </div>
+                    <div class="layout horizontal">
+                        <is-columns_shown columns="{{columns}}" id="columns" style=""></is-columns_shown>
+                        <select value="{{ order_index::change }}" style="margin-left: 20px;">
+                            <template is="dom-repeat" items="[[order_by_list]]" as="order" index-as="order_i">
+                                <option value="{{order.value}}">[[order.text]]</option>
+                            </template>
+                        </select>
+                    </div>
+                </div>
+                <template is="dom-if" if="[[mobilities_page]]">
+                    <table>
+                        <thead>
+                            <tr>
+                                <template is="dom-repeat" items="[[columns]]" as="column" id="heading_columns">
+                                    <template is="dom-if" if="{{column.is_shown}}">
+                                        <th class="tennant_colors_reversed">[[column.text]]</th>
+                                    </template>
+                                </template>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template is="dom-repeat" items="[[mobilities_page]]" as="mobility" index-as="mobility_i">
+                                <tr>
+                                    <template is="dom-repeat" items="[[columns]]" as="column" id="columns">
+                                        <template is="dom-if" if="{{column.is_shown}}">
+                                            <td>{{get_mobility_value(column.text, mobility)}}</td>
+                                        </template>
+                                    </template>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </template>
+                <template is="dom-repeat" items="[[mobilities_page]]" as="mobility" index-as="mobility_i">
+                        <!--<template is="dom-repeat" items="[[columns]]" as="column" id="columns">
+                            <template is="dom-if" if="{{column.is_shown}}">-->
+                                <div>{{get_mobility_value(column.text, mobility)}}</div>
+                            <!--</template>
+                        </template>-->
+                </template>
+            </div>
+            <template is="dom-if" if="{{is_false(mobilities_page)}}" restamp="true">
+                Loading...
+            </template>
+            <is-filter style="overflow:visible; margin-left: 20px; width:0px; height:0px;" filter_closed="{{filter_closed}}">
+                <is-filter_tags tags="{{tags}}" id="tags" style="position:absolute; top:10px; right: 135px;"></is-filter_tags>
+                <is-auto-ddl id="establishment_auto_ddl" style="margin-bottom:2px;" selected="{{establishmentSearch}}" selectedid="{{selectedEstablishmentId}}" label="Type and choose an institution" on-selected-updated="establishmentSelected"
+                             on-search-updated="establishmentListSearch" list="{{establishment_auto_list}}">
+                </is-auto-ddl>
+                <is-auto-ddl id="country_auto_ddl" style=" margin-bottom:2px;" selected="{{countrySearch}}" selectedid="{{selectedCountryId}}" label="Type and choose a country" on-selected-updated="countrySelected"
+                             on-search-updated="countryListSearch" list="{{country_auto_list}}">
+                </is-auto-ddl>
+                <is-auto-ddl id="program_auto_ddl" style=" margin-bottom:2px;" selected="{{program_search}}" selectedid="{{selected_program_id}}" label="Type and choose a program" on-selected-updated="program_selected"
+                             on-search-updated="program_list_search" list="{{program_auto_list}}">
+                </is-auto-ddl>
+                <is-auto-ddl id="level_auto_ddl" style=" margin-bottom:2px;" selected="{{level_search}}" selectedid="{{selected_level_id}}" label="Type and choose a level" on-selected-updated="level_selected"
+                             on-search-updated="level_list_search" list="{{level_auto_list}}">
+                </is-auto-ddl>
+            </is-filter>
+        </div>
+
+        <!--<iron-localstorage name="mobilities_storage" id="mobilities_storage" value="{{mobilities}}" on-iron-localstorage-load="mobility_loaded" on-iron-localstorage-load-empty="mobility_loaded">
+        </iron-localstorage>
+
+        <iron-localstorage name="establishments_storage" id="establishments_storage" value="{{establishment_list}}" on-iron-localstorage-load="establishment_loaded" on-iron-localstorage-load-empty="establishment_loaded">
+        </iron-localstorage>
+
+        <iron-localstorage name="countries_storage" id="countries_storage" value="{{country_list}}" on-iron-localstorage-load="country_loaded" on-iron-localstorage-load-empty="country_loaded">
+        </iron-localstorage>
+        <iron-localstorage name="programs_storage" id="programs_storage" value="{{program_list}}" on-iron-localstorage-load="program_loaded" on-iron-localstorage-load-empty="program_loaded">
+        </iron-localstorage>
+        <iron-localstorage name="filter_tags_storage" id="filter_tags_storage" value="{{tags}}" on-iron-localstorage-load="tag_loaded" on-iron-localstorage-load-empty="tag_loaded">
+        </iron-localstorage>-->
+        <iron-localstorage name="student_table_storage" id="student_table_storage" value="{{student_table_storage}}" on-iron-localstorage-load="student_table_storage_loaded" on-iron-localstorage-load-empty="student_table_storage_loaded">
+        </iron-localstorage>
+    </template>
+    <script src="../../../models/students.js"></script>
+    <script src="table.js"></script>
+
+</dom-module>
+
+
+<!--<table >
+
+                <thead >
+                    <tr>
+                        <th >
+                            <p>Country</p>
+                        </th>
+                        <th >
+                            <p>Level</p>
+                        </th>
+                        <th >
+                            <p>Program</p>
+                        </th>
+                        <th >
+                            <p>student_affiliation_name</p>
+                        </th>
+                        <th >
+                            <p>Status</p>
+                        </th>
+                        <th >
+                            <p>Term</p>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template is="dom-repeat" items="[[mobilities]]" as="mobilities" index-as="mobilities_i">
+
+                        <tr class="row">
+                            <td >
+                                <span>[[mobilities.country_name]]</span>
+                            </td>
+                            <td >
+                                <span>[[mobilities.level_name]]</span>
+                            </td>
+                            <td >
+                                <span>[[mobilities.program_name]]</span>
+                            </td>
+                            <td >
+                                <span>[[mobilities.student_affiliation_name]]</span>
+                            </td>
+                            <td >
+                                <span>[[mobilities.status]]</span>
+                            </td>
+                            <td >
+                                <span>[[mobilities.term_name]]</span>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>-->
+<!--<div class="table flex" style="z-index:1;">
+    <div class="heading tennant_colors_reversed">
+        <div class="cell" style="width:120px">
+            <p>Term</p>
+        </div>
+        <div class="cell" style="width:80px">
+            <p>Status</p>
+        </div>
+        <div class="cell" style="width:150px">
+            <p>Affiliation</p>
+        </div>
+        <div class="cell" style="width:120px">
+            <p>Country</p>
+        </div>
+        <div class="cell" style="width:130px">
+            <p>Level</p>
+        </div>
+        <div class="cell" style="width:200px">
+            <p>Program</p>
+        </div>
+    </div>
+    <template is="dom-repeat" items="[[mobilities_page]]" as="mobility" index-as="mobility_i">
+
+        <div class="row">
+            <div class="cell">
+                <span>[[mobility.term_name]]</span>
+            </div>
+            <div class="cell">
+                <span>[[mobility.status]]</span>
+            </div>
+            <div class="cell">
+                <span>[[mobility.student_affiliation_name]]</span>
+            </div>
+            <div class="cell">
+                <span>[[mobility.country_name]]</span>
+            </div>
+            <div class="cell">
+                <span>[[mobility.level_name]]</span>
+            </div>
+            <div class="cell">
+                <span>[[mobility.program_name]]</span>
+            </div>
+        </div>
+    </template>
+</div>-->

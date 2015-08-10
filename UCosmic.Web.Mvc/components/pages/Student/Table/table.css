@@ -1,5 +1,26 @@
 .is-page-student-table {
-    /*.table {
+  /*.items > .item:nth-child(even) {
+    background-color: #bb3333;
+}
+
+.items > .items2:nth-child(odd) > .item:nth-child(even),
+.items > .items2:nth-child(even) > .item:nth-child(odd) {
+    background-color: #bb3333;
+}*/
+  /*.items {
+    background-color:#dddddd;
+}
+.item:nth-child(odd) {
+    background-color:#F3F3F3;
+}
+.items2 {    
+    margin-left:1em;
+}
+.item2:nth-child(odd) {
+    background-color:#333;
+    color:white;
+}*/
+  /*.table {
         display: table;
         width: 900px;
     }
@@ -45,6 +66,20 @@
     .row:hover {
         background-color: yellow;
     }*/ }
+  .is-page-student-table .page_content {
+    width: 800px;
+    padding: 0 20px 20px 0;
+    margin-right: 20px; }
+  .is-page-student-table .items div, .is-page-student-table .items2 div {
+    padding: 6px 10px; }
+  .is-page-student-table .items > .item:nth-of-type(even) {
+    background-color: #dddddd; }
+  .is-page-student-table .items > .item:nth-of-type(odd) {
+    background-color: #F3F3F3; }
+  .is-page-student-table .items2 > .item2:nth-of-type(even) {
+    background-color: #aeaeae; }
+  .is-page-student-table .items2 > .item2:nth-of-type(odd) {
+    background-color: #cacaca; }
   .is-page-student-table table {
     width: 900px; }
   .is-page-student-table tr:nth-child(even) td {
@@ -59,10 +94,8 @@
     border: solid 1px white;
     padding: 4px;
     /*padding-left: 5px;
-    padding-right: 5px;*/ }
+        padding-right: 5px;*/ }
   .is-page-student-table th {
     font-weight: bold;
     text-align: left;
     padding: 8px 4px; }
-
-/*# sourceMappingURL=table.css.map */
