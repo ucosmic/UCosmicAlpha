@@ -139,6 +139,7 @@ Polymer('is-page-summary-report', {
             this.activityTypeCounts = response.detail.response.activitySummaryTypes;
             this.activity_total_location_count = response.detail.response.totalLocations;
             this.activity_total_activity_count = response.detail.response.totalActivities;
+            this.activity_total_person_count = response.detail.response.totalPeople;
         }
         else {
             console.log(response.detail.response.error);
@@ -148,13 +149,9 @@ Polymer('is-page-summary-report', {
         this.agreementTypeCountsLoaded = true;
         this.isAjaxing = false;
         if (!response.detail.response.error) {
-            this.agreementTypeCounts = response.detail.response;
-            this.agreement_total_location_count = _.sum(this.agreementTypeCounts, function (agreement) {
-                return agreement.locationCount;
-            });
-            this.agreement_total_agreement_count = _.sum(this.agreementTypeCounts, function (agreement) {
-                return agreement.typeCount;
-            });
+            this.agreementTypeCounts = response.detail.response.items;
+            this.agreement_total_location_count = response.detail.response.locationCount;
+            this.agreement_total_agreement_count = response.detail.response.typeCount;
         }
         else {
             console.log(response.detail.response.error);

@@ -32,8 +32,7 @@ Polymer('is-page-summary-report', {
         _.insert = function (arr, index, item) {
             arr.splice(index, 0, item);
         };//this should be as a global _ function somewhere
-        //this.$.ajax_affiliations.go()
-        //this.root_tenant_id = this.new_tenant_id;
+        
     },
     domReady: function () {
     },
@@ -56,11 +55,6 @@ Polymer('is-page-summary-report', {
             myThis.new_tenant_id = tenant_id && tenant_id != 0 ? tenant_id : myThis.new_tenant_id ? myThis.new_tenant_id : myThis.tenant_id ? myThis.tenant_id : 0;// should also ajax get name and put in text field.
             //myThis.affiliation_selected = myThis.new_tenant_id;
             var selectedIndex;
-            //if (country) {
-            //    setTimeout(function () {
-            //        myThis.$.selectCountry.selectedIndex = selectedIndex;
-            //    }, 200);
-            //}
             if (!myThis.affiliations) {
                 myThis.$.ajax_affiliations.go();
             } else {
@@ -109,19 +103,6 @@ Polymer('is-page-summary-report', {
             });
         }
     },
-    //selectCountry: function (event, detail, sender) {
-    //    var index = sender.selectedIndex;
-    //    if (index != 0) {
-    //        this.selectedPlaceId = this.countries[index - 1].id;
-    //        this.selectedPlaceName = this.countries[index - 1].name;
-    //        this.selectedCountryCode = this.countries[index - 1].code;
-    //    } else {
-    //        this.selectedPlaceId = 0;
-    //        this.selectedPlaceName = undefined;
-    //        this.selectedCountryCode = '';
-    //    }
-    //    page('#!/' + this.selectedCountryCode + '/' + this.selectedEstablishmentId);
-    //},
     leaveEstablishmentSearch: function (event, detail, sender) {
         setTimeout(() => {
             this.establishmentList = [];
@@ -157,85 +138,7 @@ Polymer('is-page-summary-report', {
     },
     new_tenant_idChanged: function (oldValue, newValue) {
         page('#!/' + this.selectedPlaceId + '/' + this.selectedEstablishmentId + '/' + newValue);
-        //this.create_affiliation_select(newValue);
     },
-    //create_affiliation_select: function (tenant_id) {
-    //    this.$.affiliations_container.innerHTML = "";
-
-    //    function get_ids(affiliations, start_id, end_id, arr = []) {
-    //        var affiliation: any = {};
-    //        if (start_id != end_id) {
-    //            affiliation = _.find(affiliations,(affiliation: any) => {
-    //                return affiliation._id == start_id;
-    //            });
-    //            arr.push(affiliation.parentId.toString());
-    //        } else {
-    //            affiliation.parentId = end_id;
-    //            arr = _.union(arr, [end_id]);
-    //        }
-    //        if (affiliation.parentId == end_id) {
-    //            return arr;
-    //        } else {
-    //            return get_ids(affiliations, affiliation.parentId, end_id, arr);
-    //        }
-    //    }
-
-    //    function create_element(affiliations, label_text) {
-    //        var paper_dropdown_menu: any = document.createElement('is-ddl');
-    //        paper_dropdown_menu.setAttribute('label', label_text);
-    //        paper_dropdown_menu.style.marginBottom = '0';
-    //        paper_dropdown_menu.style.marginTop = '10px';
-    //        paper_dropdown_menu.style.height = '50px';
-    //        paper_dropdown_menu.setAttribute('selected', "{{affiliation_selected}}");
-    //        paper_dropdown_menu.setAttribute('selectedid', "{{affiliation_selected_id}}");
-    //        paper_dropdown_menu.setAttribute('layout', "");
-    //        paper_dropdown_menu.setAttribute('horizontal', "");
-    //        paper_dropdown_menu.list = affiliations;
-    //        return paper_dropdown_menu;
-    //    }
-
-    //    function update_affiliations(affiliations, id) {
-    //        affiliations = _.filter(affiliations,(affiliation: any) => {
-    //            return affiliation.parentId == id;
-    //        });
-    //        affiliations.unshift({ text: "[all]", _id: id });
-    //        return affiliations;
-    //    }
-
-    //    function append_elements(affiliations, ids_array, myThis) {
-
-    //        var affiliations_new = update_affiliations(affiliations, ids_array[ids_array.length - 1]);
-    //        var label_text = "Select sub-affiliation";
-    //        if (ids_array.length > 1) {
-    //            var affiliation = _.find(affiliations,(affiliation: any) => {
-    //                return affiliation._id == ids_array[ids_array.length - 2];
-    //            });
-    //            label_text = affiliation.text;
-    //        }
-    //        if (affiliations_new.length > 1) {
-    //            var paper_dropdown_menu = create_element(affiliations_new, label_text);
-    //            paper_dropdown_menu.addEventListener("selected_updated",(id) => {
-    //                myThis.affiliation_selected = paper_dropdown_menu.selected;
-    //            });
-
-    //            myThis.$.affiliations_container.appendChild(paper_dropdown_menu);
-    //        }
-    //        if (ids_array.length > 1) {
-    //            ids_array.pop()
-    //            return append_elements(affiliations, ids_array, myThis);
-    //        } else {
-    //            return true;
-    //        }
-
-    //    }
-
-
-    //    var ids_array = get_ids(this.affiliations, tenant_id, this.tenant_id, [tenant_id.toString()]);
-
-
-    //    append_elements(this.affiliations, ids_array, this)
-
-    //},
     activitiesResponse: function (response) {
         this.isAjaxing = false;
         this.activityTypeCountsLoaded = true;
@@ -244,12 +147,8 @@ Polymer('is-page-summary-report', {
             this.activityTypeCounts = response.detail.response.activitySummaryTypes;
             this.activity_total_location_count = response.detail.response.totalLocations
             this.activity_total_activity_count = response.detail.response.totalActivities
-            //this.activity_total_location_count = _.sum(this.activityTypeCounts, function (activity: any) {
-                //return activity.locationCount;
-            //});
-            //this.activity_total_activity_count = _.sum(this.activityTypeCounts, function (activity: any) {
-                //return activity.typeCount;
-            //});
+            this.activity_total_person_count = response.detail.response.totalPeople
+            
         } else {
 
             console.log(response.detail.response.error)
@@ -260,13 +159,15 @@ Polymer('is-page-summary-report', {
         this.agreementTypeCountsLoaded = true;
         this.isAjaxing = false;
         if (!response.detail.response.error) {
-            this.agreementTypeCounts = response.detail.response;
-            this.agreement_total_location_count = _.sum(this.agreementTypeCounts, function (agreement: any) {
-                return agreement.locationCount;
-            });
-            this.agreement_total_agreement_count = _.sum(this.agreementTypeCounts, function (agreement: any) {
-                return agreement.typeCount;
-            });
+            this.agreementTypeCounts = response.detail.response.items;
+            this.agreement_total_location_count = response.detail.response.locationCount;
+            this.agreement_total_agreement_count = response.detail.response.typeCount
+            //this.agreement_total_location_count = _.sum(this.agreementTypeCounts, function (agreement: any) {
+            //    return agreement.locationCount;
+            //});
+            //this.agreement_total_agreement_count = _.sum(this.agreementTypeCounts, function (agreement: any) {
+            //    return agreement.typeCount;
+            //});
         } else {
 
             console.log(response.detail.response.error)
