@@ -45,17 +45,15 @@ var Students;
     Students.Mobility = Mobility;
     var Excel = (function () {
         function Excel(options) {
-            this.student = options.student;
-            this.mobility_establishment = options.mobility_establishment;
-            this.mobility_status = options.mobility_status;
-            this.mobility_level = options.mobility_level;
-            this.mobility_term = options.mobility_term;
-            this.mobility_country = options.mobility_country;
-            this.mobility_program = options.mobility_program;
-            this.mobility_affiliation = options.mobility_affiliation;
-            this.mobility_sub_affiliation = options.mobility_sub_affiliation;
-            this.mobility_foreign_affiliation = options.mobility_foreign_affiliation;
-            this.mobility_student = options.mobility_student;
+            this.establishment = options.establishment;
+            this.status = options.status;
+            this.level = options.level;
+            this.term = options.term;
+            this.country = options.country;
+            this.program = options.program;
+            this.affiliation = options.affiliation;
+            this.student_affiliation = options.student_affiliation;
+            this.foreign_affiliation = options.foreign_affiliation;
             this.student_external_id = options.student_external_id;
         }
         return Excel;
