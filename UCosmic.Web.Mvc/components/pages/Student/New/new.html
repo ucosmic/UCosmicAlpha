@@ -1,25 +1,52 @@
 ﻿
 <link rel="import" href="../../../../components/Polymer_1x/bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../components/Polymer_1x/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../components/components/autoDDL_1x/autoDDL.html">
+<link rel="import" href="../../../../components/components/columns_shown/columns_shown.html">
+<link rel="import" href="../../../../components/resources/icons/student_new.html">
 <dom-module id="is-page-student-new">
     <!--attributes="styledomain, tenant_id, firebase_token"-->
     <template>
         <link href="new.css" rel="stylesheet" />
-        <input type="file" name="file_input" id="file_input" on-change="handleFile" />
-        <!--<core-ajax url="/api/studentsa"
-                   params='{"Description":"test",
-                   "Links": "test",
-                   "Title": "test"}'
-                   handleas="json"
-                   method="post"
-                   on-core-response="{{student_import_response}}"
-                   on-core-error="{{ajax_error}}"
-                   id="ajax_student_import">
-        </core-ajax>-->
-        <input type="button" name="test" id="test" on-click="{{test}}" value="test" />
+        <div class="layout vertical">
+            <template is="dom-if" if="{{!can_start_file_processing}}">
+                <span style="font-size:24px; margin:20px; background-color:transparent;" class="tennant_colors">Loading...</span>
+            </template>
+            <is-columns_shown columns="{{columns}}" id="columns" style="width:230px;" text="Update Default Counts"></is-columns_shown>
+
+            <is-auto-ddl id="term_auto_ddl" style=" margin-bottom:20px; width: 220px;" selected="{{term_search}}" selectedid="{{selected_term_id}}" label="Choose default terms" on-selected-updated="term_selected"
+                         on-search-updated="term_list_search" list="{{term_auto_list}}">
+            </is-auto-ddl>
+            <div class="layout horizontal tennant_colors" style="border-radius: 10px; padding: 0 10px; margin-bottom: 20px;">
+                <template is="dom-repeat" items="[[default_terms]]" as="term" id="default_terms">
+                    <paper-item class="list-item" style="width: 100px; margin-right:20px;">
+                        <span>[[term]]</span>
+                        <iron-icon icon="student_new:remove-circle-outline" on-click="remove_default_term" style="width:44px;">
+                        </iron-icon>
+                    </paper-item>
+                </template>
+            </div>
+            <div class="layout horizontal">
+                <input type="file" name="file_input" id="file_input" on-change="handleFile" />
+                <!--<core-ajax url="/api/studentsa"
+                           params='{"Description":"test",
+                           "Links": "test",
+                           "Title": "test"}'
+                           handleas="json"
+                           method="post"
+                           on-core-response="{{student_import_response}}"
+                           on-core-error="{{ajax_error}}"
+                           id="ajax_student_import">
+                </core-ajax>-->
+                <!--<input type="button" name="test" id="test" on-click="{{test}}" value="test" />-->
+                <span>[[progress]]</span>
+            </div>
+        </div>
     </template>
     <script src="../../../models/students.js"></script>
     <script src="../../../utilities/xlsx.full.min.js"></script>
-    <script src="new_2.js"></script>
+    <script src="new.js"></script>
+
 
 </dom-module>
 
