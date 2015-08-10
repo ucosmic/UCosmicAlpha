@@ -18,12 +18,12 @@ Polymer({
                     'open': {
                         name: 'scale-up-animation',
                         node: this.$.filter,
-                        transformOrigin: '100% 0%'
+                        transformOrigin: '0% 0%'
                     },
                     'close': {
                         name: 'scale-down-animation',
                         node: this.$.filter,
-                        transformOrigin: '100% 0%'
+                        transformOrigin: '0% 0%'
                     }
                 };
             }
@@ -31,6 +31,10 @@ Polymer({
         _showing: {
             type: Boolean,
             value: false
+        },
+        text: {
+            type: String,
+            notify: true
         }
     },
     listeners: {
@@ -47,26 +51,23 @@ Polymer({
     },
     attached: function () {
     },
-    change_page: function () {
-        this.toggle_nav();
-    },
     created: function () {
     },
     columns_changed: function (new_value, old_value) {
         if (new_value) {
-            this.columns_count = new_value.length;
+            this.columns_count = _.filter(new_value, function (value, index) {
+                return value.is_shown;
+            }).length;
         }
     },
     toggle: function (close) {
+        this.$.filter.style.visibility = 'visible';
+        this.$.column_container.style.zIndex = '1';
         if (this._showing) {
-            this.$.filter.style.visibility = 'visible';
-            this.$.column_container.style.zIndex = '1';
             this._showing = false;
             this.playAnimation('close');
         }
         else if (close !== true) {
-            this.$.filter.style.visibility = 'visible';
-            this.$.column_container.style.zIndex = '1';
             this._showing = true;
             this.playAnimation('open');
         }

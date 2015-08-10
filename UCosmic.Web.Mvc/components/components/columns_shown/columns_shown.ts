@@ -20,13 +20,13 @@ Polymer({
                         // provided by neon-animation/animations/scale-up-animation.html
                         name: 'scale-up-animation',
                         node: this.$.filter
-                        , transformOrigin: '100% 0%'// + (this.$.filter.clientWidth - 20)
+                        , transformOrigin: '0% 0%'// + (this.$.filter.clientWidth - 20)
                     },
                     'close': {
                         // provided by neon-animation-animations/fade-out-animation.html
                         name: 'scale-down-animation',
                         node: this.$.filter
-                        , transformOrigin: '100% 0%'
+                        , transformOrigin: '0% 0%'
                     }
                 }
             }
@@ -34,6 +34,10 @@ Polymer({
         , _showing: {
             type: Boolean,
             value: false
+        }
+        , text: {
+            type: String
+            , notify: true
         }
 
     },
@@ -52,20 +56,15 @@ Polymer({
     },
 
     attached: function () {
-        //this.$.filter.style.display = 'none';
-        //this.$.filter.style.width = 0;
-        //this.$.filter.style.transform = 'scale(0,0)';
-        //this.$.filter.style.overflow = 'hidden';
-        //this.toggle_nav();
     },
-    change_page: function () {
-        this.toggle_nav();
-    },
+    
     created: function () {
     },
     columns_changed: function (new_value, old_value) {
         if (new_value) {
-            this.columns_count = new_value.length;
+            this.columns_count = _.filter(new_value, function(value: any, index){
+                return value.is_shown
+            }).length;
         }
     },
     toggle: function (close) {
@@ -74,16 +73,18 @@ Polymer({
         //var close_menu = (event) => {
         //    this.toggle_nav();
         //}
+        this.$.filter.style.visibility = 'visible';
+        this.$.column_container.style.zIndex = '1';
         if (this._showing) {
-            this.$.filter.style.visibility = 'visible';
-            this.$.column_container.style.zIndex = '1';
+            //this.$.filter.style.visibility = 'visible';
+            //this.$.column_container.style.zIndex = '1';
             //document.body.removeEventListener('click',
             //    close_menu,false);
             this._showing = false;
             this.playAnimation('close');
         } else if (close !== true) {
-            this.$.filter.style.visibility = 'visible';
-            this.$.column_container.style.zIndex = '1';
+            //this.$.filter.style.visibility = 'visible';
+            //this.$.column_container.style.zIndex = '1';
             //document.body.addEventListener('click',
             //    close_menu,false);
             this._showing = true;
