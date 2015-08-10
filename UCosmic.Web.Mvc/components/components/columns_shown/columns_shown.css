@@ -8,4 +8,10 @@
 .unchecked {
   color: red; }
 
+paper-item:hover {
+  cursor: pointer;
+  background-color: yellow; }
+paper-item span {
+  width: 200px; }
+
 /*# sourceMappingURL=columns_shown.css.map */

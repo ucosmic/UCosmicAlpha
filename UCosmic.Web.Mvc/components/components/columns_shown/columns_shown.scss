@@ -8,3 +8,13 @@
 .unchecked{
     color: red; 
     }
+
+paper-item {
+    &:hover{
+        cursor: pointer;
+        background-color: yellow;
+    } 
+    span {
+        width: 200px;
+    }
+}
