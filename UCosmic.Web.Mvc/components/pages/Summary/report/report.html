@@ -82,6 +82,14 @@
                                     <template if="{{activityTypeCount.typeCount == 1}}">
                                         activity
                                     </template>
+                                    from
+                                    <b>{{activityTypeCount.personCount}}</b>
+                                    <template if="{{activityTypeCount.personCount > 1}}">
+                                        people
+                                    </template>
+                                    <template if="{{activityTypeCount.personCount == 1}}">
+                                        person
+                                    </template>
                                     in
                                     <b>{{activityTypeCount.locationCount}}</b>
                                     <template if="{{activityTypeCount.locationCount > 1}}">
@@ -99,6 +107,13 @@
                                 </template>
                                 <template if="{{activity_total_activity_count == 1}}">
                                     activity
+                                </template>
+                                from <b>{{activity_total_person_count}}</b>
+                                <template if="{{activity_total_person_count > 1}}">
+                                    people
+                                </template>
+                                <template if="{{activity_total_person_count == 1}}">
+                                    person
                                 </template>
                                 in <b>{{activity_total_location_count}}</b>
                                 <template if="{{activity_total_location_count > 1}}">
