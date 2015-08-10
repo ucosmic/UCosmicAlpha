@@ -24,7 +24,8 @@
     "tests"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#~1.0.0"
+    "polymer": "Polymer/polymer#~1.0.0",
+    "promise-polyfill": "PolymerLabs/promise-polyfill#~1.0.0"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#~1.0.2",
@@ -35,12 +36,12 @@
     "paper-item": "PolymerElements/paper-item#~1.0.0"
   },
   "homepage": "https://github.com/PolymerElements/platinum-push-messaging",
-  "version": "1.0.0",
-  "_release": "1.0.0",
+  "version": "1.0.1",
+  "_release": "1.0.1",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.0",
-    "commit": "fcebba0d6d75cf1463a5b5bb0fbc5857a86eee70"
+    "tag": "v1.0.1",
+    "commit": "8a0fba3e389f95f18275c8483424db408d9eb71a"
   },
   "_source": "git://github.com/PolymerElements/platinum-push-messaging.git",
   "_target": "~1.0.0",
