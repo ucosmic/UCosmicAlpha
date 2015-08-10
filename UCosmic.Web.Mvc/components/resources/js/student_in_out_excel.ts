@@ -1,18 +1,32 @@
 ﻿importScripts('/components/Polymer_1x/bower_components/rxjs/dist/rx.all.min.js');
 importScripts('/components/Polymer_1x/bower_components/firebase/firebase.js');
-importScripts('/components/polymer_1x/bower_components/firebase-util/dist/firebase-util.js');
+//importScripts('/components/polymer_1x/bower_components/firebase-util/dist/firebase-util.js');
 importScripts('/components/Polymer_1x/bower_components/lodash/lodash.min.js');
-var exports = Firebase;
-importScripts('/components/utilities/firebase-as-array.js');
+//var exports = Firebase;
+//importScripts('/components/utilities/firebase-as-array.js');
 importScripts('/components/models/students.js');
-import Student = Students; 
+import Student = Students;
 
-self.addEventListener('message', function (e) { 
+self.addEventListener('message', function (e: any) {
 
+    function find_by_key(obj, key) {
+        if (_.has(obj, key)) // or just (key in obj)
+            return [obj];
+        // elegant:
+        return _.flatten(_.map(obj, function (v) {
+            return typeof v == "object" ? find_by_key(v, key) : [];
+        }), true);
 
+        // or efficient:
+        var res = [];
+        _.forEach(obj, function (v) {
+            if (typeof v == "object" && (v = find_by_key(v, key)).length)
+                res.push.apply(res, v);
+        });
+        return res;
+    }
 
-    var fire_students = null,
-        excel = '',
+    var excel = '',
         sheet = JSON.parse(e.data.sheet),
         my_array = JSON.parse(e.data.my_array),
         //fire_students_students = null,
@@ -20,7 +34,8 @@ self.addEventListener('message', function (e) {
         fire_students_terms = null,
         fire_students_levels = null,
         fire_students_programs = null,
-        fire_students_mobilities = null,
+        fire_members = new Firebase("https://UCosmic.firebaseio.com/Members/"),
+        //fire_students = new Firebase("https://UCosmic.firebaseio.com/Students/Mobilities"),
         fire_students_mobilities_join = null,
         fire_countries = null,
         establishment_list = JSON.parse(e.data.establishment_list),
@@ -37,66 +52,14 @@ self.addEventListener('message', function (e) {
         level = "",
         rank = 0,
         termDescription = "",
-        termStart = "",
-        termEnd = "",
+        //termStart = "",
+        //termEnd = "",
         country = "",
         progCode = 0,
-        progDescription = "",
-        uCosmicSubAffiliation = "",
+        //progDescription = "",
+        uCosmicStudentAffiliation = "",
         uCosmicForiegnAffiliation = "",
         tenant_id = e.data.tenant_id,
-        //excel = [],
-        //student_import_request = [],
-        //created = function () {
-        //    //controller = this;
-        //    //my_fire = new Firebase("https://UCosmic.firebaseio.com");
-        //    fire_students = new Firebase("https://UCosmic.firebaseio.com/Students");
-        //    fire_students_students = new Firebase("https://UCosmic.firebaseio.com/Students/Students");
-        //    fire_students_mobilities = new Firebase("https://UCosmic.firebaseio.com/Students/Mobilities");
-        //    fire_students_terms = new Firebase("https://UCosmic.firebaseio.com/Students/Terms");
-        //    fire_students_programs = new Firebase("https://UCosmic.firebaseio.com/Students/Programs");
-        //    fire_students_levels = new Firebase("https://UCosmic.firebaseio.com/Students/Levels");
-        //    fire_countries = new Firebase("https://UCosmic.firebaseio.com/Places/Countries");
-        //    fire_establishments = new Firebase("https://UCosmic.firebaseio.com/Establishments/Establishments");
-
-        //    var start_file_processing = _.after(5, function () {
-        //        set_fire_students_mobilities_join(this);
-        //    })
-
-        //    //set_fire_students_mobilities_join(this);
-        //    fire_students_levels.once("value", (snapshot) => {
-        //        level_list = snapshot.val();
-        //        start_file_processing();
-        //    }, function (errorObject) {
-        //            console.log("The read failed: " + errorObject.code);
-        //        });
-        //    fire_students_programs.once("value", (snapshot) => {
-        //        program_list = snapshot.val();
-        //        start_file_processing();
-        //    }, function (errorObject) {
-        //            console.log("The read failed: " + errorObject.code);
-        //        });
-        //    fire_students_terms.once("value", (snapshot) => {
-        //        term_list = snapshot.val();
-        //        start_file_processing();
-        //    }, function (errorObject) {
-        //            console.log("The read failed: " + errorObject.code);
-        //        });
-        //    fire_establishments.once("value", (snapshot) => {
-        //        //console.log(snapshot.val());
-        //        establishment_list = snapshot.val();
-        //        start_file_processing();
-        //        //test(this);
-        //    }, function (errorObject) {
-        //            console.log("The read failed: " + errorObject.code);
-        //        });
-        //    fire_countries.once("value", (snapshot) => {
-        //        country_list = snapshot.val();
-        //        start_file_processing();
-        //    }, function (errorObject) {
-        //            console.log("The read failed: " + errorObject.code);
-        //        });
-        //},
         next_letter = function (s) {
             return s.replace(/([a-zA-Z])[^a-zA-Z]*$/, function (a) {
                 var c = a.charCodeAt(0);
@@ -113,8 +76,8 @@ self.addEventListener('message', function (e) {
                 case "externalid":
                     externalId = col;
                     break;
-                case "ucosmicsubaffiliation":
-                    uCosmicSubAffiliation = col;
+                case "ucosmicstudentaffiliation":
+                    uCosmicStudentAffiliation = col;
                     break;
                 case "ucosmicforeignaffiliation":
                     uCosmicForiegnAffiliation = col;
@@ -131,21 +94,21 @@ self.addEventListener('message', function (e) {
                 case "ucosmicaffiliation":
                     uCosmicAffiliation = col;
                     break;
-                case "termstart":
-                    termStart = col;
-                    break;
-                case "termend":
-                    termEnd = col;
-                    break;
+                //case "termstart":
+                //    termStart = col;
+                //    break;
+                //case "termend":
+                //    termEnd = col;
+                //    break;
                 case "country":
                     country = col;
                     break;
                 case "progcode":
                     progCode = col;
                     break;
-                case "progdescription":
-                    progDescription = col;
-                    break;
+                //case "progdescription":
+                //    progDescription = col;
+                //    break;
                 case "termdescription":
                     termDescription = col;
                     break;
@@ -162,36 +125,29 @@ self.addEventListener('message', function (e) {
 
         process_sheet = function (row, student_activity_array: Students.Excel[]) {
 
-        //}, externalId, uCosmicSubAffiliation, uCosmicForiegnAffiliation, status, rank, level
-        //    , uCosmicAffiliation, termStart, termEnd, country, progCode, progDescription, termDescription) {
             //check both xls and xlsx or whatever
             if (sheet[externalId + row]) {
-                var student = "3306_" + sheet[externalId + row].v;
+                //var student = "3306_" + sheet[externalId + row].v;
                 //var mobility_affiliation = uCosmicAffiliation;
                 var externalId2 = sheet[externalId + row].v;
                 var status2 = sheet[status + row].v;
-                var level2 = "3306_" + sheet[level + row].v;
-                //var level_establishment = uCosmicAffiliation;
-                //var level_name = sheet[level + row].v;
-                //var rank = sheet[rank + row].v;
-                var term2 = "3306_" + sheet[termDescription + row].v;
-                //var term_establishment = uCosmicAffiliation;
-                //var termDescription = sheet[termDescription + row].v;
-                //var termStart = sheet[termStart + row].w;
-                //var termEnd = sheet[termEnd + row].w;
+                var level2 = sheet[level + row].v;
+                var term2 = sheet[termDescription + row].v;
+                var term: any = _.find(term_list, { 'name': term2 });
+                //var term_start = term.start_date;
+                //var term_end = term.end_date;
                 var country2 = sheet[country + row].v;
-                var progCode2 = sheet[progCode + row] ? sheet[progCode + row].v : 'null';
-                //var program_establishment = uCosmicAffiliation;
+                var progCode2 = sheet[progCode + row] ? sheet[progCode + row].v.toFixed(4) : 'none';
+                //var progDesc2 = sheet[progDescription + row] ? sheet[progDescription + row].v : 'none';
                 //var program_is_standard = true;//************** fix later ***********
-                //var progDescription = sheet[progDescription + row] ? sheet[progDescription + row].v : null;
                 // check here if has code or none code, don't add if does not have both
-                var mobility_affiliation = sheet[uCosmicAffiliation + row] ? sheet[uCosmicAffiliation + row].v : 'null';
-                var mobility_sub_affiliation = sheet[uCosmicSubAffiliation + row] ? sheet[uCosmicSubAffiliation + row].v : 'null';
-                var mobility_foreign_affiliation = sheet[uCosmicForiegnAffiliation + row] ? sheet[uCosmicForiegnAffiliation + row].v : 'null';
+                var affiliation = sheet[uCosmicAffiliation + row] ? sheet[uCosmicAffiliation + row].v : 'none';
+                var student_affiliation = sheet[uCosmicStudentAffiliation + row] ? sheet[uCosmicStudentAffiliation + row].v : 'none';
+                var foreign_affiliation = sheet[uCosmicForiegnAffiliation + row] ? sheet[uCosmicForiegnAffiliation + row].v : 'none';
                 var options = {
-                    mobility_status: status2, mobility_level: level2, mobility_term: term2, mobility_country: country2, mobility_program: progCode2, mobility_establishment: tenant_id,//mobility_establishment needs to come from mvc server
-                    mobility_affiliation: mobility_affiliation, mobility_sub_affiliation: mobility_sub_affiliation, mobility_foreign_affiliation: mobility_foreign_affiliation,
-                    mobility_student: student, student: student, student_external_id: externalId2,
+                    status: status2, level: level2, term: term2, country: country2, program: progCode2, establishment: tenant_id,//establishment needs to come from mvc server
+                    affiliation: affiliation, student_affiliation: student_affiliation, foreign_affiliation: foreign_affiliation,
+                    student_external_id: externalId2
                 }
                 var my_student_activity = new Student.Excel(options);
 
@@ -201,158 +157,314 @@ self.addEventListener('message', function (e) {
                 if (row > end_row) {
                     return student_activity_array;
                 } else {
-                    return process_sheet( row, student_activity_array);
-                    //, externalId, uCosmicSubAffiliation, uCosmicForiegnAffiliation, status, rank, level
-                    //    , uCosmicAffiliation, termStart, termEnd, country, progCode, progDescription, termDescription);
+                    return process_sheet(row, student_activity_array);
                 }
             } else {
                 return student_activity_array;
             }
         },
-        test = function () {
+        //test = function () {
 
-            var list = Firebase.getAsArray(fire_students_mobilities_join);
-        },
+        //    var list = Firebase.getAsArray(fire_students_mobilities);
+        //},
 
         create_student_imports = function () {
-            //var student_response_data = Rx.Observable.fromArray(response.detail.response);
             var student_original_data = Rx.Observable.fromArray(excel);
-            /*
-        placeId: number;
-        uCosmicAffiliationId: number;
-        uCosmicSubAffiliationId: number;
-        uCosmicForeignAffiliationId: number;*/
-            //var student_data = Rx.Observable.combineLatest(student_original_data, student_response_data, (s1: Student.Excel, s2) => {
-            //    //return s1;
-            //    return new Student.Excel_Merged({
-            //            external_id: s1.external_id, status: s1.status, level: s1.level, rank: s1.rank, term_name: s1.term_name, start_date: s1.start_date, end_date: s1.end_date, country_official_name: s1.country_official_name,
-            //            student_establishment_official_name: s1.student_establishment_official_name, foreign_establishment_official_name: s1.foreign_establishment_official_name, establishment_official_name: s1.establishment_official_name,
-            //            program: s1.program, program_name: s1.program_name,  establishment: s2.uCosmicAffiliationId, student_establishment: s2.uCosmicSubAffiliationId,
-            //            foreign_establishment: s2.uCosmicForeignAffiliationId, country: s2.placeId
-            //    })
-            //});
-
-        
-            //list.$add({
-            //    external_id: "New 234jkasd3",
-            //    level: "1",
-            //    name: "graduate",
-            //    rank: "1",
-            //    status: "in",
-            //    student: "2"
-            //});
-            //var list = get_mobility_list(_this);
-            var list = Firebase.getAsArray(fire_students_mobilities_join);
-
+            //var list = Firebase.getAsArray(fire_students_mobilities);
+            var _this = this, excel_length = excel.length, count_2 = 0;
 
             var student_new_data = student_original_data
-                .map((data: Student.Excel) => {
-                data.mobility_country = _.findKey(country_list, { 'country': data.mobility_country }) ? _.findKey(country_list, { 'country': data.mobility_country }) : 'null';
-                data.mobility_term = _.has(term_list, data.mobility_term.toLowerCase()) ? data.mobility_term.toLowerCase() : "false";
-                data.mobility_level = _.has(level_list, data.mobility_level.toLowerCase()) ? data.mobility_level.toLowerCase() : "false";
-                data.mobility_program = _.has(program_list, data.mobility_program.toString().replace(".", "_").toLowerCase()) ? data.mobility_program.toString().replace(".", "_").toLowerCase() : "false";
-                data.mobility_establishment = data.mobility_establishment;//_.findKey(establishment_list, { 'establishment': data.mobility_establishment }) ? _.findKey(establishment_list, { 'establishment': data.mobility_establishment }) : 'null';
-                data.mobility_affiliation = _.findKey(establishment_list, { 'establishment': data.mobility_affiliation }) ? _.findKey(establishment_list, { 'establishment': data.mobility_affiliation }) : 'null';
-                data.mobility_sub_affiliation = _.findKey(establishment_list, { 'establishment': data.mobility_sub_affiliation }) ? _.findKey(establishment_list, { 'establishment': data.mobility_sub_affiliation }) : 'null';
-                data.mobility_foreign_affiliation = _.findKey(establishment_list, { 'establishment': data.mobility_foreign_affiliation }) ? _.findKey(establishment_list, { 'establishment': data.mobility_foreign_affiliation }) : 'null';
+                .map((data: Student.Excel, index) => {
+                var program_id = "";
+                if (data.program) {
+                    program_id = data.program.toString().replace(".", "_");
+                    program_id = _.find(program_list, { 'id': program_id }) ? data.program.toString().replace(".", "_") : "";
+                }
+                //program_id.toString().replace(".", "_");
+                var program_name: any = data.program_name ? data.program_name : _.find(program_list, { 'id': program_id }) ? _.find(program_list, { 'id': program_id }) : 'none';
+                if (program_name && program_name.name) {
+                    program_name = program_name.name;
+                }
+                var response = {
+                    country_id: _.findKey(country_list, { 'country': data.country }) ? _.findKey(country_list, { 'country': data.country }) : ''
+                    , status: data.status
+                    , country_name: data.country
+                    , term_name: data.term
+                //, term_start: data.term_start
+                //, term_end: data.term_end
+                    , program_id: program_id
+                    , program_name: program_name
+                    , level: data.level
+                    , establishment_id: data.establishment
+                    , affiliation_id: _.findKey(establishment_list, { 'establishment': data.affiliation }) ? _.findKey(establishment_list, { 'establishment': data.affiliation }) : 'none'
+                    , student_affiliation_id: _.findKey(establishment_list, { 'establishment': data.student_affiliation }) ? _.findKey(establishment_list, { 'establishment': data.student_affiliation }) : 'none'
+                    , foreign_affiliation_id: _.findKey(establishment_list, { 'establishment': data.foreign_affiliation }) ? _.findKey(establishment_list, { 'establishment': data.foreign_affiliation }) : 'none'
+                    , affiliation_name: data.affiliation
+                    , student_affiliation_name: data.student_affiliation
+                    , foreign_affiliation_name: data.foreign_affiliation
+                    , student_external_id: data.student_external_id
+                }
+                _this.postMessage('Processing: ' + index + "/" + excel_length + " %" + ((index / excel_length) * 100).toFixed(2));
 
-
-                return data;
+                return response;
             });
 
-            //var student_new_data = student_original_data.zip(
-            //    student_original_data,
-            //    Rx.Observable.from(establishment_list),
-            //    function (s1, s2, s3) {
-            //        return s1 + ':' + s2 + ':' + s3;
-            //    }
-            //    );
+            function process_response() {
+                count_2 += 1;
+                if ((count_2 / 2) != excel_length) {
+                    if (!(count_2 % 2)) {
+                        _this.postMessage('Uploading: ' + (count_2 / 2) + "/" + excel_length + " %" + (((count_2 / 2) / excel_length) * 100).toFixed(2));
+                    }
+                } else {
+                    _this.postMessage('Completed!');
+                }
+            }
+            var has_error = false;
 
-            //country_list = Object.keys(country_list).map(function (k) { return country_list[k] });
-            //var student_mobility_country = student_original_data
-            //    .flatMap((data: Student.Excel) => {
-            //        return Rx.Observable.just(_.findKey(country_list, { 'country': data.mobility_country }));
-            //    });
-            //var student_mobility_term = student_original_data
-            //    .flatMap((data: Student.Excel) => {
-            //        return Rx.Observable.just(_.has(term_list, data.mobility_term.toLowerCase()));//_.findKey(term_list, { 'term': data.mobility_term.toLowerCase() });
-            //    });
-            //var student_mobility_level = student_original_data
-            //    .flatMap((data: Student.Excel) => {
-            //        return Rx.Observable.just(_.has(level_list, data.mobility_level.toLowerCase()));//_.findKey(level_list, { 'level': data.mobility_level.toLowerCase() });
-            //    });
-            //var student_mobility_program = student_original_data
-            //    .flatMap((data: Student.Excel) => {
-            //        return Rx.Observable.just(_.has(program_list, data.mobility_program.toString().replace(".", "_")));
-            //    });
-            //var student_mobility_establishment = student_original_data
-            //    .flatMap((data: Student.Excel) => {
-            //    return Rx.Observable.fromArray(establishment_list)
-            //        .findIndex(function (x: any, i, obs) {
-            //        if (!x) {
-            //            return null;
-            //        } else {
-            //            return x.establishment === data.mobility_establishment;
-            //        }
-            //    });
-            //    });
-            //var student_establishment_observer = student_original_data
-            //    .flatMap((data: Student.Excel) => {
-            //    return Rx.Observable.fromArray(establishment_list)
-            //        .findIndex(function (x: any, i, obs) {
-            //        if (!x) {
-            //            return null;
-            //        } else {
-            //            return x.establishment === data.student_establishment;
-            //        }
-            //    });
-            //    });
-            //var student_mobility_student_establishment = student_original_data
-            //    .flatMap((data: Student.Excel) => {
-            //    return Rx.Observable.fromArray(establishment_list)
-            //        .findIndex(function (x: any, i, obs) {
-            //        if (!x) {
-            //            return null;
-            //        } else {
-            //            return x.establishment === data.mobility_student_establishment;
-            //        }
-            //    });
-            //    });
-            //var student_mobility_student_foreign_establishment = student_original_data
-            //    .flatMap((data: Student.Excel) => {
-            //    return Rx.Observable.fromArray(establishment_list)
-            //        .findIndex(function (x: any, i, obs) {
-            //        if (!x) {
-            //            return null;
-            //        } else {
-            //            return x.establishment === data.mobility_student_foreign_establishment;
-            //        }
-            //    });
-            //});
-            //var student_new_data = Rx.Observable.combineLatest(student_original_data, student_mobility_establishment, student_mobility_country, student_mobility_term, student_mobility_level, student_mobility_program
-            //    , student_establishment_observer, student_mobility_student_establishment, student_mobility_student_foreign_establishment
-            //    , (s1: Student.Excel, mobility_establishment, mobility_country, mobility_term, mobility_level, mobility_program, student_establishment, mobility_student_establishment, mobility_student_foreign_establishment) => {
-            //    //return s1;
-
-            //    var options = {
-            //        mobility_status: s1.mobility_status, mobility_level: mobility_level ? s1.mobility_level : "-1", mobility_term: mobility_term ? s1.mobility_term : "-1", mobility_country: mobility_country
-            //        , mobility_program: mobility_program ? s1.mobility_program : "-1", mobility_establishment: mobility_establishment, mobility_student_foreign_establishment: mobility_student_foreign_establishment
-            //        , mobility_student_establishment: mobility_student_establishment
-            //        , mobility_student: s1.mobility_student, student_establishment: student_establishment, student: s1.student, student_external_id: s1.student_external_id
-            //    }
-            //    var my_student_activity = new Student.Excel(options);
-            //    return my_student_activity
-            //});
-
-
-            //var x2 = student_original_data.toArray();
             var subscription2 = student_new_data.subscribe(
-                function (x: Student.Excel) {
-                    x.mobility_program = x.mobility_program.toString().replace(".", "_");
+                function (x: any) {
+                    //x.mobility_program = x.mobility_program.toString().replace(".", "_");
                     //console.log(x);
 
                     // ************************ here do the error checking, use the other ref's like terms and make sure it exists ***********************
-                    list.$set(x.mobility_term + "_" + x.student, x);
+                    //list.$set(x.mobility_term + "_" + x.student, x);
+                    //var fire_students_mobilities_tenant = fire_students.child(tenant_id);
+                    var status = x.status;
+                    var country = x.country_name;
+                    var affiliation_name = x.affiliation_name.replace(".", " ").replace("/", " ");
+                    affiliation_name = affiliation_name.replace(".", " ").replace("/", " ");
+                    //var mobility_id = x.term_name + "_" + x.student_external_id;
+                    var level = _.findKey(level_list, { 'name': x.level }) ? _.findKey(level_list, { 'name': x.level }) : 'none';
+                    var foreign_affiliation_name = x.foreign_affiliation_name.replace(".", " ").replace("/", " ");
+                    var student_affiliation_name = x.student_affiliation_name.replace(".", " ").replace("/", " ");
+                    foreign_affiliation_name = foreign_affiliation_name.replace(".", " ").replace("/", " ");
+                    student_affiliation_name = student_affiliation_name.replace(".", " ").replace("/", " ");
+                    var term = x.term_name;
+                    var program = x.program_name.replace(".", " ").replace("/", " ");
+                    var rank: any = _.find(level_list, { name: x.level });
+                    rank = rank.rank;
+                    program = program.replace(".", " ").replace("/", " ");
+
+                    //var indexes_value = {};
+                    //indexes_value[mobility_id] = true;
+                    //var indexes = {};
+                    //indexes[status] = {
+                    //    'By_terms': {}
+                    //    //, 'Mobilities': {
+                    //    //    mobility_id: true
+                    //    //}
+                    //}
+                    //indexes[status].By_terms[term] = {
+                    //    'By_affiliations': {}
+                    //    //, 'Mobilities': {
+                    //    //    mobility_id: true
+                    //    //}
+                    //}
+                    //indexes[status].By_terms[term].By_affiliations[affiliation_name] = {
+                    //    'By_programs': {}
+                    //    //, 'Mobilities': {
+                    //    //    mobility_id: true
+                    //    //}
+                    //}
+                    //indexes[status].By_terms[term].By_affiliations[affiliation_name].By_programs[program] = {
+                    //    'By_countries': {}
+                    //    //, 'Mobilities': {
+                    //    //    mobility_id: true
+                    //    //}
+                    //}
+                    //indexes[status].By_terms[term].By_affiliations[affiliation_name].By_programs[program].By_countries[country] = {
+                    //    'By_levels': {}
+                    //    //, 'Mobilities': {
+                    //    //    mobility_id: true
+                    //    //}
+                    //}
+                    //indexes[status].By_terms[term].By_affiliations[affiliation_name].By_programs[program].By_countries[country].By_levels[level] = {
+                    //    'By_student_affiliations': {}
+                    //    //, 'Mobilities': {
+                    //    //    mobility_id: true
+                    //    //}
+                    //}
+                    //indexes[status].By_terms[term].By_affiliations[affiliation_name].By_programs[program].By_countries[country].By_levels[level].By_student_affiliations[student_affiliation_name] = {
+                    //    'By_foreign_affiliations': {}
+                    //    //, 'Mobilities': {
+                    //    //    mobility_id: true
+                    //    //}
+                    //}
+                    //indexes[status].By_terms[term].By_affiliations[affiliation_name].By_programs[program].By_countries[country].By_levels[level].By_student_affiliations[student_affiliation_name].By_foreign_affiliations[foreign_affiliation_name] = {
+                    //    'By_mobilities': {}
+                    //    //'Mobilities': {
+                    //    //    mobility_id: true
+                    //    //}
+                    //}
+                    //indexes[status].By_terms[term].By_affiliations[affiliation_name].By_programs[program].By_countries[country].By_levels[level].By_student_affiliations[student_affiliation_name].By_foreign_affiliations[foreign_affiliation_name].By_mobilities[mobility_id] = true
+
+
+
+                    //var indexes_old = {
+                    //    status: {
+                    //        'By_term': {
+                    //            term: {
+                    //                'By_affiliation': {
+                    //                    affiliation_name: {
+                    //                        'By_countries': {
+                    //                            country: {
+                    //                                'By_levels': {
+                    //                                    level: {
+                    //                                        'By_student_affiliations': {
+                    //                                            student_affiliation_name: {
+                    //                                                'By_foreign_affiliations': {
+                    //                                                    foreign_affiliation_name: {
+                    //                                                        'Mobilities': {
+                    //                                                            mobility_id: true
+                    //                                                        }
+                    //                                                    }
+                    //                                                }
+                    //                                                , 'Mobilities': {
+                    //                                                    mobility_id: true
+                    //                                                }
+                    //                                            }
+                    //                                        }
+                    //                                        , 'Mobilities': {
+                    //                                            mobility_id: true
+                    //                                        }
+                    //                                    }
+                    //                                }
+                    //                                , 'Mobilities': {
+                    //                                    mobility_id: true
+                    //                                }
+                    //                            }
+                    //                        }
+                    //                        , 'Mobilities': {
+                    //                            mobility_id: true
+                    //                        },
+                    //                    }
+                    //                }
+                    //                , 'Mobilities': {
+                    //                    mobility_id: true
+                    //                }
+                    //            }
+                    //        }
+                    //        , 'Mobilities': {
+                    //            mobility_id: true
+                    //        }
+                    //    }
+                    //}
+                    //fire_students_mobilities_tenant.child('By_status').child(status).child('By_terms').child(term).child('By_affiliations').child(affiliation_name)
+                    //    .child('By_programs').child(program).child('By_countries').child(country).child('By_levels').child(level).child('By_student_affiliations').child(student_affiliation_name)
+                    //    .child('By_foreign_affiliation').child(foreign_affiliation_name).child('By_mobilities').set(indexes_value, (error) => {
+                    //    process_response()
+                    //});
+                    //var fire_members_tenant = fire_members.child(tenant_id);
+                    //var fire_members_tenant_mobility = fire_members_tenant.child('Mobilities').child('Values').child(mobility_id); 
+                    //fire_members_tenant_mobility.set({ student: x.student_external_id }, (error) => {//*** may not need to store the whole mobility? could just store the student_id
+                    //    if (!has_error) {
+                    //        if (error) {
+                    //            has_error = true;
+                    //            _this.postMessage('Error uploading, please try again - (' + error + ')');
+                    //        }
+                    //        process_response()
+                    //    }
+                    //});
+                    //term should be faster since term will have less results and it will be defaulted to a term.
+                    //fire_members.child(tenant_id).child('Mobilities').child('Keys').child(term).child(status).child(country).child(affiliation_name).child(level).child(program).child(student_affiliation_name).child(foreign_affiliation_name).child(mobility_id).set(true, (error) => {
+
+                    var student = { external_id: x.student_external_id }
+                    //fire_members_tenant.child('Mobilities').child('Keys').child(term).child(status).child(affiliation_name).child(level).child(student_affiliation_name).child(foreign_affiliation_name).child(program).child(country).child(x.student_external_id).set(student, (error) => {
+                    //    if (!has_error) {
+                    //        if (error) {
+                    //            has_error = true;
+                    //            _this.postMessage('Error uploading, please try again - (' + error + ')');
+                    //        }
+                    //        process_response()
+                    //    }
+                    //});
+                    var fire_members_tenant = fire_members.child(tenant_id);
+                    //var mobility = { a: x.affiliation_id, c: x.country_id, e: x.establishment_id, f: x.foreign_affiliation_id, l: x.level, p: x.program_id, s: status, sa: x.student_affiliation_id, t: x.term_name }
+                    var mobility = { affiliation: x.affiliation_id, country: x.country_id, foreign_affiliation: x.foreign_affiliation_id, level: level, program: x.program_id, status: status, student_affiliation: x.student_affiliation_id, term: x.term_name }
+                    fire_members_tenant.child('Mobilities').child('Values').child(status).child(x.term_name).child(x.student_external_id).set(mobility, (error) => {
+                        if (!has_error) {
+                            if (error) {
+                                has_error = true;
+                                _this.postMessage('Error uploading, please try again - (' + error + ')');
+                            }
+                            process_response() 
+                        }
+                    }); 
+                    //fire_members_tenant_mobility_keys_term_status.child('Level').child(level).child('Mobilities').child(mobility_id).set(true, (error) => {
+
+                    //    if (!has_error) {
+                    //        if (error) {
+                    //            has_error = true;
+                    //            _this.postMessage('Error uploading, please try again - (' + error + ')');
+                    //        }
+                    //        process_response()
+                    //    }
+                    //});
+                    //fire_members_tenant_mobility_keys_term_status.child('Program').child(program).child('Mobilities').child(mobility_id).set(true, (error) => {
+
+                    //    if (!has_error) {
+                    //        if (error) {
+                    //            has_error = true;
+                    //            _this.postMessage('Error uploading, please try again - (' + error + ')');
+                    //        }
+                    //        process_response()
+                    //    }
+                    //});
+                    //fire_members_tenant_mobility_keys_term_status.child('Term').child(term).child('Mobilities').child(mobility_id).set(true, (error) => {
+
+                    //    if (!has_error) {
+                    //        if (error) {
+                    //            has_error = true;
+                    //            _this.postMessage('Error uploading, please try again - (' + error + ')');
+                    //        }
+                    //        process_response()
+                    //    }
+                    //});
+                    //fire_members_tenant_mobility_keys_term_status.child('Affiliation').child(affiliation_name).child('Mobilities').child(mobility_id).set(true, (error) => {
+
+                    //    if (!has_error) {
+                    //        if (error) {
+                    //            has_error = true;
+                    //            _this.postMessage('Error uploading, please try again - (' + error + ')');
+                    //        }
+                    //        process_response()
+                    //    }
+                    //});
+                    //fire_members_tenant_mobility_keys_term_status.child('Student_Affiliation').child(student_affiliation_name).child('Mobilities').child(mobility_id).set(true, (error) => {
+
+                    //    if (!has_error) {
+                    //        if (error) {
+                    //            has_error = true;
+                    //            _this.postMessage('Error uploading, please try again - (' + error + ')');
+                    //        }
+                    //        process_response()
+                    //    }
+                    //});
+                    //fire_members_tenant_mobility_keys_term_status.child('Foreign_Affiliation').child(foreign_affiliation_name).child('Mobilities').child(mobility_id).set(true, (error) => {
+
+                    //    if (!has_error) {
+                    //        if (error) {
+                    //            has_error = true;
+                    //            _this.postMessage('Error uploading, please try again - (' + error + ')');
+                    //        }
+                    //        process_response()
+                    //    }
+                    //});
+                    //fire_members_tenant_mobility_keys_term_status.child('Country').child(country).child('Mobilities').child(mobility_id).set(true, (error) => {
+
+                    //    if (!has_error) {
+                    //        if (error) {
+                    //            has_error = true;
+                    //            _this.postMessage('Error uploading, please try again - (' + error + ')');
+                    //        }
+                    //        process_response()
+                    //    }
+                    //});
+
+
+                    fire_members_tenant.child('Students').child(x.student_external_id).set(student, (error) => {
+                        process_response()
+                    });
                 },
                 function (err) {
                     console.log('Error: ' + err);
@@ -362,81 +474,41 @@ self.addEventListener('message', function (e) {
                 });
 
         },
-        set_fire_students_mobilities_join = function () {
-            //_this = this;
+        //set_fire_students_mobilities_join = function () {
 
-            //fire_students = my_fire.child("Students");
-            //fire_students_mobilities = my_fire.child("Mobilities");// new Firebase("https://UCosmic.firebaseio.com/Students/Mobilities")
-            //var list3 = Firebase.getAsArray(fire_students_mobilities);
+        //    var norm = new Firebase.util.NormalizedCollection(
+        //        fire_students_mobilities,  // alias is "widgets1"
+        //        //[fire_students_students, 'Students', 'Mobilities.student']
+        //        );
+        //    norm.select({ key: 'Mobilities.student', alias: 'mobility_student' }
+        //        , { key: 'Mobilities.level', alias: 'mobility_level' }, { key: 'Mobilities.level_rank', alias: 'mobility_level_rank' }
+        //        , { key: 'Mobilities.term', alias: 'mobility_term' }, { key: 'Mobilities.term_start', alias: 'mobility_term_end' }, { key: 'Mobilities.term', alias: 'mobility_term' }
+        //        , { key: 'Mobilities.establishment', alias: 'mobility_establishment' }
+        //        , { key: 'Mobilities.country', alias: 'mobility_country' }, { key: 'Mobilities.country_name', alias: 'mobility_country_name' }
+        //        , { key: 'Mobilities.program', alias: 'mobility_program' }, { key: 'Mobilities.program_name', alias: 'mobility_program_name' }
+        //        , { key: 'Mobilities.status', alias: 'mobility_status' }
+        //        , { key: 'Mobilities.affiliation', alias: 'mobility_affiliation' }, { key: 'Mobilities.foreign_affiliation', alias: 'mobility_foreign_affiliation' }
+        //        , { key: 'Mobilities.student_affiliation', alias: 'mobility_student_affiliation' }
+        //        //, { key: 'Students.external_id', alias: 'student_external_id' }
+        //    //, { key: 'Levels.name', alias: 'level_name' }, 'Levels.rank', 'Terms.start_date', 'Terms.end_date', { key: 'Terms.name', alias: 'term_name' }, { key: 'Programs.name', alias: 'program_name' }
+        //        );
+        //    var ref = norm.ref();
+            
 
-            //var list3 = Firebase.getAsArray(fire_students_mobilities); 
-
-            var norm = new Firebase.util.NormalizedCollection(
-                fire_students_mobilities,  // alias is "widgets1"
-                [fire_students_students, 'Students', 'Mobilities.student']
-            //,[fire_students_levels, 'Levels', 'Mobilities.level']
-            //, [fire_students_terms, 'Terms', 'Mobilities.term']
-            //, [fire_countries, 'Countries', 'Mobilities.country']
-            //, [fire_students_programs, 'Programs', 'Mobilities.program']
-            //, [fire_establishments, 'Establishments', 'Mobilities.establishment']
-                );
-            //norm = norm.filter(function (data, key, priority) {
-            //    return data.external_id === '2345dd';
-            //});
-            //norm.select('Mobilities.student', 'Mobilities.level', 'Mobilities.term', 'Mobilities.establishment', 'Mobilities.country', 'Mobilities.program', 'Mobilities.status',
-            //    'Mobilities.foreign_establishmente', 'Mobilities.student_establishment'
-            //    //,{ key: 'Students.external_id', alias: 'Students_external_id' }, { key: 'Students.establishment', alias: 'student_establishment2' }, { key: 'Levels.name', alias: 'level_name' }
-            //    //, 'Levels.rank', 'Terms.start_date', 'Terms.end_date', { key: 'Terms.name', alias: 'term_name' }, { key: 'Programs.name', alias: 'program_name' }
-            //    );
-            norm.select({ key: 'Mobilities.student', alias: 'mobility_student' }, { key: 'Mobilities.level', alias: 'mobility_level' }, { key: 'Mobilities.term', alias: 'mobility_term' }
-                , { key: 'Mobilities.establishment', alias: 'mobility_establishment' }, { key: 'Mobilities.country', alias: 'mobility_country' }
-                , { key: 'Mobilities.program', alias: 'mobility_program' }, { key: 'Mobilities.status', alias: 'mobility_status' }
-                , { key: 'Mobilities.affiliation', alias: 'mobility_affiliation' }, { key: 'Mobilities.foreign_affiliation', alias: 'mobility_foreign_affiliation' }
-                , { key: 'Mobilities.sub_affiliation', alias: 'mobility_sub_affiliation' }
-                , { key: 'Students.external_id', alias: 'student_external_id' }
-            //, { key: 'Levels.name', alias: 'level_name' }, 'Levels.rank', 'Terms.start_date', 'Terms.end_date', { key: 'Terms.name', alias: 'term_name' }, { key: 'Programs.name', alias: 'program_name' }
-                );
-            //norm.select('Mobilities.student', 'Mobilities.level', 'Mobilities.term', 'Mobilities.establishment', 'Mobilities.country', 'Mobilities.program', 'Mobilities.status',
-            //    'Mobilities.foreign_establishmente', 'Mobilities.student_establishment',
-            //    'Students.external_id', { key: 'Students.establishment', alias: 'students_establishment' }, { key: 'Levels.name', alias: 'level_name' }, 'Levels.rank', 'Terms.start_date', 'Terms.end_date', { key: 'Terms.name', alias: 'term_name' }
-            //    , { key: 'Establishments.official_name', alias: 'establishment_official_name' }, { key: 'Countries.official_name', alias: 'country_official_name' },
-            //    { key: 'Programs.name', alias: 'program_name' }
-            //    );
-            var ref = norm.ref();
-            //var norm2 = new Firebase.util.NormalizedCollection(
-            //    new Firebase("https://UCosmic.firebaseio.com/Students/Programs"),  // alias is "widgets1"
-            //    [ref, 'Mobilities', 'Programs.code']
-            //    );
-
-            //norm2.select('Programs.code', 'Mobilities.student', 'Mobilities.level', 'Mobilities.term', 'Mobilities.establishment', 'Mobilities.country', 'Mobilities.program', 'Mobilities.status',
-            //    'Mobilities.foreign_establishment', 'Mobilities.student_establishment', 
-            //    'Mobilities.external_id', 'Mobilities.level_name', 'Mobilities.rank', 'Mobilities.start_date', 'Mobilities.end_date', 'Mobilities.term_description',
-            //    'Mobilities.establishment_name', 'Mobilities.country_name', 'Mobilities.program_code');
-            //var ref2 = norm.ref();
-            //var list = Firebase.getAsArray(ref2); 
-            //var list = Firebase.getAsArray(ref);
-            //ref.on("value", function (snapshot) {
-            //    console.log(snapshot.val());
-            //    setTimeout(function () {
-            //        fire_students_mobilities_join = norm.ref();
-            //        var list = Firebase.getAsArray(fire_students_mobilities_join);
-            //    }, 1);
-            //}, function (errorObject) {
-            //        console.log("The read failed: " + errorObject.code);
-            //    });
-
-            fire_students_mobilities_join = norm.ref();
-            end_col = sheet["!ref"].substr(3, 1);
-            end_row = sheet["!ref"].substr(4);
-            process_sheet_columns(sheet, 'A'); // may need to impliment => http://raganwald.com/2013/03/28/trampolines-in-javascript.html
-            excel = process_sheet( 2, my_array);
-            //, externalId, uCosmicSubAffiliation, uCosmicForiegnAffiliation, status, rank, level
-            //    , uCosmicAffiliation, termStart, termEnd, country, progCode, progDescription, termDescription);
-            create_student_imports(); 
-            //return (ref);
-        }
+        //    fire_students_mobilities_join = norm.ref();
+        //    end_col = sheet["!ref"].substr(3, 1);
+        //    end_row = sheet["!ref"].substr(4);
+        //    process_sheet_columns(sheet, 'A'); // may need to impliment => http://raganwald.com/2013/03/28/trampolines-in-javascript.html
+        //    excel = process_sheet( 2, my_array);
+        //    create_student_imports(); 
+        //}
         
 
-    //created();
-    set_fire_students_mobilities_join();
+        //created();
+        //set_fire_students_mobilities_join();
+        end_col = sheet["!ref"].substr(3, 1);
+    end_row = sheet["!ref"].substr(4);
+    process_sheet_columns(sheet, 'A'); // may need to impliment => http://raganwald.com/2013/03/28/trampolines-in-javascript.html
+    excel = process_sheet(2, my_array);
+    create_student_imports();
 });
