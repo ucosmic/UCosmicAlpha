@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System.Collections.Generic;
 using UCosmic.Domain.Languages;
 
 namespace UCosmic.Web.Mvc.Models
@@ -9,7 +10,15 @@ namespace UCosmic.Web.Mvc.Models
         public string officialName { get; set; }
         public string type { get; set; }
     }
+
     public class AgreementSummaryApiModel
+    {
+        public List<AgreementSummaryItemsApiModel> items { get; set; }
+        public int LocationCount { get; set; }
+        public int TypeCount { get; set; }
+
+    }
+    public class AgreementSummaryItemsApiModel
     {
         public int LocationCount { get; set; }
         public int TypeCount { get; set; }
