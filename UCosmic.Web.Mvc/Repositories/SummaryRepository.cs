@@ -17,7 +17,7 @@ namespace UCosmic.Repositories
         {
 
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
-            string sql = "select distinct aa.revisionid as id, pp.officialname, eat.type  FROM [ActivitiesV2].[ActivityLocation] al" +
+            string sql = "select distinct aa.revisionid as id, pp.officialname, eat.type, eat.id as type_id, people.revisionid as person_id  FROM [ActivitiesV2].[ActivityLocation] al" +
                   " inner join [ActivitiesV2].[ActivityValues] av on al.activityValuesId=av.revisionid" +
                   " inner join Places.place pp on al.placeId=pp.revisionid" +
                   " inner join [ActivitiesV2].[Activity] aa on av.activityId=aa.revisionid" +

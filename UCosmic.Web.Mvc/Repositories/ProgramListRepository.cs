@@ -26,7 +26,7 @@ namespace UCosmic.Repositories
 
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
             string sql = "SELECT code as program, name, isStandard as is_standard, establishmentid as establishment_id " +
-                "FROM [UCosmicTest].[Students].[studentprogramdata] ";
+                "FROM [Students].[studentprogramdata] ";
             IList<ProgramListAllApiReturn> activityLocations = connectionFactory.SelectList<ProgramListAllApiReturn>(DB.UCosmic, sql);
             
             return activityLocations;

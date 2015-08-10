@@ -416,7 +416,7 @@ namespace UCosmic.Repositories
         public IList<StudentProgramData> getPrograms(string institution)
         {
             const string sql = @" SELECT program as name, code
-                                    FROM [UCosmicTest].[dbo].[vw_MobilityDetail]
+                                    FROM [dbo].[vw_MobilityDetail]
                                     where institution=@institution
                                     group by program,code
                                 ";
@@ -427,7 +427,7 @@ namespace UCosmic.Repositories
         }
         public IList<StudentTermData> getTerms(string institution){
             const string sql = @" SELECT [term] as name,[termStart] as startDate
-                                FROM [UCosmicTest].[dbo].[vw_MobilityDetail]
+                                FROM [dbo].[vw_MobilityDetail]
                                 where institution=@institution
                                 group by term,termStart
                                 order by termStart desc
@@ -440,7 +440,7 @@ namespace UCosmic.Repositories
         public IList<StudentLevelData> getLevels(string institution)
         {
             const string sql = @" SELECT [level] as name,[rank]
-                                FROM [UCosmicTest].[dbo].[vw_MobilityDetail]
+                                FROM [dbo].[vw_MobilityDetail]
                                 where institution=@institution
                                 group by level,rank
                                 order by rank desc

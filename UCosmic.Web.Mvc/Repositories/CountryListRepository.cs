@@ -24,7 +24,7 @@ namespace UCosmic.Repositories
 
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
             string sql = "SELECT [RevisionId] as country, [OfficialName] as official_name " +
-                "FROM [UCosmicTest].[Places].[Place] " +
+                "FROM [Places].[Place] " +
                 "where iscountry=1";
             IList<CountryListAllApiReturn> activityLocations = connectionFactory.SelectList<CountryListAllApiReturn>(DB.UCosmic, sql);
             
