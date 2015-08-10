@@ -72,13 +72,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     //establishmentTypes = employeeActivityTypesRepository.EmployeeActivityTypes_By_establishmentId(establishmentId);
                     var establishmentTypes = modelDistinct.DistinctBy(x => x.type);
                     var locationDistinct = model.DistinctBy(x => x.officialName);
+                    var personDistinct = model.DistinctBy(x => x.person_id);
                     returnModel.TotalActivities = model.DistinctBy(x => x.id).Count();
                     returnModel.TotalLocations = locationDistinct.Count();
+                    returnModel.TotalPeople = personDistinct.Count();
                     foreach (var type in establishmentTypes)
                     {
                         var typeCount = modelDistinct.Where(x => x.type == type.type).Count();
                         var locationCount = modelDistinct.Where(x => x.type == type.type).DistinctBy(x => x.officialName).Count();
-                        typesModel.Add(new ActivitySummaryTypesApiModel { LocationCount = locationCount, TypeCount = typeCount, Type = type.type, TypeId = type.id });
+                        var personCount = modelDistinct.Where(x => x.type == type.type).DistinctBy(x => x.person_id).Count();
+                        typesModel.Add(new ActivitySummaryTypesApiModel { LocationCount = locationCount, TypeCount = typeCount, Type = type.type, TypeId = type.type_id, PersonCount = personCount });
                     }
                     returnModel.ActivitySummaryTypes = typesModel.ToList();
                 }
@@ -235,13 +238,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         /* Returns agreement type counts for given place.*/
         [GET("agreement-count/{establishmentId?}/{placeId?}/{selectedEstablishmentId?}")]
-        [CacheHttpGet(Duration = 3600)]
-        public List<AgreementSummaryApiModel> GetAgreementCount(int? establishmentId, int? placeId, int? selectedEstablishmentId)
+        //[CacheHttpGet(Duration = 3600)]
+        public AgreementSummaryApiModel GetAgreementCount(int? establishmentId, int? placeId, int? selectedEstablishmentId)
         {
-            IList<AgreementSummaryApiModel> returnModel = new List<AgreementSummaryApiModel>();
+            List<AgreementSummaryItemsApiModel> returnItems = new List<AgreementSummaryItemsApiModel>();
+            AgreementSummaryApiModel returnModel = new AgreementSummaryApiModel();
             IList<AgreementSummaryApiQueryResultModel> model = new List<AgreementSummaryApiQueryResultModel>();
             //IList<AgreementTypesApiReturn> agreementTypes = new List<AgreementTypesApiReturn>();
-
             var tenancy = Request.Tenancy();
 
             if (!(establishmentId.HasValue && (establishmentId.Value != 0)))
@@ -265,6 +268,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     model = summaryRepository.AgreementSummaryByEstablishment_Place(establishmentId, placeId, selectedEstablishmentId);
                     var modelDistinct = model.DistinctBy(x => new { x.id, x.type });
                     var locationDistinct = model.DistinctBy(x => x.officialName);
+                    returnModel.TypeCount = modelDistinct.Count();
+                    returnModel.LocationCount = locationDistinct.Count();
+
                     //agreementTypes = AgreementTypesRepository.AgreementTypes_By_establishmentId(establishmentId);
                     var agreementTypes = modelDistinct.DistinctBy(x => x.type);
                     foreach (var type in agreementTypes)
@@ -272,11 +278,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
                         var typeCount = modelDistinct.Where(x => x.type == type.type).Count();
                         //var locationCount = locationDistinct.Where(x => x.type == type.type).Count();
                         var locationCount = modelDistinct.Where(x => x.type == type.type).DistinctBy(x => x.officialName).Count();
-                        returnModel.Add(new AgreementSummaryApiModel { LocationCount = locationCount, TypeCount = typeCount, Type = type.type, TypeId = type.id });
+                        returnItems.Add(new AgreementSummaryItemsApiModel { LocationCount = locationCount, TypeCount = typeCount, Type = type.type, TypeId = type.id });
                     }
                 }
             }
-            return returnModel.ToList();
+            returnModel.items = returnItems;
+            return returnModel;
         }
 
         /* Returns agreement type counts for given place.*/
