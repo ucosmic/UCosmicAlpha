@@ -24,14 +24,14 @@
                             <div style="margin-top: 20px; height:inherit">
                                 <template is="dom-repeat" items="[[columns]]" as="column" id="columns">
                                     <template is="dom-if" if="{{column.is_shown}}">
-                                        <paper-item class="list-item">
+                                        <paper-item class="list-item tennant_colors_highlight">
                                             <span>[[column.text]]</span>
                                             <iron-icon icon="columns_shown:remove-circle-outline" on-click="remove_column">
                                             </iron-icon>
                                         </paper-item>
                                     </template>
                                     <template is="dom-if" if="{{!column.is_shown}}">
-                                        <paper-item class="list-item unchecked">
+                                        <paper-item class="list-item unchecked tennant_colors_highlight">
                                             <span>[[column.text]]</span>
                                             <iron-icon icon="columns_shown:add-circle-outline" on-click="add_column">
                                             </iron-icon>
