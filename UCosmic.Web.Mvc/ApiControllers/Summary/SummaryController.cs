@@ -37,9 +37,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
         
         /* Returns activity type counts for given place.*/
-        [GET("activity-count/{establishmentId?}/{placeId?}")]
+        [GET("activity-count/{selectedEstablishment}/{establishmentId?}/{placeId?}/{selectedEstablishmentId?}")]
         //[CacheHttpGet(Duration = 3600)]
-        public ActivitySummaryApiModel GetActivityCount(int? establishmentId, int? placeId)
+        public ActivitySummaryApiModel GetActivityCount(string selectedEstablishment, int? establishmentId, int? placeId, int? selectedEstablishmentId)
         {
             ActivitySummaryApiModel returnModel = new ActivitySummaryApiModel();
             IList<ActivitySummaryTypesApiModel> typesModel = new List<ActivitySummaryTypesApiModel>();
@@ -66,7 +66,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 {
                     SummaryRepository summaryRepository = new SummaryRepository();
                     EmployeeActivityTypesRepository employeeActivityTypesRepository = new EmployeeActivityTypesRepository();
-                    model = summaryRepository.ActivitySummaryByEstablishment_Place(establishmentId, placeId);
+                    model = summaryRepository.ActivitySummaryByEstablishment_Place(establishmentId, placeId, selectedEstablishmentId, selectedEstablishment);
                     //var modelDistinct = model.DistinctBy(x => x.id);
                     var modelDistinct = model.DistinctBy(x => new { x.id, x.type });
                     //establishmentTypes = employeeActivityTypesRepository.EmployeeActivityTypes_By_establishmentId(establishmentId);
@@ -93,7 +93,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         /* Returns activity type counts for given place.*/
         [GET("activity-map-count/{establishmentId?}/{placeId?}")]
-        //[CacheHttpGet(Duration = 3600)]
+        [CacheHttpGet(Duration = 3600)]
         public List<ActivityMapSummaryApiModel> GetActivityMapCount(int? establishmentId, int? placeId)
         {
             IList<ActivityMapSummaryApiModel> returnModel = new List<ActivityMapSummaryApiModel>();
@@ -169,11 +169,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
                     model = summaryRepository.DegreeSummaryByEstablishment_Place(establishmentId, placeId, selectedEstablishmentId);
                     var modelDistinct = model.DistinctBy(x => new { x.degreeId });
+                    var modelDistinct2 = model.DistinctBy(x => x.degreeId);
 
                     var degreeCount = modelDistinct.ToList().Count();
-                    var establishmentCount = modelDistinct.DistinctBy(x => x.establishmentId).ToList().Count();
-                    var personCount = modelDistinct.DistinctBy(x => x.personId).ToList().Count();
-                    returnModel.Add(new DegreeSummaryApiModel { DegreeCount = degreeCount, EstablishmentCount = establishmentCount, PersonCount = personCount });
+                    var establishmentCount = model.DistinctBy(x => x.establishmentId).ToList().Count();
+                    var personCount = model.DistinctBy(x => x.personId).ToList().Count();
+                    var countryCount = model.Where(x => x.countryCode != null).DistinctBy(x => x.countryCode).ToList().Count();
+                    returnModel.Add(new DegreeSummaryApiModel { DegreeCount = degreeCount, EstablishmentCount = establishmentCount, PersonCount = personCount, CountryCount = countryCount });
                 }
             }
             return returnModel.ToList();
@@ -238,7 +240,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         /* Returns agreement type counts for given place.*/
         [GET("agreement-count/{establishmentId?}/{placeId?}/{selectedEstablishmentId?}")]
-        //[CacheHttpGet(Duration = 3600)]
+        [CacheHttpGet(Duration = 3600)]
         public AgreementSummaryApiModel GetAgreementCount(int? establishmentId, int? placeId, int? selectedEstablishmentId)
         {
             List<AgreementSummaryItemsApiModel> returnItems = new List<AgreementSummaryItemsApiModel>();
