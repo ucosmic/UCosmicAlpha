@@ -21,6 +21,7 @@ Polymer('is-page-summary-map', {
     degree_location_counts: [],
     establishmentSearch: "",
     selectedCountry: 0,
+    link_clicked: false,
     selectedCountryCode: 'any',
     selectedPlaceId: 0,
     expertiseCountLoaded: false,
@@ -139,12 +140,20 @@ Polymer('is-page-summary-map', {
         });
 
 
+        this.addEventListener("click", (evt) => {
+            if (evt.path[0].href){
+                this.link_clicked = true;
+            }
+        });
+
+
         this.setup_routing();
     },
     open_color_picker: function () {
         //this.color_picker_opened = this.color_picker_opened ? false : true;
         if (this.$.color_picker_container.style.display != 'none') {
             this.$.color_picker_container.style.transformOrigin = "left bottom"
+            this.$.color_picker_container.style.msTransformOrigin = "left bottom"
             this.shrink(this.$.color_picker_container, 200);
             this.fadeOut(this.$.color_picker_container, 200,() => {
                 this.$.open_color_picker.style.left = '';
@@ -185,14 +194,15 @@ Polymer('is-page-summary-map', {
         if (!evt) evt = window.event;
         if (evt.pageX) return evt.pageX;
         else if (evt.clientX) return evt.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
-        else if (evt.jb.pageX) return evt.jb.pageX
+        else if (evt.hb.pageX) return evt.hb.pageX
         else return 0;
     },
     mouseY: function (evt) {
         if (!evt) evt = window.event;
         if (evt.pageY) return evt.pageY;
         else if (evt.clientY) return evt.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
-        else if (evt.jb.pageY) return evt.jb.pageY
+        else if (evt.hb.pageY) return evt.hb.pageY
+        //else if (evt.jb.pageY) return evt.jb.pageY
         else return 0;
     },
     setup_mouse_tracer: function (el = document) {
@@ -239,7 +249,10 @@ Polymer('is-page-summary-map', {
         page('*', this.filter);
         page({ hashbang: true });
     },
-    setupMapFilters: function () {
+    click_link: function(){
+        this.link_clicked = true;
+    }
+    , setupMapFilters: function () {
 
 
         var map = new google.maps.Map(this.$.map_canvas, {
@@ -359,7 +372,7 @@ Polymer('is-page-summary-map', {
                 })[0];
             }
             var color = 'transparent';
-            if (activity) {
+            if (total) {
                 var percent = (total.locationCount) / biggest_country;
                 if (percent < .01) {
                     percent = 0.01;
@@ -480,10 +493,10 @@ Polymer('is-page-summary-map', {
                 return place.code == event.feature.getProperty('iso_a2');
             })
             element.country_name = country_name;
-            element.content = "<b>" + event.feature.getProperty('name') + "</b><br /><a href='/summary/report/#!/" + event.feature.getProperty('iso_a2') + "'>Total: " + event.feature.getProperty('total_count') + "</a>"
-            + "<br /><a href='/" + this.styledomain + "/agreements/#/table/country/" + event.feature.getProperty('iso_a2') + "/type/any/sort/start-desc/size/10/page/1/'>Agreements: " + event.feature.getProperty('agreement_count') + "</a>"
-            + "<br /><a href='/" + this.styledomain + "/employees/table/?placeIds=" + country.id + "&placeNames='>Activities: " + event.feature.getProperty('activity_count') + "</a>"
-            + "<br /><a href='/" + this.styledomain + "/employees/degrees/table/?countryCode=" + event.feature.getProperty('iso_a2') + "'>Degrees: " + event.feature.getProperty('degree_count') + "</a>";
+            element.content = "<b>" + event.feature.getProperty('name') + "</b><br /><a on-click={{click_link}} href='/summary/report/#!/" + event.feature.getProperty('iso_a2') + "'>Total: " + event.feature.getProperty('total_count') + "</a>"
+            + "<br /><a on-click={{click_link}} href='/" + this.style_domain + "/agreements/#/table/country/" + event.feature.getProperty('iso_a2') + "/type/any/sort/start-desc/size/10/page/1/'>Agreements: " + event.feature.getProperty('agreement_count') + "</a>"
+            + "<br /><a on-click={{click_link}} href='/" + this.style_domain + "/employees/table/?placeIds=" + country.id + "&placeNames='>Activities: " + event.feature.getProperty('activity_count') + "</a>"
+            + "<br /><a on-click={{click_link}} href='/" + this.style_domain + "/employees/degrees/table/?countryCode=" + event.feature.getProperty('iso_a2') + "'>Degrees: " + event.feature.getProperty('degree_count') + "</a>";
 
             this.countries_showing_details = _.union(this.countries_showing_details, [event.feature.getProperty('name')]);
             
@@ -720,3 +733,5 @@ Polymer('is-page-summary-map', {
 
     },
 }); 
+
+
