@@ -11,15 +11,38 @@ using UCosmic.Domain.Identity;
 using UCosmic.Web.Mvc.Models;
 using System.Collections.Generic;
 using System.Web;
+using System.Web.Routing;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
+    public class SignOnServices
+    {
+        public SignOnServices(IProcessQueries queryProcessor
+            , IProvideSaml2Service samlServiceProvider
+            , IManageConfigurations configurationManager
+            , IHandleCommands<UpdateSamlSignOnMetadata> commandHandler
+        )
+        {
+            QueryProcessor = queryProcessor;
+            SamlServiceProvider = samlServiceProvider;
+            ConfigurationManager = configurationManager;
+            CommandHandler = commandHandler;
+        }
+
+        public IProcessQueries QueryProcessor { get; private set; }
+        public IProvideSaml2Service SamlServiceProvider { get; private set; }
+        public IManageConfigurations ConfigurationManager { get; private set; }
+        public IHandleCommands<UpdateSamlSignOnMetadata> CommandHandler { get; private set; }
+    }
     public class Firebase_roles {
         public string name {get; set;}
         public int? for_establishment {get; set;}
     }
     public partial class IdentityController : Controller
     {
+        private readonly SignOnServices _services;
+
+        //private static readonly string Area = MVC.Identity.Name;
         private readonly ISignUsers _userSigner;
         private readonly IStorePasswords _passwords;
         private readonly IProcessQueries _queryProcessor;
@@ -33,6 +56,7 @@ namespace UCosmic.Web.Mvc.Controllers
             , IHandleCommands<UpdateSamlSignOnMetadata> updateSamlMetadata
             //, IProvideSaml2Service samlServiceProvider
             , IManageConfigurations configurationManager
+            , SignOnServices services
         )
         {
             _userSigner = userSigner;
@@ -41,6 +65,42 @@ namespace UCosmic.Web.Mvc.Controllers
             _updateSamlMetadata = updateSamlMetadata;
             //_samlServiceProvider = samlServiceProvider;
             _configurationManager = configurationManager;
+            _services = services;
+        }
+        [GET("sign-in_2")]
+        [ValidateSigningReturnUrl]
+        public virtual ActionResult SignIn_2(string returnUrl)
+        {
+            // detect SAML SSO from skin cookie
+            var tenancy = Request.Tenancy();
+            if (tenancy != null && !string.IsNullOrWhiteSpace(tenancy.StyleDomain))
+            {
+                // get the establishment for this skin
+                var establishment = _queryProcessor.Execute(
+                    new EstablishmentByDomain(tenancy.StyleDomain)
+                    {
+                        EagerLoad = new Expression<Func<Establishment, object>>[]
+                        {
+                            e => e.SamlSignOn,
+                        }
+                    }
+                );
+                if (establishment != null && establishment.HasSamlSignOn())
+                {
+                    return PushToSamlSsoExternal_2(establishment, returnUrl);
+
+                    // wait for the authn response
+                    //return new EmptyResult();
+                }
+            }
+            ViewBag.userName = User.Identity.Name.ToLower();
+
+            var model = new SignInForm();
+#if DEBUG
+            model.ShowPasswordField = true;
+#endif
+
+            return View(model);
         }
 
         [GET("sign-in")]
@@ -217,6 +277,85 @@ namespace UCosmic.Web.Mvc.Controllers
             }
 
             return View();
+        }
+
+        [NonAction]
+        private ActionResult PushToSamlSsoExternal_2(Establishment establishment, string returnUrl)
+        {
+            //var Url = "sign-on/alpha-proxy/{establishmentId}";
+            //var DataTokens = new RouteValueDictionary(new { area = Area });
+            //var Defaults = new RouteValueDictionary(new
+            //{
+            //    controller = Controller,
+            //    action = MVC.Identity.SignOn.ActionNames.AlphaProxy,
+            //});
+            //var Constraints = new RouteValueDictionary(new
+            //{
+            //    httpMethod = new HttpMethodConstraint("GET"),
+            //});
+
+            //var referrer = Request.Url;
+            //if (referrer == null) return new HttpStatusCodeResult(400);
+
+            //if (_services.ConfigurationManager.SamlRealServiceProviderEntityId.StartsWith("https://preview.ucosmic.com") &&
+            //    !referrer.AbsoluteUri.StartsWith("https://alpha.ucosmic.com") && !referrer.AbsoluteUri.StartsWith("https://alpha-staging.ucosmic.com"))
+            //    return new HttpStatusCodeResult(400);
+
+            //if (_services.ConfigurationManager.SamlRealServiceProviderEntityId.StartsWith("https://develop.ucosmic.com") &&
+            //    !referrer.AbsoluteUri.StartsWith("https://spike.ucosmic.com") && !referrer.AbsoluteUri.StartsWith("http://spike.ucosmic.com"))
+            //    return new HttpStatusCodeResult(400);
+
+            //var establishment = _services.QueryProcessor.Execute(
+            //    new GetEstablishmentByIdQuery(establishmentId)
+            //    {
+            //        EagerLoad = new Expression<Func<Establishment, object>>[]
+            //        {
+            //            e => e.SamlSignOn,
+            //        }
+            //    }
+            //);
+
+            if (establishment != null)
+            {
+                PushToSamlSso(establishment, Request.Url.AbsoluteUri);
+                return new EmptyResult();
+            }
+            return new HttpStatusCodeResult(400);
+        }
+        [NonAction]
+        private void PushToSamlSso(Establishment establishment, string returnUrl)
+        {
+            if (establishment == null) return;
+
+            // update the provider metadata
+            _services.CommandHandler.Handle(
+                new UpdateSamlSignOnMetadata
+                {
+                    EstablishmentId = establishment.RevisionId,
+                }
+            );
+
+            // clear the email from temp data
+            //TempData.SigningEmailAddress(null);
+
+            // send the authn request
+
+            var user = _queryProcessor.Execute(new UserByName(User.Identity.Name)
+            {
+                EagerLoad = new Expression<Func<User, object>>[]
+                    {
+                        x => x.Person.Affiliations.Select(y => y.Establishment),
+                    },
+            });
+            var tenancy = Mapper.Map<Tenancy>(user);
+            _services.SamlServiceProvider.SendAuthnRequest(
+                establishment.SamlSignOn.SsoLocation,
+                establishment.SamlSignOn.SsoBinding.AsSaml2SsoBinding(),
+                "https://alpha.ucosmic.com/sign-on/saml/2",
+                //_services.ConfigurationManager.SamlRealServiceProviderEntityId,
+                returnUrl ?? Url.Action(MVC.Tenancy.Tenant(tenancy.StyleDomain, returnUrl)),
+                HttpContext
+            );
         }
 
         [NonAction]
