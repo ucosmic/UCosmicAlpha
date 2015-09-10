@@ -9,9 +9,9 @@
 
 @section bib
 {
-    <nav class="bib">
-        @Html.Partial(MVC.Students.Views._Bib, new StudentsBibNavModel { })
-    </nav>
+    <nav class="bib" data-current-bib="report">
+    @Html.Partial(MVC.Students.Views._Bib, new StudentsBibNavModel { })
+</nav>
 }
 
 @section styles
