@@ -13,189 +13,206 @@
 <polymer-element name="is-page-summary-report" attributes="style_domain, tenant_id">
     <template>
         <link href="report.css" rel="stylesheet" />
-        <div layout horizontal>
-            <div flex style="margin-right:10px;">
-                <section style="position:relative;">
-                    <h3 style="margin-bottom:4px;">Agreements</h3>
-                    <div style=" font-size:1.2em;">
-                        <template if="{{agreementTypeCountsLoaded && agreement_total_agreement_count > 0}}">
-                            <template repeat="{{agreementTypeCount, agreementTypeCountI in agreementTypeCounts}}">
-                                <div style="margin-bottom:4px;">
-                                    <b>{{agreementTypeCount.typeCount}}</b>
-                                    <a href="/{{style_domain}}/agreements/#/table/country/{{selectedCountryCode}}/type/{{agreementTypeCount.type}}/sort/start-desc/size/10/page/1/">{{agreementTypeCount.type}}</a>
-                                    <template if="{{agreementTypeCount.typeCount > 1}}">
+        <div class="layout vertical">
+            <header>
+                <h2>
+                    Summary Report
+                </h2>
+            </header>
+            <div layout horizontal>
+                <div flex style="margin-right:10px;">
+                    <section style="position:relative;">
+                        <h3 style="margin:0 0 4px 0;">Agreements</h3>
+                        <div style=" font-size:1.2em;">
+                            <template if="{{agreementTypeCountsLoaded && agreement_total_agreement_count > 0}}">
+                                <template repeat="{{agreementTypeCount, agreementTypeCountI in agreementTypeCounts}}">
+                                    <div style="margin-bottom:4px;">
+                                        <b>{{agreementTypeCount.typeCount}}</b>
+                                        <a href="/{{style_domain}}/agreements/#/table/country/{{selectedCountryCode}}/type/{{agreementTypeCount.type}}/sort/start-desc/size/10/page/1/">{{agreementTypeCount.type}}</a>
+                                        <template if="{{agreementTypeCount.typeCount != 1}}">
+                                            agreements
+                                        </template>
+                                        <template if="{{agreementTypeCount.typeCount == 1}}">
+                                            agreement
+                                        </template>
+                                        in
+                                        <b>{{agreementTypeCount.locationCount}}</b>
+                                        <template if="{{agreementTypeCount.locationCount != 1}}">
+                                            locations.
+                                        </template>
+                                        <template if="{{agreementTypeCount.locationCount == 1}}">
+                                            location.
+                                        </template>
+                                    </div>
+                                </template>
+                                <div style="margin-top:12px;">
+                                    <b>{{agreement_total_agreement_count}} <a style="text-decoration:none;">Total</a></b>
+                                    <template if="{{agreement_total_agreement_count != 1}}">
                                         agreements
                                     </template>
-                                    <template if="{{agreementTypeCount.typeCount == 1}}">
+                                    <template if="{{agreement_total_agreement_count == 1}}">
                                         agreement
                                     </template>
-                                    in
-                                    <b>{{agreementTypeCount.locationCount}}</b>
-                                    <template if="{{agreementTypeCount.locationCount > 1}}">
+                                    in <b>{{agreement_total_location_count}}</b>
+                                    <template if="{{agreement_total_location_count != 1}}">
                                         locations.
                                     </template>
-                                    <template if="{{agreementTypeCount.locationCount == 1}}">
+                                    <template if="{{agreement_total_location_count == 1}}">
                                         location.
                                     </template>
                                 </div>
                             </template>
-                            <div style="margin-top:12px;">
-                                <b>{{agreement_total_agreement_count}} <a style="text-decoration:none;">Total</a></b>
-                                <template if="{{agreement_total_agreement_count > 1}}">
-                                    agreements
-                                </template>
-                                <template if="{{agreement_total_agreement_count == 1}}">
-                                    agreement
-                                </template>
-                                in <b>{{agreement_total_location_count}}</b>
-                                <template if="{{agreement_total_location_count > 1}}">
-                                    locations.
-                                </template>
-                                <template if="{{agreement_total_location_count == 1}}">
-                                    location.
-                                </template>
-                            </div>
-                        </template>
-                        <template if="{{agreementTypeCounts.length == 0 && agreementTypeCountsLoaded && establishmentSearch == ''}}">
-                            <div>You do not have any agreements for the selected location</div>
-                        </template>
-                        <template if="{{agreementTypeCounts.length == 0 && agreementTypeCountsLoaded && establishmentSearch != ''}}">
-                            <div>You do not have any agreements for the selected establishment</div>
-                        </template>
-                        <template if="{{!agreementTypeCountsLoaded}}">
-                            <div>Loading...</div>
-                        </template>
-                    </div>
-                </section>
+                            <template if="{{agreementTypeCounts.length == 0 && agreementTypeCountsLoaded && establishmentSearch == ''}}">
+                                <div>You do not have any agreements for the selected location</div>
+                            </template>
+                            <template if="{{agreementTypeCounts.length == 0 && agreementTypeCountsLoaded && establishmentSearch != ''}}">
+                                <div>You do not have any agreements for the selected establishment</div>
+                            </template>
+                            <template if="{{!agreementTypeCountsLoaded}}">
+                                <div>Loading...</div>
+                            </template>
+                        </div>
+                    </section>
 
-                <section style="position:relative; ">
-                    <h3 style="display:block; margin-bottom:4px;">Faculty & Staff Activities</h3>
-                    <div style=" font-size:1.2em;">
-                        <template if="{{activityTypeCountsLoaded && activity_total_activity_count > 0 && establishmentSearch == ''}}">
-                            <template repeat="{{activityTypeCount, activityTypeCountI in activityTypeCounts}}">
-                                <div style="margin-bottom:4px;">
-                                    <b>{{activityTypeCount.typeCount}}</b>
-                                    <a href="/{{style_domain}}/employees/table/?activityTypeIds={{activityTypeCount.typeId}}&placeIds={{selectedPlaceId}}&placeNames={{selectedPlaceName}}">{{activityTypeCount.type}}</a>
-                                    <template if="{{activityTypeCount.typeCount > 1}}">
-                                        activities
-                                    </template>
-                                    <template if="{{activityTypeCount.typeCount == 1}}">
-                                        activity
-                                    </template>
-                                    from
-                                    <b>{{activityTypeCount.personCount}}</b>
-                                    <template if="{{activityTypeCount.personCount > 1}}">
-                                        people
-                                    </template>
-                                    <template if="{{activityTypeCount.personCount == 1}}">
-                                        person
-                                    </template>
-                                    in
-                                    <b>{{activityTypeCount.locationCount}}</b>
-                                    <template if="{{activityTypeCount.locationCount > 1}}">
-                                        locations.
-                                    </template>
-                                    <template if="{{activityTypeCount.locationCount == 1}}">
-                                        location.
-                                    </template>
-                                </div>
+                    <section style="position:relative; ">
+                        <h3 style="display:block; margin-bottom:4px;">Faculty & Staff Activities</h3>
+                        <div style=" font-size:1.2em;">
+                            <template if="{{activityTypeCountsLoaded && activity_total_activity_count > 0}}">
+                                <template repeat="{{activityTypeCount, activityTypeCountI in activityTypeCounts}}">
+                                    <div style="margin-bottom:4px;">
+                                        <b>{{activityTypeCount.typeCount}}</b>
+                                        <a href="/{{style_domain}}/employees/table/?activityTypeIds={{activityTypeCount.typeId}}&placeIds={{selectedPlaceId}}&placeNames={{selectedPlaceName}}&keyword={{establishment_search_url}}">{{activityTypeCount.type}}</a>
+                                        <template if="{{activityTypeCount.typeCount != 1}}">
+                                            activities
+                                        </template>
+                                        <template if="{{activityTypeCount.typeCount == 1}}">
+                                            activity
+                                        </template>
+                                        from
+                                        <b>{{activityTypeCount.personCount}}</b>
+                                        <template if="{{activityTypeCount.personCount != 1}}">
+                                            people
+                                        </template>
+                                        <template if="{{activityTypeCount.personCount == 1}}">
+                                            person
+                                        </template>
+                                        in
+                                        <b>{{activityTypeCount.locationCount}}</b>
+                                        <template if="{{activityTypeCount.locationCount != 1}}">
+                                            locations.
+                                        </template>
+                                        <template if="{{activityTypeCount.locationCount == 1}}">
+                                            location.
+                                        </template>
+                                    </div>
+                                </template>
+                                <template if="{{activityTypeCounts.length != 0 && activityTypeCountsLoaded }}">
+                                    <div style="margin-top:12px;">
+                                        <b>{{activity_total_activity_count}} <a style="text-decoration:none;">Total</a></b>
+                                        <template if="{{activity_total_activity_count != 1}}">
+                                            activities
+                                        </template>
+                                        <template if="{{activity_total_activity_count == 1}}">
+                                            activity
+                                        </template>
+                                        from <b>{{activity_total_person_count}}</b>
+                                        <template if="{{activity_total_person_count != 1}}">
+                                            people
+                                        </template>
+                                        <template if="{{activity_total_person_count == 1}}">
+                                            person
+                                        </template>
+                                        in <b>{{activity_total_location_count}}</b>
+                                        <template if="{{activity_total_location_count != 1}}">
+                                            locations.
+                                        </template>
+                                        <template if="{{activity_total_location_count == 1}}">
+                                            location.
+                                        </template>
+                                    </div>
+                                </template>
                             </template>
-                            <div style="margin-top:12px;">
-                                <b>{{activity_total_activity_count}} <a style="text-decoration:none;">Total</a></b>
-                                <template if="{{activity_total_activity_count > 1}}">
-                                    activities
+                            <template if="{{activityTypeCounts.length == 0 && activityTypeCountsLoaded }}">
+                                <div>You do not have any activities for the selected filters</div>
+                            </template>
+                            <!--<template if="{{activityTypeCounts.length == 0 && activityTypeCountsLoaded}}">
+                            <div>You do not have any activities for the selected establishment</div>
+                        </template>-->
+                            <template if="{{!activityTypeCountsLoaded}}">
+                                <div>Loading...</div>
+                            </template>
+                        </div>
+                    </section>
+
+                    <section style="position:relative; ">
+                        <h3 style="margin-bottom:4px;">Faculty & Staff Degrees</h3>
+                        <div style=" font-size:1.2em;">
+                            <template if="{{degrees.degreeCount != 0 && degreeCountsLoaded}}">
+                                <template if="{{selectedCountryCode != 'any'}}">
+                                    <a href="/{{style_domain}}/employees/degrees/table/?countryCode={{selectedCountryCode}}">{{degrees.degreeCount}}</a>
                                 </template>
-                                <template if="{{activity_total_activity_count == 1}}">
-                                    activity
+                                <template if="{{selectedCountryCode == 'any'}}">
+                                    <a href="/{{style_domain}}/employees/degrees/table/">{{degrees.degreeCount}}</a>
                                 </template>
-                                from <b>{{activity_total_person_count}}</b>
-                                <template if="{{activity_total_person_count > 1}}">
+                                <template if="{{degrees.degreeCount != 1}}">
+                                    degrees
+                                </template>
+                                <template if="{{degrees.degreeCount == 1}}">
+                                    degree
+                                </template>
+                                earned by
+                                <b>{{degrees.personCount}}</b>
+                                <template if="{{degrees.personCount != 1}}">
                                     people
                                 </template>
-                                <template if="{{activity_total_person_count == 1}}">
+                                <template if="{{degrees.personCount == 1}}">
                                     person
                                 </template>
-                                in <b>{{activity_total_location_count}}</b>
-                                <template if="{{activity_total_location_count > 1}}">
-                                    locations.
+                                from
+                                <b>{{degrees.establishmentCount}}</b>
+                                <template if="{{degrees.establishmentCount != 1 }}">
+                                    institutions
                                 </template>
-                                <template if="{{activity_total_location_count == 1}}">
-                                    location.
+                                <template if="{{degrees.establishmentCount == 1}}">
+                                    institution
                                 </template>
-                            </div>
-                        </template>
-                        <template if="{{activityTypeCounts.length == 0 && activityTypeCountsLoaded && establishmentSearch == ''}}">
-                            <div>You do not have any activities for the selected location</div>
-                        </template>
-                        <template if="{{activityTypeCounts.length == 0 && activityTypeCountsLoaded && establishmentSearch != ''}}">
-                            <div>You do not have any activities for the selected establishment</div>
-                        </template>
-                        <template if="{{!activityTypeCountsLoaded}}">
-                            <div>Loading...</div>
-                        </template>
-                    </div>
-                </section>
-
-                <section style="position:relative; ">
-                    <h3 style="margin-bottom:4px;">Faculty & Staff Degrees</h3>
-                    <div style=" font-size:1.2em;">
-                        <template if="{{degrees.degreeCount != 0 && degreeCountsLoaded}}">
-                            <template if="{{selectedCountryCode != 'any'}}">
-                                <a href="/{{style_domain}}/employees/degrees/table/?countryCode={{selectedCountryCode}}">{{degrees.degreeCount}}</a>
+                                in
+                                <b>{{degrees.countryCount}}</b>
+                                <template if="{{degrees.countryCount != 1}}">
+                                    countries.
+                                </template>
+                                <template if="{{degrees.countryCount == 1}}">
+                                    country.
+                                </template>
                             </template>
-                            <template if="{{selectedCountryCode == 'any'}}">
-                                <a href="/{{style_domain}}/employees/degrees/table/">{{degrees.degreeCount}}</a>
+                            <template if="{{degrees.degreeCount == 0 && degreeCountsLoaded}}">
+                                <div>You do not have any degrees for the selected location</div>
                             </template>
-                            <template if="{{degrees.degreeCount > 1}}">
-                                degrees
+                            <template if="{{!degreeCountsLoaded}}">
+                                <div>Loading...</div>
                             </template>
-                            <template if="{{degrees.degreeCount == 1}}">
-                                degree
-                            </template>
-                            earned by
-                            <b>{{degrees.personCount}}</b>
-                            <template if="{{degrees.personCount > 1}}">
-                                people
-                            </template>
-                            <template if="{{degrees.personCount == 1}}">
-                                person
-                            </template>
-                            from
-                            <b>{{degrees.establishmentCount}}</b>
-                            <template if="{{degrees.establishmentCount > 1}}">
-                                institutions.
-                            </template>
-                            <template if="{{degrees.establishmentCount == 1}}">
-                                institution.
-                            </template>
-                        </template>
-                        <template if="{{degrees.degreeCount == 0 && degreeCountsLoaded}}">
-                            <div>You do not have any degrees for the selected location</div>
-                        </template>
-                        <template if="{{!degreeCountsLoaded}}">
-                            <div>Loading...</div>
-                        </template>
-                    </div>
-                </section>
+                        </div>
+                    </section>
+                </div>
+                <is-side-filter width="300px" has_space="true">
+                    <is-cascading-ddl style="margin-top:0px;" id="cascading_ddl" new_id="{{new_tenant_id}}" list="{{affiliations}}" limit_id="{{tenant_id}}" place_holder="Select sub-affiliations" layout_type="vertical">
+                    </is-cascading-ddl>
+                    <is-auto-ddl selected="{{selectedPlaceName}}" selectedid="{{selectedPlaceId}}" place_holder_text="Type and choose a country" on-selected-updated="{{selectCountry}}"
+                                 list="{{countries}}" on-search-updated="{{filter_countries}}">
+                    </is-auto-ddl>
+                    <is-auto-ddl style="margin-bottom:2px;" selected="{{establishmentSearch}}" selectedid="{{selectedEstablishmentId}}" place_holder_text="Type and choose an institution" on-selected-updated="{{establishmentSelected}}"
+                                 on-search-updated="{{establishmentListSearch}}" list="{{establishmentList}}">
+                    </is-auto-ddl>
+                </is-side-filter>
             </div>
-            <is-side-filter width="300px" has_space="true">
-                <is-cascading-ddl style="margin-top:0px;" id="cascading_ddl" new_id="{{new_tenant_id}}" list="{{affiliations}}" limit_id="{{tenant_id}}" place_holder="Select sub-affiliations" layout_type="vertical">
-                </is-cascading-ddl>
-                <is-auto-ddl selected="{{selectedPlaceName}}" selectedid="{{selectedPlaceId}}" place_holder_text="Type and choose a country" on-selected-updated="{{selectCountry}}"
-                             list="{{countries}}" on-search-updated="{{filter_countries}}">
-                </is-auto-ddl>
-                <is-auto-ddl style="margin-bottom:2px;" selected="{{establishmentSearch}}" selectedid="{{selectedEstablishmentId}}" place_holder_text="Type and choose an institution" on-selected-updated="{{establishmentSelected}}"
-                             on-search-updated="{{establishmentListSearch}}" list="{{establishmentList}}">
-                </is-auto-ddl>
-            </is-side-filter>
         </div>
 
-        <!--<div layout horizontal start style="width:1000px; z-index:1;">
+            <!--<div layout horizontal start style="width:1000px; z-index:1;">
             <is-cascading-ddl flex id="cascading_ddl2" new_id="{{new_tenant_id}}" list="{{affiliations}}" limit_id="{{tenant_id}}" place_holder="Select sub-affiliations" layout_type="horizontal">
 
             </is-cascading-ddl>
         </div>-->
-        <!--<h3 style="margin-bottom:4px;">International Affiliations</h3>
+            <!--<h3 style="margin-bottom:4px;">International Affiliations</h3>
         <template if="{{affiliations.affiliationCount.length != 0 && affiliationCountLoaded}}">
             <div>
                 <b>{{affiliations.personCount}}</b>
@@ -228,7 +245,7 @@
         <template if="{{!expertiseCountLoaded}}">
             <div>Loading...</div>
         </template>-->
-        <!--<core-ajax url="/api/home/section"
+            <!--<core-ajax url="/api/home/section"
                    params='{"Description":"{{description}}",
                    "Links" "{{links}}" ,
                    "Title" "{{title}}" }'
@@ -238,50 +255,50 @@
                    on-core-error="{{ajaxError}}"
                    id="ajax_addSection">
         </core-ajax>-->
-        <core-ajax url="/api/countries/"
-                   headers='{"Accept": "application/json"}'
-                   handleas="json" auto
-                   on-core-response="{{countriesResponse}}"
-                   on-core-error="{{ajaxError}}"
-                   id="ajax_countries">
-        </core-ajax>
-        <core-ajax url="/api/summary/activity-count/{{new_tenant_id}}/{{selectedPlaceId}}/"
-                   headers='{"Accept": "application/json"}'
-                   handleas="json"
-                   on-core-response="{{activitiesResponse}}"
-                   on-core-error="{{ajaxError}}"
-                   id="ajax_activities">
-        </core-ajax>
-        <core-ajax url="/api/summary/agreement-count/{{new_tenant_id}}/{{selectedPlaceId}}/{{selectedEstablishmentId}}/"
-                   headers='{"Accept": "application/json"}'
-                   handleas="json"
-                   on-core-response="{{agreementsResponse}}"
-                   on-core-error="{{ajaxError}}"
-                   id="ajax_agreements">
-        </core-ajax>
-        <core-ajax url="/api/summary/degree-count/{{new_tenant_id}}/{{selectedPlaceId}}/{{selectedEstablishmentId}}/"
-                   headers='{"Accept": "application/json"}'
-                   handleas="json"
-                   on-core-response="{{degreesResponse}}"
-                   on-core-error="{{ajaxError}}"
-                   id="ajax_degrees">
-        </core-ajax>
-        <core-ajax url="/api/establishments/list/{{establishmentSearch}}/"
-                   headers='{"Accept": "application/json"}'
-                   handleas="json"
-                   on-core-response="{{establishmentResponse}}"
-                   on-core-error="{{ajaxError}}"
-                   id="ajax_establishmentsList">
-        </core-ajax>
-        <core-ajax url="/api/establishments/{{tenant_id}}/offspring/"
-                   headers='{"Accept": "application/json"}'
-                   handleas="json"
-                   auto
-                   on-core-response="{{affiliations_response}}"
-                   on-core-error="{{ajaxError}}"
-                   id="ajax_affiliations">
-        </core-ajax>
-        <!--<core-ajax url="/api/international-affiliations/Affiliation-count/{{new_tenant_id}}/{{selectedPlaceId}}/"
+            <core-ajax url="/api/countries/"
+                       headers='{"Accept": "application/json"}'
+                       handleas="json" auto
+                       on-core-response="{{countriesResponse}}"
+                       on-core-error="{{ajaxError}}"
+                       id="ajax_countries">
+            </core-ajax>
+            <core-ajax url="/api/summary/activity-count/{{establishmentSearch || 'any'}}/{{new_tenant_id}}/{{selectedPlaceId}}/{{selectedEstablishmentId}}/"
+                       headers='{"Accept": "application/json"}'
+                       handleas="json"
+                       on-core-response="{{activitiesResponse}}"
+                       on-core-error="{{ajaxError}}"
+                       id="ajax_activities">
+            </core-ajax>
+            <core-ajax url="/api/summary/agreement-count/{{new_tenant_id}}/{{selectedPlaceId}}/{{selectedEstablishmentId}}/"
+                       headers='{"Accept": "application/json"}'
+                       handleas="json"
+                       on-core-response="{{agreementsResponse}}"
+                       on-core-error="{{ajaxError}}"
+                       id="ajax_agreements">
+            </core-ajax>
+            <core-ajax url="/api/summary/degree-count/{{new_tenant_id}}/{{selectedPlaceId}}/{{selectedEstablishmentId}}/"
+                       headers='{"Accept": "application/json"}'
+                       handleas="json"
+                       on-core-response="{{degreesResponse}}"
+                       on-core-error="{{ajaxError}}"
+                       id="ajax_degrees">
+            </core-ajax>
+            <core-ajax url="/api/establishments/list/{{establishmentSearch}}/"
+                       headers='{"Accept": "application/json"}'
+                       handleas="json"
+                       on-core-response="{{establishmentResponse}}"
+                       on-core-error="{{ajaxError}}"
+                       id="ajax_establishmentsList">
+            </core-ajax>
+            <core-ajax url="/api/establishments/{{tenant_id}}/offspring/"
+                       headers='{"Accept": "application/json"}'
+                       handleas="json"
+                       auto
+                       on-core-response="{{affiliations_response}}"
+                       on-core-error="{{ajaxError}}"
+                       id="ajax_affiliations">
+            </core-ajax>
+            <!--<core-ajax url="/api/international-affiliations/Affiliation-count/{{new_tenant_id}}/{{selectedPlaceId}}/"
                    handleas="json" auto
                    on-core-response="{{affiliationsResponse}}"
                    on-core-error="{{ajaxError}}"
@@ -293,9 +310,10 @@
                    on-core-error="{{ajaxError}}"
                    id="ajax_degrees">
         </core-ajax>-->
-        <core-localstorage id="affiliations" name="affiliations" value="{{affiliations}}"></core-localstorage>
+            <core-localstorage i
+            <core-localstorage id="affiliations" name="affiliations" value="{{affiliations}}"></core-localstorage>
 
-    </template>
+</template>
     <script src="report.js"></script>
 
 </polymer-element>

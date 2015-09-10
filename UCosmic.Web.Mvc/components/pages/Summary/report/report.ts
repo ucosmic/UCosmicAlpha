@@ -8,6 +8,7 @@ Polymer('is-page-summary-report', {
     activityTypeCounts: [],
     agreementTypeCounts: [],
     establishmentSearch: "",
+    establishment_search_url: "",
     lastEstablishmentSearch: "",
     selectedEstablishmentId: 0,
     last_selected_establishment_id: -1,
@@ -46,11 +47,13 @@ Polymer('is-page-summary-report', {
                 return place.code == country_code || place._id == country_code;
             }), place_id = country ? country._id : 0,
             establishment_id = parseInt(ctx.params.establishment_id),
+            establishment_search = ctx.params.establishment_search,
             tenant_id = parseInt(ctx.params.tenant_id);
         if (establishment_id != myThis.last_selected_establishment_id || place_id != myThis.last_selected_place_id || tenant_id != myThis.last_tenant_id) {
             myThis.last_selected_establishment_id = establishment_id;
             myThis.last_selected_place_id = place_id;
             myThis.selectedEstablishmentId = establishment_id ? establishment_id : 0;// should also ajax get name and put in text field.
+            myThis.establishmentSearch = establishment_search ? establishment_search : '';// should also ajax get name and put in text field.
             myThis.last_tenant_id = tenant_id;
             myThis.new_tenant_id = tenant_id && tenant_id != 0 ? tenant_id : myThis.new_tenant_id ? myThis.new_tenant_id : myThis.tenant_id ? myThis.tenant_id : 0;// should also ajax get name and put in text field.
             //myThis.affiliation_selected = myThis.new_tenant_id;
@@ -64,12 +67,13 @@ Polymer('is-page-summary-report', {
             myThis.selectedPlaceName = country ? country.text : undefined;
             myThis.selectedCountryCode = country ? country.code : 'any';
 
-            if (!myThis.selectedEstablishmentId ) {
-                myThis.$.ajax_activities.go();
-                myThis.activityTypeCountsLoaded = false;
-            }else{
-                myThis.activityTypeCountsLoaded = true
-            }
+            //if (!myThis.selectedEstablishmentId ) {
+            //    myThis.$.ajax_activities.go();
+            //    myThis.activityTypeCountsLoaded = false;
+            //}else{
+            //    myThis.activityTypeCountsLoaded = true
+            //}
+            myThis.$.ajax_activities.go();
             myThis.$.ajax_agreements.go();
             myThis.$.ajax_degrees.go();
             myThis.degreeCountsLoaded = false;
@@ -79,6 +83,7 @@ Polymer('is-page-summary-report', {
     },
     setup_routing: function () {
         page.base('/summary/report');
+        page('/:country_code/:establishment_id/:tenant_id/:establishment_search', this.filter);
         page('/:country_code/:establishment_id/:tenant_id', this.filter);
         page('/:country_code/:establishment_id/', this.filter);
         page('/:country_code', this.filter);
@@ -92,16 +97,17 @@ Polymer('is-page-summary-report', {
         } else {
 
         }
-        page('#!/' + this.selectedPlaceId + '/' + this.selectedEstablishmentId + '/' + this.new_tenant_id);
+        page('#!/' + this.selectedPlaceId + '/' + this.selectedEstablishmentId + '/' + this.new_tenant_id + '/' + this.establishmentSearch);
     },
     filter_countries: function (event, detail, sender) {
         if (!this.selectedPlaceName || this.selectedPlaceName == "") {
             this.countries = this.countries_original;
         } else {
-            this.countries = _.filter(this.countries_original,(country: any) => {
-                return _.startsWith(country.text.toLowerCase(), this.selectedPlaceName.toLowerCase());
+            this.countries = _.filter(this.countries_original, (country: any) => {
+                return _.startsWith(country.text.toLowerCase(), this.selectedPlaceName.toLowerCase()) || country.text == '[clear]';
             });
         }
+        //this.countries.unshift({ _id: 0, text: '[clear]' })
     },
     leaveEstablishmentSearch: function (event, detail, sender) {
         setTimeout(() => {
@@ -115,9 +121,10 @@ Polymer('is-page-summary-report', {
         } else {
 
         }
-        page('#!/' + this.selectedPlaceId + '/' + this.selectedEstablishmentId + '/' + this.new_tenant_id);
+        page('#!/' + this.selectedPlaceId + '/' + this.selectedEstablishmentId + '/' + this.new_tenant_id + '/' + this.establishmentSearch);
     },
     establishmentListSearch: function (event, detail, sender) {
+        this.establishmentList = [{ _id: 0, text: '[clear]' }]
         if (this.establishmentSearch == "") {
             this.establishmentList = [];
         } else {
@@ -125,6 +132,7 @@ Polymer('is-page-summary-report', {
                 this.isAjaxing = true;
                 this.$.ajax_establishmentsList.go();
                 this.lastEstablishmentSearch = this.establishmentSearch;
+
             } else {
                 setTimeout(() => {
                     if (this.lastEstablishmentSearch != this.establishmentSearch) {
@@ -137,7 +145,10 @@ Polymer('is-page-summary-report', {
         }
     },
     new_tenant_idChanged: function (oldValue, newValue) {
-        page('#!/' + this.selectedPlaceId + '/' + this.selectedEstablishmentId + '/' + newValue);
+        page('#!/' + this.selectedPlaceId + '/' + this.selectedEstablishmentId + '/' + newValue + '/' + this.establishmentSearch);
+    },
+    establishmentSearchChanged: function (oldValue: string, newValue) {
+        this.establishment_search_url = newValue ? "\"" + newValue + "\"" : ""; 
     },
     activitiesResponse: function (response) {
         this.isAjaxing = false;
@@ -209,6 +220,7 @@ Polymer('is-page-summary-report', {
         if (!response.detail.response.error) {
             _.insert(response.detail.response, 8, { code: 'AQ', id: 17, name: 'Antarctica' })//hack alert
 
+            response.detail.response.unshift({ id: 0, name: '[clear]' })
             this.countries_original = response.detail.response.map(function (country) {
                 country._id = country.id;
                 country.text = country.name;
@@ -233,9 +245,10 @@ Polymer('is-page-summary-report', {
                 list[i]._id = list[i].forestablishmentId;
                 delete list[i].forestablishmentId;
             }
+            //this.establishmentSearch.unshift({ _id: 0, text: '[all]' });
+            response.detail.response.unshift({ _id: 0, text: '[clear]' })
             this.establishmentList = response.detail.response;
         } else {
-
             console.log(response.detail.response.error)
         }
 

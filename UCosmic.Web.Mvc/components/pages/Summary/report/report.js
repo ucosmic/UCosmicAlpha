@@ -6,6 +6,7 @@ Polymer('is-page-summary-report', {
     activityTypeCounts: [],
     agreementTypeCounts: [],
     establishmentSearch: "",
+    establishment_search_url: "",
     lastEstablishmentSearch: "",
     selectedEstablishmentId: 0,
     last_selected_establishment_id: -1,
@@ -36,11 +37,12 @@ Polymer('is-page-summary-report', {
         var myThis = document.querySelector("is-page-summary-report"), country_code = ctx.params.country_code, country = _.find(myThis.countries_original, function (place, index) {
             selectedIndex = index + 1;
             return place.code == country_code || place._id == country_code;
-        }), place_id = country ? country._id : 0, establishment_id = parseInt(ctx.params.establishment_id), tenant_id = parseInt(ctx.params.tenant_id);
+        }), place_id = country ? country._id : 0, establishment_id = parseInt(ctx.params.establishment_id), establishment_search = ctx.params.establishment_search, tenant_id = parseInt(ctx.params.tenant_id);
         if (establishment_id != myThis.last_selected_establishment_id || place_id != myThis.last_selected_place_id || tenant_id != myThis.last_tenant_id) {
             myThis.last_selected_establishment_id = establishment_id;
             myThis.last_selected_place_id = place_id;
             myThis.selectedEstablishmentId = establishment_id ? establishment_id : 0;
+            myThis.establishmentSearch = establishment_search ? establishment_search : '';
             myThis.last_tenant_id = tenant_id;
             myThis.new_tenant_id = tenant_id && tenant_id != 0 ? tenant_id : myThis.new_tenant_id ? myThis.new_tenant_id : myThis.tenant_id ? myThis.tenant_id : 0;
             var selectedIndex;
@@ -53,13 +55,7 @@ Polymer('is-page-summary-report', {
             myThis.selectedPlaceId = country ? country._id : 0;
             myThis.selectedPlaceName = country ? country.text : undefined;
             myThis.selectedCountryCode = country ? country.code : 'any';
-            if (!myThis.selectedEstablishmentId) {
-                myThis.$.ajax_activities.go();
-                myThis.activityTypeCountsLoaded = false;
-            }
-            else {
-                myThis.activityTypeCountsLoaded = true;
-            }
+            myThis.$.ajax_activities.go();
             myThis.$.ajax_agreements.go();
             myThis.$.ajax_degrees.go();
             myThis.degreeCountsLoaded = false;
@@ -68,6 +64,7 @@ Polymer('is-page-summary-report', {
     },
     setup_routing: function () {
         page.base('/summary/report');
+        page('/:country_code/:establishment_id/:tenant_id/:establishment_search', this.filter);
         page('/:country_code/:establishment_id/:tenant_id', this.filter);
         page('/:country_code/:establishment_id/', this.filter);
         page('/:country_code', this.filter);
@@ -80,7 +77,7 @@ Polymer('is-page-summary-report', {
         }
         else {
         }
-        page('#!/' + this.selectedPlaceId + '/' + this.selectedEstablishmentId + '/' + this.new_tenant_id);
+        page('#!/' + this.selectedPlaceId + '/' + this.selectedEstablishmentId + '/' + this.new_tenant_id + '/' + this.establishmentSearch);
     },
     filter_countries: function (event, detail, sender) {
         var _this = this;
@@ -89,7 +86,7 @@ Polymer('is-page-summary-report', {
         }
         else {
             this.countries = _.filter(this.countries_original, function (country) {
-                return _.startsWith(country.text.toLowerCase(), _this.selectedPlaceName.toLowerCase());
+                return _.startsWith(country.text.toLowerCase(), _this.selectedPlaceName.toLowerCase()) || country.text == '[clear]';
             });
         }
     },
@@ -105,10 +102,11 @@ Polymer('is-page-summary-report', {
         }
         else {
         }
-        page('#!/' + this.selectedPlaceId + '/' + this.selectedEstablishmentId + '/' + this.new_tenant_id);
+        page('#!/' + this.selectedPlaceId + '/' + this.selectedEstablishmentId + '/' + this.new_tenant_id + '/' + this.establishmentSearch);
     },
     establishmentListSearch: function (event, detail, sender) {
         var _this = this;
+        this.establishmentList = [{ _id: 0, text: '[clear]' }];
         if (this.establishmentSearch == "") {
             this.establishmentList = [];
         }
@@ -130,7 +128,10 @@ Polymer('is-page-summary-report', {
         }
     },
     new_tenant_idChanged: function (oldValue, newValue) {
-        page('#!/' + this.selectedPlaceId + '/' + this.selectedEstablishmentId + '/' + newValue);
+        page('#!/' + this.selectedPlaceId + '/' + this.selectedEstablishmentId + '/' + newValue + '/' + this.establishmentSearch);
+    },
+    establishmentSearchChanged: function (oldValue, newValue) {
+        this.establishment_search_url = newValue ? "\"" + newValue + "\"" : "";
     },
     activitiesResponse: function (response) {
         this.isAjaxing = false;
@@ -191,6 +192,7 @@ Polymer('is-page-summary-report', {
         this.isAjaxing = false;
         if (!response.detail.response.error) {
             _.insert(response.detail.response, 8, { code: 'AQ', id: 17, name: 'Antarctica' });
+            response.detail.response.unshift({ id: 0, name: '[clear]' });
             this.countries_original = response.detail.response.map(function (country) {
                 country._id = country.id;
                 country.text = country.name;
@@ -211,6 +213,7 @@ Polymer('is-page-summary-report', {
                 list[i]._id = list[i].forestablishmentId;
                 delete list[i].forestablishmentId;
             }
+            response.detail.response.unshift({ _id: 0, text: '[clear]' });
             this.establishmentList = response.detail.response;
         }
         else {
