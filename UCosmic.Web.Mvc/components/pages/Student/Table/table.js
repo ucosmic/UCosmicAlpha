@@ -2,10 +2,33 @@
 /// <reference path="../../../typediff/mytypes.d.ts" />
 /// <reference path="../../../models/students.ts" />
 /// <reference path="../../../../scripts/typings/lodash.d.ts" />
+/// <reference path="../../../behaviors/closest/closest.ts" />
+/// <reference path="../../../behaviors/template_helpers/template_helpers.ts" />
 var Student_Table = Students;
 Polymer({
     is: "is-page-student-table",
+    behaviors: [Polymer.NeonAnimationRunnerBehavior, closest, template_helpers],
     properties: {
+        animationConfig: {
+            value: function () {
+                return {
+                    'slide_left': {
+                        name: 'transform-animation',
+                        node: this.$.tags,
+                        transformOrigin: '100% 0%',
+                        transformFrom: 'translateX(0px)',
+                        transformTo: 'translateX(-265px)'
+                    },
+                    'slide_right': {
+                        name: 'transform-animation',
+                        node: this.$.tags,
+                        transformOrigin: '100% 0%',
+                        transformFrom: 'translateX(0px)',
+                        transformTo: 'translateX(265px)'
+                    }
+                };
+            }
+        },
         style_domain: {
             type: String,
             notify: true,
@@ -218,7 +241,7 @@ Polymer({
         },
         filter_closed: {
             type: Boolean,
-            value: false,
+            value: true,
             notify: true,
             observer: 'filter_closed_changed'
         },
@@ -254,6 +277,21 @@ Polymer({
         terms_statuses: {
             type: Object,
             notify: true
+        },
+        term_is_selected: {
+            type: String,
+            computed: 'compute_term_is_selected(tags)'
+        }
+    },
+    listeners: {
+        'neon-animation-finish': '_onAnimationFinish'
+    },
+    _onAnimationFinish: function () {
+        if (this._slide) {
+            this.$.tags.style.left = '-300px';
+        }
+        else {
+            this.$.tags.style.left = '-35px';
         }
     },
     keys: {},
@@ -276,8 +314,6 @@ Polymer({
         { name: 'Levels', is_clicked: false, show_all: false }, { name: 'Affiliations', is_clicked: false, show_all: false },
         { name: 'Status', is_clicked: false, show_all: false }, { name: 'Terms', is_clicked: false, show_all: false },
         { name: 'Student Affiliations', is_clicked: false, show_all: false }, { name: 'Foreign Affiliations', is_clicked: false, show_all: false }],
-    count_list1: this.count_list_orignal,
-    count_list2: this.count_list1,
     created: function () {
         this.controller = this;
     },
@@ -299,6 +335,7 @@ Polymer({
         this.count_list1 = this.count_list_original;
         this.count_list2 = this.count_list1;
         this.mobilities_filtered = [];
+        this.is_processing = false;
     },
     fire_students_tenant_keys: null,
     get_mobility_value: function (column_name, mobility) {
@@ -324,7 +361,7 @@ Polymer({
         this.fire_terms = new Firebase("https://UCosmic.firebaseio.com/Establishments/Establishments");
         this.fire_students_programs = new Firebase("https://UCosmic.firebaseio.com/Students/Programs");
         this.fire_countries = new Firebase("https://UCosmic.firebaseio.com/Places/Countries");
-        this.status_list = [{ _id: 'IN', text: 'In' }, { _id: 'OUT', text: 'Out' }];
+        this.status_list = [{ _id: 'IN', text: 'Incoming' }, { _id: 'OUT', text: 'Outgoing' }];
         this.fire_establishments.once("value", function (snapshot) {
             _this.establishment_list = _.map(snapshot.val(), function (value, index) {
                 if (value) {
@@ -332,33 +369,12 @@ Polymer({
                     return object;
                 }
             });
-            var affiliation_list = [];
-            if (_this.establishment_list) {
-                _.forEach(new_value, function (value, index) {
-                    affiliation_list = _.union(affiliation_list, [_this.establishment_list[value.affiliation]]);
-                });
-            }
-            var student_affiliation_list = [];
-            if (_this.establishment_list) {
-                _.forEach(new_value, function (value, index) {
-                    student_affiliation_list = _.union(student_affiliation_list, [_this.establishment_list[value.student_affiliation]]);
-                });
-            }
-            var foreign_affiliation_list = [];
-            if (_this.establishment_list) {
-                _.forEach(new_value, function (value, index) {
-                    foreign_affiliation_list = _.union(foreign_affiliation_list, [_this.establishment_list[value.foreign_affiliation]]);
-                });
-            }
-            _this.student_affiliation_list = student_affiliation_list;
-            _this.affiliation_list = affiliation_list;
-            _this.foreign_affiliation_list = foreign_affiliation_list;
             _this.start_setup_filter();
         }, function (errorObject) {
             console.log("The read failed: " + errorObject.code);
         });
-        this.fire_students_levels.once("value", function (snapshot) {
-            _this.level_list = _.map(snapshot.val(), function (value, index) {
+        this.fire_students_levels.on("value", function (snapshot) {
+            _this.level_list = _.map(_.sortBy(snapshot.val(), 'rank'), function (value, index) {
                 if (value) {
                     var object = { _id: index, text: value.name };
                     return object;
@@ -455,6 +471,32 @@ Polymer({
         //var t1 = d1.getTime();
         return (t2 - t1) / (24 * 3600 * 1000);
     },
+    compute_term_is_selected: function (tags) {
+        var term_tags = _.uniq(_.filter(tags, function (tag) {
+            if (tag._type == 'term') {
+                return tag;
+            }
+        }), '_id');
+        if (term_tags.length > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    },
+    has_results: function (results) {
+        var _this = this;
+        if (this.mobilities_filtered) {
+            var count = 0;
+            _.forEach(results, function (value, key) {
+                count += _this.get_count(value.name);
+            });
+            return count ? true : false;
+        }
+        else {
+            return true;
+        }
+    },
     student_table_storage_loaded: function () {
         var _this = this;
         if (!this.student_table_storage_computed) {
@@ -505,8 +547,15 @@ Polymer({
     init2: function () {
     },
     filter_closed_changed: function (new_value, old_value) {
-        if (new_value) {
-            this.$.tags.toggle(true);
+        if (old_value != undefined) {
+            if (new_value) {
+                this._slide = false;
+                this.playAnimation('slide_right');
+            }
+            else {
+                this._slide = true;
+                this.playAnimation('slide_left');
+            }
         }
     },
     mobilities_changed: function (new_value, old_value) {
@@ -544,7 +593,7 @@ Polymer({
     _load_mobility_data: function (_this) {
         if (_this.mobilities && _this.mobilities.length > 0) {
             _this.mobilities = _.map(_this.mobility_snapshot, function (value, index) {
-                value.status = value.status == 'IN' ? "In Coming" : "Out Going";
+                value.status = value.status == 'IN' ? "Incoming" : "Outgoing";
                 value.affiliation_name = _this.affiliation_list[value.affiliation] ? _this.affiliation_list[value.affiliation].text : "";
                 value.student_affiliation_name = _this.student_affiliation_list[value.student_affiliation] ? _this.student_affiliation_list[value.student_affiliation].text : "";
                 value.foreign_affiliation_name = _this.foreign_affiliation_list[value.foreign_affiliation] ? _this.foreign_affiliation_list[value.foreign_affiliation].text : "";
@@ -554,7 +603,7 @@ Polymer({
         }
         else {
             _this.mobilities = _.map(_this.mobility_snapshot, function (value, index) {
-                value.status = value.status == 'IN' ? "In Coming" : "Out Going";
+                value.status = value.status == 'IN' ? "Incoming" : "Outgoing";
                 value.affiliation_name = _this.affiliation_list[value.affiliation] ? _this.affiliation_list[value.affiliation].text : "";
                 value.student_affiliation_name = _this.student_affiliation_list[value.student_affiliation] ? _this.student_affiliation_list[value.student_affiliation].text : "";
                 value.foreign_affiliation_name = _this.foreign_affiliation[value.foreign_affiliation] ? _this.foreign_affiliation[value.foreign_affiliation].text : "";
@@ -632,10 +681,10 @@ Polymer({
     },
     show_all_check: function (show_all, index) {
         if (!show_all && index > 9) {
-            return false;
+            return true;
         }
         else {
-            return true;
+            return false;
         }
     },
     show_all: function (event, target, test) {
@@ -664,43 +713,50 @@ Polymer({
     },
     count_clicked: function (event, target, test) {
         var _this = this;
-        var index = event.target.parentElement.id;
-        var tag = event.model.__data__['count_l' + index];
+        var index = 1;
+        var tag = event.model.__data__['count_l1'];
         if (this.get_count(tag.name) > 0) {
-            if (tag.is_clicked) {
-                event.target.parentElement.parentElement.querySelector('#collapse_outer' + event.model.__data__.__key__).opened = false;
-                setTimeout(function () {
-                    tag.is_clicked = false;
+            this.is_processing = true;
+            setTimeout(function () {
+                if (tag.is_clicked) {
+                    _this.closest_utility().find_closest(event.target, '#collapse_outer' + event.model.__data__.__key__).opened = false;
+                    _this.is_processing = false;
+                    setTimeout(function () {
+                        tag.is_clicked = false;
+                        _this['count_list' + index] = JSON.parse(JSON.stringify(_this['count_list' + index]));
+                    }, 500);
+                }
+                else {
+                    tag.is_clicked = true;
                     _this['count_list' + index] = JSON.parse(JSON.stringify(_this['count_list' + index]));
-                }, 500);
-            }
-            else {
-                tag.is_clicked = true;
-                this['count_list' + index] = JSON.parse(JSON.stringify(this['count_list' + index]));
-                setTimeout(function () {
-                    event.target.parentElement.parentElement.querySelector('#collapse_outer' + event.model.__data__.__key__).opened = true;
-                }, 100);
-            }
+                    setTimeout(function () {
+                        _this.closest_utility().find_closest(event.target, '#collapse_outer' + event.model.__data__.__key__).opened = true;
+                        _this.is_processing = false;
+                    }, 50);
+                }
+            }, 10);
         }
     },
     array_clicked: function (event, target, test) {
+        var _this = this;
         var index = event.target.parentElement.id;
         var parent = event.model.dataHost.parentElement.children['array_l' + index];
         var tag = event.model.__data__['array_l1'];
         var collection = event.model.dataHost.dataHost.dataHost.items;
         if (tag.is_clicked) {
-            event.target.parentElement.parentElement.querySelector('#collapse_inner' + event.model.dataHost.dataHost.__key__).opened = false;
+            this.closest_utility().find_closest(event.target, 'iron-collapse').opened = false;
             setTimeout(function () {
                 tag.is_clicked = false;
-                event.model.dataHost.dataHost.dataHost.items = JSON.parse(JSON.stringify(event.model.dataHost.dataHost.dataHost.items));
+                event.model.dataHost.items = JSON.parse(JSON.stringify(event.model.dataHost.items));
             }, 500);
         }
         else {
             tag.is_clicked = true;
-            event.model.dataHost.dataHost.dataHost.items = JSON.parse(JSON.stringify(event.model.dataHost.dataHost.dataHost.items));
+            var template = this.closest_utility().find_closest_parent(event.target, 'template');
+            event.model.dataHost.items = JSON.parse(JSON.stringify(event.model.dataHost.items));
             setTimeout(function () {
-                event.target.parentElement.parentElement.querySelector('#collapse_inner' + event.model.dataHost.dataHost.__key__).opened = true;
-            }, 100);
+                _this.closest_utility().find_closest(event.target, 'iron-collapse').opened = true;
+            }, 50);
         }
     },
     get_count_name: function (value) {
@@ -731,23 +787,30 @@ Polymer({
             }
         });
         if (x) {
-            return x.text;
+            return x.text ? x.text : 'Not Reported';
+        }
+        else {
+            return 'Not Reported';
         }
     },
-    create_array: function () {
+    create_array: function (name, show_all) {
         var _this = this;
-        var count = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            count[_i - 0] = arguments[_i];
+        var name = this.get_count_name(name);
+        var my_list = _.union(_.uniq(this.mobilities_filtered, name), my_list);
+        if (show_all) {
+            return _.sortBy(my_list, function (my_array) {
+                return -1 * (_.filter(_this.mobilities_filtered, function (value, index) {
+                    return value[name] == my_array[name];
+                }).length);
+            });
         }
-        var my_list = [];
-        _.forEach(count, function (value, index) {
-            value = _this.get_count_name(value);
-            my_list = _.union(_.uniq(_this.mobilities_filtered, value), my_list);
-        });
-        return _.sortBy(my_list, function (my_array) {
-            return -1 * (_this.get_count_inner(my_array, count[count.length - 1]));
-        });
+        else {
+            return _.take(_.sortBy(my_list, function (my_array) {
+                return -1 * (_.filter(_this.mobilities_filtered, function (value, index) {
+                    return value[name] == my_array[name];
+                }).length);
+            }), 10);
+        }
     },
     get_count: function () {
         var _this = this;
@@ -785,9 +848,6 @@ Polymer({
         _.forEach(count, function (value, index) {
             if (index % 2 != 0) {
                 var x = _this.get_count_name(count[index - 1]);
-                my_array = _.filter(my_array, function (value2, index) {
-                    return value2[x] != 'none';
-                });
                 my_list = _.union(_.filter(my_array, function (value2, index) {
                     return value2[x] == value[x];
                 }));
@@ -833,7 +893,7 @@ Polymer({
         this.count_list1 = this.count_list_original;
         this.count_list2 = this.count_list1;
         _this.columns_changed(_this.columns);
-        _this.total = _this.mobilities_filtered.length;
+        _this.total = _this.mobilities_filtered ? _this.mobilities_filtered.length : 0;
     },
     data_loaded_changed: function (new_value, old_value) {
         var is_data_loaded = true;
@@ -877,6 +937,9 @@ Polymer({
                 var stop_processing_table = _.after(how_many, function () {
                     _this.processing_table = false;
                 });
+                if (!how_many) {
+                    _this.processing_table = false;
+                }
                 if (_this.terms_statuses.length || _this.terms_statuses.length == 0) {
                     _this.terms_statuses = {};
                 }
@@ -990,17 +1053,17 @@ Polymer({
         if (affiliation_selected != 'all') {
             _this.add_tag(affiliation_selected, _this.affiliation, 'affiliation');
         }
-        var country_selected = _this.country != 'all' ? _.result(_.find(_this.country_list, { '_id': _this.country }), 'text') : 'all';
+        var country_selected = _this.country != 'all' && _this.country ? _.result(_.find(_this.country_list, { '_id': _this.country }), 'text') : 'all';
         _this.$.country_auto_ddl.selected = '';
         if (country_selected != 'all') {
             _this.add_tag(country_selected, _this.country, 'country');
         }
-        var program_selected = _this.program != 'all' ? _.result(_.find(_this.program_list, { '_id': _this.program }), 'text') : 'all';
+        var program_selected = _this.program != 'all' && _this.program ? _.result(_.find(_this.program_list, { '_id': _this.program }), 'text') : 'all';
         _this.$.program_auto_ddl.selected = '';
         if (program_selected != 'all') {
             _this.add_tag(program_selected, _this.program, 'program');
         }
-        var level_selected = _this.level != 'all' ? _.result(_.find(_this.level_list, { '_id': _this.level }), 'text') : 'all';
+        var level_selected = _this.level != 'all' && _this.level ? _.result(_.find(_this.level_list, { '_id': _this.level }), 'text') : 'all';
         _this.$.level_auto_ddl.selected = '';
         if (level_selected != 'all') {
             _this.add_tag(level_selected, _this.level, 'level');
@@ -1096,7 +1159,7 @@ Polymer({
         }
     },
     level_selected: function (event, detail, sender) {
-        this.level = this.selected_level_id ? this.selected_level_id : 'all';
+        this.level = (this.selected_level_id || this.selected_level_id == 0) ? this.selected_level_id : 'all';
         var level_selected = this.level != 'all' ? _.result(_.find(this.level_list, { '_id': this.level }), 'text') : 'all';
         this.$.level_auto_ddl.selected = '';
         if (level_selected != 'all') {

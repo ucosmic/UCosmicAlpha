@@ -3,12 +3,15 @@
 <link rel="import" href="../../../../components/Polymer_1x/bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../../../../components/Polymer_1x/bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../components/Polymer_1x/bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="/components/Polymer_1x/bower_components/paper-spinner/paper-spinner.html">
 <!--<link rel="import" href="../../../../components/Polymer_1x/bower_components/iron-icon/iron-icon.html">-->
 <link rel="import" href="../../../../components/resources/icons/student_table.html">
 <link rel="import" href="../../../../components/components/filter/filter.html">
 <link rel="import" href="../../../../components/components/autoDDL_1x/autoDDL.html">
 <link rel="import" href="../../../../components/components/filter_tags/filter_tags.html">
 <link rel="import" href="../../../../components/components/columns_shown/columns_shown.html">
+<link rel="import" href="/components/behaviors/closest/closest.html">
+<link rel="import" href="/components/behaviors/template_helpers/template_helpers.html">
 <script src="../../../Polymer/bower_components/page.js/page.js"></script>
 <!--<link rel="import" href="../../../../components/behaviors/pagination/pagination.html">-->
 <dom-module id="is-page-student-table">
@@ -16,65 +19,62 @@
     <template>
         <div class="layout vertical">
             <div class="layout horizontal">
-                <is-columns_shown columns="{{columns}}" id="columns" style="width:116px;" text="Counts"></is-columns_shown>
-                <div class="flex"></div>
-                <template is="dom-if" if="{{!is_data_loaded}}">
-                    <span style="font-size:24px; margin:10px; background-color:transparent;" class="tennant_colors">Loading new counts...</span>
-                </template>
-                <div class="flex"></div>
-                <is-filter_tags tags="{{tags}}" id="tags" tags_count="{{tags_count}}" style="position: relative;right: 35px; z-index:2;"></is-filter_tags>
-                <is-filter style="overflow:visible; margin-left: 20px; width:0px; height:0px;" filter_closed="{{filter_closed}}">
-                    <!--<is-filter_tags tags="{{tags}}" id="tags" style="position:absolute; top:10px; right: 135px;"></is-filter_tags>-->
-                    <is-auto-ddl id="affiliation_auto_ddl" style="margin-bottom:2px;" selected="{{affiliation_search}}" selectedid="{{selected_affiliation_id}}" label="Type and choose an affiliation" on-selected-updated="affiliation_selected"
-                                 on-search-updated="affiliation_list_search" list="{{affiliation_auto_list}}">
-                    </is-auto-ddl>
-                    <is-auto-ddl id="country_auto_ddl" style=" margin-bottom:2px;" selected="{{countrySearch}}" selectedid="{{selectedCountryId}}" label="Type and choose a country" on-selected-updated="countrySelected"
-                                 on-search-updated="countryListSearch" list="{{country_auto_list}}">
-                    </is-auto-ddl>
-                    <is-auto-ddl id="program_auto_ddl" style=" margin-bottom:2px;" selected="{{program_search}}" selectedid="{{selected_program_id}}" label="Type and choose a program" on-selected-updated="program_selected"
-                                 on-search-updated="program_list_search" list="{{program_auto_list}}">
-                    </is-auto-ddl>
-                    <is-auto-ddl id="level_auto_ddl" style=" margin-bottom:2px;" selected="{{level_search}}" selectedid="{{selected_level_id}}" label="Choose a level" on-selected-updated="level_selected"
-                                 on-search-updated="level_list_search" list="{{level_auto_list}}">
-                    </is-auto-ddl>
-                    <is-auto-ddl id="term_auto_ddl" style=" margin-bottom:2px;" selected="{{term_search}}" selectedid="{{selected_term_id}}" label="Choose a term" on-selected-updated="term_selected"
-                                 on-search-updated="term_list_search" list="{{term_auto_list}}">
-                    </is-auto-ddl>
-                    <is-auto-ddl id="status_auto_ddl" style=" margin-bottom:2px;" selected="{{status_search}}" selectedid="{{selected_status_id}}" label="Choose a status" on-selected-updated="status_selected"
-                                 on-search-updated="status_list_search" list="{{status_auto_list}}">
-                    </is-auto-ddl>
-                    <is-auto-ddl id="foreign_affiliation_auto_ddl" style=" margin-bottom:2px;" selected="{{foreign_affiliation_search}}" selectedid="{{selected_foreign_affiliation_id}}" label="Type and choose a foreign affiliation" on-selected-updated="foreign_affiliation_selected"
-                                 on-search-updated="foreign_affiliation_list_search" list="{{foreign_affiliation_auto_list}}">
-                    </is-auto-ddl>
-                    <is-auto-ddl id="student_affiliation_auto_ddl" style=" margin-bottom:2px;" selected="{{student_affiliation_search}}" selectedid="{{selected_student_affiliation_id}}" label="Type and choose a student affiliation" on-selected-updated="student_affiliation_selected"
-                                 on-search-updated="student_affiliation_list_search" list="{{student_affiliation_auto_list}}">
-                    </is-auto-ddl>
-                </is-filter>
-            </div>
-            <div class="layout vertical page_content">
-                <template is="dom-repeat" items="[[count_list1]]" as="count_l1" index-as="count_l1_i" id="count_l1" data-id="l1">
+                <div class="layout vertical page_content">
+                    <header>
+                        <h2>
+                            Student Mobility Summary
+                        </h2>
+                    </header>
+                    <is-columns_shown columns="{{columns}}" id="columns" style="width:116px;" text="Counts"></is-columns_shown>
+                    <div style="margin-top: 20px;">
+                        <span hidden$="[[is_data_loaded]]">
+                            <span style="font-size:24px; margin:10px; background-color:transparent;" class="tennant_colors">Loading new counts...</span>
+                        </span>
+                        <span hidden$="[[!is_data_loaded]]">
+                            <span hidden$="[[term_is_selected]]">
+                                <span style="font-size:24px; margin:10px; background-color:transparent;" class="tennant_colors">No term selected, please select a term to retrieve results.</span>
+                            </span>
+                            <span hidden$="[[!term_is_selected]]">
+                                <span hidden$="[[has_results(count_list1)]]">
+                                    <span style="font-size:24px; margin:10px; background-color:transparent;" class="tennant_colors">No results found. Please modify your Filter Tags.</span>
+                                </span>
+                            </span>
+                        </span>
+                    </div>
                     <div class="level_1">
                         <div style="  color: black; margin-top: 20px; font-size:24px; cursor:pointer;" class="level_1" on-click="count_clicked" id="1">
-                            <span>[[count_l1.name]]</span>: <span>{{get_count(count_l1.name)}}</span>
-                            <iron-icon icon="student_table:unfold-more" on-click="remove_tag"></iron-icon>
+                            <span class="tennant_colors_text"><b>Total Students</b></span>: <span>[[total]]</span>
                         </div>
-                        <template is="dom-if" if="{{count_l1.is_clicked}}">
-                            <iron-collapse id="{{set_id('collapse_outer', count_l1_i)}}">
-                                <template is="dom-if" if="{{!count_l1.show_all}}">
-                                    <span on-click="show_all" style="font-weight:bold; cursor:pointer;">Show all</span>
-                                    <iron-icon on-click="show_all" style="cursor:pointer;" icon="student_table:unfold-more" on-click="remove_tag"></iron-icon>
-                                </template>
-                                <template is="dom-if" if="{{count_l1.show_all}}">
-                                    <span on-click="show_all" style="font-weight:bold; cursor:pointer;">Show Less</span>
-                                    <iron-icon on-click="show_all" style="cursor:pointer;" icon="student_table:unfold-more" on-click="remove_tag"></iron-icon>
-                                </template>
-                                <div class="items">
-                                    <template is="dom-repeat" items="{{create_array(count_l1.name)}}" as="array_l1" index-as="array_l1_i" id="{{set_id('array_l', count_l1_i)}}">
-                                        <template is="dom-if" if="{{show_all_check(count_l1.show_all, array_l1_i)}}">
+                    </div>
+                    <template is="dom-repeat" items="[[count_list1]]" as="count_l1" index-as="count_l1_i" id="count_l1" data-id="l1">
+                        <div class="level_1">
+                            <div style="  color: black; margin-top: 20px; font-size:24px; cursor:pointer; line-height:34px;" class="level_1" on-click="count_clicked" id="1">
+                                <span style="cursor:pointer;">[[count_l1.name]]</span>: <span style="cursor:pointer;">{{get_count(count_l1.name)}}</span>
+                                <span hidden$="[[!is_processing]]" style="cursor:pointer;">
+                                    <paper-spinner active></paper-spinner>
+                                </span>
+                                <span hidden$="[[is_processing]]" style="cursor:pointer;">
+                                    <iron-icon icon="student_table:unfold-more"></iron-icon>
+                                </span>
+                            </div>
+                            <template is="dom-if" if="{{count_l1.is_clicked}}">
+                                <iron-collapse id="{{set_id('collapse_outer', count_l1_i)}}">
+                                    <template is="dom-if" if="{{!count_l1.show_all}}">
+                                        <span on-click="show_all" style="font-weight:bold; cursor:pointer;">Show all</span>
+                                        <iron-icon on-click="show_all" style="cursor:pointer;" icon="student_table:unfold-more"></iron-icon>
+                                    </template>
+                                    <template is="dom-if" if="{{count_l1.show_all}}">
+                                        <span on-click="show_all" style="font-weight:bold; cursor:pointer;">Show Less</span>
+                                        <iron-icon on-click="show_all" style="cursor:pointer;" icon="student_table:unfold-more"></iron-icon>
+                                    </template>
+                                    <div class="items">
+                                        <template is="dom-repeat" items="{{create_array(count_l1.name, count_l1.show_all)}}" as="array_l1" index-as="array_l1_i" id="{{set_id('array_l', count_l1_i)}}">
+                                            <!--<template is="dom-if" if="{{show_all_check(count_l1.show_all, array_l1_i)}}">-->
+                                            <div style="  color: black;" class="it
                                             <div style="  color: black;" class="item" on-click="array_clicked" id="[[count_l1_i]]">
 
                                                 <span style="cursor:pointer;">{{get_name(array_l1, count_l1.name)}}</span><span style="cursor:pointer;">: </span><span style="cursor:pointer;">{{get_count_inner(array_l1, count_l1.name)}}</span>
-                                                <iron-icon style="cursor:pointer;" icon="student_table:unfold-more" on-click="remove_tag"></iron-icon>
+                                                <iron-icon style="cursor:pointer;" icon="student_table:unfold-more"></iron-icon>
                                                 <template is="dom-if" if="{{array_l1.is_clicked}}">
                                                     <iron-collapse id="{{set_id('collapse_inner', array_l1_i)}}">
                                                         <div class="items2">
@@ -85,19 +85,75 @@
                                                     </iron-collapse>
                                                 </template>
                                             </div>
+                                            <!--</template>-->
                                         </template>
-                                    </template>
-                                </div>
-                            </iron-collapse>
-                        </template>
-                    </div>
-                </template>
-                <div class="level_1">
-                    <div style="  color: black; margin-top: 20px; font-size:24px; cursor:pointer;" class="level_1" on-click="count_clicked" id="1">
-                        <span>Total Students</span>: <span>[[total]]</span>
-                    </div>
+                                    </div>
+                                </iron-collapse>
+                            </template>
+                        </div>
+                    </template>
                 </div>
+                <!--<div class="flex"></div>
+                <div style="margin-left: 20px;">
+                    <span hidden$="[[is_data_loaded}}">
+                        <span style="font-size:24px; margin:10px; background-color:transparent;" class="tennant_colors">Loading new counts...</span>
+                    </span>
+                    <span hidden$="[[!is_data_loaded}}">
+                        <span hidden$="[[term_is_selected}}">
+                            <span style="font-size:24px; margin:10px; background-color:transparent;" class="tennant_colors">No term selected, please select a term to retrieve results.</span>
+                        </span>
+                        <span hidden$="[[!term_is_selected}}">
+                            <span hidden$="[[has_results(count_list1)]]">
+                                <span style="font-size:24px; margin:10px; background-color:transparent;" class="tennant_colors">No results found. Please modify your Filter Tags.</span>
+                            </span>
+                        </span>
+                    </span>
+                </div>-->
+                <div class="flex"></div>
+                <is-filter_tags tags="{{tags}}" id="tags" tags_count="{{tags_count}}" style="position: relative;right: 35px; z-index:2;"></is-filter_tags>
+                <is-filter style="overflow:visible; margin-left: 20px; width:0px; " filter_closed="{{filter_closed}}">
+                    <!--<is-filter_tags tags="{{tags}}" id="tags" style="position:absolute; top:10px; right: 135px;"></is-filter_tags>-->
+                    <is-auto-ddl id="term_auto_ddl" style=" margin-bottom:2px;" selected="{{term_search}}" selectedid="{{selected_term_id}}" label="Choose a term" on-selected-updated="term_selected"
+                                 on-search-updated="term_list_search" list="{{term_auto_list}}">
+                    </is-auto-ddl>
+                    <span hidden$="[[!term_is_selected]]">
+                        <span hidden$="[[is_greater_than(2, affiliation_list.length)]]">
+                            <is-auto-ddl id="affiliation_auto_ddl" style="margin-bottom:2px;" selected="{{affiliation_search}}" selectedid="{{selected_affiliation_id}}" label="Type and choose an affiliation" on-selected-updated="affiliation_selected"
+                                         on-search-updated="affiliation_list_search" list="{{affiliation_auto_list}}">
+                            </is-auto-ddl>
+                        </span>
+                        <is-auto-ddl id="country_auto_ddl" style=" margin-bottom:2px;" selected="{{countrySearch}}" selectedid="{{selectedCountryId}}" label="Type and choose a country" on-selected-updated="countrySelected"
+                                     on-search-updated="countryListSearch" list="{{country_auto_list}}">
+                        </is-auto-ddl>
+                        <span hidden$="[[is_greater_than(2, program_list.length)]]">
+                            <is-auto-ddl id="program_auto_ddl" style=" margin-bottom:2px;" selected="{{program_search}}" selectedid="{{selected_program_id}}" label="Type and choose a program" on-selected-updated="program_selected"
+                                         on-search-updated="program_list_search" list="{{program_auto_list}}">
+                            </is-auto-ddl>
+                        </span>
+                        <span hidden$="[[is_greater_than(2, level_list.length)]]">
+                            <is-auto-ddl id="level_auto_ddl" style=" margin-bottom:2px;" selected="{{level_search}}" selectedid="{{selected_level_id}}" label="Choose a level" on-selected-updated="level_selected"
+                                         on-search-updated="level_list_search" list="{{level_auto_list}}">
+                            </is-auto-ddl>
+                        </span>
+                        <span hidden$="[[is_greater_than(2, status_list.length)]]">
+                            <is-auto-ddl id="status_auto_ddl" style=" margin-bottom:2px;" selected="{{status_search}}" selectedid="{{selected_status_id}}" label="Choose a status" on-selected-updated="status_selected"
+                                         on-search-updated="status_list_search" list="{{status_auto_list}}">
+                            </is-auto-ddl>
+                        </span>
+                        <span hidden$="[[is_greater_than(2, foreign_affiliation_list.length)]]">
+                            <is-auto-ddl id="foreign_affiliation_auto_ddl" style=" margin-bottom:2px;" selected="{{foreign_affiliation_search}}" selectedid="{{selected_foreign_affiliation_id}}" label="Type and choose a foreign affiliation" on-selected-updated="foreign_affiliation_selected"
+                                         on-search-updated="foreign_affiliation_list_search" list="{{foreign_affiliation_auto_list}}">
+                            </is-auto-ddl>
+                        </span>
+                        <span hidden$="[[is_greater_than(2, student_affiliation_list.length)]]">
+                            <is-auto-ddl id="student_affiliation_auto_ddl" style=" margin-bottom:2px;" selected="{{student_affiliation_search}}" selectedid="{{selected_student_affiliation_id}}" label="Type and choose a student affiliation" on-selected-updated="student_affiliation_selected"
+                                         on-search-updated="student_affiliation_list_search" list="{{student_affiliation_auto_list}}">
+                            </is-auto-ddl>
+                        </span>
+                    </span>
+</is-filter>
             </div>
+
         </div>
         <iron-localstorage name="student_table_storage" id="student_table_storage" value="{{student_table_storage}}" on-iron-localstorage-load="student_table_storage_loaded" on-iron-localstorage-load-empty="student_table_storage_loaded">
         </iron-localstorage>
@@ -106,207 +162,3 @@
     <script src="table.js"></script>
 
 </dom-module>
-
-<!--<iron-localstorage name="mobilities_storage" id="mobilities_storage" value="{{mobilities}}" on-iron-localstorage-load="mobility_loaded" on-iron-localstorage-load-empty="mobility_loaded">
-</iron-localstorage>
-
-<iron-localstorage name="establishments_storage" id="establishments_storage" value="{{establishment_list}}" on-iron-localstorage-load="establishment_loaded" on-iron-localstorage-load-empty="establishment_loaded">
-</iron-localstorage>
-
-<iron-localstorage name="countries_storage" id="countries_storage" value="{{country_list}}" on-iron-localstorage-load="country_loaded" on-iron-localstorage-load-empty="country_loaded">
-</iron-localstorage>
-<iron-localstorage name="programs_storage" id="programs_storage" value="{{program_list}}" on-iron-localstorage-load="program_loaded" on-iron-localstorage-load-empty="program_loaded">
-</iron-localstorage>
-<iron-localstorage name="filter_tags_storage" id="filter_tags_storage" value="{{tags}}" on-iron-localstorage-load="tag_loaded" on-iron-localstorage-load-empty="tag_loaded">
-</iron-localstorage>-->
-
-
-<!--<div class="layout vertical page_content">
-    <template is="dom-repeat" items="[[count_list1]]" as="count_l1" index-as="count_l1_i" id="count_l1" data-id="l1">
-        <div class="level_1">
-            <div style="  color: black; margin-top: 20px; font-size:24px; cursor:pointer;" class="level_1" on-click="count_clicked" id="1">
-                <span>[[count_l1.name]]</span>: <span>{{get_count(count_l1.name)}}</span>
-                <iron-icon icon="student_table:unfold-more" on-click="remove_tag"></iron-icon>
-            </div>
-            <template is="dom-if" if="{{count_l1.is_clicked}}">
-                <template is="dom-if" if="{{!count_l1.show_all}}">
-                    <div on-click="show_all" style="font-weight:bold;">Show all</div>
-                </template>
-                <template is="dom-if" if="{{count_l1.show_all}}">
-                    <div on-click="show_all" style="font-weight:bold;">Show Less</div>
-                </template>
-                <div class="items">
-                    <template is="dom-repeat" items="{{create_array(count_l1.name)}}" as="array_l1" index-as="array_l1_i" id="{{set_id('array_l', count_l1_i)}}">
-                        <template is="dom-if" if="{{show_all_check(count_l1.show_all, array_l1_i)}}">
-                            <div style="  color: black;" class="item" on-click="array_clicked" id="[[count_l1_i]]">
-
-                                <span style="cursor:pointer;">{{get_name(array_l1, count_l1.name)}}</span><span style="cursor:pointer;">: </span><span style="cursor:pointer;">{{get_count_inner(array_l1, count_l1.name)}}</span>
-                                <iron-icon style="cursor:pointer;" icon="student_table:unfold-more" on-click="remove_tag"></iron-icon>
-                                <template is="dom-if" if="{{array_l1.is_clicked}}">
-                                    <div class="items2">
-                                        <template is="dom-repeat" items="[[count_list2]]" as="count_l2" index-as="count_l2_i" id="count_l2">
-                                            <div class="item2" style="  color: black; z-index: 10; " on-click="count_clicked" id="2"><span>[[count_l2.name]]</span>: <span>{{get_count_deep(count_l1.name, array_l1, count_l2.name)}}</span></div>
-                                        </template>
-                                    </div>
-                                </template>
-                            </div>
-                        </template>
-                    </template>
-                </div>
-            </template>
-        </div>
-    </template>
-</div>-->
-<!--<div class="layout vertical">
-    <template is="dom-repeat" items="[[count_list1]]" as="count_l1" index-as="count_l1_i" id="count_l1" data-id="l1">
-        <div style="  color: black; z-index: 10;margin-top: 50px;" on-click="count_clicked" id="1"><span>[[count_l1.name]]</span>: <span>{{get_count(count_l1.name)}}</span></div>
-        <template is="dom-if" if="{{count_l1.is_clicked}}">
-            <template is="dom-if" if="{{!count_l1.show_all}}">
-                <div on-click="show_all">Show all</div>
-            </template>
-            <template is="dom-if" if="{{count_l1.show_all}}">
-                <div on-click="show_all">Show Less</div>
-            </template>
-            <template is="dom-repeat" items="{{create_array(count_l1.name)}}" as="array_l1" index-as="array_l1_i" id="array_l1">
-                <template is="dom-if" if="{{show_all_check(count_l1.show_all, array_l1_i)}}">
-                    <div style="  color: black; z-index: 10;margin-top: 0px;" on-click="array_clicked" id="1"><span>{{get_name(array_l1, count_l1.name)}}</span>: <span>{{get_count_inner(array_l1, count_l1.name)}}</span></div>
-                    <template is="dom-if" if="{{array_l1.is_clicked}}">
-                        <template is="dom-repeat" items="[[count_list2]]" as="count_l2" index-as="count_l2_i" id="count_l2">
-                            <div style="  color: black; z-index: 10;margin-top: 0px;" on-click="count_clicked" id="2"><span>[[count_l2.name]]</span>: <span>{{get_count_deep(count_l1.name, array_l1, count_l2.name)}}</span></div>
-                            <template is="dom-if" if="{{count_l2.is_clicked}}">
-                                <template is="dom-if" if="{{!count_l2.show_all}}">
-                                    <div on-click="show_all">Show all</div>
-                                </template>
-                                <template is="dom-if" if="{{count_l2.show_all}}">
-                                    <div on-click="show_all">Show Less</div>
-                                </template>
-                                <template is="dom-repeat" items="{{create_array(count_l2.name)}}" as="array_l2" index-as="array_l2_i" id="array_l2">
-                                    <template is="dom-if" if="{{show_all_check(count_l2.show_all, array_l2_i)}}">
-                                        <div style="  color: black; z-index: 10;margin-top: 0px;" on-click="array_clicked" id="2"><span>{{get_name(array_l2, count_l2.name)}}</span>: <span>{{get_count_inner(array_l2, count_l2.name)}}</span></div>
-                                        <template is="dom-if" if="{{array_l2.is_clicked}}">
-                                            <template is="dom-repeat" items="[[count_list3]]" as="count_l3" index-as="count_l3_i">
-                                                <div style="  color: black; z-index: 10;margin-top: 0px;"><span>[[count_l3.name]]</span>: <span>{{get_count_deep(count_l1.name, array_l1, count_l2.name, array_l2, count_l2.name)}}</span></div>
-
-                                            </template>
-                                        </template>
-                                    </template>
-                                </template>
-                            </template>
-                        </template>
-                    </template>
-                </template>
-            </template>
-        </template>
-    </template>
-</div>-->
-<!--<div class="layout vertical">
-    <div style="  color: black; z-index: 10;margin-top: 50px;">Countries: <span>[[country_count]]</span></div>
-    <div style="  color: black; z-index: 10;margin-top: 50px;">Affiliation: <span>[[affiliation]]</span></div>
-    <div style="  color: black; z-index: 10;margin-top: 50px;">Foreign Affiliation: <span>[[foreign_affiliation]]</span></div>
-    <div style="  color: black; z-index: 10;margin-top: 50px;">Student Affiliation: <span>[[student_affiliation]]</span></div>
-    <div style="  color: black; z-index: 10;margin-top: 50px;">Programs: <span>[[program_count]]</span></div>
-
-    <template is="dom-repeat" items="[[term_count_list]]" as="term" index-as="term_i">
-        <div style="  color: black; z-index: 10;margin-top: 50px;">Terms: <span>[[term.count]]</span></div>
-    </template>
-    <div style="  color: black; z-index: 10;margin-top: 50px;">Terms: <span>[[status_in_count]]</span></div>
-    <div style="  color: black; z-index: 10;margin-top: 50px;">Terms: <span>[[status_out_count]]</span></div>
-    <div style="  color: black; z-index: 10;margin-top: 50px;">Total: <span>[[total_count]]</span></div>
-</div>-->
-
-
-<!--<table >
-
-                <thead >
-                    <tr>
-                        <th >
-                            <p>Country</p>
-                        </th>
-                        <th >
-                            <p>Level</p>
-                        </th>
-                        <th >
-                            <p>Program</p>
-                        </th>
-                        <th >
-                            <p>student_affiliation_name</p>
-                        </th>
-                        <th >
-                            <p>Status</p>
-                        </th>
-                        <th >
-                            <p>Term</p>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <template is="dom-repeat" items="[[mobilities]]" as="mobilities" index-as="mobilities_i">
-
-                        <tr class="row">
-                            <td >
-                                <span>[[mobilities.country_name]]</span>
-                            </td>
-                            <td >
-                                <span>[[mobilities.level_name]]</span>
-                            </td>
-                            <td >
-                                <span>[[mobilities.program_name]]</span>
-                            </td>
-                            <td >
-                                <span>[[mobilities.student_affiliation_name]]</span>
-                            </td>
-                            <td >
-                                <span>[[mobilities.status]]</span>
-                            </td>
-                            <td >
-                                <span>[[mobilities.term_name]]</span>
-                            </td>
-                        </tr>
-                    </template>
-                </tbody>
-            </table>-->
-<!--<div class="table flex" style="z-index:1;">
-    <div class="heading tennant_colors_reversed">
-        <div class="cell" style="width:120px">
-            <p>Term</p>
-        </div>
-        <div class="cell" style="width:80px">
-            <p>Status</p>
-        </div>
-        <div class="cell" style="width:150px">
-            <p>Affiliation</p>
-        </div>
-        <div class="cell" style="width:120px">
-            <p>Country</p>
-        </div>
-        <div class="cell" style="width:130px">
-            <p>Level</p>
-        </div>
-        <div class="cell" style="width:200px">
-            <p>Program</p>
-        </div>
-    </div>
-    <template is="dom-repeat" items="[[mobilities_page]]" as="mobility" index-as="mobility_i">
-
-        <div class="row">
-            <div class="cell">
-                <span>[[mobility.term_name]]</span>
-            </div>
-            <div class="cell">
-                <span>[[mobility.status]]</span>
-            </div>
-            <div class="cell">
-                <span>[[mobility.student_affiliation_name]]</span>
-            </div>
-            <div class="cell">
-                <span>[[mobility.country_name]]</span>
-            </div>
-            <div class="cell">
-                <span>[[mobility.level_name]]</span>
-            </div>
-            <div class="cell">
-                <span>[[mobility.program_name]]</span>
-            </div>
-        </div>
-    </template>
-</div>-->
