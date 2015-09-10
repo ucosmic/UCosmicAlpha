@@ -3,7 +3,7 @@
 Polymer('is-auto-ddl', {
     isAjaxing: false,
     selected: "",
-    lastSearch: "", 
+    lastSearch: "",
     selectedid: 0,
     position: 1,
     backgroundcolor: "gray",
@@ -13,20 +13,21 @@ Polymer('is-auto-ddl', {
     fadeOutBackground: function (element, duration, callback = null) {
         //element.style.display = "block";
         //if (this.isChrome) {
-            var animation = new Animation(element, [
-                //{ opacity: "1.0", transform: "scale(1)" },
-                //{ opacity: "0", transform: "scale(0)" },
-                { backgroundColor: this.highlightcolor },
-                { backgroundColor: "transparent" },
-            ], { duration: duration, fill: 'forwards' });
-            var player = document.timeline.play(animation);
-            player.addEventListener('finish',() => {
-                element.style.backgroundColor = "transparent";
-                var mythis = this;
-                if (callback) {
-                    callback();
-                }
-            });
+        var animation = new Animation(element, [
+            //{ opacity: "1.0", transform: "scale(1)" },
+            //{ opacity: "0", transform: "scale(0)" },
+            { backgroundColor: this.highlightcolor },
+            { backgroundColor: "transparent" },
+        ], { duration: duration, fill: 'forwards' });
+        var player = document.timeline.play(animation);
+        player.addEventListener('finish', () => {
+            element.style.backgroundColor = "transparent";
+            element.style.color = "white";
+            var mythis = this;
+            if (callback) {
+                callback();
+            }
+        });
         //} else {
         //    element.style.backgroundColor = "transparent";
         //}
@@ -34,26 +35,27 @@ Polymer('is-auto-ddl', {
     fadeInBackground: function (element, duration, position, callback = null) {
         //element.style.display = "block";
         //if (this.isChrome) {
-            var animation = new Animation(element, [
-                { backgroundColor: "transparent" },
-                { backgroundColor: this.highlightcolor },
-                //{ opacity: "0", transform: "scale(0)" },
-                //{ opacity: "1.0", transform: "scale(1)" },
-            ], { duration: duration, fill: 'forwards' });
-            //this.fadePlayer.play(animation);
-            var player = document.timeline.play(animation);
-            player.addEventListener('finish',() => {
-                if (position == this.position) {
-                    element.style.backgroundColor = this.highlightcolor;
-                    var mythis = this;
-                    if (callback) {
-                        callback(position);
-                    }
-                } else {
-                    //element.style.backgroundColor = "transparent";
-                    this.fadeOutBackground(element, 0);
+        var animation = new Animation(element, [
+            { backgroundColor: "transparent" },
+            { backgroundColor: this.highlightcolor },
+            //{ opacity: "0", transform: "scale(0)" },
+            //{ opacity: "1.0", transform: "scale(1)" },
+        ], { duration: duration, fill: 'forwards' });
+        //this.fadePlayer.play(animation);
+        var player = document.timeline.play(animation);
+        player.addEventListener('finish', () => {
+            if (position == this.position) {
+                element.style.backgroundColor = this.highlightcolor;
+                element.style.color = 'black';
+                var mythis = this;
+                if (callback) {
+                    callback(position);
                 }
-            });
+            } else {
+                //element.style.backgroundColor = "transparent";
+                this.fadeOutBackground(element, 0);
+            }
+        });
         //} else {
         //    element.style.backgroundColor = "transparent";
         //}
@@ -74,7 +76,9 @@ Polymer('is-auto-ddl', {
     leaveSearch: function (event, detail, sender) {
         if (!this.is_scrolling) {
             setTimeout(() => {
-                this.list = [];
+                if (!this.is_scrolling) {
+                    this.list = [];
+                }
             }, 200);
         }
     },
@@ -116,40 +120,56 @@ Polymer('is-auto-ddl', {
             this.hoverChange(false, 100);
         }
         var x = this.$.itemsContainer.children[1]
-        if (x){
+        if (x) {
             var a = x.children[this.position]
             this.is_scrolling = true;
             a.focus();
             sender.focus();
         }
     },
-    selectedChanged: function (oldV, newV) {
-        if (newV == "" && oldV && oldV.length > 0) {
+    scrolling: function () {
+        this.is_scrolling = true;
+        setTimeout(() => {
+            //this.is_scrolling = false;
+            this.$.selectedInput.focus();
+        }, 50); 
+    }
+    , selectedChanged: function (oldV, newV) {
+        if (newV == "" && oldV && oldV.length > 0 && oldV != '[clear]') {
             this.fire('selected-updated');
             this.selected = "";
             this.selectedid = 0;
             this.fire('search-updated');
             this.position = 1;
         }
+        if (newV == '[clear]') {
+            this.selected = "";
+        }
     },
     select: function (event, detail, sender) {
         this.selectedid = event.target.templateInstance.model.item._id;
-        this.selected = event.target.templateInstance.model.item.text;
+        if (event.target.templateInstance.model.item.text == '[clear]') {
+            this.selected = "";
+        } else {
+            this.selected = event.target.templateInstance.model.item.text;
+        }
         this.fire('selected-updated');
         this.list = [];
         //this.fire('ouch', { msg: 'That hurt!' });//under firing custom events in https://www.polymer-project.org/docs/polymer/polymer.html
-    },
-    fire_search: function () {
+    }
+    , fire_search: function () {
+        if (!this.is_scrolling) {
+            this.fire('search-updated');
+        }
         this.is_scrolling = false;
-        this.fire('search-updated');
     },
     listSearch: function (event, detail, sender) {
         if (this.selected == "") {
             //this.list = [];
             //if (this.lastSearch != "") {
-                this.fire('selected-updated');
+            this.fire('selected-updated');
             //}
-        } else {
+        } else if(event.keyCode != 40 && event.keyCode != 38) {
             this.fire('search-updated');
         }
     },
@@ -169,10 +189,18 @@ Polymer('is-auto-ddl', {
     },
     listChangeObserver: function () {
         var observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                this.hoverChange(false, 200);
-                this.listChangeObserverInner();
-            });
+            if (this.position <= this.list.length) {
+                mutations.forEach((mutation) => {
+                    this.hoverChange(false, 200);
+                    this.listChangeObserverInner();
+                });
+            }else{
+                this.position = 1
+                mutations.forEach((mutation) => {
+                    this.hoverChange(false, 200);
+                    this.listChangeObserverInner();
+                });
+            }
         });
         var container = this.$.itemsContainer;
         observer.observe(container, {
@@ -204,14 +232,21 @@ Polymer('is-auto-ddl', {
                     if (elements[x].style.backgroundColor == this.highlightcolor) {
                         //element[x].style.backgroundColor = "transparent"
                         this.fadeOutBackground(elements[x], 0);
-                    };
+                    }
                 }
-                this.fadeInBackground(elements[this.position], speed, this.position);//,() => {
-            //    element.style.display = "block";
-            //});
-            //this.$.itemsContainer.querySelector("#itemsInnerContainer").children[this.position].style.backgroundColor = this.highlightcolor;
-            //}
-            }else{
+                //if (this.list.length != 1) {
+                //}
+                if (this.position <= this.list.length) {
+                    this.fadeInBackground(elements[this.position], speed, this.position);
+                } else {
+                    this.position = 1
+                    this.fadeInBackground(elements[this.position], speed, this.position);
+                }//,() => {
+                //    element.style.display = "block";
+                //});
+                //this.$.itemsContainer.querySelector("#itemsInnerContainer").children[this.position].style.backgroundColor = this.highlightcolor;
+                //}
+            } else {
                 setTimeout(() => {
                     if (this.list && this.list.length > 0) {
                         this.hoverChange(newValue, speed)
@@ -240,12 +275,12 @@ Polymer('is-auto-ddl', {
             return;
         } else {
             setTimeout(() => {
-                if (this.position == 11) {
+                if (this.position == 10) {
                     this.position = 1;
                     this.hoverChange(false, 200);
                 }
             }, 100);
-            this.position = 11;
+            this.position = 10;
             //this.hoverChange(false,200);
         }
     },

@@ -21,7 +21,7 @@
             </paper-input-decorator>
             <div id="itemsContainer" style="height:0; z-index:10;">
                 <template if="{{list.length > 0}}">
-                    <div id="itemsInnerContainer" class="items-inner-container" on-mouseout="{{selectHoverLeave2}}">
+                    <div id="itemsInnerContainer" class="items-inner-container" on-mouseout="{{selectHoverLeave2}}" on-mousedown="{{scrolling}}">
                         <template repeat="{{item, itemI in list}}">
                             <paper-item on-click="{{select}}" on-mouseover="{{selectHover}}" tabindex="-1" on-mouseout="{{selectHoverLeave}}" data-id="{{item._id}}" class="list-item">
                                 {{item.text}}

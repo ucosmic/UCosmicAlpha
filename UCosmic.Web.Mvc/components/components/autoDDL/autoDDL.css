@@ -2,7 +2,8 @@
   margin: 0px;
   cursor: pointer;
   padding: 4px !important;
-  border-radius: 5px; }
+  border-radius: 5px;
+  color: white; }
 
 paper-item::shadow .button-content {
   padding: 4px; }

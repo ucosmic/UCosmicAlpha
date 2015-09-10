@@ -19,6 +19,7 @@ Polymer('is-auto-ddl', {
         var player = document.timeline.play(animation);
         player.addEventListener('finish', function () {
             element.style.backgroundColor = "transparent";
+            element.style.color = "white";
             var mythis = _this;
             if (callback) {
                 callback();
@@ -36,6 +37,7 @@ Polymer('is-auto-ddl', {
         player.addEventListener('finish', function () {
             if (position == _this.position) {
                 element.style.backgroundColor = _this.highlightcolor;
+                element.style.color = 'black';
                 var mythis = _this;
                 if (callback) {
                     callback(position);
@@ -60,7 +62,9 @@ Polymer('is-auto-ddl', {
         var _this = this;
         if (!this.is_scrolling) {
             setTimeout(function () {
-                _this.list = [];
+                if (!_this.is_scrolling) {
+                    _this.list = [];
+                }
             }, 200);
         }
     },
@@ -113,30 +117,47 @@ Polymer('is-auto-ddl', {
             sender.focus();
         }
     },
+    scrolling: function () {
+        var _this = this;
+        this.is_scrolling = true;
+        setTimeout(function () {
+            _this.$.selectedInput.focus();
+        }, 50);
+    },
     selectedChanged: function (oldV, newV) {
-        if (newV == "" && oldV && oldV.length > 0) {
+        if (newV == "" && oldV && oldV.length > 0 && oldV != '[clear]') {
             this.fire('selected-updated');
             this.selected = "";
             this.selectedid = 0;
             this.fire('search-updated');
             this.position = 1;
         }
+        if (newV == '[clear]') {
+            this.selected = "";
+        }
     },
     select: function (event, detail, sender) {
         this.selectedid = event.target.templateInstance.model.item._id;
-        this.selected = event.target.templateInstance.model.item.text;
+        if (event.target.templateInstance.model.item.text == '[clear]') {
+            this.selected = "";
+        }
+        else {
+            this.selected = event.target.templateInstance.model.item.text;
+        }
         this.fire('selected-updated');
         this.list = [];
     },
     fire_search: function () {
+        if (!this.is_scrolling) {
+            this.fire('search-updated');
+        }
         this.is_scrolling = false;
-        this.fire('search-updated');
     },
     listSearch: function (event, detail, sender) {
         if (this.selected == "") {
             this.fire('selected-updated');
         }
-        else {
+        else if (event.keyCode != 40 && event.keyCode != 38) {
             this.fire('search-updated');
         }
     },
@@ -157,10 +178,19 @@ Polymer('is-auto-ddl', {
     listChangeObserver: function () {
         var _this = this;
         var observer = new MutationObserver(function (mutations) {
-            mutations.forEach(function (mutation) {
-                _this.hoverChange(false, 200);
-                _this.listChangeObserverInner();
-            });
+            if (_this.position <= _this.list.length) {
+                mutations.forEach(function (mutation) {
+                    _this.hoverChange(false, 200);
+                    _this.listChangeObserverInner();
+                });
+            }
+            else {
+                _this.position = 1;
+                mutations.forEach(function (mutation) {
+                    _this.hoverChange(false, 200);
+                    _this.listChangeObserverInner();
+                });
+            }
         });
         var container = this.$.itemsContainer;
         observer.observe(container, {
@@ -176,9 +206,14 @@ Polymer('is-auto-ddl', {
                     if (elements[x].style.backgroundColor == this.highlightcolor) {
                         this.fadeOutBackground(elements[x], 0);
                     }
-                    ;
                 }
-                this.fadeInBackground(elements[this.position], speed, this.position);
+                if (this.position <= this.list.length) {
+                    this.fadeInBackground(elements[this.position], speed, this.position);
+                }
+                else {
+                    this.position = 1;
+                    this.fadeInBackground(elements[this.position], speed, this.position);
+                }
             }
             else {
                 setTimeout(function () {
@@ -208,12 +243,12 @@ Polymer('is-auto-ddl', {
         }
         else {
             setTimeout(function () {
-                if (_this.position == 11) {
+                if (_this.position == 10) {
                     _this.position = 1;
                     _this.hoverChange(false, 200);
                 }
             }, 100);
-            this.position = 11;
+            this.position = 10;
         }
     },
 });
