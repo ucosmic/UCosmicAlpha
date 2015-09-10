@@ -1,0 +1,32 @@
+<script src="closest.js"></script>
+<!--<script>-->
+    <!--//have to do it this way because loading script comes too late.-->
+    <!--var closest = {-->
+        <!--closest_utility: function () {-->
+            <!--return {-->
+                <!--find_closest: function (el, selector) {-->
+                    <!--var matchesFn;-->
+                    <!--// find vendor prefix-->
+                    <!--['matches', 'webkitMatchesSelector', 'mozMatchesSelector', 'msMatchesSelector', 'oMatchesSelector'].some(function (fn) {-->
+                        <!--if (typeof document.body[fn] == 'function') {-->
+                            <!--matchesFn = fn;-->
+                            <!--return true;-->
+                        <!--}-->
+                        <!--return false;-->
+                    <!--});-->
+                    <!--// traverse parents-->
+                    <!--var parent;-->
+                    <!--while (el !== null) {-->
+                        <!--parent = el.parentElement;-->
+                        <!--if (parent !== null && parent[matchesFn](selector)) {-->
+                            <!--return parent;-->
+                        <!--}-->
+                        <!--el = parent;-->
+                    <!--}-->
+                    <!--return null;-->
+                <!--}-->
+            <!--};-->
+        <!--}-->
+    <!--};-->
+    <!--//# sourceMappingURL=closest.js.map-->
+<!--</script>-->
