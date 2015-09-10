@@ -62,7 +62,14 @@ Polymer({
     attached: function () {
         this.listChangeObserver();
     },
-    leaveSearch: function (event, detail, sender) {
+    scrolling: function () {
+        this.is_scrolling = true;
+        setTimeout(() => {
+            //this.is_scrolling = false;
+            this.$.selectedInput.$.input.focus();
+        }, 50); 
+    }
+    , leaveSearch: function (event, detail, sender) {
         if (!this.is_scrolling) {
             setTimeout(() => {
                 this.list = [];
@@ -70,7 +77,7 @@ Polymer({
         }
     },
     list_changed: function (newV, oldV) {
-        if (newV.length == 1) {
+        if (newV.length == 1 && newV[0]) {
             if (this.selected == newV[0].text) {
                 this.list = [];
             }
@@ -111,7 +118,7 @@ Polymer({
             }
             this.hoverChange(false, 100);
         }
-        var x = this.$.itemsContainer.children[1]
+        var x = this.$.itemsContainer.children[0]
         if (x) {
             var a = x.children[this.position]
             this.is_scrolling = true;
@@ -187,9 +194,11 @@ Polymer({
                 for (x; x < elements.length; x++) {
                     if (elements[x].style.backgroundColor == this.highlightcolor) {
                         elements[x].style.backgroundColor = "transparent";
+                        elements[x].style.color = "white";
                     };
                 }
-                elements[this.position].style.backgroundColor = "yellow"; 
+                elements[this.position].style.backgroundColor = this.highlightcolor;
+                elements[this.position].style.color = 'black'; 
             } else {
                 setTimeout(() => {
                     if (this.list && this.list.length > 0) {

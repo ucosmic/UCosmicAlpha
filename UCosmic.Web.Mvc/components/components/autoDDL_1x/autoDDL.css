@@ -1,20 +1,18 @@
-.list-item {
+is-auto-ddl .list-item {
   margin: 0px;
   cursor: pointer;
   padding: 4px !important;
-  border-radius: 5px; }
-
-paper-item::shadow .button-content {
+  border-radius: 5px;
+  color: white; }
+is-auto-ddl paper-item::shadow .button-content {
   padding: 4px; }
-
-.items-inner-container {
+is-auto-ddl .items-inner-container {
   /*background-color: {{first}};*/
   padding: 5px;
   border-radius: 5px;
   max-height: 200px;
   overflow-y: scroll; }
-
-paper-item {
+is-auto-ddl paper-item {
   background-color: transparent;
   -o-transition: color .2s ease-out, background .1s ease-in;
   -ms-transition: color .2s ease-out, background .1s ease-in;
@@ -22,10 +20,10 @@ paper-item {
   -webkit-transition: color .2s ease-out, background .1s ease-in;
   /* ...and now override with proper CSS property */
   transition: color .2s ease-out, background .1s ease-in; }
-  paper-item span {
+  is-auto-ddl paper-item span {
     width: 200px; }
-
-paper-item:hover {
-  background: yellow; }
+is-auto-ddl paper-item:hover {
+  background: rgba(255, 255, 0, 0.57);
+  color: black; }
 
 /*# sourceMappingURL=autoDDL.css.map */

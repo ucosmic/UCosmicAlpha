@@ -7,9 +7,9 @@
     <template>
         <div style="margin-left:20px;" class="layout vertical" tabindex="-1">
             <paper-input label="{{label}}" style="padding-bottom: 2px;" on-keyup="listSearch" id="selectedInput" on-blur="leaveSearch" on-focus="fire_search" on-keydown="selectedKeyPress" value="{{selected}}"></paper-input>
-            <div id="itemsContainer" style="height:0; z-index:10;">
+            <div id="itemsContainer" style=" z-index:10;">
                 <template is="dom-if" if="{{list.length}}">
-                    <div id="itemsInnerContainer" class="items-inner-container" on-mouseout="selectHoverLeave2">
+                    <div id="itemsInnerContainer" class="items-inner-container" on-mouseout="selectHoverLeave2" on-mousedown="scrolling">
                         <template is="dom-repeat" items="{{list}}" as="item" id="items">
                             <paper-item on-click="select" on-mouseover="selectHover" tabindex="-1" on-mouseout="selectHoverLeave" data-id="{{item._id}}" class="list-item">
                                 <span>{{item.text}}</span>

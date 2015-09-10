@@ -1,35 +1,39 @@
-.list-item {
-    margin: 0px;
-    cursor: pointer;
-    padding: 4px !important;
-    border-radius: 5px;
-}
+is-auto-ddl{
 
-paper-item::shadow {
-    .button-content {
-        padding: 4px;
-    }
-}
-
-    .items-inner-container {
-    /*background-color: {{first}};*/
-    padding: 5px;
-    border-radius: 5px;
-    max-height: 200px;
-    overflow-y: scroll;
-
+    .list-item {
+        margin: 0px;
+        cursor: pointer;
+        padding: 4px !important;
+        border-radius: 5px;
+        color: white;
     }
 
-    paper-item {
-  background-color:transparent;
-  -o-transition:color .2s ease-out, background .1s ease-in;
-  -ms-transition:color .2s ease-out, background .1s ease-in;
-  -moz-transition:color .2s ease-out, background .1s ease-in;
-  -webkit-transition:color .2s ease-out, background .1s ease-in;
-  /* ...and now override with proper CSS property */
-  transition:color .2s ease-out, background .1s ease-in;
-  span{
-      width: 200px;
-      }
+    paper-item::shadow {
+        .button-content {
+            padding: 4px;
+        }
+    }
+
+        .items-inner-container {
+        /*background-color: {{first}};*/
+        padding: 5px;
+        border-radius: 5px;
+        max-height: 200px;
+        overflow-y: scroll;
+
+        }
+
+        paper-item {
+      background-color:transparent;
+      -o-transition:color .2s ease-out, background .1s ease-in;
+      -ms-transition:color .2s ease-out, background .1s ease-in;
+      -moz-transition:color .2s ease-out, background .1s ease-in;
+      -webkit-transition:color .2s ease-out, background .1s ease-in;
+      /* ...and now override with proper CSS property */
+      transition:color .2s ease-out, background .1s ease-in;
+      span{
+          width: 200px;
+          }
+    }
+    paper-item:hover { background:rgba(255, 255, 0, 0.57); color: black; }
 }
-paper-item:hover { background:yellow; }
