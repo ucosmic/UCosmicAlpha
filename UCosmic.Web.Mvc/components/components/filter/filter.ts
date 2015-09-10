@@ -37,7 +37,7 @@ Polymer({
         }
         , filter_closed: {
             type: Boolean,
-            value: false
+            value: true
             , notify: true
         }
     },

@@ -9,6 +9,11 @@
     <template>
         <link href="new.css" rel="stylesheet" />
         <div class="layout vertical">
+            <header>
+                <h2>
+                    Student Mobility Settings
+                </h2>
+            </header>
             <template is="dom-if" if="{{!can_start_file_processing}}">
                 <span style="font-size:24px; margin:20px; background-color:transparent;" class="tennant_colors">Loading...</span>
             </template>
@@ -19,7 +24,7 @@
             </is-auto-ddl>
             <div class="layout horizontal tennant_colors" style="border-radius: 10px; padding: 0 10px; margin-bottom: 20px;">
                 <template is="dom-repeat" items="[[default_terms]]" as="term" id="default_terms">
-                    <paper-item class="list-item" style="width: 100px; margin-right:20px;">
+                    <paper-item class="list-item tennant_colors_highlight" style="width: 100px; margin-right:20px;">
                         <span>[[term]]</span>
                         <iron-icon icon="student_new:remove-circle-outline" on-click="remove_default_term" style="width:44px;">
                         </iron-icon>
