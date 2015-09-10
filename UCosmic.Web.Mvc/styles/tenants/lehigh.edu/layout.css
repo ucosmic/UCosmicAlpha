@@ -1,4 +1,4 @@
-/* lehigh layout importer */
+﻿/* lehigh layout importer */
 /* main sass bootstrap */
 /* suny brand values */
 /* default variable values */
@@ -48,8 +48,8 @@ body > nav.my {
       body > nav.my > .container > .content > .right {
         float: right;
         /*a:first-child {
-            border-left: solid 1px $nav-my-link-border-color;
-        }*/ }
+                        border-left: solid 1px $nav-my-link-border-color;
+                    }*/ }
         @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
           body > nav.my > .container > .content > .right a:last-child {
             border-right: 0 none !important; } }
@@ -74,17 +74,17 @@ body > nav.my {
         font-weight: bold;
         color: #eee;
         /*&.principal {
-            padding-left: 0;
-            color: $nav-my-email-link-color;
-            text-decoration: none;
-            cursor: default;
-            > * {
-                cursor: default;
-            }
-            &:hover {
-                background-color: transparent;
-            }
-        }*/ }
+                        padding-left: 0;
+                        color: $nav-my-email-link-color;
+                        text-decoration: none;
+                        cursor: default;
+                        > * {
+                            cursor: default;
+                        }
+                        &:hover {
+                            background-color: transparent;
+                        }
+                    }*/ }
         body > nav.my > .container > .content a:hover {
           background-color: #eee;
           color: #502d0e;
@@ -99,6 +99,7 @@ body > nav.my {
           background-position: 8px -1px;
           background-repeat: no-repeat;
           padding-left: 40px; }
+
 body > nav.modules {
   padding: 2px 0 0 0;
   width: 100%;
@@ -165,6 +166,7 @@ body > nav.modules {
         color: #333;
         font-weight: bold;
         cursor: default; }
+
 body > header {
   position: relative;
   z-index: 1;
@@ -246,6 +248,7 @@ body > header {
             margin-left: 8px;
             width: 24px;
             height: 24px; }
+
 body > nav.bib {
   position: relative;
   padding: 0 0 2px 0;
@@ -298,6 +301,7 @@ body > nav.bib {
         color: #333;
         font-weight: bold;
         cursor: default; }
+
 body > div.bib {
   position: relative;
   padding: 10px 16px 10px;
@@ -575,6 +579,7 @@ body #main {
         font-size: 24px; }
       body #main > .content header h2 {
         font-size: 20px; }
+
 body .ui-dialog {
   border: 0;
   padding: 0;
@@ -651,24 +656,30 @@ body .ui-dialog {
           line-height: normal; }
   body .ui-dialog.no-close .ui-dialog-titlebar-close {
     display: none; }
+
 body .ui-widget-overlay {
   background: #000 url("../../../images/bg/ui-bg_flat_black_40x100.png") 50% 50% repeat-x;
   -moz-opacity: 0.6;
   opacity: 0.6;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); }
+
 body .inline-block {
   display: inline-block; }
+
 body .bold {
   font-weight: bold; }
 
 body /deep/ a, body /deep/ a:visited {
   color: #4e75bb;
   text-decoration: underline; }
+
 body /deep/ a:hover {
   text-decoration: none; }
+
 body /deep/ a[target=_blank], body /deep/ a[target=_blank]:visited {
   color: #00c; }
+
 body /deep/ h1, body /deep/ h2, body /deep/ h3, body /deep/ h4, body /deep/ h5, body /deep/ h6 {
   text-transform: uppercase;
   display: inline-block;
@@ -677,12 +688,22 @@ body /deep/ h1, body /deep/ h2, body /deep/ h3, body /deep/ h4, body /deep/ h5, 
   color: #502d0e; }
   body /deep/ h1 a, body /deep/ h2 a, body /deep/ h3 a, body /deep/ h4 a, body /deep/ h5 a, body /deep/ h6 a {
     color: #502d0e; }
+
 body /deep/ .tennant_colors {
   background-color: #502d0e;
-  color: #00c; }
+  color: #eee; }
+
+body /deep/ .tennant_colors_text {
+  color: #502d0e; }
+
+body /deep/ .tennant_colors_highlight:hover {
+  color: #502d0e;
+  background-color: #eee; }
+
 body /deep/ .tennant_colors_reversed {
   color: #502d0e;
-  background-color: #00c; }
+  background-color: #eee; }
+
 body /deep/ .tennant_colors_secondary {
   background-color: #fff;
   color: #333; }
@@ -760,5 +781,3 @@ body > footer {
       text-decoration: underline; }
       body > footer small.powered-by a:hover {
         text-decoration: none; }
-
-/*# sourceMappingURL=layout.css.map */

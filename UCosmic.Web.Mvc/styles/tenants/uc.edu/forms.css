@@ -1,4 +1,4 @@
-/* uc forms importer */
+﻿/* uc forms importer */
 /* main sass bootstrap */
 /* suny brand values */
 /* default variable values */
@@ -57,13 +57,13 @@ input[type="month"], input[type="time"], input[type="week"], textarea {
     background-position: right top;
     background-repeat: no-repeat;
     background-origin: content-box; }
-  input[type="email"][disabled], input[type="email"][disabled=true], input[type="number"][disabled], input[type="number"][disabled=true], input[type="password"][disabled], input[type="password"][disabled=true], input[type="search"][disabled], input[type="search"][disabled=true],
-  input[type="tel"][disabled],
-  input[type="tel"][disabled=true], input[type="text"][disabled], input[type="text"][disabled=true], input[type="url"][disabled], input[type="url"][disabled=true], input[type="color"][disabled], input[type="color"][disabled=true],
-  input[type="date"][disabled],
-  input[type="date"][disabled=true], input[type="datetime"][disabled], input[type="datetime"][disabled=true], input[type="datetime-local"][disabled], input[type="datetime-local"][disabled=true],
-  input[type="month"][disabled],
-  input[type="month"][disabled=true], input[type="time"][disabled], input[type="time"][disabled=true], input[type="week"][disabled], input[type="week"][disabled=true], textarea[disabled], textarea[disabled=true] {
+  input[type="email"][disabled], input[type="email"][disabled=true], input[type="number"][disabled], input[type="number"][disabled=true], input[type="password"][disabled], input[type="password"][disabled=true], input[type="search"][disabled],
+  input[type="search"][disabled=true],
+  input[type="tel"][disabled], input[type="tel"][disabled=true], input[type="text"][disabled], input[type="text"][disabled=true], input[type="url"][disabled], input[type="url"][disabled=true], input[type="color"][disabled],
+  input[type="color"][disabled=true],
+  input[type="date"][disabled], input[type="date"][disabled=true], input[type="datetime"][disabled], input[type="datetime"][disabled=true], input[type="datetime-local"][disabled],
+  input[type="datetime-local"][disabled=true],
+  input[type="month"][disabled], input[type="month"][disabled=true], input[type="time"][disabled], input[type="time"][disabled=true], input[type="week"][disabled], input[type="week"][disabled=true], textarea[disabled], textarea[disabled=true] {
     cursor: not-allowed; }
 
 .contactKendoWindow {
@@ -120,9 +120,9 @@ textarea {
     border: solid 1px #aaa;
     border-right-color: #ddd;
     border-bottom-color: #ddd;
-    -moz-box-shadow: inset 0 0 0 0 black;
-    -webkit-box-shadow: inset 0 0 0 0 black;
-    box-shadow: inset 0 0 0 0 black; }
+    -moz-box-shadow: inset 0 0 0 0 #000000;
+    -webkit-box-shadow: inset 0 0 0 0 #000000;
+    box-shadow: inset 0 0 0 0 #000000; }
     .k-combobox .k-dropdown-wrap input.k-input, .k-combobox .k-dropdown-wrap.k-state-default input.k-input, .k-combobox .k-dropdown-wrap.k-state-border-down input.k-input, .k-combobox .k-dropdown-wrap.k-state-hover input.k-input, .k-combobox .k-dropdown-wrap.k-state-focused input.k-input {
       -moz-border-radius: 0;
       -webkit-border-radius: 0;
@@ -135,9 +135,9 @@ textarea {
       font-size: 16px;
       line-height: 20px;
       font-family: Arial, Helvetica, sans-serif;
-      -moz-box-shadow: inset 0 0 0 0 black;
-      -webkit-box-shadow: inset 0 0 0 0 black;
-      box-shadow: inset 0 0 0 0 black;
+      -moz-box-shadow: inset 0 0 0 0 #000000;
+      -webkit-box-shadow: inset 0 0 0 0 #000000;
+      box-shadow: inset 0 0 0 0 #000000;
       color: #000; }
     .k-combobox .k-dropdown-wrap .k-select, .k-combobox .k-dropdown-wrap.k-state-default .k-select, .k-combobox .k-dropdown-wrap.k-state-border-down .k-select, .k-combobox .k-dropdown-wrap.k-state-hover .k-select, .k-combobox .k-dropdown-wrap.k-state-focused .k-select {
       cursor: pointer;
@@ -229,6 +229,7 @@ body /deep/ a.button > .text {
   display: inline-block;
   line-height: 20px;
   vertical-align: middle; }
+
 body /deep/ a.button > i.green.plus {
   display: inline-block;
   vertical-align: middle;
@@ -236,6 +237,7 @@ body /deep/ a.button > i.green.plus {
   height: 24px;
   margin: -2px 0 0 -2px;
   background-image: url(../../../images/icons/plus/plus-24-green-disc.png); }
+
 body /deep/ a.button > i.save {
   display: inline-block;
   vertical-align: middle;
@@ -243,6 +245,7 @@ body /deep/ a.button > i.save {
   height: 24px;
   margin: -2px 0 0 -2px;
   background-image: url(../../../images/icons/save/save-24.png); }
+
 body /deep/ a.button > i.red.closer {
   display: inline-block;
   vertical-align: middle;
@@ -259,8 +262,8 @@ button, input[type=submit], input[type=reset], input[type=button], a.button, a.b
   border-radius: 4px;
   padding: 6px 12px;
   font-family: Arial, Helvetica, sans-serif;
-  color: white !important;
-  background-color: black;
+  color: #fff !important;
+  background-color: #000;
   -moz-opacity: 0.9;
   opacity: 0.9;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";
@@ -282,8 +285,8 @@ button, input[type=submit], input[type=reset], input[type=button], a.button, a.b
       cursor: not-allowed; }
 
 body /deep/ button, body /deep/ input[type=submit], body /deep/ input[type=reset], body /deep/ input[type=button], body /deep/ a.button, body /deep/ a.button:visited {
-  color: white !important;
-  background-color: black; }
+  color: #fff !important;
+  background-color: #000; }
 
 button.link, input[type=submit].link, input[type=reset].link, input[type=button].link, body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true] {
   display: inline-block;
@@ -398,6 +401,7 @@ button.link, input[type=submit].link, input[type=reset].link, input[type=button]
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 8px; }
+
 .validation-summary ol, .validation-summary ul {
   margin-left: 20px;
   padding-left: 0;
@@ -478,6 +482,7 @@ fieldset.no-sidebar {
   padding: 20px 40px;
   border: solid 1px #ccc;
   border-radius: 12px; }
+
 fieldset legend {
   margin-left: 4px;
   font-weight: bold;
@@ -719,6 +724,7 @@ section {
 
 .flasher.side * {
   cursor: pointer; }
+
 .flasher.side > .content {
   margin-bottom: 20px;
   margin-left: 4px;
@@ -754,7 +760,7 @@ section {
     -ms-transform-origin: top right;
     -o-transform-origin: top right;
     transform-origin: top right;
-    color: white;
+    color: #fff;
     text-transform: uppercase;
     font-family: Arial, Helvetica, sans-serif; }
   .typed-item > .item, .typed-item2 > .item {
@@ -780,4 +786,3 @@ section {
 
 .required:after {
   content: ' *'; }
-

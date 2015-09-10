@@ -497,12 +497,20 @@ body /deep/ {
 
     .tennant_colors {
         background-color: $nav-bib-bg-color;
-        color: $external-link-color;
+        color: $nav-bib-link-text-color;
+    }
+    .tennant_colors_text {
+        color: $heading-text-color;
+    }
+
+    .tennant_colors_highlight:hover {
+        color: $nav-bib-bg-color;
+        background-color: $nav-bib-link-text-color;
     }
     
     .tennant_colors_reversed {
         color: $nav-bib-bg-color;
-        background-color: $external-link-color;
+        background-color: $nav-bib-link-text-color;
     }
     
     .tennant_colors_secondary {
