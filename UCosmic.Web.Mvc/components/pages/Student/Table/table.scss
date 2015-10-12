@@ -6,8 +6,37 @@
         padding: 0 20px 20px 0;
         margin-right: 20px;
     }
-    .items div, .items2 div {
+    .items, .item2, .item {
         padding: 6px 10px;
+    }
+    google-chart{
+        width: 600px; 
+        height: 300px;
+    }
+
+    /*.chart_counts span.chart_count_item:after {
+    content: ", ";
+    }
+
+    .chart_counts span.chart_count_item:last-child:after {
+    content: "";
+    }*/
+
+    .chart_counts span.chart_count_item + span.chart_count_item:before {
+        content: "- ";
+    }
+    .chart_count_item span:first-child {
+        font-weight: bold;
+    }
+    .chart_counts{
+        margin-left: 10px;
+    }
+    .action_close_container{
+        margin-right: 5px;
+    }
+
+    .dropdown-content{
+        max-height: 300px;
     }
     /*paper-spinner{
         height:20px; 

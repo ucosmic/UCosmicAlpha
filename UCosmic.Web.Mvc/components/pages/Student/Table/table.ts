@@ -311,6 +311,21 @@ Polymer({
             type: String,
             computed: 'compute_term_is_selected(tags)'
         }
+        , count_list_original: {
+            type: Array,
+            notify: true,
+            value: []
+        }
+        , is_processing: {
+            type: Boolean,
+            notify: true,
+            value: false
+        }
+        , mobilities_filtered: {
+            type: Array,
+            notify: true,
+            value: []
+        }
     },
     listeners: {
         'neon-animation-finish': '_onAnimationFinish'
@@ -364,15 +379,13 @@ Polymer({
 //foreign_affiliation_count: 0,
 //program_count: 0,
 //country_count: 0
-    , count_list_orignal: [{ name: 'Countries', is_clicked: false, show_all: false }, { name: 'Programs', is_clicked: false, show_all: false }
-        , { name: 'Levels', is_clicked: false, show_all: false }, { name: 'Affiliations', is_clicked: false, show_all: false }
-        , { name: 'Status', is_clicked: false, show_all: false }, { name: 'Terms', is_clicked: false, show_all: false }
-        , { name: 'Student Affiliations', is_clicked: false, show_all: false }, { name: 'Foreign Affiliations', is_clicked: false, show_all: false }]
     //, count_list1: this.count_list_orignal
     //, count_list2: this.count_list1
 //, count_list3: [{ name: 'Countries', is_clicked: false, show_all: false }, { name: 'Programs', is_clicked: false, show_all: false }, { name: 'Levels', is_clicked: false, show_all: false }] 
     , created: function () {
         this.controller = this;
+        //this.mobilities_filtered = [];
+        //this.is_processing = false;
     },
     attached: function () {
         if (this.firebase_token) {
@@ -384,15 +397,13 @@ Polymer({
                 }
             });
         }
-        this.count_list_original = [{ name: 'Countries', is_clicked: false, show_all: false }, { name: 'Programs', is_clicked: false, show_all: false }
-            , { name: 'Levels', is_clicked: false, show_all: false }, { name: 'Affiliations', is_clicked: false, show_all: false }
-            , { name: 'Status', is_clicked: false, show_all: false }, { name: 'Terms', is_clicked: false, show_all: false }
-            , { name: 'Student Affiliations', is_clicked: false, show_all: false }, { name: 'Foreign Affiliations', is_clicked: false, show_all: false }];
-        this.count_list1 = this.count_list_original;
-        this.count_list2 = this.count_list1;
+        //this.count_list_original = [{ name: 'Countries', is_clicked: false, show_all: false }, { name: 'Programs', is_clicked: false, show_all: false }
+        //    , { name: 'Levels', is_clicked: false, show_all: false }, { name: 'Affiliations', is_clicked: false, show_all: false }
+        //    , { name: 'Status', is_clicked: false, show_all: false }, { name: 'Terms', is_clicked: false, show_all: false }
+        //    , { name: 'Student Affiliations', is_clicked: false, show_all: false }, { name: 'Foreign Affiliations', is_clicked: false, show_all: false }];
+        //this.count_list1 = this.count_list_original;
+        //this.count_list2 = this.count_list1;
 
-        this.mobilities_filtered = [];
-        this.is_processing = false;
     }
     , fire_students_tenant_keys: null
     , get_mobility_value: function (column_name, mobility) {
@@ -521,6 +532,7 @@ Polymer({
         this.fire_students_tenant_values = new Firebase("https://UCosmic.firebaseio.com/Members/" + this.tenant_id + '/Mobilities/Values');
 
 
+        this.load_settings_counts(this);
     }
 
     , start_setup_filter: _.after(8, function () {
@@ -583,8 +595,28 @@ Polymer({
         }
 
     }
-
+    , process_text_to_name: function (text) {
+        switch (text) {
+            case "Country":
+                return 'Countries';
+            case "Program":
+                return 'Programs';
+            case "Level":
+                return 'Levels';
+            case "Affiliation":
+                return 'Affiliations';
+            case "Status":
+                return 'Status';
+            case "Term":
+                return 'Terms';
+            case "Student Affiliation":
+                return 'Student Affiliations';
+            case "Foreign Affiliation":
+                return 'Foreign Affiliations';
+        }
+    }
     , student_table_storage_loaded: function () {
+        var my_this = this;
         if (!this.student_table_storage_computed) {
             //var load_new_data = this.student_table_storage.date_stored ? (this.in_days(this.student_table_storage.date_stored, Date.now()) > 1 ? true : false) : false;
             if (this.student_table_storage && this.student_table_storage.mobilities && this.student_table_storage.mobilities.length && !(this.student_table_storage.date_stored ? (this.in_days(this.student_table_storage.date_stored, Date.now()) > 1 ? true : false) : false)) {// && this.mobilities.length > 0) {
@@ -597,17 +629,12 @@ Polymer({
                 this.last_term_tags = this.student_table_storage.last_term_tags;
                 this.last_status = this.student_table_storage.last_status;
                 this.terms_statuses = this.student_table_storage.terms_statuses ? this.student_table_storage.terms_statuses : {};
+                this.count_list_original = _.map(this.student_table_storage.columns, function (value: any, index) {
+                    if (value) {
+                        return { name: my_this.process_text_to_name(value.text), is_clicked: false, show_all: false }
+                    }
+                });
                 this.columns = this.student_table_storage.columns
-                //    ? this.student_table_storage.columns : [ //redo this based on columns shown - add foreign affiliation and student aff
-                //    { is_shown: true, text: 'Term' }
-                //    , { is_shown: true, text: 'Status' }
-                //    , { is_shown: true, text: 'Affiliation' }
-                //    , { is_shown: true, text: 'Foreign Affiliation' }
-                //    , { is_shown: true, text: 'Country' }
-                //    , { is_shown: true, text: 'Level' }
-                //    , { is_shown: true, text: 'Program' }
-                //    , { is_shown: true, text: 'Student Affiliation' }
-                //];
                 this.setup_routing();
             } else if (!this.mobilities && !this.establishment_list && !this.country_list && !this.program_list && !this.level_list && !this.tags) {
                 if (this.student_table_storage) {
@@ -622,31 +649,40 @@ Polymer({
                 this.last_term_tags = [];
                 this.last_status = [];
                 this.terms_statuses = {};
-                //this.columns = [ //redo this based on columns shown - add foreign affiliation and student aff
-                //    { is_shown: true, text: 'Term' }
-                //    , { is_shown: true, text: 'Status' }
-                //    , { is_shown: true, text: 'Affiliation' }
-                //    , { is_shown: true, text: 'Foreign Affiliation' }
-                //    , { is_shown: true, text: 'Country' }
-                //    , { is_shown: true, text: 'Level' }
-                //    , { is_shown: true, text: 'Program' }
-                //    , { is_shown: true, text: 'Student Affiliation' }
-                //]
                 this.start_setup_filter();
             }
         }
         if (this.columns) {
             this.start_setup_filter();
         } else {
-            this.fire_members_settings_mobility_counts.once("value", (snapshot) => {
-
-                this.columns = snapshot.val();
-                this.start_setup_filter();
-            }, function (errorObject) {
-                    console.log("The read failed: " + errorObject.code);
-                });
+            my_this.load_settings_counts(my_this);
         }
     }
+
+    , load_settings_counts: _.after(2, function (my_this) {
+        this.fire_members_settings_mobility_counts.once("value", (snapshot) => {
+
+            this.count_list_original = _.map(snapshot.val(), function (value: any, index) {
+                if (value) {
+                    return { name: my_this.process_text_to_name(value.text), is_clicked: false, show_all: false }
+                }
+            });
+            this.columns = snapshot.val();
+            //this.count_list_original = [{ name: 'Countries', is_clicked: false, show_all: false }, { name: 'Programs', is_clicked: false, show_all: false }
+            //    , { name: 'Levels', is_clicked: false, show_all: false }, { name: 'Affiliations', is_clicked: false, show_all: false }
+            //    , { name: 'Status', is_clicked: false, show_all: false }, { name: 'Terms', is_clicked: false, show_all: false }
+            //    , { name: 'Student Affiliations', is_clicked: false, show_all: false }, { name: 'Foreign Affiliations', is_clicked: false, show_all: false }];
+            this.count_list_original = _.map(this.columns, function (value: any, index) {
+                return { name: my_this.process_text_to_name(value.text), is_clicked: false, show_all: false }
+            });
+            this.count_list1 = this.count_list_original;
+            this.count_list2 = this.count_list1;
+
+            this.start_setup_filter();
+        }, function (errorObject) {
+                console.log("The read failed: " + errorObject.code);
+            });
+    })
     , student_table_storage_loaded_empty: function () {
         this.start_setup_filter();
     },
@@ -679,18 +715,19 @@ Polymer({
         var student_affiliation_list = [];
         if (this.establishment_list) {
             _.forEach(new_value, (value: any, index) => {
-                student_affiliation_list = _.union(student_affiliation_list, [this.establishment_list[value.student_affiliation]]);
+                student_affiliation_list = value.student_affiliation != 'none' ? _.union(student_affiliation_list, [ this.establishment_list[value.student_affiliation]]) : student_affiliation_list;
             })
         }
         var foreign_affiliation_list = [];
         if (this.establishment_list) {
             _.forEach(new_value, (value: any, index) => {
-                foreign_affiliation_list = _.union(foreign_affiliation_list, [this.establishment_list[value.foreign_affiliation]]);
+                foreign_affiliation_list = value.foreign_affiliation != 'none' ? _.union(foreign_affiliation_list, [this.establishment_list[value.foreign_affiliation]]) : foreign_affiliation_list;
             })
         }
         this.student_affiliation_list = student_affiliation_list;
         this.affiliation_list = affiliation_list;
         this.foreign_affiliation_list = foreign_affiliation_list;
+
     }
 
     , is_false: function (value) {
@@ -704,9 +741,9 @@ Polymer({
         if (_this.mobilities && _this.mobilities.length > 0) {
             _this.mobilities = _.map(_this.mobility_snapshot, function (value: any, index) {
                 value.status = value.status == 'IN' ? "Incoming" : "Outgoing";
-                value.affiliation_name = _this.affiliation_list[value.affiliation] ? _this.affiliation_list[value.affiliation].text : "";
-                value.student_affiliation_name = _this.student_affiliation_list[value.student_affiliation] ? _this.student_affiliation_list[value.student_affiliation].text : "";
-                value.foreign_affiliation_name = _this.foreign_affiliation_list[value.foreign_affiliation] ? _this.foreign_affiliation_list[value.foreign_affiliation].text : "";
+                value.affiliation_name = _this.affiliation_list[value.affiliation] ? _this.affiliation_list[value.affiliation].text : "Not Reported";
+                value.student_affiliation_name = _this.student_affiliation_list[value.student_affiliation] ? _this.student_affiliation_list[value.student_affiliation].text : "Not Reported";
+                value.foreign_affiliation_name = _this.foreign_affiliation_list[value.foreign_affiliation] ? _this.foreign_affiliation_list[value.foreign_affiliation].text : "Not Reported";
                 return value;
             });
 
@@ -715,9 +752,9 @@ Polymer({
 
             _this.mobilities = _.map(_this.mobility_snapshot, function (value: any, index) {
                 value.status = value.status == 'IN' ? "Incoming" : "Outgoing";
-                value.affiliation_name = _this.affiliation_list[value.affiliation] ? _this.affiliation_list[value.affiliation].text : "";
-                value.student_affiliation_name = _this.student_affiliation_list[value.student_affiliation] ? _this.student_affiliation_list[value.student_affiliation].text : "";
-                value.foreign_affiliation_name = _this.foreign_affiliation[value.foreign_affiliation] ? _this.foreign_affiliation[value.foreign_affiliation].text : "";
+                value.affiliation_name = _this.affiliation_list[value.affiliation] ? _this.affiliation_list[value.affiliation].text : "Not Reported";
+                value.student_affiliation_name = _this.student_affiliation_list[value.student_affiliation] ? _this.student_affiliation_list[value.student_affiliation].text : "Not Reported";
+                value.foreign_affiliation_name = _this.foreign_affiliation[value.foreign_affiliation] ? _this.foreign_affiliation[value.foreign_affiliation].text : "Not Reported";
                 return value;
             });
 
@@ -796,7 +833,9 @@ Polymer({
     , capitaliseFirstLetter: function (myString) {
         return myString.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
     }
-
+    , get_expand_icon: function(is_expanded){
+        return is_expanded ? 'student_table:unfold-less' : 'student_table:unfold-more';
+    }
     , show_all_check: function (show_all, index) {
         if (!show_all && index > 9) {
             return true;//opposite for hidden
@@ -805,29 +844,195 @@ Polymer({
         }
     }
     , show_all: function (event, target, test) {
+
+        this.is_processing = true;
         var tag = this.$.count_l1.itemForElement(event.target);
         //tag.show_all = tag.show_all ? false : true;
+        var target = this.closest_utility().find_closest(event.target, '#collapse_outer' + this.$.count_l1.indexForElement(event.target))
         if (tag.show_all) {
-            event.target.parentElement.parentElement.querySelector('#collapse_outer' + this.$.count_l1.indexForElement(event.target)).toggle();
+            target.toggle();
+            //event.target.parentElement.parentElement.querySelector('#collapse_outer' + this.$.count_l1.indexForElement(event.target)).toggle();
             setTimeout(() => {
                 tag.show_all = false;
                 this.count_list1 = JSON.parse(JSON.stringify(this.count_list1));
                 setTimeout(() => {
-                    event.target.parentElement.parentElement.querySelector('#collapse_outer' + this.$.count_l1.indexForElement(event.target)).toggle();
+                    //event.target.parentElement.parentElement.querySelector('#collapse_outer' + this.$.count_l1.indexForElement(event.target)).toggle();
+                    target.toggle();
+                    this.is_processing = false;
                 }, 100);
             }, 200);
 
         } else {
-            event.target.parentElement.parentElement.querySelector('#collapse_outer' + this.$.count_l1.indexForElement(event.target)).toggle();
+            target.toggle();
+            //event.target.parentElement.parentElement.querySelector('#collapse_outer' + this.$.count_l1.indexForElement(event.target)).toggle();
             setTimeout(() => {
                 tag.show_all = true;
                 this.count_list1 = JSON.parse(JSON.stringify(this.count_list1));
                 setTimeout(() => {
-                    event.target.parentElement.parentElement.querySelector('#collapse_outer' + this.$.count_l1.indexForElement(event.target)).toggle();
+                    //event.target.parentElement.parentElement.querySelector('#collapse_outer' + this.$.count_l1.indexForElement(event.target)).toggle();
+                    target.toggle();
+                    this.is_processing = false;
                 }, 100);
             }, 100);
         }
     }
+    , get_chart_name: function(value){
+
+        switch (value) {
+            case 0:
+                return 'area';
+            case 1:
+                return 'bar';
+            case 2:
+                return 'bubble';
+            case 3:
+                return 'candlestick';
+            case 4:
+                return 'combo';
+            case 5:
+                return 'column';
+            case 6:
+                return 'geo';
+            case 7:
+                return 'histogram';
+            case 8:
+                return 'line';
+            case 9:
+                return 'pie';
+            case 10:
+                return 'scatter';
+            case 11:
+                return 'stepped-area';
+            case 12:
+                return 'treemap';
+        }
+
+        return 'column'
+    }
+    , show_charts: function (event, target, test) {
+        var target = this.closest_utility().find_closest(event.target, '.dialog_charts');
+        var chart = this.closest_utility().find_closest(event.target, 'google-chart');
+        var paper_tabs = this.closest_utility().find_closest(event.target, 'paper-menu');
+        paper_tabs.selected = 0;
+        //this.tab_changed(event);
+
+        var template = this.closest_utility().find_closest(event.target, '#count_l1');
+        var index = template.indexForElement(event.target);
+        var item = template.itemForElement(event.target);
+        var template2 = this.closest_utility().find_closest(event.target, '#array_l' + index);
+        var rows = [], my_this = this;
+        _.each(template2.collection.store, function (value: any, index, array) {
+            //cols.push(my_this.get_name(array_l1, count_l1.name));
+            rows.push([my_this.get_name(array[index], item.name), my_this.get_count_inner(array[index], item.name)]);
+        });
+        //var paper_tab = this.closest_utility().find_closest(event.target, 'paper-item');
+        //var chart_type = paper_tab.dataset.chart_type;
+        //var chart = this.closest_utility().find_closest(event.target, '.' + chart_type);
+        var chart = this.closest_utility().find_closest(event.target, 'google-chart');
+        chart.cols = [{ "label": "Value", "type": "string" }, { "label": "Count", "type": "number" }]
+        chart.rows = rows;//[["Jan", 31], ["Feb", 28], ["Mar", 31], ["Apr", 30], ["May", 31], ["Jun", 30]];
+        target.toggle();
+        //setTimeout(function () {
+        //    target.fit();
+        //}, 100);
+        setTimeout(function () {
+        chart.drawChart();
+        }, 100);
+        //chart.drawChart();
+    }
+
+    //, open_dialog: function (event, target, test) {
+    //    var target = this.closest_utility().find_closest(event.target, '.dialog_charts');
+    //    //target.toggle();
+    //    setTimeout(function () {
+    //        target.fit();
+    //    }, 1);
+    //}
+    , close_dialog: function () {
+
+        var target = this.closest_utility().find_closest(event.target, '.dialog_charts');
+        target.toggle();
+    }
+    //, tab_changed: function (event, target) {
+    //    var template = this.closest_utility().find_closest(event.target, '#count_l1');
+    //    var index = template.indexForElement(event.target);
+    //    var item = template.itemForElement(event.target);
+    //    var template2 = this.closest_utility().find_closest(event.target, '#array_l' + index);
+    //    var rows = [], my_this = this;
+    //    _.each(template2.collection.store, function (value: any, index, array) {
+    //        //cols.push(my_this.get_name(array_l1, count_l1.name));
+    //        rows.push([my_this.get_name(array[index], item.name), my_this.get_count_inner(array[index], item.name)]);
+    //    });
+    //    //var paper_tab = this.closest_utility().find_closest(event.target, 'paper-item');
+    //    //var chart_type = paper_tab.dataset.chart_type;
+    //    //var chart = this.closest_utility().find_closest(event.target, '.' + chart_type);
+    //    var chart = this.closest_utility().find_closest(event.target, 'google-chart');
+    //    chart.cols = [{ "label": "Value", "type": "string" }, { "label": "Count", "type": "number" }]
+    //    chart.rows = rows;//[["Jan", 31], ["Feb", 28], ["Mar", 31], ["Apr", 30], ["May", 31], ["Jun", 30]];
+    //    setTimeout(function () {
+    //        chart.drawChart();
+    //    }, 50);
+    //}
+    , show_charts_2: function (event, target, test) {
+        var target = this.closest_utility().find_closest(event.target, '.dialog_charts');
+        //var target = this.closest_utility().find_closest(event.target, '.collapse_charts');
+        var chart = this.closest_utility().find_closest(event.target, 'google-chart');
+        var paper_tabs = this.closest_utility().find_closest(event.target, 'paper-menu');
+        paper_tabs.selected = 0;
+        target.toggle();
+        //this.tab_changed_2(event);
+        //chart.drawChart();
+
+        var template_parent = this.closest_utility().find_closest(event.target, '#count_l1');
+        var index_parent = template_parent.indexForElement(event.target);
+        var item_parent = template_parent.itemForElement(event.target);
+
+        //var template_inner = this.closest_utility().find_closest(event.target, '#count_l2');
+
+        var template = this.closest_utility().find_closest(event.target, '.count_l2');
+        var index = template.indexForElement(event.target);
+        var item = template.itemForElement(event.target);
+        //var template2 = this.closest_utility().find_closest(event.target, '#array_l' + index);
+        var rows = [], my_this = this;
+        _.each(this.count_list2, function (value: any) {
+            rows.push([value.name, my_this.get_count_deep(item_parent.name, template.collection.store[index_parent], value.name)]);
+        });
+        //var paper_tab = this.closest_utility().find_closest(event.target, 'paper-item');
+        //var chart_type = paper_tab.dataset.chart_type;
+        //var chart = this.closest_utility().find_closest(event.target, '.' + chart_type);
+        var chart = this.closest_utility().find_closest(event.target, 'google-chart');
+        chart.cols = [{ "label": "Value", "type": "string" }, { "label": "Count", "type": "number" }]
+        chart.rows = rows;//[["Jan", 31], ["Feb", 28], ["Mar", 31], ["Apr", 30], ["May", 31], ["Jun", 30]];
+
+        setTimeout(function () {
+            chart.drawChart();
+        }, 100);
+    }
+    //, tab_changed_2: function (event, target) {
+    //    var template_parent = this.closest_utility().find_closest(event.target, '#count_l1');
+    //    var index_parent = template_parent.indexForElement(event.target);
+    //    var item_parent = template_parent.itemForElement(event.target);
+
+    //    //var template_inner = this.closest_utility().find_closest(event.target, '#count_l2');
+
+    //    var template = this.closest_utility().find_closest(event.target, '.count_l2');
+    //    var index = template.indexForElement(event.target);
+    //    var item = template.itemForElement(event.target);
+    //    //var template2 = this.closest_utility().find_closest(event.target, '#array_l' + index);
+    //    var rows = [], my_this = this;
+    //    _.each(this.count_list2, function (value: any) {
+    //        rows.push([value.name, my_this.get_count_deep(item_parent.name, template.collection.store[index_parent], value.name)]);
+    //    });
+    //    //var paper_tab = this.closest_utility().find_closest(event.target, 'paper-item');
+    //    //var chart_type = paper_tab.dataset.chart_type;
+    //    //var chart = this.closest_utility().find_closest(event.target, '.' + chart_type);
+    //    var chart = this.closest_utility().find_closest(event.target, 'google-chart');
+    //    chart.cols = [{ "label": "Value", "type": "string" }, { "label": "Count", "type": "number" }]
+    //    chart.rows = rows;//[["Jan", 31], ["Feb", 28], ["Mar", 31], ["Apr", 30], ["May", 31], ["Jun", 30]];
+    //    setTimeout(function () {
+    //        chart.drawChart();
+    //    }, 50);
+    //}
     , count_clicked: function (event, target, test) {
         var index = 1;// event.target.parentElement.id;
         //var parent = event.model.dataHost.parentElement.children['count_l' + index];
@@ -861,36 +1066,41 @@ Polymer({
         //*** may have to reset the object with json parse stringify
     }
     , array_clicked: function (event, target, test) {
-        var index = event.target.parentElement.id;
-        //var tag = this.$['array_l' + index].itemForElement(event.target);
-        var parent = event.model.dataHost.parentElement.children['array_l' + index];
-        //var tag = parent.itemForElement(event.target);
-        var tag = event.model.__data__['array_l1'];
-        var collection = event.model.dataHost.dataHost.dataHost.items;//event.model.dataHost.modelForElement(event.target);//event.model.__data__;//parent.modelForElement(event.target);
-        if (tag.is_clicked) {
-            //event.target.parentElement.parentElement.querySelector('#collapse_inner' + parent.indexForElement(event.target)).opened = false;
-            //event.target.parentElement.parentElement.querySelector('#collapse_inner' + event.model.__data__.__key__).opened = false;
-            this.closest_utility().find_closest(event.target, 'iron-collapse').opened = false;
-            //event.target.parentElement.parentElement.querySelector('#collapse_inner' + event.model.dataHost.dataHost.__key__).opened = false;
-            setTimeout(() => {
-                tag.is_clicked = false;
-                event.model.dataHost.items = JSON.parse(JSON.stringify(event.model.dataHost.items));
-                //collection.dataHost.items = JSON.parse(JSON.stringify(collection.dataHost.items));
-            }, 500);
+        this.is_processing = true;
+        setTimeout(() =>{
+            var index = event.target.parentElement.id;
+            //var tag = this.$['array_l' + index].itemForElement(event.target);
+            var parent = event.model.dataHost.parentElement.children['array_l' + index];
+            //var tag = parent.itemForElement(event.target);
+            var tag = event.model.__data__['array_l1'];
+            var collection = event.model.dataHost.dataHost.dataHost.items;//event.model.dataHost.modelForElement(event.target);//event.model.__data__;//parent.modelForElement(event.target);
+            if (tag.is_clicked) {
+                //event.target.parentElement.parentElement.querySelector('#collapse_inner' + parent.indexForElement(event.target)).opened = false;
+                //event.target.parentElement.parentElement.querySelector('#collapse_inner' + event.model.__data__.__key__).opened = false;
+                this.closest_utility().find_closest(event.target, 'iron-collapse').opened = false;
+                //event.target.parentElement.parentElement.querySelector('#collapse_inner' + event.model.dataHost.dataHost.__key__).opened = false;
+                this.is_processing = false;
+                setTimeout(() => {
+                    tag.is_clicked = false;
+                    event.model.dataHost.items = JSON.parse(JSON.stringify(event.model.dataHost.items));
+                    //collection.dataHost.items = JSON.parse(JSON.stringify(collection.dataHost.items));
+                }, 500);
 
-        } else {
-            tag.is_clicked = true;
-            //collection.dataHost.items = JSON.parse(JSON.stringify(collection.dataHost.items));
-            //event.model.dataHost.dataHost.dataHost.items = JSON.parse(JSON.stringify(event.model.__data__.items));
-            var template = this.closest_utility().find_closest_parent(event.target, 'template');
-            event.model.dataHost.items = JSON.parse(JSON.stringify(event.model.dataHost.items));
-            //event.model.dataHost.dataHost.dataHost.items = JSON.parse(JSON.stringify(event.model.dataHost.dataHost.dataHost.items));
-            setTimeout(() => { 
-                //event.target.parentElement.parentElement.querySelector('#collapse_inner' + parent.indexForElement(event.target)).opened = true;
-                this.closest_utility().find_closest(event.target, 'iron-collapse').opened = true;
-                //event.target.parentElement.parentElement.querySelector('#collapse_inner' + event.model.__key__).opened = true;
-            }, 50);
-        }
+            } else {
+                tag.is_clicked = true;
+                //collection.dataHost.items = JSON.parse(JSON.stringify(collection.dataHost.items));
+                //event.model.dataHost.dataHost.dataHost.items = JSON.parse(JSON.stringify(event.model.__data__.items));
+                var template = this.closest_utility().find_closest_parent(event.target, 'template');
+                event.model.dataHost.items = JSON.parse(JSON.stringify(event.model.dataHost.items));
+                //event.model.dataHost.dataHost.dataHost.items = JSON.parse(JSON.stringify(event.model.dataHost.dataHost.dataHost.items));
+                setTimeout(() => { 
+                    //event.target.parentElement.parentElement.querySelector('#collapse_inner' + parent.indexForElement(event.target)).opened = true;
+                    this.closest_utility().find_closest(event.target, 'iron-collapse').opened = true;
+                    this.is_processing = false;
+                    //event.target.parentElement.parentElement.querySelector('#collapse_inner' + event.model.__key__).opened = true;
+                }, 50);
+            }
+        }, 1);
 
         //this['array_list' + index] = JSON.parse(JSON.stringify(this['array_list' + index]));
         //event.model.is_clicked = true;
@@ -930,7 +1140,6 @@ Polymer({
         }
     }
     , create_array: function (name, show_all) {
-
         /* Go about 6/7 layers deep hard coded. 
             Each count can be clicked to expand and then show sub results, then repeated with the count_list
         */
@@ -1151,8 +1360,9 @@ Polymer({
                 return obj.is_shown;
             })
             this.count_list2 = this.count_list1;
-
-            this.mobilities_filtered = JSON.parse(JSON.stringify(this.mobilities_filtered));
+            //if (this.mobilities_filtered) {
+                this.mobilities_filtered = JSON.parse(JSON.stringify(this.mobilities_filtered));
+            //}
         }
     }
     , processing_table: false

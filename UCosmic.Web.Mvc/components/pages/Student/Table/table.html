@@ -3,7 +3,14 @@
 <link rel="import" href="../../../../components/Polymer_1x/bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../../../../components/Polymer_1x/bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../components/Polymer_1x/bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="/components/Polymer_1x/bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="/components/Polymer_1x/bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="/components/Polymer_1x/bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="/components/Polymer_1x/bower_components/google-chart/google-chart.html">
+<link rel="import" href="/components/Polymer_1x/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="/components/Polymer_1x/bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="/components/Polymer_1x/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/components/Polymer_1x/bower_components/paper-fab/paper-fab.html">
 <!--<link rel="import" href="../../../../components/Polymer_1x/bower_components/iron-icon/iron-icon.html">-->
 <link rel="import" href="../../../../components/resources/icons/student_table.html">
 <link rel="import" href="../../../../components/components/filter/filter.html">
@@ -54,38 +61,222 @@
                                     <paper-spinner active></paper-spinner>
                                 </span>
                                 <span hidden$="[[is_processing]]" style="cursor:pointer;">
-                                    <iron-icon icon="student_table:unfold-more"></iron-icon>
+                                    <iron-icon icon="{{get_expand_icon(count_l1.is_expanded)}}"></iron-icon>
+                                    <!--<iron-icon icon="student_table:unfold-less" hidden="{{!count_l1.is_expanded}}"></iron-icon>
+                                    <iron-icon icon="student_table:unfold-more" hidden="{{count_l1.is_expanded}}"></iron-icon>-->
                                 </span>
                             </div>
                             <template is="dom-if" if="{{count_l1.is_clicked}}">
-                                <iron-collapse id="{{set_id('collapse_outer', count_l1_i)}}">
-                                    <template is="dom-if" if="{{!count_l1.show_all}}">
-                                        <span on-click="show_all" style="font-weight:bold; cursor:pointer;">Show all</span>
-                                        <iron-icon on-click="show_all" style="cursor:pointer;" icon="student_table:unfold-more"></iron-icon>
-                                    </template>
-                                    <template is="dom-if" if="{{count_l1.show_all}}">
-                                        <span on-click="show_all" style="font-weight:bold; cursor:pointer;">Show Less</span>
-                                        <iron-icon on-click="show_all" style="cursor:pointer;" icon="student_table:unfold-more"></iron-icon>
-                                    </template>
-                                    <div class="items">
-                                        <template is="dom-repeat" items="{{create_array(count_l1.name, count_l1.show_all)}}" as="array_l1" index-as="array_l1_i" id="{{set_id('array_l', count_l1_i)}}">
-                                            <!--<template is="dom-if" if="{{show_all_check(count_l1.show_all, array_l1_i)}}">-->
-                                            <div style="  color: black;" class="it
-                                            <div style="  color: black;" class="item" on-click="array_clicked" id="[[count_l1_i]]">
-
-                                                <span style="cursor:pointer;">{{get_name(array_l1, count_l1.name)}}</span><span style="cursor:pointer;">: </span><span style="cursor:pointer;">{{get_count_inner(array_l1, count_l1.name)}}</span>
+                                <div class="layout horizontal" style="margin: 10px;">
+                                    <div on-click="show_all">
+                                        <span hidden$="{{count_l1.show_all}}">
+                                            <span style="font-weight:bold; cursor:pointer;">Show all</span>
+                                            <span hidden$="[[!is_processing]]" style="cursor:pointer;">
+                                                <paper-spinner active></paper-spinner>
+                                            </span>
+                                            <span hidden$="[[is_processing]]" style="cursor:pointer;">
                                                 <iron-icon style="cursor:pointer;" icon="student_table:unfold-more"></iron-icon>
+                                            </span>
+                                            <!--<iron-icon icon="{{get_expand_icon(count_l1.is_expanded_chart)}}"></iron-icon>-->
+                                            <!--<iron-icon style="cursor:pointer;" icon="student_table:unfold-more"></iron-icon>-->
+                                        </span>
+                                        <span hidden$="{{!count_l1.show_all}}">
+                                            <span style="font-weight:bold; cursor:pointer;">Show Less</span>
+                                            <span hidden$="[[!is_processing]]" style="cursor:pointer;">
+                                                <paper-spinner active></paper-spinner>
+                                            </span>
+                                            <span hidden$="[[is_processing]]" style="cursor:pointer;">
+                                                <iron-icon style="cursor:pointer;" icon="student_table:unfold-less"></iron-icon>
+                                            </span>
+                                            <!--<iron-icon icon="{{get_expand_icon(count_l1.is_expanded_chart)}}"></iron-icon>-->
+                                            <!--<iron-icon style="cursor:pointer;" icon="student_table:unfold-more"></iron-icon>-->
+                                        </span>
+                                    </div>
+                                    <div class="flex"></div>
+                                    <div on-click="show_charts" style="margin-left: 20px;">
+                                        <span style="font-weight:bold; cursor:pointer;">Show charts</span>
+                                        <iron-icon icon="student_table:launch"></iron-icon>
+                                        <!--<iron-icon style="cursor:pointer;" icon="student_table:unfold-more"></iron-icon>-->
+                                    </div>
+                                </div>
+                                <!--<iron-collapse class="collapse_charts" opened="{{count_l1.is_expanded_chart}}">
+                                            <paper-dropdown-menu label="Select Chart">
+                                                <paper-menu class="dropdown-content" selected="{{count_l1.selected_tab}}">
+                                                    <paper-item>Area Chart</paper-item>
+                                                    <paper-item>Bar Chart</paper-item>
+                                                    <paper-item>Bubble Chart</paper-item>
+                                                    <paper-item>Candlestick Chart</paper-item>
+                                                    <paper-item>Combo Chart</paper-item>
+                                                    <paper-item>Column Chart</paper-item>
+                                                    <paper-item>Geo Chart</paper-item>
+                                                    <paper-item>Histogram Chart</paper-item>
+                                                    <paper-item>Line Chart</paper-item>
+                                                    <paper-item>Pie Chart</paper-item>
+                                                    <paper-item>Scatter Chart</paper-item>
+                                                    <paper-item>Stepped-area Chart</paper-item>
+                                                    <paper-item>Treemap Chart</paper-item>
+                                                </paper-menu>
+                                            </paper-dropdown-menu>
+                                            <div>
+                                                <google-chart type='{{get_chart_name(count_l1.selected_tab)}}'
+                                                              options='{"title": "Counts"}'>
+                                                </google-chart>
+                                            </div>
+                                        </iron-collapse>-->
+                                <!--<paper-tabs selected="{{count_l1.selected_tab}}" >
+                                    <paper-tab on-click="tab_changed" data-chart_type="pie">Pie Chart</paper-tab>
+                                    <paper-tab on-click="tab_changed" data-chart_type="column">Column Chart</paper-tab>
+                                    <paper-tab on-click="tab_changed" data-chart_type="line">Line Chart</paper-tab>
+                                </paper-tabs>-->
+                                <!--<iron-pages selected="{{count_l1.selected_tab}}">
+                                    <div>
+                                        <google-chart class="pie" type='pie'
+                                                      options='{"title": "Days in a month"}'
+                                                      cols='[{"label": "Month", "type": "string"},{"label": "Days", "type": "number"}]'>
+                                        </google-chart>
+                                    </div>
+                                    <div>
+                                        <google-chart class="column" type='column'
+                                                      options='{"title": "Days in a month"}'
+                                                      cols='[{"label": "Month", "type": "string"},{"label": "Days", "type": "number"}]'>
+                                        </google-chart>
+                                    </div>
+                                    <div>
+                                        <google-chart class="line" type='line'
+                                                      options='{"title": "Days in a month"}'
+                                                      cols='[{"label": "Month", "type": "string"},{"label": "Days", "type": "number"}]'>
+                                        </google-chart>
+                                    </div>
+                                </iron-pages>-->
+                                <paper-dialog class="dialog_charts" modal style="width: 650px; height: 450px; max-height: 450px;" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+                                    <div style="width: 650px; height: 380px;">
+                                        <paper-dropdown-menu label="Select Chart">
+                                            <paper-menu class="dropdown-content" selected="{{count_l1.selected_tab}}">
+                                                <paper-item>Area Chart</paper-item>
+                                                <paper-item>Bar Chart</paper-item>
+                                                <paper-item>Bubble Chart</paper-item>
+                                                <paper-item>Candlestick Chart</paper-item>
+                                                <paper-item>Combo Chart</paper-item>
+                                                <paper-item>Column Chart</paper-item>
+                                                <paper-item>Geo Chart</paper-item>
+                                                <paper-item>Histogram Chart</paper-item>
+                                                <paper-item>Line Chart</paper-item>
+                                                <paper-item>Pie Chart</paper-item>
+                                                <paper-item>Scatter Chart</paper-item>
+                                                <paper-item>Stepped-area Chart</paper-item>
+                                                <paper-item>Treemap Chart</paper-item>
+                                            </paper-menu>
+                                        </paper-dropdown-menu>
+                                        <div>
+                                            <google-chart type='{{get_chart_name(count_l1.selected_tab)}}'
+                                                          options='{"title": "Counts"}' style="width: 600px; height: 300px;">
+                                            </google-chart>
+                                        </div>
+                                        <div class="chart_counts">
+                                            <template is="dom-repeat" items="{{create_array(count_l1.name, count_l1.show_all)}}" as="array_l1">
+                                                <span class="chart_count_item">
+                                                    <span>{{get_name(array_l1, count_l1.name)}}</span><span>: </span>
+                                                    <span>{{get_count_inner(array_l1, count_l1.name)}}</span>
+                                                </span>
+                                            </template>
+                                        </div>
+                                    </div>
+                                    <div class="action_close_container layout horizontal end-justified" on-click="close_dialog">
+                                        <paper-fab mini icon="student_table:close"></paper-fab>
+                                    </div>
+                                </paper-dialog>
+                                <iron-collapse id="{{set_id('collapse_outer', count_l1_i)}}" opened="{{count_l1.is_expanded}}">
+                                    <div class="items">
+                                        <template is="dom-repeat" items="{{create_array(count_l1.name, count_l1.show_all)}}" as="array_l1" index-as="array_l1_i" id="{{set_id('array_l', count_l1_i)}}" class="count_l2">
+                                            <div style="  color: black; " class="item" id="[[count_l1_i]]">
+                                                <div on-click="array_clicked" style="cursor:pointer;">
+                                                    <span>{{get_name(array_l1, count_l1.name)}}</span><span style="cursor:pointer;">: </span><span style="cursor:pointer;">{{get_count_inner(array_l1, count_l1.name)}}</span>
+                                                    <span hidden$="[[!is_processing]]" style="cursor:pointer;">
+                                                        <paper-spinner active></paper-spinner>
+                                                    </span>
+                                                    <span hidden$="[[is_processing]]" style="cursor:pointer;">
+                                                        <iron-icon icon="{{get_expand_icon(array_l1.is_expanded)}}"></iron-icon>
+                                                    </span>
+                                                    <!--<iron-icon style="cursor:pointer;" icon="student_table:unfold-more"></iron-icon>-->
+                                                </div>
                                                 <template is="dom-if" if="{{array_l1.is_clicked}}">
-                                                    <iron-collapse id="{{set_id('collapse_inner', array_l1_i)}}">
+                                                    <iron-collapse id="{{set_id('collapse_inner', array_l1_i)}}" opened="{{array_l1.is_expanded}}">
                                                         <div class="items2">
+                                                            <div on-click="show_charts_2" class="layout horizontal end-justified" style="cursor:pointer;">
+                                                                <span style="font-weight:bold;">Show charts</span>
+                                                                <iron-icon icon="student_table:launch"></iron-icon>
+                                                                <!--<iron-icon icon="{{get_expand_icon(array_l1.is_expanded_chart)}}"></iron-icon>-->
+                                                                <!--<iron-icon style="cursor:pointer;" icon="student_table:unfold-more"></iron-icon>-->
+                                                            </div>
+
+                                                            <paper-dialog class="dialog_charts" modal style="width: 650px; height: 450px; max-height: 450px;" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+                                                                <div style="width: 650px; height: 380px;">
+                                                                    <paper-dropdown-menu label="Select Chart">
+                                                                        <paper-menu class="dropdown-content" selected="{{array_l1.selected_tab}}">
+                                                                            <paper-item>Area Chart</paper-item>
+                                                                            <paper-item>Bar Chart</paper-item>
+                                                                            <paper-item>Bubble Chart</paper-item>
+                                                                            <paper-item>Candlestick Chart</paper-item>
+                                                                            <paper-item>Combo Chart</paper-item>
+                                                                            <paper-item>Column Chart</paper-item>
+                                                                            <paper-item>Geo Chart</paper-item>
+                                                                            <paper-item>Histogram Chart</paper-item>
+                                                                            <paper-item>Line Chart</paper-item>
+                                                                            <paper-item>Pie Chart</paper-item>
+                                                                            <paper-item>Scatter Chart</paper-item>
+                                                                            <paper-item>Stepped-area Chart</paper-item>
+                                                                            <paper-item>Treemap Chart</paper-item>
+                                                                        </paper-menu>
+                                                                    </paper-dropdown-menu>
+                                                                    <div>
+                                                                        <google-chart type='{{get_chart_name(array_l1.selected_tab)}}'
+                                                                                      options='{"title": "Counts"}' style="width: 600px; height: 300px;">
+                                                                        </google-chart>
+                                                                    </div>
+                                                                    <div class="chart_counts">
+                                                                        <template is="dom-repeat" items="[[count_list2]]" as="count_l2">
+                                                                            <span class="chart_count_item">
+                                                                                <span>[[count_l2.name]]</span><span>: </span>
+                                                                                <span>{{get_count_deep(count_l1.name, array_l1, count_l2.name)}}</span>
+                                                                            </span>
+                                                                        </template>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="action_close_container layout horizontal end-justified" on-click="close_dialog">
+                                                                    <paper-fab mini icon="student_table:close"></paper-fab>
+                                                                </div>
+                                                            </paper-dialog>
+                                                            <!--<iron-collapse class="collapse_charts" opened="{{array_l1.is_expanded_chart}}">
+                                                                <paper-dropdown-menu label="Select Chart">
+                                                                    <paper-menu class="dropdown-content" selected="{{array_l1.selected_tab}}">
+                                                                        <paper-item>Area Chart</paper-item>
+                                                                        <paper-item>Bar Chart</paper-item>
+                                                                        <paper-item>Bubble Chart</paper-item>
+                                                                        <paper-item>Candlestick Chart</paper-item>
+                                                                        <paper-item>Combo Chart</paper-item>
+                                                                        <paper-item>Column Chart</paper-item>
+                                                                        <paper-item>Geo Chart</paper-item>
+                                                                        <paper-item>Histogram Chart</paper-item>
+                                                                        <paper-item>Line Chart</paper-item>
+                                                                        <paper-item>Pie Chart</paper-item>
+                                                                        <paper-item>Scatter Chart</paper-item>
+                                                                        <paper-item>Stepped-area Chart</paper-item>
+                                                                        <paper-item>Treemap Chart</paper-item>
+                                                                    </paper-menu>
+                                                                </paper-dropdown-menu>
+                                                                <div>
+                                                                    <google-chart type='{{get_chart_name(array_l1.selected_tab)}}'
+                                                                                  options='{"title": "Counts"}'>
+                                                                    </google-chart>
+                                                                </div>
+                                                            </iron-collapse>-->
                                                             <template is="dom-repeat" items="[[count_list2]]" as="count_l2" index-as="count_l2_i" id="count_l2">
-                                                                <div class="item2" style="  color: black; z-index: 10; " on-click="count_clicked" id="2"><span>[[count_l2.name]]</span>: <span>{{get_count_deep(count_l1.name, array_l1, count_l2.name)}}</span></div>
+                                                                <div class="item2" style="  color: black; z-index: 10; " id="2"><span>[[count_l2.name]]</span>: <span>{{get_count_deep(count_l1.name, array_l1, count_l2.name)}}</span></div>
                                                             </template>
                                                         </div>
                                                     </iron-collapse>
                                                 </template>
                                             </div>
-                                            <!--</template>-->
                                         </template>
                                     </div>
                                 </iron-collapse>
@@ -93,22 +284,6 @@
                         </div>
                     </template>
                 </div>
-                <!--<div class="flex"></div>
-                <div style="margin-left: 20px;">
-                    <span hidden$="[[is_data_loaded}}">
-                        <span style="font-size:24px; margin:10px; background-color:transparent;" class="tennant_colors">Loading new counts...</span>
-                    </span>
-                    <span hidden$="[[!is_data_loaded}}">
-                        <span hidden$="[[term_is_selected}}">
-                            <span style="font-size:24px; margin:10px; background-color:transparent;" class="tennant_colors">No term selected, please select a term to retrieve results.</span>
-                        </span>
-                        <span hidden$="[[!term_is_selected}}">
-                            <span hidden$="[[has_results(count_list1)]]">
-                                <span style="font-size:24px; margin:10px; background-color:transparent;" class="tennant_colors">No results found. Please modify your Filter Tags.</span>
-                            </span>
-                        </span>
-                    </span>
-                </div>-->
                 <div class="flex"></div>
                 <is-filter_tags tags="{{tags}}" id="tags" tags_count="{{tags_count}}" style="position: relative;right: 35px; z-index:2;"></is-filter_tags>
                 <is-filter style="overflow:visible; margin-left: 20px; width:0px; " filter_closed="{{filter_closed}}">
@@ -151,7 +326,7 @@
                             </is-auto-ddl>
                         </span>
                     </span>
-</is-filter>
+                </is-filter>
             </div>
 
         </div>

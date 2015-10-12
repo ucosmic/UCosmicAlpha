@@ -281,6 +281,21 @@ Polymer({
         term_is_selected: {
             type: String,
             computed: 'compute_term_is_selected(tags)'
+        },
+        count_list_original: {
+            type: Array,
+            notify: true,
+            value: []
+        },
+        is_processing: {
+            type: Boolean,
+            notify: true,
+            value: false
+        },
+        mobilities_filtered: {
+            type: Array,
+            notify: true,
+            value: []
         }
     },
     listeners: {
@@ -310,10 +325,6 @@ Polymer({
     last_selected_establishment_id: -1,
     controller: null,
     total: 0,
-    count_list_orignal: [{ name: 'Countries', is_clicked: false, show_all: false }, { name: 'Programs', is_clicked: false, show_all: false },
-        { name: 'Levels', is_clicked: false, show_all: false }, { name: 'Affiliations', is_clicked: false, show_all: false },
-        { name: 'Status', is_clicked: false, show_all: false }, { name: 'Terms', is_clicked: false, show_all: false },
-        { name: 'Student Affiliations', is_clicked: false, show_all: false }, { name: 'Foreign Affiliations', is_clicked: false, show_all: false }],
     created: function () {
         this.controller = this;
     },
@@ -328,14 +339,6 @@ Polymer({
                 }
             });
         }
-        this.count_list_original = [{ name: 'Countries', is_clicked: false, show_all: false }, { name: 'Programs', is_clicked: false, show_all: false },
-            { name: 'Levels', is_clicked: false, show_all: false }, { name: 'Affiliations', is_clicked: false, show_all: false },
-            { name: 'Status', is_clicked: false, show_all: false }, { name: 'Terms', is_clicked: false, show_all: false },
-            { name: 'Student Affiliations', is_clicked: false, show_all: false }, { name: 'Foreign Affiliations', is_clicked: false, show_all: false }];
-        this.count_list1 = this.count_list_original;
-        this.count_list2 = this.count_list1;
-        this.mobilities_filtered = [];
-        this.is_processing = false;
     },
     fire_students_tenant_keys: null,
     get_mobility_value: function (column_name, mobility) {
@@ -436,6 +439,7 @@ Polymer({
         var mobility_snapshot = [];
         var counter = 0;
         this.fire_students_tenant_values = new Firebase("https://UCosmic.firebaseio.com/Members/" + this.tenant_id + '/Mobilities/Values');
+        this.load_settings_counts(this);
     },
     start_setup_filter: _.after(8, function () {
         if (!this.is_routing_setup) {
@@ -497,8 +501,28 @@ Polymer({
             return true;
         }
     },
+    process_text_to_name: function (text) {
+        switch (text) {
+            case "Country":
+                return 'Countries';
+            case "Program":
+                return 'Programs';
+            case "Level":
+                return 'Levels';
+            case "Affiliation":
+                return 'Affiliations';
+            case "Status":
+                return 'Status';
+            case "Term":
+                return 'Terms';
+            case "Student Affiliation":
+                return 'Student Affiliations';
+            case "Foreign Affiliation":
+                return 'Foreign Affiliations';
+        }
+    },
     student_table_storage_loaded: function () {
-        var _this = this;
+        var my_this = this;
         if (!this.student_table_storage_computed) {
             if (this.student_table_storage && this.student_table_storage.mobilities && this.student_table_storage.mobilities.length && !(this.student_table_storage.date_stored ? (this.in_days(this.student_table_storage.date_stored, Date.now()) > 1 ? true : false) : false)) {
                 this.mobilities = this.student_table_storage.mobilities;
@@ -510,6 +534,11 @@ Polymer({
                 this.last_term_tags = this.student_table_storage.last_term_tags;
                 this.last_status = this.student_table_storage.last_status;
                 this.terms_statuses = this.student_table_storage.terms_statuses ? this.student_table_storage.terms_statuses : {};
+                this.count_list_original = _.map(this.student_table_storage.columns, function (value, index) {
+                    if (value) {
+                        return { name: my_this.process_text_to_name(value.text), is_clicked: false, show_all: false };
+                    }
+                });
                 this.columns = this.student_table_storage.columns;
                 this.setup_routing();
             }
@@ -533,14 +562,28 @@ Polymer({
             this.start_setup_filter();
         }
         else {
-            this.fire_members_settings_mobility_counts.once("value", function (snapshot) {
-                _this.columns = snapshot.val();
-                _this.start_setup_filter();
-            }, function (errorObject) {
-                console.log("The read failed: " + errorObject.code);
-            });
+            my_this.load_settings_counts(my_this);
         }
     },
+    load_settings_counts: _.after(2, function (my_this) {
+        var _this = this;
+        this.fire_members_settings_mobility_counts.once("value", function (snapshot) {
+            _this.count_list_original = _.map(snapshot.val(), function (value, index) {
+                if (value) {
+                    return { name: my_this.process_text_to_name(value.text), is_clicked: false, show_all: false };
+                }
+            });
+            _this.columns = snapshot.val();
+            _this.count_list_original = _.map(_this.columns, function (value, index) {
+                return { name: my_this.process_text_to_name(value.text), is_clicked: false, show_all: false };
+            });
+            _this.count_list1 = _this.count_list_original;
+            _this.count_list2 = _this.count_list1;
+            _this.start_setup_filter();
+        }, function (errorObject) {
+            console.log("The read failed: " + errorObject.code);
+        });
+    }),
     student_table_storage_loaded_empty: function () {
         this.start_setup_filter();
     },
@@ -569,13 +612,13 @@ Polymer({
         var student_affiliation_list = [];
         if (this.establishment_list) {
             _.forEach(new_value, function (value, index) {
-                student_affiliation_list = _.union(student_affiliation_list, [_this.establishment_list[value.student_affiliation]]);
+                student_affiliation_list = value.student_affiliation != 'none' ? _.union(student_affiliation_list, [_this.establishment_list[value.student_affiliation]]) : student_affiliation_list;
             });
         }
         var foreign_affiliation_list = [];
         if (this.establishment_list) {
             _.forEach(new_value, function (value, index) {
-                foreign_affiliation_list = _.union(foreign_affiliation_list, [_this.establishment_list[value.foreign_affiliation]]);
+                foreign_affiliation_list = value.foreign_affiliation != 'none' ? _.union(foreign_affiliation_list, [_this.establishment_list[value.foreign_affiliation]]) : foreign_affiliation_list;
             });
         }
         this.student_affiliation_list = student_affiliation_list;
@@ -594,9 +637,9 @@ Polymer({
         if (_this.mobilities && _this.mobilities.length > 0) {
             _this.mobilities = _.map(_this.mobility_snapshot, function (value, index) {
                 value.status = value.status == 'IN' ? "Incoming" : "Outgoing";
-                value.affiliation_name = _this.affiliation_list[value.affiliation] ? _this.affiliation_list[value.affiliation].text : "";
-                value.student_affiliation_name = _this.student_affiliation_list[value.student_affiliation] ? _this.student_affiliation_list[value.student_affiliation].text : "";
-                value.foreign_affiliation_name = _this.foreign_affiliation_list[value.foreign_affiliation] ? _this.foreign_affiliation_list[value.foreign_affiliation].text : "";
+                value.affiliation_name = _this.affiliation_list[value.affiliation] ? _this.affiliation_list[value.affiliation].text : "Not Reported";
+                value.student_affiliation_name = _this.student_affiliation_list[value.student_affiliation] ? _this.student_affiliation_list[value.student_affiliation].text : "Not Reported";
+                value.foreign_affiliation_name = _this.foreign_affiliation_list[value.foreign_affiliation] ? _this.foreign_affiliation_list[value.foreign_affiliation].text : "Not Reported";
                 return value;
             });
             _this.start_setup_filter();
@@ -604,9 +647,9 @@ Polymer({
         else {
             _this.mobilities = _.map(_this.mobility_snapshot, function (value, index) {
                 value.status = value.status == 'IN' ? "Incoming" : "Outgoing";
-                value.affiliation_name = _this.affiliation_list[value.affiliation] ? _this.affiliation_list[value.affiliation].text : "";
-                value.student_affiliation_name = _this.student_affiliation_list[value.student_affiliation] ? _this.student_affiliation_list[value.student_affiliation].text : "";
-                value.foreign_affiliation_name = _this.foreign_affiliation[value.foreign_affiliation] ? _this.foreign_affiliation[value.foreign_affiliation].text : "";
+                value.affiliation_name = _this.affiliation_list[value.affiliation] ? _this.affiliation_list[value.affiliation].text : "Not Reported";
+                value.student_affiliation_name = _this.student_affiliation_list[value.student_affiliation] ? _this.student_affiliation_list[value.student_affiliation].text : "Not Reported";
+                value.foreign_affiliation_name = _this.foreign_affiliation[value.foreign_affiliation] ? _this.foreign_affiliation[value.foreign_affiliation].text : "Not Reported";
                 return value;
             });
             _this.start_setup_filter();
@@ -679,6 +722,9 @@ Polymer({
     capitaliseFirstLetter: function (myString) {
         return myString.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
     },
+    get_expand_icon: function (is_expanded) {
+        return is_expanded ? 'student_table:unfold-less' : 'student_table:unfold-more';
+    },
     show_all_check: function (show_all, index) {
         if (!show_all && index > 9) {
             return true;
@@ -689,27 +735,110 @@ Polymer({
     },
     show_all: function (event, target, test) {
         var _this = this;
+        this.is_processing = true;
         var tag = this.$.count_l1.itemForElement(event.target);
+        var target = this.closest_utility().find_closest(event.target, '#collapse_outer' + this.$.count_l1.indexForElement(event.target));
         if (tag.show_all) {
-            event.target.parentElement.parentElement.querySelector('#collapse_outer' + this.$.count_l1.indexForElement(event.target)).toggle();
+            target.toggle();
             setTimeout(function () {
                 tag.show_all = false;
                 _this.count_list1 = JSON.parse(JSON.stringify(_this.count_list1));
                 setTimeout(function () {
-                    event.target.parentElement.parentElement.querySelector('#collapse_outer' + _this.$.count_l1.indexForElement(event.target)).toggle();
+                    target.toggle();
+                    _this.is_processing = false;
                 }, 100);
             }, 200);
         }
         else {
-            event.target.parentElement.parentElement.querySelector('#collapse_outer' + this.$.count_l1.indexForElement(event.target)).toggle();
+            target.toggle();
             setTimeout(function () {
                 tag.show_all = true;
                 _this.count_list1 = JSON.parse(JSON.stringify(_this.count_list1));
                 setTimeout(function () {
-                    event.target.parentElement.parentElement.querySelector('#collapse_outer' + _this.$.count_l1.indexForElement(event.target)).toggle();
+                    target.toggle();
+                    _this.is_processing = false;
                 }, 100);
             }, 100);
         }
+    },
+    get_chart_name: function (value) {
+        switch (value) {
+            case 0:
+                return 'area';
+            case 1:
+                return 'bar';
+            case 2:
+                return 'bubble';
+            case 3:
+                return 'candlestick';
+            case 4:
+                return 'combo';
+            case 5:
+                return 'column';
+            case 6:
+                return 'geo';
+            case 7:
+                return 'histogram';
+            case 8:
+                return 'line';
+            case 9:
+                return 'pie';
+            case 10:
+                return 'scatter';
+            case 11:
+                return 'stepped-area';
+            case 12:
+                return 'treemap';
+        }
+        return 'column';
+    },
+    show_charts: function (event, target, test) {
+        var target = this.closest_utility().find_closest(event.target, '.dialog_charts');
+        var chart = this.closest_utility().find_closest(event.target, 'google-chart');
+        var paper_tabs = this.closest_utility().find_closest(event.target, 'paper-menu');
+        paper_tabs.selected = 0;
+        var template = this.closest_utility().find_closest(event.target, '#count_l1');
+        var index = template.indexForElement(event.target);
+        var item = template.itemForElement(event.target);
+        var template2 = this.closest_utility().find_closest(event.target, '#array_l' + index);
+        var rows = [], my_this = this;
+        _.each(template2.collection.store, function (value, index, array) {
+            rows.push([my_this.get_name(array[index], item.name), my_this.get_count_inner(array[index], item.name)]);
+        });
+        var chart = this.closest_utility().find_closest(event.target, 'google-chart');
+        chart.cols = [{ "label": "Value", "type": "string" }, { "label": "Count", "type": "number" }];
+        chart.rows = rows;
+        target.toggle();
+        setTimeout(function () {
+            chart.drawChart();
+        }, 100);
+    },
+    close_dialog: function () {
+        var target = this.closest_utility().find_closest(event.target, '.dialog_charts');
+        target.toggle();
+    },
+    show_charts_2: function (event, target, test) {
+        var target = this.closest_utility().find_closest(event.target, '.dialog_charts');
+        var chart = this.closest_utility().find_closest(event.target, 'google-chart');
+        var paper_tabs = this.closest_utility().find_closest(event.target, 'paper-menu');
+        paper_tabs.selected = 0;
+        target.toggle();
+        var template_parent = this.closest_utility().find_closest(event.target, '#count_l1');
+        var index_parent = template_parent.indexForElement(event.target);
+        var item_parent = template_parent.itemForElement(event.target);
+        var template = this.closest_utility().find_closest(event.target, '.count_l2');
+        var index = template.indexForElement(event.target);
+        var item = template.itemForElement(event.target);
+        var rows = [], my_this = this;
+        _.each(this.count_list2, function (value) {
+            rows.push([value.name, my_this.get_count_deep(item_parent.name, template.collection.store[index_parent], value.name)]);
+        });
+        var chart = this.closest_utility().find_closest(event.target, 'google-chart');
+        chart.cols = [{ "label": "Value", "type": "string" }, { "label": "Count", "type": "number" }];
+        chart.rows = rows;
+        setTimeout(function () {
+            chart.drawChart();
+        }, 100);
     },
     count_clicked: function (event, target, test) {
         var _this = this;
@@ -739,25 +868,30 @@ Polymer({
     },
     array_clicked: function (event, target, test) {
         var _this = this;
-        var index = event.target.parentElement.id;
-        var parent = event.model.dataHost.parentElement.children['array_l' + index];
-        var tag = event.model.__data__['array_l1'];
-        var collection = event.model.dataHost.dataHost.dataHost.items;
-        if (tag.is_clicked) {
-            this.closest_utility().find_closest(event.target, 'iron-collapse').opened = false;
-            setTimeout(function () {
-                tag.is_clicked = false;
+        this.is_processing = true;
+        setTimeout(function () {
+            var index = event.target.parentElement.id;
+            var parent = event.model.dataHost.parentElement.children['array_l' + index];
+            var tag = event.model.__data__['array_l1'];
+            var collection = event.model.dataHost.dataHost.dataHost.items;
+            if (tag.is_clicked) {
+                _this.closest_utility().find_closest(event.target, 'iron-collapse').opened = false;
+                _this.is_processing = false;
+                setTimeout(function () {
+                    tag.is_clicked = false;
+                    event.model.dataHost.items = JSON.parse(JSON.stringify(event.model.dataHost.items));
+                }, 500);
+            }
+            else {
+                tag.is_clicked = true;
+                var template = _this.closest_utility().find_closest_parent(event.target, 'template');
                 event.model.dataHost.items = JSON.parse(JSON.stringify(event.model.dataHost.items));
-            }, 500);
-        }
-        else {
-            tag.is_clicked = true;
-            var template = this.closest_utility().find_closest_parent(event.target, 'template');
-            event.model.dataHost.items = JSON.parse(JSON.stringify(event.model.dataHost.items));
-            setTimeout(function () {
-                _this.closest_utility().find_closest(event.target, 'iron-collapse').opened = true;
-            }, 50);
-        }
+                setTimeout(function () {
+                    _this.closest_utility().find_closest(event.target, 'iron-collapse').opened = true;
+                    _this.is_processing = false;
+                }, 50);
+            }
+        }, 1);
     },
     get_count_name: function (value) {
         switch (value) {
