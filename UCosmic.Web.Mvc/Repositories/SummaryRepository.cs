@@ -146,22 +146,23 @@ namespace UCosmic.Repositories
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
             string sql = "SELECT  distinct  d.[RevisionId] as degreeId " +
               ",d.[PersonId] as personId " +
-              ",d.revisionId as establishmentId " +
-              ",gpp.countryCode " +
+              ",d.institutionId as establishmentId " +
+              ",gpp.countryCode , elip.placeId " +
               "FROM [Employees].[Degree] d " +
               //"inner join [establishments].establishment ee on ee.revisionId = d.institutionId  " +
               //"inner join establishments.establishmentlocation el on ee.revisionId = el.revisionId  " +
               "inner join establishments.establishmentlocationInPlace elip on elip.establishmentlocationid = d.institutionId " +
               //"inner join places.place pp on pp.revisionId = elip.placeId " +
               "inner join places.geoplanetplace gpp on gpp.placeid = elip.placeId " +
+                "inner join places.geoplanetplace gpp2 on gpp2.englishname = gpp.countryname " +
               "inner join [People].Person people on d.personId=people.revisionid " +
               "left outer join people.affiliation pa on pa.personId=people.revisionid " +
               "left outer join establishments.establishmentNode een on pa.establishmentid=een.offspringId " +
-              "inner join [identity].[user] iu on iu.personId=people.revisionid " +
+              //"inner join [identity].[user] iu on iu.personId=people.revisionid " + // degrees is off because of this, but may need fixed in Degress page by terms -same in map degree count below
                "where (pa.establishmentid=" + EstablishmentId +  " or een.AncestorId= " + EstablishmentId + ")";
             if (PlaceId > 0)
             {
-                sql += " and elip.placeId=" + PlaceId;
+                sql += " and (gpp.placeId=" + PlaceId + " or gpp2.placeId=" + PlaceId + ")";
             }
             if (selectedEstablishmentId > 0)
             {
@@ -175,21 +176,22 @@ namespace UCosmic.Repositories
         public IList<DegreeMapSummaryApiQueryResultModel> DegreeMapSummaryByEstablishment_Place(int? EstablishmentId, int? PlaceId)
         {
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
-            string sql = "SELECT  distinct  d.[RevisionId] as id , pp.OfficialName,gnt.CountryCode " +
+            string sql = "SELECT  distinct  d.[RevisionId] as id , gpp.englishname as OfficialName,gpp.CountryCode " +
               "FROM [Employees].[Degree] d " +
               "inner join [establishments].establishment ee on ee.revisionId = d.institutionId  " +
               "inner join establishments.establishmentlocation el on ee.revisionId = el.revisionId  " +
               "inner join establishments.establishmentlocationInPlace elip on elip.establishmentlocationid = el.revisionId " +
-              "inner join places.place pp on pp.revisionId = elip.placeId " +
-              " inner join Places.geonamestoponym gnt on gnt.placeId=pp.revisionid " +
+              //"inner join places.place pp on pp.revisionId = elip.placeId " +
+              "inner join places.geoplanetplace gpp on gpp.placeid = elip.placeId " +
+                "inner join places.geoplanetplace gpp2 on gpp2.englishname = gpp.countryname " +
               "inner join [People].Person people on d.personId=people.revisionid " +
               "left outer join people.affiliation pa on pa.personId=people.revisionid " +
               "left outer join establishments.establishmentNode een on pa.establishmentid=een.offspringId " +
-              "inner join [identity].[user] iu on iu.personId=people.revisionid " +
+              //"inner join [identity].[user] iu on iu.personId=people.revisionid " +
                "where (pa.establishmentid=" + EstablishmentId +  " or een.AncestorId=" + EstablishmentId + ")";
             if (PlaceId > 0)
             {
-                sql += " and pp.revisionid=" + PlaceId;
+                sql += " and (gpp.placeId=" + PlaceId + " or gpp2.placeId=" + PlaceId + ")";
             }
             //if (selectedEstablishmentId > 0)
             //{
