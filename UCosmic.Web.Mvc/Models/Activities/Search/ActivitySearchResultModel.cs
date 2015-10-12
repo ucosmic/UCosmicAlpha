@@ -34,6 +34,7 @@ namespace UCosmic.Web.Mvc.Models
     public class PageOfActivitySearchResultModel : PageOf<ActivitySearchResultModel>
     {
         public int peopleTotal { get; set; }
+        public int locationTotal { get; set; }
     }
 
     //public static class ActivitySearchResultProfiler
