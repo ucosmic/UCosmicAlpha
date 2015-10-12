@@ -146,6 +146,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 }
                 var resultsCount = results.Count();
                 var peopleCount = results.DistinctBy2(x => x.Owner.PersonId).Count();
+                var locationCount = results.SelectMany(x => x.Places.DistinctBy2(y => y.PlaceName)).Count();
                 
                 if (input != null){
                     //int endPosition = 10;
@@ -161,6 +162,7 @@ namespace UCosmic.Web.Mvc.Controllers
                     Items = results,
                     ItemTotal = resultsCount,
                     peopleTotal = peopleCount,
+                    locationTotal = locationCount,
                     PageNumber = input.PageNumber,
                     PageSize = input.PageSize
                 };
