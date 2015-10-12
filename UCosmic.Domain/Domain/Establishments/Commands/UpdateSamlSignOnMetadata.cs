@@ -33,19 +33,19 @@ namespace UCosmic.Domain.Establishments
             if (samlSignOn == null) throw new InvalidOperationException(string.Format(
                 "Unable to locate SAML sign on information for establishment '{0}'.", command.EstablishmentId));
 
-            if (
-                !string.IsNullOrWhiteSpace(samlSignOn.MetadataXml) &&       // if metadata has already been loaded, and
-                samlSignOn.UpdatedOnUtc.HasValue &&                         // metadata has already been parsed and cached, and
-                samlSignOn.UpdatedOnUtc.Value.AddDays(7) > DateTime.UtcNow  // metadata was checked less than a week ago, then
-            ) return;                                                       // nothing has changed
+            //if (
+            //    !string.IsNullOrWhiteSpace(samlSignOn.MetadataXml) &&       // if metadata has already been loaded, and
+            //    samlSignOn.UpdatedOnUtc.HasValue &&                         // metadata has already been parsed and cached, and
+            //    samlSignOn.UpdatedOnUtc.Value.AddDays(7) > DateTime.UtcNow  // metadata was checked less than a week ago, then
+            //) return;                                                       // nothing has changed
 
+            
             // load published metadata over http
             var entitiesDescriptorXml = _httpConsumer.Download<string>(samlSignOn.MetadataUrl, 5000, 2);
 
             // metadata may be entities descriptor, need specific entity descriptor
             samlSignOn.MetadataXml = _saml2MetadataParser.GetEntityDescriptor(
                 entitiesDescriptorXml, samlSignOn.EntityId);
-
             // currently only support http-post and http-redirect bindings
             samlSignOn.SsoLocation = _saml2MetadataParser.GetIdpSsoServiceLocation(
                 samlSignOn.MetadataXml, Saml2SsoBinding.HttpPost, Saml2SsoBinding.HttpRedirect);
