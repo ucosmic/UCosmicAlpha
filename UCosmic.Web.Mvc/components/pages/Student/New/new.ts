@@ -201,7 +201,7 @@ Polymer({
     check_if_can_start_file_process: function ( sheet, my_array, _this) {
 
         if (this.can_start_file_processing && !_this.worker_processing) {
-            var worker = new Worker('/components/resources/js/student_in_out_excel.js');
+            var worker = new Worker('/components/resources/js/student_in_out_excel_2.js');  
 
             worker.addEventListener('message', function (e) {
                 //console.log('Worker said: ', e.data);
@@ -240,7 +240,7 @@ Polymer({
 
                 if (_this.can_start_file_processing && !_this.worker_processing) {
 
-                    var worker = new Worker('/components/resources/js/student_in_out_excel.js');
+                    var worker = new Worker('/components/resources/js/student_in_out_excel_2.js');
 
                     worker.addEventListener('message', function (e) {
                         //console.log('Worker said: ', e.data);

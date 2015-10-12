@@ -245,6 +245,35 @@ self.addEventListener('message', function (e: any) {
                     rank = rank.rank;
                     program = program.replace(".", " ").replace("/", " ");
 
+                    var student = { external_id: x.student_external_id }
+                    var fire_members_tenant = fire_members.child(tenant_id);
+                    //var mobility = { a: x.affiliation_id, c: x.country_id, e: x.establishment_id, f: x.foreign_affiliation_id, l: x.level, p: x.program_id, s: status, sa: x.student_affiliation_id, t: x.term_name }
+                    var mobility = { affiliation: x.affiliation_id, country: x.country_id, foreign_affiliation: x.foreign_affiliation_id, level: level, program: x.program_id, status: status, student_affiliation: x.student_affiliation_id, term: x.term_name }
+
+                    fire_members_tenant.child('Mobilities').child('Values').child(status).child(x.term_name).child(x.student_external_id).set(mobility, (error) => {
+                        if (!has_error) {
+                            if (error) {
+                                has_error = true;
+                                _this.postMessage('Error uploading, please try again - (' + error + ')');
+                            }
+                            process_response()
+                        }
+                    });
+
+                    fire_members_tenant.child('Students').child(x.student_external_id).set(student, (error) => {
+                        process_response()
+                    });
+
+                    
+                    //fire_members_tenant.child('Mobilities').child('Keys').child(term).child(status).child(affiliation_name).child(level).child(student_affiliation_name).child(foreign_affiliation_name).child(program).child(country).child(x.student_external_id).set(student, (error) => {
+                    //    if (!has_error) {
+                    //        if (error) {
+                    //            has_error = true;
+                    //            _this.postMessage('Error uploading, please try again - (' + error + ')');
+                    //        }
+                    //        process_response()
+                    //    }
+                    //});
                     //var indexes_value = {};
                     //indexes_value[mobility_id] = true;
                     //var indexes = {};
@@ -368,28 +397,6 @@ self.addEventListener('message', function (e: any) {
                     //term should be faster since term will have less results and it will be defaulted to a term.
                     //fire_members.child(tenant_id).child('Mobilities').child('Keys').child(term).child(status).child(country).child(affiliation_name).child(level).child(program).child(student_affiliation_name).child(foreign_affiliation_name).child(mobility_id).set(true, (error) => {
 
-                    var student = { external_id: x.student_external_id }
-                    //fire_members_tenant.child('Mobilities').child('Keys').child(term).child(status).child(affiliation_name).child(level).child(student_affiliation_name).child(foreign_affiliation_name).child(program).child(country).child(x.student_external_id).set(student, (error) => {
-                    //    if (!has_error) {
-                    //        if (error) {
-                    //            has_error = true;
-                    //            _this.postMessage('Error uploading, please try again - (' + error + ')');
-                    //        }
-                    //        process_response()
-                    //    }
-                    //});
-                    var fire_members_tenant = fire_members.child(tenant_id);
-                    //var mobility = { a: x.affiliation_id, c: x.country_id, e: x.establishment_id, f: x.foreign_affiliation_id, l: x.level, p: x.program_id, s: status, sa: x.student_affiliation_id, t: x.term_name }
-                    var mobility = { affiliation: x.affiliation_id, country: x.country_id, foreign_affiliation: x.foreign_affiliation_id, level: level, program: x.program_id, status: status, student_affiliation: x.student_affiliation_id, term: x.term_name }
-                    fire_members_tenant.child('Mobilities').child('Values').child(status).child(x.term_name).child(x.student_external_id).set(mobility, (error) => {
-                        if (!has_error) {
-                            if (error) {
-                                has_error = true;
-                                _this.postMessage('Error uploading, please try again - (' + error + ')');
-                            }
-                            process_response() 
-                        }
-                    }); 
                     //fire_members_tenant_mobility_keys_term_status.child('Level').child(level).child('Mobilities').child(mobility_id).set(true, (error) => {
 
                     //    if (!has_error) {
@@ -462,9 +469,6 @@ self.addEventListener('message', function (e: any) {
                     //});
 
 
-                    fire_members_tenant.child('Students').child(x.student_external_id).set(student, (error) => {
-                        process_response()
-                    });
                 },
                 function (err) {
                     console.log('Error: ' + err);
