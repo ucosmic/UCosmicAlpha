@@ -227,20 +227,36 @@
                                         of <span>@Model.Output.PageCount</span>)
                                     </span>
                                 }
-                                @if (@Model.Output.peopleTotal > 0)
-                                {
-                                    <strong style="display:block;">
+                                <strong style="display:block;">
+                                    @if (Model.Output.peopleTotal > 0)
+                                    {
                                         <span> from @Model.Output.peopleTotal</span>
-                                        @if (@Model.Output.peopleTotal > 1)
+                                        if (@Model.Output.peopleTotal > 1)
                                         {
-                                            <span>people.</span>
+                                            <span>people</span>
                                         }
                                         else
                                         {
-                                            <span>person.</span>
+                                            <span>person</span>
                                         }
-                                    </strong>
-                                }
+                                    }
+                                    @if (Model.Output.locationTotal > 0)
+                                    {
+                                        <span> in @Model.Output.locationTotal</span>
+                                        if (@Model.Output.locationTotal > 1)
+                                        {
+                                            <span>locations.</span>
+                                        }
+                                        else
+                                        {
+                                            <span>location.</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span>.</span>
+                                    }
+                                </strong>
                             </div>
 
                             @* PREV & NEXT PAGER BUTTONS *@
