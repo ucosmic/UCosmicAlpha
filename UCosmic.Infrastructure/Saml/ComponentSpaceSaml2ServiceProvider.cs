@@ -32,6 +32,12 @@ namespace UCosmic.Saml
                 NameIDPolicy = new NameIDPolicy(null, null, true),
             };
 
+            authnRequest.AssertionConsumerServiceURL = "https://alpha.ucosmic.com/sign-on/saml/2";
+            //var doc = new XmlDocument();
+            //doc.LoadXml(" <SingleSignOnService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST\" Location=\"https://alpha-staging.ucosmic.com/sign-on/saml/2\" />");
+            //authnRequest.Extensions = new Extensions();
+            //authnRequest.Extensions.Data = doc.ChildNodes;
+
             // Serialize the authentication request to XML for transmission.
             var authnRequestXml = authnRequest.ToXml();
 
@@ -48,7 +54,7 @@ namespace UCosmic.Saml
             string relayState = null;
             if (!string.IsNullOrWhiteSpace(returnUrl))
                 relayState = RelayStateCache.Add(new RelayState(returnUrl, null));
-
+            //authnRequestXml.InnerXml = authnRequestXml.InnerXml.Replace("</Signature>", "</Signature><SingleSignOnService Binding=\"urn:mace:shibboleth:1.0:profiles:AuthnRequest\" Location=\"https://alpha-staging.ucosmic.com/sign-on/saml/2\" /> <SingleSignOnService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST\" Location=\"https://alpha-staging.ucosmic.com/sign-on/saml/2\" /><SingleSignOnService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign\" Location=\"https://alpha-staging.ucosmic.com/sign-on/saml/2\" /><SingleSignOnService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect\" Location=\"https://alpha-staging.ucosmic.com/sign-on/saml/2\" />");
             // Send the authentication request to the identity provider over the configured binding.
             switch (idpBinding)
             {
