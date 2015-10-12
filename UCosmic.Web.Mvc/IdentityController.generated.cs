@@ -43,6 +43,12 @@ namespace UCosmic.Web.Mvc.Controllers
 
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult SignIn_2()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignIn_2);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public System.Web.Mvc.ActionResult SignIn()
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignIn);
@@ -81,6 +87,7 @@ namespace UCosmic.Web.Mvc.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass
         {
+            public readonly string SignIn_2 = "SignIn_2";
             public readonly string SignIn = "SignIn";
             public readonly string Tenantize = "Tenantize";
             public readonly string SignOut = "SignOut";
@@ -91,6 +98,7 @@ namespace UCosmic.Web.Mvc.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
+            public const string SignIn_2 = "SignIn_2";
             public const string SignIn = "SignIn";
             public const string Tenantize = "Tenantize";
             public const string SignOut = "SignOut";
@@ -99,6 +107,14 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
 
+        static readonly ActionParamsClass_SignIn_2 s_params_SignIn_2 = new ActionParamsClass_SignIn_2();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_SignIn_2 SignIn_2Params { get { return s_params_SignIn_2; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_SignIn_2
+        {
+            public readonly string returnUrl = "returnUrl";
+        }
         static readonly ActionParamsClass_SignIn s_params_SignIn = new ActionParamsClass_SignIn();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionParamsClass_SignIn SignInParams { get { return s_params_SignIn; } }
@@ -156,6 +172,13 @@ namespace UCosmic.Web.Mvc.Controllers
     public class T4MVC_IdentityController : UCosmic.Web.Mvc.Controllers.IdentityController
     {
         public T4MVC_IdentityController() : base(Dummy.Instance) { }
+
+        public override System.Web.Mvc.ActionResult SignIn_2(string returnUrl)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.SignIn_2);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "returnUrl", returnUrl);
+            return callInfo;
+        }
 
         public override System.Web.Mvc.ActionResult SignIn(string returnUrl)
         {
