@@ -16,9 +16,15 @@
     //created: function() {
     //    console.log('Highlighting for ', this, 'enabled!');
     //},
+    null_to_zero: function(value){
+        if(!value){
+            return 0;
+        }else{
+            return value;
+        }
+    }
 
-
-    set_id: function (name, index) {
+    ,set_id: function (name, index) {
         return (name + index);
     }
     , compare: function (var_1, var_2) {
