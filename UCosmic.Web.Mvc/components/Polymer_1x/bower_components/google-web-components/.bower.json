@@ -43,6 +43,5 @@
   },
   "_source": "git://github.com/GoogleWebComponents/google-web-components.git",
   "_target": "~1.0.1",
-  "_originalSource": "google-web-components",
-  "_direct": true
+  "_originalSource": "google-web-components"
 }

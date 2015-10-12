@@ -1,7 +1,7 @@
 {
   "name": "firebase-util",
   "description": "A set of experimental power tools for Firebase.",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "authors": [
     "Firebase <support@firebase.com> (https://www.firebase.com/)"
   ],
@@ -32,11 +32,11 @@
     "firebase": "2.2.x"
   },
   "devDependencies": {},
-  "_release": "0.2.4",
+  "_release": "0.2.5",
   "_resolution": {
     "type": "version",
-    "tag": "v0.2.4",
-    "commit": "94d2a5aaa7cb485ec46a3f8de9d404dd48b22543"
+    "tag": "v0.2.5",
+    "commit": "bcafcb223bd579e8aec130d6b58635bd316002fa"
   },
   "_source": "git://github.com/firebase/firebase-util.git",
   "_target": "~0.2.4",

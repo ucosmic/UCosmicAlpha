@@ -30,6 +30,5 @@
   },
   "_source": "git://github.com/PolymerElements/molecules.git",
   "_target": "~1.0.0",
-  "_originalSource": "PolymerElements/molecules",
-  "_direct": true
+  "_originalSource": "PolymerElements/molecules"
 }

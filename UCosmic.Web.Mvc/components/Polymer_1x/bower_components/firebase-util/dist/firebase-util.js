@@ -1,9 +1,9 @@
 /*!
  * Firebase-util:  A set of experimental power tools for Firebase.
  *
- * Version: 0.2.4
+ * Version: 0.2.5
  * URL: https://github.com/firebase/firebase-util
- * Date: 2015-04-15T01:10:41.880Z
+ * Date: 2015-08-20T17:16:45.677Z
  * License: MIT http://firebase.mit-license.org/
  */
 
@@ -21,7 +21,6 @@ exports.NormalizedCollection = require('./libs/NormalizedCollection.js');
 },{"./libs/NormalizedCollection.js":6}],3:[function(require,module,exports){
 'use strict';
 
-var NormalizedSnapshot = require('./NormalizedSnapshot');
 var util = require('../../common/');
 
 /**
@@ -49,8 +48,9 @@ function AbstractRecord(fieldMap, name, url) {
   self._map = fieldMap;
   self._name = name;
   self._url = url;
+  self.lastMergedValue = util.undef; // starts undefined since first value may be null
   self._obs = new util.Observable(
-    ['value', 'child_added', 'child_removed', 'child_moved', 'child_changed'],
+    ['child_added', 'child_removed', 'child_changed', 'child_moved', 'value'],
     {
       onAdd: function(event) {
         var count = self._obs.getObservers(event).length;
@@ -66,13 +66,6 @@ function AbstractRecord(fieldMap, name, url) {
       }
     }
   );
-  self.eventHandlers = {
-    'value': util.bind(self._trigger, self, 'value'),
-    'child_added': util.bind(self._trigger, self, 'child_added'),
-    'child_changed': util.bind(self._trigger, self, 'child_changed'),
-    'child_removed': util.bind(self._trigger, self, 'child_removed'),
-    'child_moved': util.bind(self._trigger, self, 'child_moved')
-  };
 }
 
 AbstractRecord.prototype = {
@@ -245,45 +238,9 @@ AbstractRecord.prototype = {
     return this._url;
   },
 
-  _trigger: function(event, id, snaps, prev) {
-    var ref, args;
-    if( event === 'value' ) {
-      snaps = id;
-      id = null;
-      ref = this.getRef();
-      prev = null;
-    }
-    else {
-      if( util.isObject(id) ) {
-        snaps = id;
-        id = snaps.key();
-      }
-      ref = this.getRef().ref().child(id);
-    }
-    //todo probably just have the record types pass in the final snapshot to _trigger
-    //todo instead of this coupled and crazy dance
-    if( snaps instanceof NormalizedSnapshot ) {
-      args = [event, snaps];
-    }
-    else {
-      if( util.isObject(snaps) && !util.isArray(snaps) && typeof snaps.val === 'function' ) {
-        snaps = [snaps];
-      }
-      args = [event, new NormalizedSnapshot(ref, snaps)];
-    }
-    if( event === 'child_added' || event === 'child_moved' ) {
-      args.push(prev);
-    }
-    util.log.debug('AbstractRecord._trigger: event=%s, id=%s, snaps=%d, prev=%s', event, id, snaps.length, prev);
-    this._obs.triggerEvent.apply(this._obs, args);
-  },
-
-  /**
-   * @param {string} event
-   * @returns {function}
-   */
-  handler: function(event) {
-    return this.eventHandlers[event];
+  trigger: function(snapshotFactory) {
+    util.log.debug('AbstractRecord._trigger: %s', snapshotFactory.toString());
+    this._obs.triggerEvent(snapshotFactory.event, snapshotFactory.create(this.getRef()));
   },
 
   /**
@@ -302,7 +259,7 @@ function abstract(method) {
 }
 
 module.exports = AbstractRecord;
-},{"../../common/":24,"./NormalizedSnapshot":8}],4:[function(require,module,exports){
+},{"../../common/":25}],4:[function(require,module,exports){
 'use strict';
 
 var util = require('../../common');
@@ -598,7 +555,7 @@ function getOut(data, alias) {
 }
 
 module.exports = FieldMap;
-},{"../../common":24,"./PathManager":10}],5:[function(require,module,exports){
+},{"../../common":25,"./PathManager":10}],5:[function(require,module,exports){
 'use strict';
 
 var util = require('../../common');
@@ -630,7 +587,7 @@ Condition.prototype.test = function(data, key, priority) {
 };
 
 module.exports = Filter;
-},{"../../common":24}],6:[function(require,module,exports){
+},{"../../common":25}],6:[function(require,module,exports){
 'use strict';
 
 var util          = require('../../common');
@@ -754,7 +711,7 @@ function assertValidField(f) {
 }
 
 module.exports = NormalizedCollection;
-},{"../../common":24,"./FieldMap":4,"./Filter":5,"./NormalizedRef":7,"./PathManager":10,"./RecordSet":14}],7:[function(require,module,exports){
+},{"../../common":25,"./FieldMap":4,"./Filter":5,"./NormalizedRef":7,"./PathManager":10,"./RecordSet":14}],7:[function(require,module,exports){
 'use strict';
 
 var util      = require('../../common');
@@ -897,7 +854,7 @@ function notSupported(method) {
 }
 
 module.exports = NormalizedRef;
-},{"../../common":24,"./Query":11}],8:[function(require,module,exports){
+},{"../../common":25,"./Query":11}],8:[function(require,module,exports){
 'use strict';
 
 var util = require('../../common');
@@ -1010,7 +967,7 @@ NormalizedSnapshot.prototype = {
 };
 
 module.exports = NormalizedSnapshot;
-},{"../../common":24}],9:[function(require,module,exports){
+},{"../../common":25}],9:[function(require,module,exports){
 'use strict';
 
 var util = require('../../common');
@@ -1083,7 +1040,7 @@ function parseDep(dep) {
 }
 
 module.exports = Path;
-},{"../../common":24}],10:[function(require,module,exports){
+},{"../../common":25}],10:[function(require,module,exports){
 'use strict';
 
 var Path = require('./Path');
@@ -1191,7 +1148,7 @@ function depChain(map, deps) {
 }
 
 module.exports = PathManager;
-},{"../../common":24,"./Path":9}],11:[function(require,module,exports){
+},{"../../common":25,"./Path":9}],11:[function(require,module,exports){
 'use strict';
 
 var util = require('../../common');
@@ -1212,7 +1169,15 @@ Query.prototype = {
       context = cancel;
       cancel = util.undef;
     }
-    this.$getRecord().watch(event, callback, cancel, context);
+
+    function cancelHandler(err) {
+      if( typeof(cancel) === 'function' && err !== null ) {
+        cancel.call(context, err);
+      }
+    }
+
+    this.$getRecord().watch(event, callback, cancelHandler, context);
+    return callback;
   },
 
   'once': function(event, callback, cancel, context) {
@@ -1232,7 +1197,7 @@ Query.prototype = {
       }
     }
 
-    this.on(event, successHandler, cancelHandler);
+    return this.on(event, successHandler, cancelHandler);
   },
 
   'off': function(event, callback, context) {
@@ -1249,6 +1214,10 @@ Query.prototype = {
 
   'orderByKey': function() {
     return this.$replicate('orderByKey', util.toArray(arguments));
+  },
+
+  'orderByValue': function() {
+    return this.$replicate('orderByValue', util.toArray(arguments));
   },
 
   'orderByPriority': function() {
@@ -1310,12 +1279,13 @@ Query.prototype = {
 
 util.registerFirebaseWrapper(Query);
 module.exports = Query;
-},{"../../common":24,"./Transmogrifier":16}],12:[function(require,module,exports){
+},{"../../common":25,"./Transmogrifier":17}],12:[function(require,module,exports){
 'use strict';
 
 var FieldMap           = require('./FieldMap');
 var RecordField        = require('./RecordField');
 var AbstractRecord     = require('./AbstractRecord');
+var SnapshotFactory       = require('./SnapshotFactory');
 var util               = require('../../common');
 
 function Record(fieldMap) {
@@ -1407,16 +1377,23 @@ util.inherits(Record, AbstractRecord, {
    * @returns {Object}
    */
   mergeData: function(snaps, isExport) {
-    var map = this.getFieldMap();
-    var data = util.extend.apply(null, util.map(snaps, function(ss) {
-      return map.extractData(ss, isExport);
-    }));
-    if( isExport && snaps.length > 0 && snaps[0].getPriority() !== null ) {
-      if( !util.isObject(data) ) {
-        data = {'.value': data};
+    var data = null, map = this.getFieldMap();
+
+    // if the master path is null, the record does not exist
+    // so we do not add any data
+    if( snaps.length > 0 && snaps[0].val() !== null ) {
+      data = util.extend.apply(null, util.map(snaps, function(ss) {
+        return map.extractData(ss, isExport);
+      }));
+
+      if( isExport && data !== null && snaps[0].getPriority() !== null ) {
+        if( !util.isObject(data) ) {
+          data = {'.value': data};
+        }
+        data['.priority'] = snaps[0].getPriority();
       }
-      data['.priority'] = snaps[0].getPriority();
     }
+
     return data;
   },
 
@@ -1575,7 +1552,7 @@ ValueEventManager.prototype = {
     this._checkLoadState();
     util.log('Record.ValueEventManager.update: url=%s, loadCompleted=%s', snap.ref().toString(), this.loadCompleted);
     if( this.loadCompleted ) {
-      this.rec.handler('value')(util.toArray(this.snaps));
+      this.rec.trigger(new SnapshotFactory('value', this.rec.getName(), util.toArray(this.snaps)));
     }
   },
 
@@ -1648,10 +1625,8 @@ ChildEventManager.prototype = {
 
   update: function(snap, prev) {
     if( snap !== null && this.map.aliasFor(snap.ref().toString()) !== null ) {
-      var args = [snap.key(), snap];
-      if( prev !== util.undef ) { args.push(prev); }
       util.log('Record.ChildEventManager.update: event=%s, key=%s/%s', this.event, snap.ref().parent().key(), snap.key());
-      this.rec.handler(this.event).apply(this.rec, args);
+      this.rec.trigger(new SnapshotFactory(this.event, snap.key(), snap, prev));
     }
   }
 };
@@ -1725,15 +1700,17 @@ function addEmptyFields(map, path, dataToSave) {
 }
 
 module.exports = Record;
-},{"../../common":24,"./AbstractRecord":3,"./FieldMap":4,"./RecordField":13}],13:[function(require,module,exports){
+},{"../../common":25,"./AbstractRecord":3,"./FieldMap":4,"./RecordField":13,"./SnapshotFactory":16}],13:[function(require,module,exports){
 'use strict';
 
 var PathManager        = require('./PathManager');
 var FieldMap           = require('./FieldMap');
 var AbstractRecord     = require('./AbstractRecord');
+var SnapshotFactory       = require('./SnapshotFactory');
 var util               = require('../../common');
 
 function RecordField(fieldMap) {
+  this.handlers = {};
   this.path = fieldMap.getPathManager().first();
   this._super(fieldMap, this.path.name(), this.path.url());
   if( fieldMap.getPathManager().count() !== 1 ) {
@@ -1822,11 +1799,17 @@ util.inherits(RecordField, AbstractRecord, {
   getClass: function() { return RecordField; },
 
   _start: function(event) {
-    this.path.ref().on(event, this.handler(event), this._cancel, this);
+    var self = this;
+    this.handlers[event] = function(snap, prev) {
+      self.trigger(new SnapshotFactory(event, snap.key(), snap, prev));
+    };
+    this.path.ref().on(event, this.handlers[event], this._cancel, this);
   },
 
   _stop:   function(event) {
-    this.path.ref().off(event, this.handler(event), this);
+    if( this.handlers.hasOwnProperty(event) ) {
+      this.path.ref().off(event, this.handlers[event], this);
+    }
   }
 });
 
@@ -1842,7 +1825,7 @@ function wrapCallback(opts) {
 }
 
 module.exports = RecordField;
-},{"../../common":24,"./AbstractRecord":3,"./FieldMap":4,"./PathManager":10}],14:[function(require,module,exports){
+},{"../../common":25,"./AbstractRecord":3,"./FieldMap":4,"./PathManager":10,"./SnapshotFactory":16}],14:[function(require,module,exports){
 'use strict';
 
 var Record = require('./Record');
@@ -1919,13 +1902,16 @@ util.inherits(RecordSet, AbstractRecord, {
    * @returns {Object}
    */
   mergeData: function(snaps, isExport) {
-    var self = this;
-    var out = {};
-    util.each(snaps, function(snap) {
-      if( snap.val() !== null && self.filters.test(snap.val(), snap.key(), snap.getPriority()) ) {
-        out[snap.key()] = isExport? snap.exportVal() : snap.val();
-      }
-    });
+    var self = this, out = null;
+    // if the master path is empty, there is no data to be merged
+    if( snaps.length && snaps[0].val() !== null ) {
+      out = {};
+      util.each(snaps, function(snap) {
+        if( snap.val() !== null && self.filters.test(snap.val(), snap.key(), snap.getPriority()) ) {
+          out[snap.key()] = isExport? snap.exportVal() : snap.val();
+        }
+      });
+    }
     return out;
   },
 
@@ -2042,16 +2028,16 @@ util.inherits(RecordSet, AbstractRecord, {
 });
 
 module.exports = RecordSet;
-},{"../../common":24,"./AbstractRecord":3,"./FieldMap":4,"./Record":12,"./RecordSetEventManager":15}],15:[function(require,module,exports){
+},{"../../common":25,"./AbstractRecord":3,"./FieldMap":4,"./Record":12,"./RecordSetEventManager":15}],15:[function(require,module,exports){
 'use strict';
 
+var SnapshotFactory = require('./SnapshotFactory');
 var util = require('../../common');
 
 /**
  * Monitors the references attached to a RecordSet and maintains a cache of
  * current snapshots (inside RecordList below). Any time there is an update, this calls
- * RecordSet.handler() to invoke the correct event types (child_added, child_removed, value, et al)
- * on the RecordSet object.
+ * RecordSet.trigger() to notify event listeners.
  *
  * @param parentRec
  * @constructor
@@ -2072,10 +2058,7 @@ RecordSetEventManager.prototype = {
       this.masterRef.on('child_added',   this._add,    this);
       this.masterRef.on('child_removed', this._remove, this);
       this.masterRef.on('child_moved',   this._move,   this);
-      /**
-       * This depends on the fact that all child_added events on a given path will be triggered
-       * before
-       */
+      // make sure all existing keys are loaded into memory before we let recList trigger value events
       this.masterRef.once('value', this.recList.masterPathLoaded, this.recList);
     }
     return this;
@@ -2117,7 +2100,7 @@ RecordList.prototype = {
     util.log.debug('RecordList.add: key=%s, prevChild=%s', key, prevChild);
     var rec = this.obs.child(key);
     var fn = util.bind(this._valueUpdated, this, key);
-    this.loading[key] = {rec: rec, prev: prevChild, fn: fn};
+    this.loading[key] = {rec: rec, prev: prevChild, fn: fn, unwatch: function() { rec.unwatch('value', fn); }};
     if( !this.loadComplete ) {
       this.initialKeysLeft.push(key);
     }
@@ -2144,7 +2127,9 @@ RecordList.prototype = {
   masterPathLoaded: function() {
     util.log.debug('RecordList: Initial data has been loaded from master list at %s', this.url);
     this.masterLoaded = true;
-    this._checkLoadState();
+    if( this._checkLoadState() ) {
+      this._notifyValue();
+    }
   },
 
   unloaded: function() {
@@ -2152,7 +2137,6 @@ RecordList.prototype = {
   },
 
   findKey: function(key) {
-    //todo cache these lookups in a weak map?
     return util.indexOf(this.recIds, key);
   },
 
@@ -2160,68 +2144,102 @@ RecordList.prototype = {
     util.each(this.recs, function(rec, key) {
       this.remove(key);
     }, this);
+    util.each(this.filtered, function(rec, key) {
+      this._dropRecord(key);
+    }, this);
+    util.each(this.loading, function(rec, key) {
+      this._dropRecord(key);
+    }, this);
     this.recs = {};
     this.recIds = [];
     this.snaps = {};
     this.loading = {};
+    this.filtered = {};
     this.loadComplete = false;
     this.initialKeysLeft = [];
     this.masterLoaded = false;
   },
 
   _valueUpdated: function(key, snap) {
+    var rec;
     this.snaps[key] = snap;
     if(util.has(this.loading, key)) {
-      // newly added record
-      var r = this.loading[key];
+      // record has finished loading and merging paths
+      rec = this.loading[key];
       delete this.loading[key];
-      if( this.obs.filters.test(snap.val(), key, snap.getPriority()) ) {
-        this.recs[key] = r.rec;
-        this._putAfter(key, r.prev);
-        this._checkLoadState(key);
-        this._notify('child_added', key);
-      }
-      else {
-        util.log('RecordList: Filtered key %s', key);
-        r.rec.unwatch('value', r.fn);
-      }
+      this._processAdd(snap, rec);
     }
     else if(util.has(this.recs, key)) {
-      // a changed record
-      this._notify('child_changed', key);
+      rec = this.recs[key];
+      this._processChange(snap, rec);
+    }
+    else if(util.has(this.filtered, key)) {
+      if( snap.val() !== null && this.obs.filters.test(snap.val(), key, snap.getPriority()) ) {
+        // the record data has changed and it is no longer part of the filtered
+        // content, so treat it as a newly added record
+        rec = this.filtered[key];
+        delete this.filtered[key];
+        util.log('RecordList: Unfiltered key %s', key);
+        this._processAdd(snap, rec);
+      }
     }
     else {
       util.log('RecordList: Orphan key %s ignored. Probably a concurrent edit.', key);
     }
   },
 
+  _processAdd: function(snap, rec) {
+    var key = snap.key();
+    if( this.obs.filters.test(snap.val(), key, snap.getPriority()) ) {
+      this.recs[key] = rec;
+      this._putAfter(key, rec.prev);
+      this._notify('child_added', key);
+    }
+    else {
+      util.log('RecordList: Filtered key %s', key);
+      this.filtered[key] = rec;
+    }
+    if( this._checkLoadState(key) ) {
+      this._notifyValue();
+    }
+  },
+
+  _processChange: function(snap, rec) {
+    // null records are valid at the record level and can trigger value events, but at
+    // the Set level, they mean the record is in the process of being deleted so we
+    // ignore the value event here
+    if( snap.val() !== null ) {
+      var key = snap.key();
+      if( this.obs.filters.test(snap.val(), key, snap.getPriority()) ) {
+        // a changed record that has not been filtered
+        this._notify('child_changed', key);
+      }
+      else {
+        // record changes caused it to become filtered, so treat it as a removed rec
+        // however, we'll continue to watch it for changes so it can be unfiltered later
+        delete this.recs[key];
+        this.filtered[key] = rec;
+        this._notify('child_removed', key, this.snaps[key]);
+      }
+    }
+  },
+
   _notify: function(event, key, oldSnap) {
-    var args = [key];
-    // do not fetch prev child for other events as it costs an indexOf
-    switch(event) {
-      case 'child_added':
-      case 'child_moved':
-        var prev = this._getPrevChild(key);
-        args.push(this.snaps[key], prev);
-        break;
-      case 'child_changed':
-        args.push(this.snaps[key]);
-        break;
-      case 'child_removed':
-        args.push(oldSnap);
-        break;
-      default:
-        throw new Error('Invalid event type ' + event + ' for key ' + key);
+    var prev;
+    if( event === 'child_added' || event === 'child_moved' ) {
+      prev = this._getPrevChild(key);
     }
     util.log('RecordList._notify: event=%s, key=%s, prev=%s', event, key, prev);
-    this.obs.handler(event).apply(this.obs, args);
+    var factory = new SnapshotFactory(event, key, oldSnap||this.snaps[key], prev);
+    this.obs.trigger(factory);
     this._notifyValue();
   },
 
   _notifyValue: function() {
-    util.log.debug('RecordList._notifyValue: snap_keys=%s, loadComplete=%s', util.keys(this.snaps), this.loadComplete);
     if( this.loadComplete ) {
-      this.obs.handler('value')(util.toArray(this.snaps));
+      util.log.debug('RecordList._notifyValue: snap_keys=%s', util.keys(this.snaps));
+      var factory = new SnapshotFactory('value', null, util.toArray(this.snaps));
+      this.obs.trigger(factory);
     }
   },
 
@@ -2257,16 +2275,23 @@ RecordList.prototype = {
   },
 
   _dropRecord: function(key) {
-    if(util.has(this.recs, key)) {
-      var snap = this.snaps[key];
-      this.recs[key].unwatch('value', this._valueUpdated, this);
-      delete this.recs[key];
-      delete this.snaps[key];
-      delete this.loading[key];
-      util.remove(this.recIds, key);
-      return snap;
+    var res = null;
+    if(this.recs[key]) {
+      res = this.snaps[key];
+      this.recs[key].unwatch();
     }
-    return null;
+    if(this.loading[key]) {
+      this.loading[key].unwatch();
+    }
+    if(util.has(this.filtered, key)) {
+      this.filtered[key].unwatch();
+    }
+    delete this.loading[key];
+    delete this.snaps[key];
+    delete this.filtered[key];
+    delete this.recs[key];
+    util.remove(this.recIds, key);
+    return res;
   },
 
   /**
@@ -2276,21 +2301,89 @@ RecordList.prototype = {
    * @private
    */
   _checkLoadState: function(key) {
-    if( this.loadComplete ) { return; }
-    if( key ) {
-      util.remove(this.initialKeysLeft, key);
-    }
-    if( !this.initialKeysLeft.length && this.masterLoaded ) {
-      this.loadComplete = true;
-      if( !key ) {
-        this._notifyValue();
+    if( !this.loadComplete ) {
+      if( key ) {
+        util.remove(this.initialKeysLeft, key);
+      }
+      if( !this.initialKeysLeft.length && this.masterLoaded ) {
+        this.loadComplete = true;
+        return true;
       }
     }
+    return false;
   }
 };
 
 module.exports = RecordSetEventManager;
-},{"../../common":24}],16:[function(require,module,exports){
+},{"../../common":25,"./SnapshotFactory":16}],16:[function(require,module,exports){
+
+'use strict';
+
+var util = require('../../common');
+var NormalizedSnapshot = require('./NormalizedSnapshot.js');
+
+function SnapshotFactory(event, key, snaps, prevChild) {
+  this.event = event;
+  this.key = key;
+  this.snaps = unwrapSnapshots(snaps);
+  this.prevChild = prevChild;
+  assertValidTrigger(this);
+}
+
+SnapshotFactory.prototype.create = function(ref) {
+  var snapshot;
+  if( this.event === 'value' ) {
+    snapshot = new NormalizedSnapshot(ref, this.snaps);
+  }
+  else {
+    snapshot = new NormalizedSnapshot(ref.ref().child(this.key), this.snaps);
+  }
+  return snapshot;
+};
+
+SnapshotFactory.prototype.toString = function() {
+  return util.printf(
+    'SnapshotFactory(event=%s, key=%s, numberOfSnapshots=%s, prevChild=%s',
+    this.event, this.key, this.snaps.length, this.prevChild === util.undef? 'undefined' : this.prevChild
+  );
+};
+
+function assertValidTrigger(trigger) {
+  switch(trigger.event) {
+    case 'value':
+      break;
+    case 'child_added':
+    case 'child_moved':
+      if( typeof trigger.key !== 'string' || !trigger.key ) {
+        throw new Error('Invalid trigger key ' + trigger.key);
+      }
+      if( trigger.prevChild === util.undef ) {
+        throw new Error('Triggers must provide a valid prevChild value for child_added and child_moved events');
+      }
+      break;
+    case 'child_removed':
+    case 'child_changed':
+      if( typeof trigger.key !== 'string' || !trigger.key ) {
+        throw new Error('Invalid trigger key ' + trigger.key);
+      }
+      break;
+    default:
+      throw new Error('Invalid trigger event type: ' + trigger.event);
+  }
+}
+
+function unwrapSnapshots(snaps) {
+  if( snaps instanceof NormalizedSnapshot ) {
+    return snaps._snaps.slice();
+  }
+  if( !util.isArray(snaps) ) {
+    return [snaps];
+  }
+  return snaps.slice();
+}
+
+module.exports = SnapshotFactory;
+},{"../../common":25,"./NormalizedSnapshot.js":8}],17:[function(require,module,exports){
 'use strict';
 
 var util        = require('../../common');
@@ -2325,7 +2418,7 @@ module.exports = {
     return rec;
   }
 };
-},{"../../common":24,"./FieldMap":4,"./Path":9,"./PathManager":10,"./RecordSet":14}],17:[function(require,module,exports){
+},{"../../common":25,"./FieldMap":4,"./Path":9,"./PathManager":10,"./RecordSet":14}],18:[function(require,module,exports){
 'use strict';
 var util = require('../common');
 var Scroll = require('./libs/Scroll.js');
@@ -2339,9 +2432,10 @@ var DEFAULTS = {
 };
 
 exports.Scroll = function(baseRef, sortField, opts) {
-  if( !util.isFirebaseRef(baseRef) ) {
-    throw new Error('First argument to Firebase.util.Scroll must be a valid Firebase ref');
+  if( !util.isFirebaseRef(baseRef) || util.isQueryRef(baseRef) ) {
+    throw new Error('First argument to Firebase.util.Scroll must be a valid Firebase ref. It cannot be a Query (e.g. you have called orderByChild()).');
   }
+
   if( typeof sortField !== 'string' ) {
     throw new Error('Second argument to Firebase.util.Scroll must be a valid string');
   }
@@ -2354,8 +2448,8 @@ exports.Scroll = function(baseRef, sortField, opts) {
 };
 
 exports.Paginate = function(baseRef, sortField, opts) {
-  if( !util.isFirebaseRef(baseRef) ) {
-    throw new Error('First argument to Firebase.util.Paginate must be a valid Firebase ref');
+  if( !util.isFirebaseRef(baseRef) || util.isQueryRef(baseRef) ) {
+    throw new Error('First argument to Firebase.util.Paginate must be a valid Firebase ref. It cannot be a Query (e.g. you have called orderByChild()).');
   }
   if( typeof sortField !== 'string' ) {
     throw new Error('Second argument to Firebase.util.Paginate must be a valid string');
@@ -2383,7 +2477,7 @@ function assertNumber(obj, key, method) {
     throw new Error('Argument ' + key + ' passed into opts for ' + method + 'must be a number' );
   }
 }
-},{"../common":24,"./libs/Paginate.js":20,"./libs/ReadOnlyRef.js":21,"./libs/Scroll.js":22}],18:[function(require,module,exports){
+},{"../common":25,"./libs/Paginate.js":21,"./libs/ReadOnlyRef.js":22,"./libs/Scroll.js":23}],19:[function(require,module,exports){
 'use strict';
 var util = require('../../common');
 var Offset = require('./Offset');
@@ -2541,7 +2635,7 @@ Cache.prototype._removeOrphans = function(valueSnap) {
 };
 
 module.exports = Cache;
-},{"../../common":24,"./Offset":19}],19:[function(require,module,exports){
+},{"../../common":25,"./Offset":20}],20:[function(require,module,exports){
 'use strict';
 var util = require('../../common');
 
@@ -2714,9 +2808,9 @@ Offset.prototype._monitorEmptyOffset = function() {
 
 Offset.prototype._listen = function() {
   this._unsubscribe();
-  if( this.curr > this.keys.length ) {
+  if( this.curr >= this.keys.length ) {
     this._grow(function(/*changed*/) {
-      if( this.keys.length > this.curr ) {
+      if( this.keys.length >= this.curr ) {
         this._subscribe();
       }
       else {
@@ -2738,6 +2832,9 @@ function extractKey(snap, field) {
       break;
     case '$priority':
       v = snap.getPriority();
+      break;
+    case '$value':
+      v = snap.val();
       break;
     default:
       var obj = snap.val();
@@ -2772,6 +2869,9 @@ function baseRef(ref, field) {
   }
   else if( field === '$priority' ) {
     return ref.orderByPriority();
+  }
+  else if( field === '$value' ) {
+    return ref.orderByValue();
   }
   else {
     return ref.orderByChild(field);
@@ -2846,7 +2946,7 @@ function lastKey(list) {
 }
 
 module.exports = Offset;
-},{"../../common":24}],20:[function(require,module,exports){
+},{"../../common":25}],21:[function(require,module,exports){
 'use strict';
 var util = require('../../common');
 var Cache = require('./Cache');
@@ -3074,7 +3174,7 @@ function microAjax(url,callbackFunction){var o={};o.bindFunction=function(caller
 
 module.exports = Paginate;
 
-},{"../../common":24,"./Cache":18}],21:[function(require,module,exports){
+},{"../../common":25,"./Cache":19}],22:[function(require,module,exports){
 'use strict';
 var util      = require('../../common');
 
@@ -3092,9 +3192,10 @@ ReadOnlyRef.prototype = {
   },
 
   'once': function(event, callback, cancel, context) {
+    var self = this;
     function fn(snap) {
       /*jshint validthis:true */
-      this.off(event, fn, this);
+      self.off(event, fn, self);
       callback.call(context, snap);
     }
     this.on(event, fn, cancel, this);
@@ -3190,7 +3291,7 @@ function notSupported(method) {
 }
 
 module.exports = ReadOnlyRef;
-},{"../../common":24}],22:[function(require,module,exports){
+},{"../../common":25}],23:[function(require,module,exports){
 'use strict';
 var Cache = require('./Cache');
 
@@ -3266,7 +3367,7 @@ Scroll.prototype.destroy = function() {
 };
 
 module.exports = Scroll;
-},{"./Cache":18}],23:[function(require,module,exports){
+},{"./Cache":19}],24:[function(require,module,exports){
 /**
  * This file loads all the public methods from
  * the common/ library. To fetch all methods
@@ -3278,7 +3379,7 @@ var util = require('./index.js');
 exports.log = util.log;
 exports.logLevel = util.logLevel;
 exports.escapeEmail = util.escapeEmail;
-},{"./index.js":24}],24:[function(require,module,exports){
+},{"./index.js":25}],25:[function(require,module,exports){
 /**
  * This file loads the entire common/ package for INTERNAL USE.
  * The public methods are specified by exports.js
@@ -3299,7 +3400,7 @@ util.extend(
     queue: require('./libs/queue.js')
   }
 );
-},{"./libs/Observable.js":25,"./libs/Observer.js":26,"./libs/args.js":27,"./libs/logger.js":28,"./libs/queue.js":29,"./libs/util.js":30}],25:[function(require,module,exports){
+},{"./libs/Observable.js":26,"./libs/Observer.js":27,"./libs/args.js":28,"./libs/logger.js":29,"./libs/queue.js":30,"./libs/util.js":31}],26:[function(require,module,exports){
 'use strict';
 
 var util = require('./util.js');
@@ -3495,7 +3596,7 @@ function parseProps(eventsMonitored, opts) {
 }
 
 module.exports = Observable;
-},{"./Observer.js":26,"./args.js":27,"./logger.js":28,"./util.js":30}],26:[function(require,module,exports){
+},{"./Observer.js":27,"./args.js":28,"./logger.js":29,"./util.js":31}],27:[function(require,module,exports){
 'use strict';
 var util = require('./util.js');
 
@@ -3542,7 +3643,7 @@ Observer.prototype = {
 };
 
 module.exports = Observer;
-},{"./util.js":30}],27:[function(require,module,exports){
+},{"./util.js":31}],28:[function(require,module,exports){
 'use strict';
 var util = require('./util.js');
 var log = require('./logger.js');
@@ -3827,7 +3928,7 @@ function format(val, types) {
 }
 
 module.exports = Args;
-},{"./logger.js":28,"./util.js":30}],28:[function(require,module,exports){
+},{"./logger.js":29,"./util.js":31}],29:[function(require,module,exports){
 'use strict';
 /*global window*/
 var DEFAULT_LEVEL = 2; //  errors and warnings
@@ -3943,7 +4044,7 @@ function levelInt(x) {
 
 logger.logLevel(getDefaultLevel());
 module.exports = logger;
-},{"./util.js":30}],29:[function(require,module,exports){
+},{"./util.js":31}],30:[function(require,module,exports){
 'use strict';
 var util = require('./util.js');
 
@@ -4012,7 +4113,7 @@ Queue.prototype = {
 
   handler: function(fn, context) {
     this._runOrStore(function() {
-      fn.apply(context, this.hasErrors()? this.getErrors() : null);
+      fn.apply(context, this.getErrors());
     });
     return this;
   },
@@ -4096,7 +4197,8 @@ module.exports = function(criteriaFns, callback) {
   if( callback ) { q.done(callback); }
   return q;
 };
-},{"./util.js":30}],30:[function(require,module,exports){
+
+},{"./util.js":31}],31:[function(require,module,exports){
 (function (global){
 /*jshint unused:vars */
 /*jshint bitwise:false */
@@ -4445,22 +4547,34 @@ util.noop = function() {};
 
 var wrappingClasses = [];
 util.isFirebaseRef = function(x) {
+  // ES5 throws TypeError if getPrototypeOf() called on a non-object
+  if( !util.isObject(x) ) {
+    return false;
+  }
+
   // necessary because instanceof won't work on Firebase Query objects
   // so we can't simply do instanceof here
-  var isObject = util.isObject(x);
-  var proto = isObject? Object.getPrototypeOf(x) : false;
+  var proto = Object.getPrototypeOf(x);
   if( proto && proto.constructor === util.Firebase.prototype.constructor ) {
     return true;
   }
 
   //todo-hack: SDK 2.2.x no longer works with the above. This is a hack to make that work until fixed
-  if( isObject && typeof(x.ref) === 'function' && typeof(x.ref().transaction) === 'function' ) {
+  if( typeof(x.ref) === 'function' && typeof(x.ref().transaction) === 'function' ) {
     return true;
   }
 
-  return util.find(wrappingClasses, function(C) {
-    return isObject? x instanceof C : x === C;
+  return util.isFirebaseRefWrapper(x);
+};
+
+util.isFirebaseRefWrapper = function(x) {
+  return util.contains(wrappingClasses, function(C) {
+    return x instanceof C;
   });
+};
+
+util.isQueryRef = function(x) {
+  return util.isFirebaseRef(x) && typeof x.transaction !== 'function';
 };
 
 // Add a Class as a valid substitute for a Firebase reference, so that it will
@@ -4677,4 +4791,4 @@ if( typeof window !== 'undefined' ) {
     window.Firebase.util = util;
   }
 }
-},{"./NormalizedCollection/exports.js":2,"./Paginate/exports.js":17,"./common/exports.js":23,"./common/index.js":24}]},{},[1]);
+},{"./NormalizedCollection/exports.js":2,"./Paginate/exports.js":18,"./common/exports.js":24,"./common/index.js":25}]},{},[1]);

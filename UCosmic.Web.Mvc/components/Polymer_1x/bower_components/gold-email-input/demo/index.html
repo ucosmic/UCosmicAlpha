@@ -29,16 +29,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <h4>Standard</h4>
     <div class="vertical-section">
       <gold-email-input></gold-email-input>
-      <gold-email-input label="Auto-validating" auto-validate></gold-email-input>
+      <gold-email-input label="Auto-validating" required auto-validate></gold-email-input>
     </div>
 
     <h4>Pre-validated</h4>
     <div class="vertical-section">
       <gold-email-input auto-validate value="batman@gotham.org"></gold-email-input>
       <gold-email-input auto-validate value="not-a-thing.email"></gold-email-input>
+      <gold-email-input auto-validate label="custom regex, needs to ends in .cat"
+          regex='^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+.cat$'
+          value="felix@meow.car"></gold-email-input>
     </div>
 
-    <h4>Custom error message</h4>
+    <h4>Custom error message, auto-validates on blur</h4>
     <div class="vertical-section">
       <gold-email-input required auto-validate error-message="Please enter a valid email" label="Email contact"></gold-email-input>
     </div>

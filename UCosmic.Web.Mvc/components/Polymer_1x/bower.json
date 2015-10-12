@@ -28,6 +28,11 @@
     "platinum-elements": "PolymerElements/platinum-elements#~1.0.1",
     "google-web-components": "~1.0.1",
     "molecules": "PolymerElements/molecules#~1.0.0",
-    "rxjs": "~2.5.2"
+    "rxjs": "~2.5.2",
+    "lovefield": "~2.0.63",
+    "es6-promise": "~3.0.2"
+  },
+  "resolutions": {
+    "polymer": "^1.1.0"
   }
 }
