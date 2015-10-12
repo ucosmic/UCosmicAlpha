@@ -869,8 +869,8 @@ var Employees;
                 if (placeId == 1)
                     placeId = null;
                 var places = this.placeData.cached;
-                var currentYear = 2012;
-                var minYear = 2003;
+                var currentYear = 2014;
+                var minYear = 2005;
                 var activityYears = Enumerable.From(places)
                     .Where(function (x) {
                     if (placeId == null)
