@@ -347,13 +347,19 @@ namespace UCosmic.Web.Mvc.Controllers
                         x => x.Person.Affiliations.Select(y => y.Establishment),
                     },
             });
+            establishment.SamlSignOn.MetadataXml = establishment.SamlSignOn.MetadataXml.Replace("https://shibboleth.usf.edu/idp/profile/Shibboleth/SSO", "https://alpha-staging.ucosmic.com/sign-on/saml/2");
+            establishment.SamlSignOn.MetadataXml = establishment.SamlSignOn.MetadataXml.Replace("https://shibboleth.usf.edu/idp/profile/SAML2/POST/SSO", "https://alpha-staging.ucosmic.com/sign-on/saml/2");
+            establishment.SamlSignOn.MetadataXml = establishment.SamlSignOn.MetadataXml.Replace("https://shibboleth.usf.edu/idp/profile/SAML2/POST-SimpleSign/SSO", "https://alpha-staging.ucosmic.com/sign-on/saml/2");
+            establishment.SamlSignOn.MetadataXml = establishment.SamlSignOn.MetadataXml.Replace("https://shibboleth.usf.edu/idp/profile/SAML2/Redirect/SSO", "https://alpha-staging.ucosmic.com/sign-on/saml/2");
             var tenancy = Mapper.Map<Tenancy>(user);
             _services.SamlServiceProvider.SendAuthnRequest(
                 establishment.SamlSignOn.SsoLocation,
                 establishment.SamlSignOn.SsoBinding.AsSaml2SsoBinding(),
+                //"https://preview.ucosmic.com/sign-on/saml/2",
                 "https://alpha.ucosmic.com/sign-on/saml/2",
                 //_services.ConfigurationManager.SamlRealServiceProviderEntityId,
-                returnUrl ?? Url.Action(MVC.Tenancy.Tenant(tenancy.StyleDomain, returnUrl)),
+                //returnUrl ?? Url.Action(MVC.Tenancy.Tenant(tenancy.StyleDomain, returnUrl)),
+                "https://alpha.ucosmic.com/sign-on/saml/2",
                 HttpContext
             );
         }
