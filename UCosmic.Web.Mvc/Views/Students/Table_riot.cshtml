@@ -1,0 +1,27 @@
+﻿@using UCosmic.Web.Mvc.Models
+@{
+    ViewBag.Title = "Student Mobility Snapshot";
+        var tenancy = Request.Tenancy();
+        var styleDomain = tenancy != null ? tenancy.StyleDomain : "default";
+        var tenantId = tenancy != null ? tenancy.TenantId : 0;
+        var hasStyleDomain = !string.IsNullOrWhiteSpace(styleDomain) && !"default".Equals(styleDomain, StringComparison.OrdinalIgnoreCase);
+}
+
+@section bib
+{
+    <nav class="bib" data-current-bib="report">
+    @Html.Partial(MVC.Students.Views._Bib, new StudentsBibNavModel { })
+</nav>
+}
+
+@section styles
+{
+    <link rel="stylesheet" type="text/css" href="~/styles/sass/sheets/employees/summary.css" />
+
+}
+
+<script src="~/components_riot/components/pages/students/table/student_table.js"></script>
+
+<div class="content fixed" data-current-module="students">
+    <student_table id="page_student_table" style_domain="@styleDomain" tenant_id="@tenantId" firebase_token="@ViewBag.firebase_token"></student_table>
+</div>
