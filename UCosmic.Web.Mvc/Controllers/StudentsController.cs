@@ -317,6 +317,42 @@ namespace UCosmic.Web.Mvc.Controllers
                 return HttpNotFound();
             }
         }
+        [GET("{domain}/students/table_riot/")]
+        public virtual ActionResult Table_riot(string domain)
+        {
+
+            //load filter parameter values
+            Establishment establishment = null;
+            StudentActivityRepository student_rep = new StudentActivityRepository();
+            PlacesRepository places_rep = new PlacesRepository();
+
+            var tenancy = Request.Tenancy() ?? new Tenancy();
+            if (tenancy.TenantId.HasValue)
+            {
+                establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+            }
+            else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+            {
+                establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+            }
+
+            if (establishment != null)
+            {
+                //Load filter parameters
+                ViewBag.firebase_token = Request.Cookies.Get("firebase_token") != null ? Request.Cookies.Get("firebase_token").Value : null;
+                ViewBag.campus = establishment.Children; // list of campuses
+                ViewBag.continents = places_rep.getContinentList();
+                ViewBag.countries = places_rep.getCountryList();
+                ViewBag.programs = student_rep.getPrograms(establishment.OfficialName);
+                ViewBag.terms = student_rep.getTerms(establishment.OfficialName);
+
+                return View("Table", "_Layout_riot");
+            }
+            else
+            {
+                return HttpNotFound();
+            }
+        }
 
 
         [GET("{domain}/students/map")]
