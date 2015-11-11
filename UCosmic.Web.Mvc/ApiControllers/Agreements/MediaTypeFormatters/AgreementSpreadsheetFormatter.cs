@@ -188,7 +188,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     if (_isPrivate)
                         Cell(ColumnName.Status, rowNumber).Value = model.Status;
 
-                    Cell(ColumnName.Description, rowNumber).Value = model.Content.Length > 0 ? StripTagsCharArray(model.Content) : "[None]";
+                    Cell(ColumnName.Description, rowNumber).Value = model.Content != null && model.Content.Length > 0 ? StripTagsCharArray(model.Content) : "[None]";
                     //Cell(ColumnName.Description, rowNumber).Value = model.Description ?? "[None]";
                     Cell(ColumnName.Contacts, rowNumber).Value = model.Contacts ?? "[Unknown]";
 
