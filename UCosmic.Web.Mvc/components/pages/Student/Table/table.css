@@ -1,3 +1,9 @@
+paper-icon-button {
+  height: 24px; }
+
+.paper-input-container-0 .input-content.paper-input-container label, .paper-input-container-0 .input-content.paper-input-container .paper-input-label {
+  color: black !important; }
+
 .is-page-student-table {
     /*.chart_counts span.chart_count_item:after {
     content: ", ";

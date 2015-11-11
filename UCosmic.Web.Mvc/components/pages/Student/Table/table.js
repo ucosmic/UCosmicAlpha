@@ -761,36 +761,36 @@ Polymer({
             }, 100);
         }
     },
-    get_chart_name: function (value) {
+    get_chart_name: function (value, name) {
         switch (value) {
             case 0:
-                return 'area';
-            case 1:
                 return 'bar';
-            case 2:
-                return 'bubble';
-            case 3:
-                return 'candlestick';
-            case 4:
-                return 'combo';
-            case 5:
+            case 1:
                 return 'column';
-            case 6:
-                return 'geo';
-            case 7:
-                return 'histogram';
-            case 8:
-                return 'line';
-            case 9:
+            case 2:
                 return 'pie';
-            case 10:
-                return 'scatter';
-            case 11:
-                return 'stepped-area';
-            case 12:
-                return 'treemap';
+            case 3:
+                return this.is_country(name) ? 'geo' : 'line';
         }
         return 'column';
+    },
+    is_country: function (name) {
+        if (name == 'Countries') {
+            return true;
+        }
+        else {
+            return false;
+        }
+        console.log(name);
+    },
+    is_term: function (name) {
+        if (name == 'Terms') {
+            return true;
+        }
+        else {
+            return false;
+        }
+        console.log('term');
     },
     show_charts: function (event, target, test) {
         var target = this.closest_utility().find_closest(event.target, '.dialog_charts');
@@ -809,6 +809,31 @@ Polymer({
         chart.cols = [{ "label": "Value", "type": "string" }, { "label": "Count", "type": "number" }];
         chart.rows = rows;
         target.toggle();
+        setTimeout(function () {
+            chart.drawChart();
+        }, 100);
+    },
+    chart_selected: function (event, target, test) {
+        var target = this.closest_utility().find_closest(event.target, '.dialog_charts');
+        var chart = this.closest_utility().find_closest(event.target, 'google-chart');
+        var template = this.closest_utility().find_closest(event.target, '#count_l1');
+        var index = template.indexForElement(event.target);
+        var item = template.itemForElement(event.target);
+        var template2 = this.closest_utility().find_closest(event.target, '#array_l' + index);
+        var rows = [], my_this = this;
+        if (event.target.selected == 2) {
+            _.each(template2.collection.store, function (value, index, array) {
+                rows.push([my_this.get_name(array[index], item.name), my_this.get_count_inner(array[index], item.name)]);
+            });
+        }
+        else {
+            _.each(template2.collection.store, function (value, index, array) {
+                rows.push([my_this.get_name(array[index], item.name), my_this.get_count_inner(array[index], item.name)]);
+            });
+        }
+        var chart = this.closest_utility().find_closest(event.target, 'google-chart');
+        chart.cols = [{ "label": "Value", "type": "string" }, { "label": "Count", "type": "number" }];
+        chart.rows = rows;
         setTimeout(function () {
             chart.drawChart();
         }, 100);
