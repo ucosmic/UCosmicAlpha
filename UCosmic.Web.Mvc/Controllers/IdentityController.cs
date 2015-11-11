@@ -12,6 +12,8 @@ using UCosmic.Web.Mvc.Models;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Routing;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -71,6 +73,8 @@ namespace UCosmic.Web.Mvc.Controllers
         [ValidateSigningReturnUrl]
         public virtual ActionResult SignIn_2(string returnUrl)
         {
+
+            Run_Firebase_get("test", "test2");
             // detect SAML SSO from skin cookie
             var tenancy = Request.Tenancy();
             if (tenancy != null && !string.IsNullOrWhiteSpace(tenancy.StyleDomain))
@@ -123,7 +127,14 @@ namespace UCosmic.Web.Mvc.Controllers
                 );
                 if (establishment != null && establishment.HasSamlSignOn())
                 {
-                    return PushToSamlSsoExternal(establishment, returnUrl);
+                    if (establishment.OfficialName == "University of South Florida System")
+                    {
+                        return PushToSamlSsoExternal_2(establishment, returnUrl);
+                    }
+                    else
+                    {
+                        return PushToSamlSsoExternal(establishment, returnUrl);
+                    }
 
                     // wait for the authn response
                     //return new EmptyResult();
@@ -154,7 +165,15 @@ namespace UCosmic.Web.Mvc.Controllers
                 });
                 if (establishment != null && establishment.HasSamlSignOn())
                 {
-                    return PushToSamlSsoExternal(establishment, model.ReturnUrl);
+                    if (establishment.OfficialName == "University of South Florida System")
+                    {
+                        return PushToSamlSsoExternal_2(establishment, model.ReturnUrl);
+                    }
+                    else
+                    {
+                        return PushToSamlSsoExternal(establishment, model.ReturnUrl);
+                    }
+                    //return PushToSamlSsoExternal(establishment, model.ReturnUrl);
                 }
                 if (!string.IsNullOrWhiteSpace(model.Password) && _passwords.Validate(model.UserName, model.Password))
                 {
@@ -327,6 +346,7 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             if (establishment == null) return;
 
+            //Run_Firebase_test(establishment, "request_1");
             // update the provider metadata
             _services.CommandHandler.Handle(
                 new UpdateSamlSignOnMetadata
@@ -347,10 +367,11 @@ namespace UCosmic.Web.Mvc.Controllers
                         x => x.Person.Affiliations.Select(y => y.Establishment),
                     },
             });
-            establishment.SamlSignOn.MetadataXml = establishment.SamlSignOn.MetadataXml.Replace("https://shibboleth.usf.edu/idp/profile/Shibboleth/SSO", "https://alpha-staging.ucosmic.com/sign-on/saml/2");
-            establishment.SamlSignOn.MetadataXml = establishment.SamlSignOn.MetadataXml.Replace("https://shibboleth.usf.edu/idp/profile/SAML2/POST/SSO", "https://alpha-staging.ucosmic.com/sign-on/saml/2");
-            establishment.SamlSignOn.MetadataXml = establishment.SamlSignOn.MetadataXml.Replace("https://shibboleth.usf.edu/idp/profile/SAML2/POST-SimpleSign/SSO", "https://alpha-staging.ucosmic.com/sign-on/saml/2");
-            establishment.SamlSignOn.MetadataXml = establishment.SamlSignOn.MetadataXml.Replace("https://shibboleth.usf.edu/idp/profile/SAML2/Redirect/SSO", "https://alpha-staging.ucosmic.com/sign-on/saml/2");
+            //Run_Firebase_test(_services.ConfigurationManager.SamlRealServiceProviderEntityId, "request_2");
+            //establishment.SamlSignOn.MetadataXml = establishment.SamlSignOn.MetadataXml.Replace("https://shibboleth.usf.edu/idp/profile/Shibboleth/SSO", "https://alpha-staging.ucosmic.com/sign-on/saml/2");
+            //establishment.SamlSignOn.MetadataXml = establishment.SamlSignOn.MetadataXml.Replace("https://shibboleth.usf.edu/idp/profile/SAML2/POST/SSO", "https://alpha-staging.ucosmic.com/sign-on/saml/2");
+            //establishment.SamlSignOn.MetadataXml = establishment.SamlSignOn.MetadataXml.Replace("https://shibboleth.usf.edu/idp/profile/SAML2/POST-SimpleSign/SSO", "https://alpha-staging.ucosmic.com/sign-on/saml/2");
+            //establishment.SamlSignOn.MetadataXml = establishment.SamlSignOn.MetadataXml.Replace("https://shibboleth.usf.edu/idp/profile/SAML2/Redirect/SSO", "https://alpha-staging.ucosmic.com/sign-on/saml/2");
             var tenancy = Mapper.Map<Tenancy>(user);
             _services.SamlServiceProvider.SendAuthnRequest(
                 establishment.SamlSignOn.SsoLocation,
@@ -359,9 +380,17 @@ namespace UCosmic.Web.Mvc.Controllers
                 "https://alpha.ucosmic.com/sign-on/saml/2",
                 //_services.ConfigurationManager.SamlRealServiceProviderEntityId,
                 //returnUrl ?? Url.Action(MVC.Tenancy.Tenant(tenancy.StyleDomain, returnUrl)),
-                "https://alpha.ucosmic.com/sign-on/saml/2",
+                "https://alpha.ucosmic.com/sign-on/saml/2/post",
                 HttpContext
             );
+
+            //_services.SamlServiceProvider.SendAuthnRequest(
+            //    establishment.SamlSignOn.SsoLocation,
+            //    establishment.SamlSignOn.SsoBinding.AsSaml2SsoBinding(),
+            //    _services.ConfigurationManager.SamlRealServiceProviderEntityId,
+            //    returnUrl ?? Url.Action(MVC.Identity.MyHome.Get()),
+            //    HttpContext
+            //);
         }
 
         [NonAction]
@@ -511,6 +540,47 @@ namespace UCosmic.Web.Mvc.Controllers
                 return RedirectToAction(MVC.Identity.Tenantize(returnUrl));
             }
             return RedirectToAction(MVC.People.Me());
+        }
+        public async void Run_Firebase_test(Object saml_response, string test_number)//(CancellationToken cancellationToken)
+        {
+
+
+            using (var client = new HttpClient())
+            {
+                // New code:
+                client.BaseAddress = new Uri("https://ucosmic.firebaseio.com");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //client.PutAsJsonAsync("students/establishments/" + establishment.establishment + ".json", xx);
+                HttpResponseMessage response = await client.PutAsJsonAsync("Test/Checks/" + test_number + ".json", saml_response);
+
+            }
+        }
+        public async void Run_Firebase_get(string test_number1, string test_number)//(CancellationToken cancellationToken)
+        {
+
+
+            using (var client = new HttpClient())
+            {
+                // New code:
+                client.BaseAddress = new Uri("https://ucosmic.firebaseio.com");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //client.PutAsJsonAsync("students/establishments/" + establishment.establishment + ".json", xx);
+                //HttpResponseMessage response = await client.PutAsJsonAsync("Test/Checks/" + test_number + ".json", saml_response);
+                HttpResponseMessage response = await client.GetAsync("Test/Checks");
+                if (response.IsSuccessStatusCode)
+                {
+                    var x = response.Content.ReadAsStringAsync().Result;
+                    x = x;
+                }
+                else
+                {
+                    //return "";
+                }
+            }
         }
 
     }
