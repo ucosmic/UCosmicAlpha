@@ -195,7 +195,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 var deleteUserCommand = new DeleteUser(User, user.RevisionId);
                 _deleteUser.Handle(deleteUserCommand);
             }
+            try
+            {
+                _passwords.Destroy(user.Name);
+            }
+            catch (Exception e)
+            {
 
+            }
             return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
