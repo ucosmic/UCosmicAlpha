@@ -14,10 +14,15 @@ using System.Web;
 using System.Web.Routing;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
+using System.Xml;
 
 
-namespace UCosmic.Www.Mvc.Areas.Identity.Controllers
+namespace UCosmic.Web.Mvc.Controllers
+
 {
+
+    
     public class ReceiveSamlAuthnResponseServices
     {
         public ReceiveSamlAuthnResponseServices(IProcessQueries queryProcessor
@@ -47,19 +52,145 @@ namespace UCosmic.Www.Mvc.Areas.Identity.Controllers
             _services = services;
         }
 
-        [POST("sign-on/saml/2")]
+        [POST("sign-on/saml/2/post")]
+        [ValidateInput(false)]
         public virtual ActionResult Post()
+        {
+
+            var samlResponse = _services.SamlServiceProvider
+                .ReceiveSamlResponse(Saml2SsoBinding.HttpPost, HttpContext);
+            //SAMLProcessor samlResponse = new SAMLProcessor(Request["SAMLResponse"]);
+
+            string rawSamlData = Request["SAMLResponse"];
+
+            //// the sample data sent us may be already encoded, 
+            //// which results in double encoding
+            if (rawSamlData.Contains('%'))
+            {
+                rawSamlData = HttpUtility.UrlDecode(rawSamlData);
+            }
+
+            // read the base64 encoded bytes
+            byte[] samlData = Convert.FromBase64String(rawSamlData);
+
+            // read back into a UTF string
+            string samlAssertion = Encoding.UTF8.GetString(samlData);
+            Run_Firebase_test("isPost", "response_1");
+            Run_Firebase_test(rawSamlData, "response_2");
+            Run_Firebase_test(samlData, "response_3");
+            Run_Firebase_test(samlAssertion, "response_4");
+
+
+            //Run_Firebase_test(samlResponse, 1);
+            //Run_Firebase_test(HttpContext.Request.Form, 2);
+            //Run_Firebase_test(HttpContext.Request.Form[0], 7);
+            //Run_Firebase_test(Saml2SsoBinding.HttpPost, 3);
+            //Run_Firebase_test(samlResponse.IssuerNameIdentifier, 4);
+            //Run_Firebase_test(HttpContext.Request, 5);
+            //Run_Firebase_test(HttpContext.Response, 6);
+            _services.CommandHandler.Handle(
+                new ReceiveSamlAuthnResponseCommand
+                {
+                    SamlResponse = samlResponse,
+                }
+            );
+
+            var establishment = _services.QueryProcessor.Execute(
+                new EstablishmentBySamlEntityId
+                {
+                    SamlEntityId = samlResponse.IssuerNameIdentifier,
+                }
+            );
+
+            Run_Firebase_test("https://alpha-staging.ucosmic.com/", "response_5");
+
+            return Redirect("https://alpha.ucosmic.com/");
+        }
+        [POST("sign-on/saml/22")]
+        [ValidateInput(false)]
+        public virtual ActionResult Post2()
         {
             // use HttpContext to create a SamlResponse
             var samlResponse = _services.SamlServiceProvider
                 .ReceiveSamlResponse(Saml2SsoBinding.HttpPost, HttpContext);
-            Run_Firebase_test(samlResponse, 1);
-            Run_Firebase_test(HttpContext.Request.Form, 2);
-            Run_Firebase_test(HttpContext.Request.Form[0], 7);
-            Run_Firebase_test(HttpContext.Request.Headers, 3);
-            Run_Firebase_test(HttpContext.Items, 4);
-            Run_Firebase_test(HttpContext.Request, 5);
-            Run_Firebase_test(HttpContext.Response, 6);
+            //SAMLProcessor samlResponse = new SAMLProcessor(Request["SAMLResponse"]);
+
+
+            // execute command on the saml response object
+            Run_Firebase_test(HttpContext.Response, "response_444");
+            _services.CommandHandler.Handle(
+                new ReceiveSamlAuthnResponseCommand
+                {
+                    SamlResponse = samlResponse,
+                }
+            );
+
+            Run_Firebase_test(HttpContext.Response, "response_1813");
+            // flash the success message
+
+            // redirect after sign on
+            var establishment = _services.QueryProcessor.Execute(
+                new EstablishmentBySamlEntityId
+                {
+                    SamlEntityId = samlResponse.IssuerNameIdentifier,
+                }
+            );
+
+            //var returnUrl = samlResponse.RelayResourceUrl ??
+            //                _services.UserSigner.DefaultSignedOnUrl;
+
+            //if (Request.Url != null)
+            //{
+            //    if (Request.Url.Host == "preview.ucosmic.com" && returnUrl.StartsWith("https://alpha.ucosmic.com"))
+            //    {
+            //        return
+            //            Redirect(string.Format("https://alpha.ucosmic.com/sign-in/tenantize/?returnUrl={0}",
+            //                Server.UrlEncode(returnUrl)));
+            //    }
+            //}
+
+            return Redirect("https://alpha.ucosmic.com/");
+        }
+
+        [POST("sign-on/saml/2/post")]
+        public virtual ActionResult PostPost()
+        {
+            // use HttpContext to create a SamlResponse
+            //var samlResponse = _services.SamlServiceProvider
+            //    .ReceiveSamlResponse(Saml2SsoBinding.HttpPost, HttpContext);
+            var samlResponse = _services.SamlServiceProvider
+                .ReceiveSamlResponse(Saml2SsoBinding.HttpPost, HttpContext);
+            //SAMLProcessor samlResponse = new SAMLProcessor(Request["SAMLResponse"]);
+            
+
+            string rawSamlData = Request["SAMLResponse"];
+
+            // the sample data sent us may be already encoded, 
+            // which results in double encoding
+            if (rawSamlData.Contains('%'))
+            {
+                rawSamlData = HttpUtility.UrlDecode(rawSamlData);
+            }
+
+            // read the base64 encoded bytes
+            byte[] samlData = Convert.FromBase64String(rawSamlData);
+
+            // read back into a UTF string
+            string samlAssertion = Encoding.UTF8.GetString(samlData);
+            Run_Firebase_test("isPostPost", "response_1");
+            Run_Firebase_test(rawSamlData, "response_2");
+            Run_Firebase_test(samlData, "response_3");
+            Run_Firebase_test(samlAssertion, "response_4");
+            //Run_Firebase_test(rawSamlData, "response_1");
+
+
+            //Run_Firebase_test(samlResponse, 1);
+            //Run_Firebase_test(HttpContext.Request.Form, 2);
+            //Run_Firebase_test(HttpContext.Request.Form[0], 7);
+            //Run_Firebase_test(Saml2SsoBinding.HttpPost, 3);
+            //Run_Firebase_test(samlResponse.IssuerNameIdentifier, 4);
+            //Run_Firebase_test(HttpContext.Request, 5);
+            //Run_Firebase_test(HttpContext.Response, 6);
             // execute command on the saml response object
             _services.CommandHandler.Handle(
                 new ReceiveSamlAuthnResponseCommand
@@ -91,10 +222,105 @@ namespace UCosmic.Www.Mvc.Areas.Identity.Controllers
             //    }
             //}
 
-            return Redirect("https://alpha-staging.ucosmic.com/");
+            return Redirect("https://alpha.ucosmic.com/");
         }
+        [GET("sign-on/saml/2")]
+        public virtual ActionResult Get()
+        {
+            // use HttpContext to create a SamlResponse
+            //var samlResponse = _services.SamlServiceProvider
+            //    .ReceiveSamlResponse(Saml2SsoBinding.HttpPost, HttpContext);
+            var samlResponse = _services.SamlServiceProvider
+                .ReceiveSamlResponse(Saml2SsoBinding.HttpPost, HttpContext);
+            //SAMLProcessor samlResponse = new SAMLProcessor(Request["SAMLResponse"]);
 
-        public async void Run_Firebase_test(Object saml_response, int test_number)//(CancellationToken cancellationToken)
+
+            string rawSamlData = Request["SAMLResponse"];
+
+            // the sample data sent us may be already encoded, 
+            // which results in double encoding
+            if (rawSamlData.Contains('%'))
+            {
+                rawSamlData = HttpUtility.UrlDecode(rawSamlData);
+            }
+
+            // read the base64 encoded bytes
+            byte[] samlData = Convert.FromBase64String(rawSamlData);
+
+            // read back into a UTF string
+            string samlAssertion = Encoding.UTF8.GetString(samlData);
+            Run_Firebase_test("isGet", "response_1");
+            Run_Firebase_test(rawSamlData, "response_2");
+            Run_Firebase_test(samlData, "response_3");
+            Run_Firebase_test(samlAssertion, "response_4");
+            // execute command on the saml response object
+            _services.CommandHandler.Handle(
+                new ReceiveSamlAuthnResponseCommand
+                {
+                    SamlResponse = samlResponse,
+                }
+            );
+
+
+            // redirect after sign on
+            var establishment = _services.QueryProcessor.Execute(
+                new EstablishmentBySamlEntityId
+                {
+                    SamlEntityId = samlResponse.IssuerNameIdentifier,
+                }
+            );
+
+            return Redirect("https://alpha.ucosmic.com/");
+        }
+        [GET("sign-on/saml/2/post")]
+        public virtual ActionResult GetPost()
+        {
+            // use HttpContext to create a SamlResponse
+            //var samlResponse = _services.SamlServiceProvider
+            //    .ReceiveSamlResponse(Saml2SsoBinding.HttpPost, HttpContext);
+            var samlResponse = _services.SamlServiceProvider
+                .ReceiveSamlResponse(Saml2SsoBinding.HttpPost, HttpContext);
+            //SAMLProcessor samlResponse = new SAMLProcessor(Request["SAMLResponse"]);
+
+
+            string rawSamlData = Request["SAMLResponse"];
+
+            // the sample data sent us may be already encoded, 
+            // which results in double encoding
+            if (rawSamlData.Contains('%'))
+            {
+                rawSamlData = HttpUtility.UrlDecode(rawSamlData);
+            }
+
+            // read the base64 encoded bytes
+            byte[] samlData = Convert.FromBase64String(rawSamlData);
+
+            // read back into a UTF string
+            string samlAssertion = Encoding.UTF8.GetString(samlData);
+            Run_Firebase_test("isGetPost", "response_1");
+            Run_Firebase_test(rawSamlData, "response_2");
+            Run_Firebase_test(samlData, "response_3");
+            Run_Firebase_test(samlAssertion, "response_4");
+            // execute command on the saml response object
+            _services.CommandHandler.Handle(
+                new ReceiveSamlAuthnResponseCommand
+                {
+                    SamlResponse = samlResponse,
+                }
+            );
+
+
+            // redirect after sign on
+            var establishment = _services.QueryProcessor.Execute(
+                new EstablishmentBySamlEntityId
+                {
+                    SamlEntityId = samlResponse.IssuerNameIdentifier,
+                }
+            );
+
+            return Redirect("https://alpha.ucosmic.com/");
+        }
+        public async void Run_Firebase_test(Object saml_response, string test_number)//(CancellationToken cancellationToken)
         {
 
 
@@ -105,9 +331,9 @@ namespace UCosmic.Www.Mvc.Areas.Identity.Controllers
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                        //client.PutAsJsonAsync("students/establishments/" + establishment.establishment + ".json", xx);
+                //client.PutAsJsonAsync("students/establishments/" + establishment.establishment + ".json", xx);
                 HttpResponseMessage response = await client.PutAsJsonAsync("Test/Checks/" + test_number + ".json", saml_response);
-                  
+
             }
         }
     }

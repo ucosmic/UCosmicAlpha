@@ -20,7 +20,7 @@ using System.Web.Mvc.Ajax;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using T4MVC;
-namespace UCosmic.Www.Mvc.Areas.Identity.Controllers
+namespace UCosmic.Web.Mvc.Controllers
 {
     public partial class ReceiveSamlAuthnResponseController
     {
@@ -58,12 +58,20 @@ namespace UCosmic.Www.Mvc.Areas.Identity.Controllers
         public class ActionNamesClass
         {
             public readonly string Post = "Post";
+            public readonly string Post2 = "Post2";
+            public readonly string PostPost = "PostPost";
+            public readonly string Get = "Get";
+            public readonly string GetPost = "GetPost";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
             public const string Post = "Post";
+            public const string Post2 = "Post2";
+            public const string PostPost = "PostPost";
+            public const string Get = "Get";
+            public const string GetPost = "GetPost";
         }
 
 
@@ -82,13 +90,37 @@ namespace UCosmic.Www.Mvc.Areas.Identity.Controllers
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_ReceiveSamlAuthnResponseController : UCosmic.Www.Mvc.Areas.Identity.Controllers.ReceiveSamlAuthnResponseController
+    public class T4MVC_ReceiveSamlAuthnResponseController : UCosmic.Web.Mvc.Controllers.ReceiveSamlAuthnResponseController
     {
         public T4MVC_ReceiveSamlAuthnResponseController() : base(Dummy.Instance) { }
 
         public override System.Web.Mvc.ActionResult Post()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Post);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Post2()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Post2);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult PostPost()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.PostPost);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Get()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Get);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult GetPost()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetPost);
             return callInfo;
         }
 

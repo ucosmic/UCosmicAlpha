@@ -159,10 +159,12 @@ namespace UCosmic.Web.Mvc.Controllers
             public class _ViewNamesClass
             {
                 public readonly string SignIn = "SignIn";
+                public readonly string SignIn_2 = "SignIn_2";
                 public readonly string SignOut = "SignOut";
                 public readonly string SignOverFail = "SignOverFail";
             }
             public readonly string SignIn = "~/Views/Identity/SignIn.cshtml";
+            public readonly string SignIn_2 = "~/Views/Identity/SignIn_2.cshtml";
             public readonly string SignOut = "~/Views/Identity/SignOut.cshtml";
             public readonly string SignOverFail = "~/Views/Identity/SignOverFail.cshtml";
         }
