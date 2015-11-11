@@ -32,7 +32,7 @@ namespace UCosmic.Saml
                 NameIDPolicy = new NameIDPolicy(null, null, true),
             };
 
-            authnRequest.AssertionConsumerServiceURL = "https://alpha.ucosmic.com/sign-on/saml/2";
+            authnRequest.AssertionConsumerServiceURL = "https://alpha.ucosmic.com/sign-on/saml/2/post";
             //var doc = new XmlDocument();
             //doc.LoadXml(" <SingleSignOnService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST\" Location=\"https://alpha-staging.ucosmic.com/sign-on/saml/2\" />");
             //authnRequest.Extensions = new Extensions();
@@ -74,11 +74,18 @@ namespace UCosmic.Saml
                         "The '{0}' binding is currently not supported.", idpBinding.AsUriString()));
             }
         }
-
+        private static XmlElement GetElement(string xml)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+            return doc.DocumentElement;
+        }
         public Saml2Response ReceiveSamlResponse(Saml2SsoBinding spBinding, HttpContextBase httpContext)
         {
             XmlElement responseElement; string relayState;
+            //responseElement =  GetElement(httpContext.Request["SAMLResponse"]);
             ServiceProvider.ReceiveSAMLResponseByHTTPPost(httpContext.Request, out responseElement, out relayState);
+
             var info = new ComponentSpaceSaml2Response(responseElement, relayState, spBinding,
                 _certificates.GetEncryptionCertificate(), httpContext);
             return info;
