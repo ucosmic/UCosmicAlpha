@@ -1,0 +1,35 @@
+{
+  "name": "X-Menu",
+  "authors": [
+    "timbow574521 <timtwillis@gmail.com>"
+  ],
+  "description": "Online Food Ordering System",
+  "main": "index.html",
+  "moduleType": [],
+  "keywords": [
+    "Online",
+    "food",
+    "ordering",
+    "system",
+    "xmenu",
+    "x-menu"
+  ],
+  "license": "MIT",
+  "homepage": "xmenu.menu",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "riot": "~2.2.4",
+    "firebase": "~2.3.1",
+    "rxjs": "~4.0.6",
+    "lodash": "~3.10.1",
+    "RiotControl": "riotcontrol#*",
+    "riot-ts": "~0.0.17"
+  }
+}
