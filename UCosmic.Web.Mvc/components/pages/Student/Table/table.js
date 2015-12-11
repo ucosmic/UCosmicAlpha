@@ -366,11 +366,11 @@ Polymer({
         this.fire_countries = new Firebase("https://UCosmic.firebaseio.com/Places/Countries");
         this.status_list = [{ _id: 'IN', text: 'Incoming' }, { _id: 'OUT', text: 'Outgoing' }];
         this.fire_establishments.once("value", function (snapshot) {
-            _this.establishment_list = _.map(snapshot.val(), function (value, index) {
-                if (value) {
-                    var object = { _id: index, text: value.establishment };
-                    return object;
-                }
+            _this.establishment_list = [];
+            _this.establishment_list = _.map(_.range(15000), function () { return undefined; });
+            _.each(snapshot.val(), function (value, index) {
+                var index_2 = parseInt(index);
+                _this.establishment_list.splice(index_2, 1, { _id: index_2, text: value.establishment });
             });
             _this.start_setup_filter();
         }, function (errorObject) {
@@ -838,7 +838,11 @@ Polymer({
             chart.drawChart();
         }, 100);
     },
-    close_dialog: function () {
+    clear_tags: function () {
+        this.tags = [];
+        this.calculate_counts(this);
+    },
+    close_dialog: function (event) {
         var target = this.closest_utility().find_closest(event.target, '.dialog_charts');
         target.toggle();
     },
@@ -1260,7 +1264,7 @@ Polymer({
     affiliation_list_search: function (event, detail, sender) {
         var _this = this;
         if (this.affiliation_search == "") {
-            this.affiliation_auto_list = _.take(this.affiliation_list, 10);
+            this.affiliation_auto_list = this.affiliation_list;
         }
         else {
             var list = _.filter(this.affiliation_list, function (value) {
@@ -1268,7 +1272,7 @@ Polymer({
                     return (value.text.toLowerCase().indexOf(_this.affiliation_search.toLowerCase()) > -1);
                 }
             });
-            this.affiliation_auto_list = _.take(list, 10);
+            this.affiliation_auto_list = list;
         }
     },
     countrySelected: function (event, detail, sender) {
@@ -1283,7 +1287,7 @@ Polymer({
     countryListSearch: function (event, detail, sender) {
         var _this = this;
         if (this.countrySearch == "") {
-            this.country_auto_list = _.take(this.country_list, 10);
+            this.country_auto_list = this.country_list;
         }
         else {
             var list = _.filter(this.country_list, function (value) {
@@ -1291,7 +1295,7 @@ Polymer({
                     return (value.text.toLowerCase().indexOf(_this.countrySearch.toLowerCase()) > -1);
                 }
             });
-            this.country_auto_list = _.take(list, 10);
+            this.country_auto_list = list;
         }
     },
     program_selected: function (event, detail, sender) {
@@ -1306,7 +1310,7 @@ Polymer({
     program_list_search: function (event, detail, sender) {
         var _this = this;
         if (this.program_search == "") {
-            this.program_auto_list = _.take(this.program_list, 10);
+            this.program_auto_list = this.program_list;
         }
         else {
             var list = _.filter(this.program_list, function (value) {
@@ -1314,7 +1318,7 @@ Polymer({
                     return (value.text.toLowerCase().indexOf(_this.program_search.toLowerCase()) > -1);
                 }
             });
-            this.program_auto_list = _.take(list, 10);
+            this.program_auto_list = list;
         }
     },
     level_selected: function (event, detail, sender) {
@@ -1341,7 +1345,7 @@ Polymer({
     student_affiliation_list_search: function (event, detail, sender) {
         var _this = this;
         if (this.student_affiliation_search == "") {
-            this.student_affiliation_auto_list = _.take(this.student_affiliation_list, 10);
+            this.student_affiliation_auto_list = this.student_affiliation_list;
         }
         else {
             var list = _.filter(this.student_affiliation_list, function (value) {
@@ -1349,7 +1353,7 @@ Polymer({
                     return (value.text.toLowerCase().indexOf(_this.student_affiliation_search.toLowerCase()) > -1);
                 }
             });
-            this.student_affiliation_auto_list = _.take(list, 10);
+            this.student_affiliation_auto_list = list;
         }
     },
     foreign_affiliation_selected: function (event, detail, sender) {
@@ -1364,7 +1368,7 @@ Polymer({
     foreign_affiliation_list_search: function (event, detail, sender) {
         var _this = this;
         if (this.foreign_affiliation_search == "") {
-            this.foreign_affiliation_auto_list = _.take(this.foreign_affiliation_list, 10);
+            this.foreign_affiliation_auto_list = this.foreign_affiliation_list;
         }
         else {
             var list = _.filter(this.foreign_affiliation_list, function (value) {
@@ -1372,7 +1376,7 @@ Polymer({
                     return (value.text.toLowerCase().indexOf(_this.foreign_affiliation_search.toLowerCase()) > -1);
                 }
             });
-            this.foreign_affiliation_auto_list = _.take(list, 10);
+            this.foreign_affiliation_auto_list = list;
         }
     },
     term_selected: function (event, detail, sender) {
