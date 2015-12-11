@@ -57,6 +57,8 @@ namespace UCosmic.Web.Mvc.Controllers
         public virtual ActionResult Post()
         {
 
+            var date = DateTime.Now;
+            Run_Firebase_test(date.ToString(), "response_time_1");
             var samlResponse = _services.SamlServiceProvider
                 .ReceiveSamlResponse(Saml2SsoBinding.HttpPost, HttpContext);
             //SAMLProcessor samlResponse = new SAMLProcessor(Request["SAMLResponse"]);
@@ -102,9 +104,23 @@ namespace UCosmic.Web.Mvc.Controllers
                 }
             );
 
-            Run_Firebase_test("https://alpha-staging.ucosmic.com/", "response_5");
+            //Run_Firebase_test("https://alpha-staging.ucosmic.com/", "response_5");
 
-            return Redirect("https://alpha.ucosmic.com/");
+            //return Redirect("https://alpha.ucosmic.com/");
+            Run_Firebase_test(samlResponse.RelayResourceUrl, "samlResponse.RelayResourceUrl");
+            var returnUrl = samlResponse.RelayResourceUrl ??
+                            _services.UserSigner.DefaultSignedOnUrl;
+            if (returnUrl == "https://alpha.ucosmic.com/sign-on/saml/2/post")
+            {
+                returnUrl = "/person/";
+            }
+
+            Run_Firebase_test(returnUrl, "response_5");
+            Run_Firebase_test(date.ToString(), "response_time_2");
+            return
+                Redirect(string.Format("https://alpha.ucosmic.com/sign-in/tenantize/?returnUrl={0}",
+                    Server.UrlEncode(returnUrl)));
+            //return Redirect(returnUrl);
         }
         [POST("sign-on/saml/22")]
         [ValidateInput(false)]
@@ -149,7 +165,14 @@ namespace UCosmic.Web.Mvc.Controllers
             //    }
             //}
 
-            return Redirect("https://alpha.ucosmic.com/");
+            //return Redirect("https://alpha.ucosmic.com/");
+            var returnUrl = samlResponse.RelayResourceUrl ??
+                            _services.UserSigner.DefaultSignedOnUrl;
+
+            return
+                Redirect(string.Format("https://alpha.ucosmic.com/sign-in/tenantize/?returnUrl={0}",
+                    Server.UrlEncode(returnUrl)));
+            //return Redirect(returnUrl);
         }
 
         [POST("sign-on/saml/2/post")]
@@ -222,7 +245,15 @@ namespace UCosmic.Web.Mvc.Controllers
             //    }
             //}
 
-            return Redirect("https://alpha.ucosmic.com/");
+            //return Redirect("https://alpha.ucosmic.com/");
+            var returnUrl = samlResponse.RelayResourceUrl ??
+                            _services.UserSigner.DefaultSignedOnUrl;
+
+
+            //return Redirect(returnUrl);
+            return
+                Redirect(string.Format("https://alpha.ucosmic.com/sign-in/tenantize/?returnUrl={0}",
+                    Server.UrlEncode(returnUrl)));
         }
         [GET("sign-on/saml/2")]
         public virtual ActionResult Get()
@@ -270,7 +301,15 @@ namespace UCosmic.Web.Mvc.Controllers
                 }
             );
 
-            return Redirect("https://alpha.ucosmic.com/");
+            //return Redirect("https://alpha.ucosmic.com/");
+            var returnUrl = samlResponse.RelayResourceUrl ??
+                            _services.UserSigner.DefaultSignedOnUrl;
+
+
+            //return Redirect(returnUrl);
+            return
+                Redirect(string.Format("https://alpha.ucosmic.com/sign-in/tenantize/?returnUrl={0}",
+                    Server.UrlEncode(returnUrl)));
         }
         [GET("sign-on/saml/2/post")]
         public virtual ActionResult GetPost()
@@ -310,7 +349,6 @@ namespace UCosmic.Web.Mvc.Controllers
             );
 
 
-            // redirect after sign on
             var establishment = _services.QueryProcessor.Execute(
                 new EstablishmentBySamlEntityId
                 {
@@ -318,7 +356,15 @@ namespace UCosmic.Web.Mvc.Controllers
                 }
             );
 
-            return Redirect("https://alpha.ucosmic.com/");
+            // redirect after sign on
+            var returnUrl = samlResponse.RelayResourceUrl ??
+                            _services.UserSigner.DefaultSignedOnUrl;
+
+
+            //return Redirect(returnUrl);
+            return
+                Redirect(string.Format("https://alpha.ucosmic.com/sign-in/tenantize/?returnUrl={0}",
+                    Server.UrlEncode(returnUrl)));
         }
         public async void Run_Firebase_test(Object saml_response, string test_number)//(CancellationToken cancellationToken)
         {
