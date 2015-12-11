@@ -31,7 +31,7 @@ module People.ViewModels {
         lastName = ko.observable<string>();
         suffix = ko.observable<string>();
         preferredTitle = ko.observable<string>()
-        DefaultAffiliationEstablishmentId: number;
+        defaultAffiliationEstablishmentId: number;
 
         defaultEstablishmentHasCampuses = ko.observable<boolean>(false);
 
@@ -63,7 +63,7 @@ module People.ViewModels {
         constructor(model) {
             this.personId2 = model.personId;
             this.model = model
-            this.DefaultAffiliationEstablishmentId = model.DefaultAffiliationEstablishmentId;
+            this.defaultAffiliationEstablishmentId = model.defaultAffiliationEstablishmentId;
         }
         model
         //#endregion
@@ -136,7 +136,7 @@ module People.ViewModels {
                 var affiliationPutModel: ApiModels.AffiliationPut = {
                     jobTitles: this.preferredTitle(),
                 };
-                Servers.PutAffiliation(affiliationPutModel, this.DefaultAffiliationEstablishmentId);
+                Servers.PutAffiliation(affiliationPutModel, this.defaultAffiliationEstablishmentId);
 
 
                 $.ajax({

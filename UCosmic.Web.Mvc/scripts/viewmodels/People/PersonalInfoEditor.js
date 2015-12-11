@@ -34,7 +34,7 @@ var People;
                 this.startTabName = ko.observable("Activities");
                 this.personId2 = model.personId;
                 this.model = model;
-                this.DefaultAffiliationEstablishmentId = model.DefaultAffiliationEstablishmentId;
+                this.defaultAffiliationEstablishmentId = model.defaultAffiliationEstablishmentId;
             }
             PersonalInfoEditor.prototype.load = function (startTab) {
                 var _this = this;
@@ -92,7 +92,7 @@ var People;
                     var affiliationPutModel = {
                         jobTitles: this.preferredTitle(),
                     };
-                    People.Servers.PutAffiliation(affiliationPutModel, this.DefaultAffiliationEstablishmentId);
+                    People.Servers.PutAffiliation(affiliationPutModel, this.defaultAffiliationEstablishmentId);
                     $.ajax({
                         url: '/api/user/person',
                         type: 'PUT',
