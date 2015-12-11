@@ -40,8 +40,8 @@ Polymer('is-page-summary-report', {
 
     filter: function (ctx, next) {
 
-        var myThis: any = document.querySelector("is-page-summary-report"),
-            country_code = ctx.params.country_code,
+        var myThis: any = document.querySelector("is-page-summary-report");
+        var country_code = ctx.params.country_code,
             country = _.find(myThis.countries_original, function (place: any, index: any) {
                 selectedIndex = index + 1;
                 return place.code == country_code || place._id == country_code;
@@ -54,6 +54,7 @@ Polymer('is-page-summary-report', {
             myThis.last_selected_place_id = place_id;
             myThis.selectedEstablishmentId = establishment_id ? establishment_id : 0;// should also ajax get name and put in text field.
             myThis.establishmentSearch = establishment_search ? establishment_search : '';// should also ajax get name and put in text field.
+            //myThis.establishment_search_url = myThis.establishmentSearch ? "\"" + myThis.establishmentSearch + "\"" : ""; 
             myThis.last_tenant_id = tenant_id;
             myThis.new_tenant_id = tenant_id && tenant_id != 0 ? tenant_id : myThis.new_tenant_id ? myThis.new_tenant_id : myThis.tenant_id ? myThis.tenant_id : 0;// should also ajax get name and put in text field.
             //myThis.affiliation_selected = myThis.new_tenant_id;
@@ -63,9 +64,9 @@ Polymer('is-page-summary-report', {
             } else {
                 myThis.$.cascading_ddl.item_selected = myThis.new_tenant_id;
             }
-            myThis.selectedPlaceId = country ? country._id : 0;
-            myThis.selectedPlaceName = country ? country.text : undefined;
-            myThis.selectedCountryCode = country ? country.code : 'any';
+            myThis.selectedPlaceId = country && country.text != "[clear]" ? country._id : 0;
+            myThis.selectedPlaceName = country && country.text != "[clear]" ? country.text : undefined;
+            myThis.selectedCountryCode = country && country.text != "[clear]" ? country.code : 'any';
 
             //if (!myThis.selectedEstablishmentId ) {
             //    myThis.$.ajax_activities.go();
@@ -145,6 +146,9 @@ Polymer('is-page-summary-report', {
         }
     },
     new_tenant_idChanged: function (oldValue, newValue) {
+        //var establishment_keyword_object: any = _.find(this.affiliations, { id: parseInt(newValue) });
+        //this.establishment_search_url = establishment_keyword_object ? "\"" + establishment_keyword_object.text + "\"" : "";
+        this.establishment_search_url = newValue ? newValue : ""; 
         page('#!/' + this.selectedPlaceId + '/' + this.selectedEstablishmentId + '/' + newValue + '/' + this.establishmentSearch);
     },
     establishmentSearchChanged: function (oldValue: string, newValue) {

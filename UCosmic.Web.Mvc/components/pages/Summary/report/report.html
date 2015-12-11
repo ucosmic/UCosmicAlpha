@@ -46,7 +46,7 @@
                                     </div>
                                 </template>
                                 <div style="margin-top:12px;">
-                                    <b>{{agreement_total_agreement_count}} <a style="text-decoration:none;">Total</a></b>
+                                    <b>{{agreement_total_agreement_count}} <a href="/{{style_domain}}/agreements/#/table/country/{{selectedCountryCode}}/type/any/sort/start-desc/size/10/page/1/">Total</a></b>
                                     <template if="{{agreement_total_agreement_count != 1}}">
                                         agreements
                                     </template>
@@ -81,7 +81,7 @@
                                 <template repeat="{{activityTypeCount, activityTypeCountI in activityTypeCounts}}">
                                     <div style="margin-bottom:4px;">
                                         <b>{{activityTypeCount.typeCount}}</b>
-                                        <a href="/{{style_domain}}/employees/table/?activityTypeIds={{activityTypeCount.typeId}}&placeIds={{selectedPlaceId}}&placeNames={{selectedPlaceName}}&keyword={{establishment_search_url}}">{{activityTypeCount.type}}</a>
+                                        <a href="/{{style_domain}}/employees/table/?activityTypeIds={{activityTypeCount.typeId}}&placeIds={{selectedPlaceId}}&placeNames={{selectedPlaceName}}&ancestorid={{establishment_search_url}}">{{activityTypeCount.type}}</a>
                                         <template if="{{activityTypeCount.typeCount != 1}}">
                                             activities
                                         </template>
@@ -108,7 +108,7 @@
                                 </template>
                                 <template if="{{activityTypeCounts.length != 0 && activityTypeCountsLoaded }}">
                                     <div style="margin-top:12px;">
-                                        <b>{{activity_total_activity_count}} <a style="text-decoration:none;">Total</a></b>
+                                        <b>{{activity_total_activity_count}} <a href="/{{style_domain}}/employees/table/?activityTypeIds=&placeIds={{selectedPlaceId}}&placeNames={{selectedPlaceName}}&ancestorid={{establishment_search_url}}">Total</a></b>
                                         <template if="{{activity_total_activity_count != 1}}">
                                             activities
                                         </template>
