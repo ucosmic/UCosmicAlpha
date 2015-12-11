@@ -77,6 +77,10 @@ namespace UCosmic.Repositories
                     {
                         sql += " and (av.endson <= '" + input.Until + "' or av.startson <= '" + input.Until + "')";
                     }
+                    if ((input.Until == null || input.Until == "") && (input.Since == null || input.Since == ""))
+                    {
+                        sql += " and (av.endson <= '" + DateTime.Now + "' or av.startson <= '" + DateTime.Now + "')";
+                    }
                 }
                 else
                 {
