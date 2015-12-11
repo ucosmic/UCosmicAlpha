@@ -194,16 +194,36 @@ Polymer('is-page-summary-map', {
         if (!evt) evt = window.event;
         if (evt.pageX) return evt.pageX;
         else if (evt.clientX) return evt.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
-        else if (evt.hb.pageX) return evt.hb.pageX
-        else return 0;
+        else{
+            var arr = _.values(evt);// evt.keys(evt).map(function (key) { return evt[key] });
+            var pageX = 0;
+            arr.forEach((value, index, test) => {
+                if(value && value.pageX){
+                    pageX = value.pageX
+                }
+            });
+            return pageX;
+        }
+        //else if (evt.hb.pageX) return evt.hb.pageX
+        //else return 0;
     },
     mouseY: function (evt) {
         if (!evt) evt = window.event;
         if (evt.pageY) return evt.pageY;
         else if (evt.clientY) return evt.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
-        else if (evt.hb.pageY) return evt.hb.pageY
-        //else if (evt.jb.pageY) return evt.jb.pageY
-        else return 0;
+        else {
+            var arr = _.values(evt);// evt.keys(evt).map(function (key) { return evt[key] });
+            var pageY = 0;
+            arr.forEach((value, index, test) => {
+                if (value && value.pageY) {
+                    pageY = value.pageY
+                }
+            });
+            return pageY;
+        }
+        //else if (evt.hb.pageY) return evt.hb.pageY
+        ////else if (evt.jb.pageY) return evt.jb.pageY
+        //else return 0;
     },
     setup_mouse_tracer: function (el = document) {
 
