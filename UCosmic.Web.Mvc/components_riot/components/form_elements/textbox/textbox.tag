@@ -48,7 +48,8 @@
         <span class="validation_message" show="{validation_message}"  riot-style="width: {opts.width}; height: {opts.height}"><span>{validation_message}</span></span>
     </div>
     <script>
-        var self = this;
+        "use strict";
+        let self = this;
         self.is_shown = false;
         self.validation_message = '';
         self.on('mount', function(){
@@ -94,12 +95,12 @@
         self.validate = function(){
             if(self.input.validationMessage){
                 self.validation_message = 'Please correct ' + self.opts.place_holder + '.';
-                var validation_message = self.input.validationMessage;
+                let validation_message = self.input.validationMessage;
                 self.update();
                 return validation_message;
             }else if(self.opts.type == 'password' && self.check_pwd(self.input.value)){
                 self.validation_message = 'Please correct ' + self.opts.place_holder + '.';
-                var validation_message = self.check_pwd(self.input.value);
+                let validation_message = self.check_pwd(self.input.value);
                 self.update();
                 return validation_message;
             }else {
