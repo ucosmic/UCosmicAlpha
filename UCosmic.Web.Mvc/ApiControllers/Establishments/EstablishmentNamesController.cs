@@ -272,7 +272,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return true;
         }
 
-
+        
         public async void Run_Firebase_establishment_sync()//(CancellationToken cancellationToken)
         {
 
