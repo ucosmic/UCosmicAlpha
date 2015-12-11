@@ -31,21 +31,32 @@
         }
     </style>
     <div id="dialog_container" riot-style="width:{opts.width}; height:{opts.height}; max-width: {opts.max_width}"
-         class="pre_scale_center_center {fade_in: opts.is_shown} {fade_out: !opts.is_shown} {scale: !opts.is_shown}">
+         class="pre_scale_center_center {fade_in: is_shown} {fade_out: !is_shown} {scale: !is_shown}">
         <div id="dialog_container_inner">
+            <fab_close onclick="{toggle}"></fab_close>
             <yield/>
             <div>{opts.type}</div>
         </div>
     </div>
-    <div id="dialog_background" data-type="{opts.type}" onclick="{close_dialog}" show="{opts.is_shown}">
+    <div id="dialog_background" data-type="{opts.type}" onclick="{toggle}" show="{is_shown}">
 
     </div>
     <script>
-        this.close_dialog = function(event){
-            this.opts.close();
+        var self = this;
+        self.on('mount', function () {
+            xmenu.load_tag('/components_riot/is_dialog/fab_close/fab_close.js', document.head);
+        });
+        self.is_shown = false;
+        self.select_item = function(event){
+            "use strict";
+            self.is_shown = false;
+            self.update();
+//            RiotControl.trigger(self.opts._id + '_selected_changed', event);
         }
-        this.on('mount', function(){
-            var test = 1;
-        })
+        self.toggle = function(){
+            "use strict";
+            self.is_shown = self.is_shown ? false : true;
+            self.update();
+        }
     </script>
 </is_dialog>
