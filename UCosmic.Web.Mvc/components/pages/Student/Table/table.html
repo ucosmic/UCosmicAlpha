@@ -119,7 +119,8 @@
                                         </div>
                                     </div>
                                     <div class="action_close_container layout horizontal end-justified" on-click="close_dialog">
-                                        <paper-fab mini icon="student_table:close"></paper-fab>
+                                        <!--<paper-fab mini icon="student_table:close"></paper-fab>-->
+                                        <iron-icon class="fab" mini icon="student_table:close"></iron-icon>
                                     </div>
                                 </paper-dialog>
                                 <iron-collapse id="{{set_id('collapse_outer', count_l1_i)}}" opened="{{count_l1.is_expanded}}">
@@ -177,7 +178,8 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="action_close_container layout horizontal end-justified" on-click="close_dialog">
-                                                                    <paper-fab mini icon="student_table:close"></paper-fab>
+                                                                    <!--<paper-fab mini icon="student_table:close"></paper-fab>-->
+                                                                    <iron-icon class="fab" mini icon="student_table:close"></iron-icon>
                                                                 </div>
                                                             </paper-dialog>
                                                             <template is="dom-repeat" items="[[count_list2]]" as="count_l2" index-as="count_l2_i" id="count_l2">
@@ -197,10 +199,16 @@
                 <div class="flex"></div>
                 <is-filter_tags tags="{{tags}}" id="tags" tags_count="{{tags_count}}" style="position: relative;right: 35px; z-index:2;"></is-filter_tags>
                 <is-filter style="overflow:visible; margin-left: 20px; width:0px; " filter_closed="{{filter_closed}}">
+                    <div style="height:0; overflow:visible; position:relative; top: -5px; left: 20px; text-decoration:underline; cursor: pointer;" on-click="clear_tags">Clear Tag(s)</div>
                     <is-auto-ddl id="term_auto_ddl" style=" margin-bottom:2px;" selected="{{term_search}}" selectedid="{{selected_term_id}}" label="Choose a term" on-selected-updated="term_selected"
                                  on-search-updated="term_list_search" list="{{term_auto_list}}">
                     </is-auto-ddl>
                     <span hidden$="[[!term_is_selected]]">
+                        <span hidden$="[[is_greater_than(2, status_list.length)]]">
+                            <is-auto-ddl id="status_auto_ddl" style=" margin-bottom:2px;" selected="{{status_search}}" selectedid="{{selected_status_id}}" label="Choose a status" on-selected-updated="status_selected"
+                                         on-search-updated="status_list_search" list="{{status_auto_list}}">
+                            </is-auto-ddl>
+                        </span>
                         <span hidden$="[[is_greater_than(2, affiliation_list.length)]]">
                             <is-auto-ddl id="affiliation_auto_ddl" style="margin-bottom:2px;" selected="{{affiliation_search}}" selectedid="{{selected_affiliation_id}}" label="Type and choose an affiliation" on-selected-updated="affiliation_selected"
                                          on-search-updated="affiliation_list_search" list="{{affiliation_auto_list}}">
@@ -209,9 +217,9 @@
                         <is-auto-ddl id="country_auto_ddl" style=" margin-bottom:2px;" selected="{{countrySearch}}" selectedid="{{selectedCountryId}}" label="Type and choose a country" on-selected-updated="countrySelected"
                                      on-search-updated="countryListSearch" list="{{country_auto_list}}">
                         </is-auto-ddl>
-                        <span hidden$="[[is_greater_than(2, program_list.length)]]">
-                            <is-auto-ddl id="program_auto_ddl" style=" margin-bottom:2px;" selected="{{program_search}}" selectedid="{{selected_program_id}}" label="Type and choose a program" on-selected-updated="program_selected"
-                                         on-search-updated="program_list_search" list="{{program_auto_list}}">
+                        <span hidden$="[[is_greater_than(2, student_affiliation_list.length)]]">
+                            <is-auto-ddl id="student_affiliation_auto_ddl" style=" margin-bottom:2px;" selected="{{student_affiliation_search}}" selectedid="{{selected_student_affiliation_id}}" label="Type and choose a student affiliation" on-selected-updated="student_affiliation_selected"
+                                         on-search-updated="student_affiliation_list_search" list="{{student_affiliation_auto_list}}">
                             </is-auto-ddl>
                         </span>
                         <span hidden$="[[is_greater_than(2, level_list.length)]]">
@@ -219,19 +227,14 @@
                                          on-search-updated="level_list_search" list="{{level_auto_list}}">
                             </is-auto-ddl>
                         </span>
-                        <span hidden$="[[is_greater_than(2, status_list.length)]]">
-                            <is-auto-ddl id="status_auto_ddl" style=" margin-bottom:2px;" selected="{{status_search}}" selectedid="{{selected_status_id}}" label="Choose a status" on-selected-updated="status_selected"
-                                         on-search-updated="status_list_search" list="{{status_auto_list}}">
-                            </is-auto-ddl>
-                        </span>
                         <span hidden$="[[is_greater_than(2, foreign_affiliation_list.length)]]">
                             <is-auto-ddl id="foreign_affiliation_auto_ddl" style=" margin-bottom:2px;" selected="{{foreign_affiliation_search}}" selectedid="{{selected_foreign_affiliation_id}}" label="Type and choose a foreign affiliation" on-selected-updated="foreign_affiliation_selected"
                                          on-search-updated="foreign_affiliation_list_search" list="{{foreign_affiliation_auto_list}}">
                             </is-auto-ddl>
                         </span>
-                        <span hidden$="[[is_greater_than(2, student_affiliation_list.length)]]">
-                            <is-auto-ddl id="student_affiliation_auto_ddl" style=" margin-bottom:2px;" selected="{{student_affiliation_search}}" selectedid="{{selected_student_affiliation_id}}" label="Type and choose a student affiliation" on-selected-updated="student_affiliation_selected"
-                                         on-search-updated="student_affiliation_list_search" list="{{student_affiliation_auto_list}}">
+                        <span hidden$="[[is_greater_than(2, program_list.length)]]">
+                            <is-auto-ddl id="program_auto_ddl" style=" margin-bottom:2px;" selected="{{program_search}}" selectedid="{{selected_program_id}}" label="Type and choose a program" on-selected-updated="program_selected"
+                                         on-search-updated="program_list_search" list="{{program_auto_list}}">
                             </is-auto-ddl>
                         </span>
                     </span>
