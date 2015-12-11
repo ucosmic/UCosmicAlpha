@@ -10,8 +10,8 @@
     <link href="filter_tags.css" rel="stylesheet" />
     <template>
 
-        <paper-material elevation="2" id="filter_tags_button" class="tennant_colors" on-click="toggle">
-            <div style="padding: 0 0 0 8px;">Filter Tags(<span>[[tags_count]]</span>)<paper-icon-button icon="filter_tags:apps"></paper-icon-button></div>
+        <paper-material elevation="2" id="filter_tags_button" class="tennant_colors" on-click="toggle" style="cursor: pointer;">
+            <div style="padding: 0 0 0 8px;">Filter Tags(<span>[[tags_count]]</span>)<iron-icon icon="filter_tags:apps" class="icon_button"></iron-icon></div>
         </paper-material>
         <div style="height: 40px;">
             <div style="display: inline-block; height:0;">
@@ -19,14 +19,14 @@
                 <!--<div class="layout vertical filter_container" id="filter_container" style="text-align:left; position:relative;  bottom:30px; right: 45px;">-->
                     <div id="filter" style="border-radius:20px; width:310px; right: 20px;height:0;">
                         <div class="tennant_colors layout vertical" style=" padding: 20px; border-radius: 20px; box-shadow: 2px 2px 5px #888888;">
-                            <div style=" overflow:visible;position: absolute; width: 270px;" class="layout horizontal end-justified">
-                                <paper-icon-button style="position:relative; top:-16px;  right: -16px;" icon="filter_tags:close" id="close_icon" on-click="toggle"></paper-icon-button>
+                            <div style=" overflow:visible;position: absolute; width: 270px;" class="layout horizontal end-justified" on-click="toggle">
+                                <iron-icon style="position:relative; top:-16px;  right: -16px;" icon="filter_tags:close" id="close_icon" class="icon_button"></iron-icon>
                             </div>
                             <div style="margin-top: 20px; height:inherit">
                                 <template is="dom-repeat" items="[[tags]]" as="tag" id="tags">
                                     <paper-item class="list-item tennant_colors_highlight">
                                         <span>[[tag.text]]</span>
-                                        <iron-icon icon="filter_tags:remove-circle-outline" on-click="remove_tag">
+                                        <iron-icon icon="filter_tags:remove-circle-outline" on-click="remove_tag" class="icon_button">
                                         </iron-icon>
                                     </paper-item>
                                 </template>

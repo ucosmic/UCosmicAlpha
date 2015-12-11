@@ -9,8 +9,8 @@
 
     <template>
 
-        <paper-material elevation="2" id="filter_button" class="tennant_colors">
-            <paper-icon-button  icon="filter:filter-list" on-click="toggle"></paper-icon-button>
+        <paper-material elevation="2" id="filter_button" class="tennant_colors" on-click="toggle">
+            <iron-icon icon="filter:filter-list" class="icon_button"></iron-icon>
         </paper-material>
         <div style="margin: 20px;">
             <div style="display: inline-block; width:0px;">
@@ -33,8 +33,8 @@
                 <div class="layout vertical filter_container" id="filter_container" style="text-align:left; position:relative;  bottom:10px; right:330px;">
                     <paper-material elevation="2" id="filter" style="border-radius:20px; width:310px;">
                         <div class="tennant_colors layout vertical" style=" padding: 0 20px 20px 0; border-radius: 20px;">
-                            <div style=" overflow:visible;position: absolute; width: 270px;" class="layout horizontal end-justified">
-                                <paper-icon-button style="position:relative; right: -36px;" icon="filter:close" id="close_icon" on-click="toggle"></paper-icon-button>
+                            <div style=" overflow:visible;position: absolute; width: 270px;" class="layout horizontal end-justified" on-click="toggle">
+                                <iron-icon style="position:relative; right: -36px;" icon="filter:close" id="close_icon" class="icon_button"></iron-icon>
                             </div>
                             <div style="margin-top: 20px;">
                                 <content></content>

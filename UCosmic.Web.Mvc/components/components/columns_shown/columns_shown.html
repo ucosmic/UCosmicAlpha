@@ -10,30 +10,30 @@
     <link href="columns_shown.css" rel="stylesheet" />
     <template>
 
-        <paper-material elevation="2" id="columns_shown_button" class="tennant_colors" on-click="toggle" style="z-index:1">
-            <div style="padding: 0 0 0 8px;"><span>[[text]]</span>(<span>[[columns_count]]</span>)<paper-icon-button icon="columns_shown:view-column"></paper-icon-button></div>
+        <paper-material elevation="2" id="columns_shown_button" class="tennant_colors" on-click="toggle" style="z-index:1; cursor: pointer;">
+            <div style="padding: 0 0 0 8px;"><span>[[text]]</span>(<span>[[columns_count]]</span>)<iron-icon icon="columns_shown:view-column" class="icon_button"></iron-icon></div>
         </paper-material>
         <div style="height: 40px;">
             <div style="display: inline-block; height: 0;">
                 <div class="layout vertical " id="column_container" style="text-align:left; position:relative;  bottom:30px; left: 20px; height: 0px;">
                     <paper-material elevation="2" id="filter" style="border-radius:20px; width:200px; right: 20px; visibility:hidden;">
                         <div class="tennant_colors layout vertical" style=" padding: 20px; border-radius: 20px;">
-                            <div style=" overflow:visible;position: absolute; width: 270px;" class="layout horizontal end-justified">
-                                <paper-icon-button style="position:relative; top:-16px; right: 100px;" icon="columns_shown:close" id="close_icon" on-click="toggle"></paper-icon-button>
+                            <div style=" overflow:visible;position: absolute; width: 270px;" class="layout horizontal end-justified" on-click="toggle">
+                                <iron-icon style="position:relative; top:-16px; right: 100px;" icon="columns_shown:close" id="close_icon" class="icon_button"></iron-icon>
                             </div>
                             <div style="margin-top: 20px; height:inherit">
                                 <template is="dom-repeat" items="[[columns]]" as="column" id="columns">
                                     <template is="dom-if" if="{{column.is_shown}}">
                                         <paper-item class="list-item tennant_colors_highlight">
                                             <span>[[column.text]]</span>
-                                            <iron-icon icon="columns_shown:remove-circle-outline" on-click="remove_column">
+                                            <iron-icon icon="columns_shown:remove-circle-outline" on-click="remove_column" class="icon_button">
                                             </iron-icon>
                                         </paper-item>
                                     </template>
                                     <template is="dom-if" if="{{!column.is_shown}}">
                                         <paper-item class="list-item unchecked tennant_colors_highlight">
                                             <span>[[column.text]]</span>
-                                            <iron-icon icon="columns_shown:add-circle-outline" on-click="add_column">
+                                            <iron-icon icon="columns_shown:add-circle-outline" on-click="add_column" class="icon_button">
                                             </iron-icon>
                                         </paper-item>
                                     </template>
