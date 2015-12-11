@@ -1,5 +1,21 @@
-paper-icon-button{
-    height: 24px;
+iron-icon.icon_button{
+    margin: 10px 5px;
+    cursor: pointer;
+    /*pointer-events: none;*/
+}
+.fab{
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 1px 2px -1px rgba(0, 0, 0, 0.4);
+    background: red;
+    border-radius: 20px;
+    padding: 5px;
+    top: -8px;
+    cursor: pointer;
+}
+.fab:hover, .fab:active{
+    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+}
+paper-item span {
+    pointer-events: none;
 }
 .paper-input-container-0 .input-content.paper-input-container label, .paper-input-container-0 .input-content.paper-input-container .paper-input-label{
     color: black!important;
