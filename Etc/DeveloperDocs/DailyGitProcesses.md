@@ -1,5 +1,21 @@
 # Developer Daily Pull / Rebase Process
 
+## Monthly Process
+
+1.   `git stash -u` (optional) 
+6.    `git checkout work` 
+7.    `git branch worksafe` 
+8.   `git push -f origin work`  
+11.    `git checkout team`
+12.    `git merge --ff-only work`
+13.    `git push origin team`
+14.    `git push mainline team`
+15.    `git checkout work`
+16.    `git branch -D worksafe`
+17.    `git stash pop` (optional)  
+
+
+
 ## Sometime during the workday(summary)
 
 1.   `git stash -u` (optional)  
