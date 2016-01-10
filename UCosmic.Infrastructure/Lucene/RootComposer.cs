@@ -4,6 +4,7 @@ using Microsoft.WindowsAzure.ServiceRuntime;
 using SimpleInjector;
 using SimpleInjector.Extensions;
 using UCosmic.Configuration;
+using System;
 
 namespace UCosmic.Lucene
 {
@@ -11,11 +12,18 @@ namespace UCosmic.Lucene
     {
         internal static void RegisterLucene(this Container container)
         {
-            if (RoleEnvironment.IsAvailable)
-                container.RegisterSingle<IStoreDocumentIndexes>(() =>
-                    new AzureDirectoryStore(CloudConfigurationManager.GetSetting(AppSettingsKey.AzureStorageData.ToString())));
-            else
+            try
+            {
+                if (RoleEnvironment.IsAvailable)
+                    container.RegisterSingle<IStoreDocumentIndexes>(() =>
+                        new AzureDirectoryStore(CloudConfigurationManager.GetSetting(AppSettingsKey.AzureStorageData.ToString())));
+                else
+                    container.Register<IStoreDocumentIndexes>(() => new IisFileSystemDirectoryStore("~/App_Data/lucene"));
+            }
+            catch (Exception e)
+            {
                 container.Register<IStoreDocumentIndexes>(() => new IisFileSystemDirectoryStore("~/App_Data/lucene"));
+            }
 
             container.RegisterManyForOpenGeneric(typeof(IIndexDocuments<>), Assembly.GetAssembly(typeof(IIndexDocuments<>)));
 
