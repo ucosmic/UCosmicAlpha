@@ -34,14 +34,18 @@ declare module Employees.ApiModels {
         rank?: number;
         hasIcon: boolean;
         iconSrc?: string;
-        activityIds: number[];
-        activityPersonIds: number[];
+        count: number;
+        peopleCount: number;
+        //activityIds: number[];
+        //activityPersonIds: number[];
     }
 
     export interface EmployeeActivityYearCount {
         year: number;
-        activityIds: number[];
-        activityPersonIds: number[];
+        count: number;
+        peopleCount: number;
+        //activityIds: number[];
+        //activityPersonIds: number[];
     }
 
     export interface EmployeeActivityCounts {

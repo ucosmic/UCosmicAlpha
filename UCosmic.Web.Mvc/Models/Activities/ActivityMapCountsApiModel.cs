@@ -1,5 +1,6 @@
 ﻿
 
+using System;
 namespace UCosmic.Web.Mvc.Models
 {
     public class ActivityMapCountsApiQueryResultModel
@@ -25,6 +26,18 @@ namespace UCosmic.Web.Mvc.Models
             }
         }
     }
+    public class ActivitySnapShotApiQueryResultModel
+    {
+        public int id { get; set; }
+        public int personId { get; set; }
+        public string name { get; set; }
+        public int typeId { get; set; }
+        public DateTime startsOn { get; set; }
+        public DateTime endsOn { get; set; }
+        public bool ongoing { get; set; }
+
+    }
+    
     public class ActivityMapCountsAllApiQueryResultModel
     {
         public int id { get; set; }

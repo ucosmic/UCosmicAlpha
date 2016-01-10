@@ -49,6 +49,12 @@ namespace UCosmic.Web.Mvc.Controllers
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult Table_riot()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Table_riot);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public System.Web.Mvc.ActionResult Map()
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Map);
@@ -78,6 +84,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string Index = "Index";
             public readonly string New = "New";
             public readonly string Table = "Table";
+            public readonly string Table_riot = "Table_riot";
             public readonly string Map = "Map";
             public readonly string TenantIndex = "TenantIndex";
         }
@@ -88,6 +95,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string Index = "Index";
             public const string New = "New";
             public const string Table = "Table";
+            public const string Table_riot = "Table_riot";
             public const string Map = "Map";
             public const string TenantIndex = "TenantIndex";
         }
@@ -106,6 +114,14 @@ namespace UCosmic.Web.Mvc.Controllers
         public ActionParamsClass_Table TableParams { get { return s_params_Table; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionParamsClass_Table
+        {
+            public readonly string domain = "domain";
+        }
+        static readonly ActionParamsClass_Table_riot s_params_Table_riot = new ActionParamsClass_Table_riot();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Table_riot Table_riotParams { get { return s_params_Table_riot; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Table_riot
         {
             public readonly string domain = "domain";
         }
@@ -143,6 +159,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string New = "New";
                 public readonly string Table = "Table";
                 public readonly string Table_old = "Table_old";
+                public readonly string Table_riot = "Table_riot";
                 public readonly string TenantIndex = "TenantIndex";
             }
             public readonly string _Bib = "~/Views/Students/_Bib.cshtml";
@@ -152,6 +169,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string New = "~/Views/Students/New.cshtml";
             public readonly string Table = "~/Views/Students/Table.cshtml";
             public readonly string Table_old = "~/Views/Students/Table_old.cshtml";
+            public readonly string Table_riot = "~/Views/Students/Table_riot.cshtml";
             public readonly string TenantIndex = "~/Views/Students/TenantIndex.cshtml";
         }
     }
@@ -183,6 +201,13 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult Table(string domain)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Table);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Table_riot(string domain)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Table_riot);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
             return callInfo;
         }

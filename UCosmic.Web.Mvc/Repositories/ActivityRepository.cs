@@ -371,5 +371,30 @@ namespace UCosmic.Repositories
 
         //        return ActivityMapCounts;
         //    }
+        public IList<ActivityTypesApiQueryResultModel> ActivityTypesByEstablishment(int? EstablishmentId)
+        {
+
+
+            SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
+            // decrypt the password. Use this once all passwords have been encrypted.
+            // string pw = FormsAuthentication.HashPasswordForStoringInConfigFile(password.Trim(), "sha1");
+            string sql = "SELECT  id ,[Type] ,[Rank] FROM [Employees].[EmployeeActivityType] where establishmentId=3306";
+
+
+            //const string sql = "select eat.[type],  count(eat.[type]) as typeCount  FROM [ActivitiesV2].[ActivityLocation] al" +
+            //      " inner join [ActivitiesV2].[ActivityValues] av on al.activityValuesId=av.revisionid" +
+            //      " inner join Places.place pp on al.placeId=pp.revisionid" +
+            //      " inner join [ActivitiesV2].[Activity] aa on av.activityId=aa.revisionid" +
+            //      " inner join [People].Person people on aa.personId=people.revisionid" +
+            //      " inner join [identity].[user] iu on iu.personId=people.revisionid" +
+            //      " inner join [ActivitiesV2].[ActivityType] at on at.activityValuesId=av.revisionid" +
+            //      " inner join employees.employeeactivitytype eat on eat.establishmentId=iu.tenantId" +
+            //      " where iu.tenantId=3306 group by eat.[type]";
+            //connectionFactory.
+            IList<ActivityTypesApiQueryResultModel> activitySnapshot = connectionFactory.SelectList<ActivityTypesApiQueryResultModel>(DB.UCosmic, sql);
+            //IList<ActivityLocationsApiModel> activityLocations = connectionFactory.SelectList<ActivityLocationsApiModel>(DB.UCosmic, sql, new { un = username });
+
+            return activitySnapshot;
+        }
     }
 }

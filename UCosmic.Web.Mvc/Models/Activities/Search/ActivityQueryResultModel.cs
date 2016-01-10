@@ -19,9 +19,25 @@ namespace UCosmic.Web.Mvc.Models
         public string title { get; set; }
         public bool onGoing { get; set; }
     }
-    //public class ActivityMapCountsAllApiQueryResultModel
-    //{
-    //    public int id { get; set; }
-    //    public string name { get; set; }
-    //}
+    public class ActivityTypesApiQueryResultModel
+    {
+        public int id { get; set; }
+        public string type { get; set; }
+        public int rank { get; set; }
+    }
+    public class ActivityTypesApiCountsModel
+    {
+        public int activityTypeId { get; set; }
+        public string text { get; set; }
+        public bool hasIcon { get; set; }
+        public string iconSrc { get; set; }
+        public int count { get; set; }
+        public int peopleCount { get; set; }
+    }
+    public class ActivityYearApiCountsModel
+    {
+        public int year { get; set; }
+        public int count { get; set; }
+        public int peopleCount { get; set; }
+    }
 }

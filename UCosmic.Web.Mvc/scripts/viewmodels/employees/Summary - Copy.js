@@ -92,7 +92,9 @@ var Employees;
                     _this._onRouteStateChanged();
                 }).extend({ throttle: 1 });
                 this.hasPlaceData = ko.observable(false);
-                this.placeData = $.Deferred();
+                this.placeData = new App.DataCacher(function () {
+                    return _this._loadPlaceData();
+                });
                 this.hasTenancyData = ko.observable(false);
                 this.isCreatingSelectEstablishments = false;
                 this.tenancyData = new App.DataCacher(function () {
@@ -191,7 +193,6 @@ var Employees;
                 this._initActivityTypeChart();
                 this._initActivityYearChart();
                 this._loadTenancyData();
-                this._loadPlaceData();
             }
             Summary.loadGoogleVisualization = function () {
                 google.load('visualization', '1', { 'packages': ['corechart', 'geochart'] });
@@ -328,24 +329,28 @@ var Employees;
                 this._drawActivityYearChart();
             };
             Summary.prototype._loadPlaceData = function () {
-                // calling .ready() on placeData invokes this
                 var _this = this;
-                var settings = settings || {};
-                var establishmentId = this.selectedTenant() ? this.selectedTenant() : this.establishmentId();
-                var url = '/api/' + this.settings.tenantId + '/employees/snapshot/' + establishmentId;
-                settings.url = url;
+                var promise = $.Deferred();
+                var request = {
+                    countries: true,
+                    placeIds: this._getOverlayPlaceIds(),
+                    placeAgnostic: true,
+                };
                 this.geoChartSpinner.start();
-                $.ajax(settings)
-                    .done(function (response) {
-                    _this.hasPlaceData(response && response.counts.length > 0);
-                    _this.placeData.cached = response;
-                    _this.placeData.resolve(response);
+                var establishmentId = this.selectedTenant() ? this.selectedTenant() : this.establishmentId();
+                Employees.Servers.GetEmployeesPlaces(establishmentId, request)
+                    .done(function (places) {
+                    _this.hasPlaceData(places && places.length > 0);
+                    promise.resolve(places);
                 })
                     .fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to load employee location summary data.', true);
+                    promise.reject();
                 })
                     .always(function () {
                     _this.geoChartSpinner.stop();
                 });
+                return promise;
             };
             Summary.prototype._getPlaceById = function (placeId) {
                 var place = Enumerable.From(this.placeData.cached)
@@ -510,7 +515,7 @@ var Employees;
                 var placeId = this.placeId();
                 var areBindingsApplied = this.areBindingsApplied();
                 if (placeId != 1 && areBindingsApplied) {
-                    $.when(this.placeData).then(function () {
+                    $.when(this.placeData.ready()).then(function () {
                         var place = _this._getPlaceById(placeId);
                         _this.selectedPlaceSummary.personCount(place.activityPersonIds.length.toString());
                         _this.selectedPlaceSummary.activityCount(place.activityIds.length.toString());
@@ -595,7 +600,7 @@ var Employees;
                 optionOverrides.keepAspectRatio = placeId && placeId > 1 && place && place.countryCode ? false :
                     this.settings.geoChart.keepAspectRatio ? true : false;
                 this._initGeoChart().then(function () {
-                    _this.placeData.done(function (places) {
+                    _this.placeData.ready().done(function (places) {
                         if (needsRedraw) {
                             _this._drawGeoChart();
                             return;
@@ -603,16 +608,16 @@ var Employees;
                         var isPivotPeople = _this.isPivotPeople();
                         _this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(isPivotPeople ? 'People' : 'Activities'));
                         _this._geoChartDataTable.removeRows(0, _this._geoChartDataTable.getNumberOfRows());
-                        $.each(places.counts, function (i, dataPoint) {
-                            if (!dataPoint.id)
+                        $.each(places, function (i, dataPoint) {
+                            if (!dataPoint.placeId)
                                 return;
-                            var total = isPivotPeople ? dataPoint.peopleCount : dataPoint.count;
-                            _this._geoChartDataTable.addRow([dataPoint.name, total]);
+                            var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
+                            _this._geoChartDataTable.addRow([dataPoint.placeName, total]);
                         });
                         _this.geoChart.draw(_this._geoChartDataTable, _this._getGeoChartOptions(optionOverrides))
                             .then(function () {
                             setTimeout(function () { _this._svgInjectPlaceOverlays(); }, 0);
-                            _this._applyPlaceOverlayTotals(places.counts);
+                            _this._applyPlaceOverlayTotals(places);
                             _this._createOverlayTooltips();
                         });
                     });
@@ -742,17 +747,17 @@ var Employees;
                 var needsRedraw = !cachedData;
                 var placeId = this.placeId();
                 this._initActivityTypeChart().then(function () {
-                    _this.placeData.done(function (places) {
+                    _this.placeData.ready().done(function (places) {
                         if (needsRedraw) {
                             _this._drawActivityTypeChart();
                             return;
                         }
                         var isPivotPeople = _this.isPivotPeople();
                         _this._activityTypeChartDataTable.removeRows(0, _this._activityTypeChartDataTable.getNumberOfRows());
-                        var activityTypes = places.types;
+                        var activityTypes = _this._getActivityTypes();
                         _this.activityTypes(activityTypes);
                         $.each(activityTypes, function (i, dataPoint) {
-                            var total = isPivotPeople ? dataPoint.peopleCount : dataPoint.count;
+                            var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
                             _this._activityTypeChartDataTable.addRow([dataPoint.text, total, total, dataPoint.activityTypeId]);
                         });
                         var dataView = new google.visualization.DataView(_this._activityTypeChartDataTable);
@@ -762,6 +767,33 @@ var Employees;
                         });
                     });
                 });
+            };
+            Summary.prototype._getActivityTypes = function () {
+                var placeId = this.placeId();
+                if (placeId == 1)
+                    placeId = null;
+                var places = this.placeData.cached;
+                var activityTypes = Enumerable.From(places)
+                    .Where(function (x) {
+                    if (placeId == null)
+                        return !x.placeId;
+                    return x.placeId == placeId;
+                })
+                    .SelectMany(function (x) {
+                    return x.activityTypes;
+                })
+                    .Distinct(function (x) {
+                    return x.activityTypeId;
+                })
+                    .OrderBy(function (x) {
+                    return x.rank;
+                })
+                    .Select(function (x) {
+                    x.iconSrc = Routes.Api.Employees.Settings.ActivityTypes.icon(x.activityTypeId);
+                    return x;
+                })
+                    .ToArray();
+                return activityTypes;
             };
             Summary.prototype._getActivityYearChartOptions = function () {
                 var options = {
@@ -813,17 +845,17 @@ var Employees;
                 var needsRedraw = !cachedData;
                 var placeId = this.placeId();
                 this._initActivityYearChart().then(function () {
-                    _this.placeData.done(function (places) {
+                    _this.placeData.ready().done(function (places) {
                         if (needsRedraw) {
                             _this._drawActivityYearChart();
                             return;
                         }
                         var isPivotPeople = _this.isPivotPeople();
                         _this._activityYearChartDataTable.removeRows(0, _this._activityYearChartDataTable.getNumberOfRows());
-                        var activityYears = places.year;
+                        var activityYears = _this._getActivityYears();
                         _this.activityYears(activityYears);
                         $.each(activityYears, function (i, dataPoint) {
-                            var total = isPivotPeople ? dataPoint.peopleCount : dataPoint.count;
+                            var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
                             _this._activityYearChartDataTable.addRow([dataPoint.year.toString(), total]);
                         });
                         _this.activityYearChart.draw(_this._activityYearChartDataTable, _this._getActivityYearChartOptions())
@@ -1037,10 +1069,10 @@ var Employees;
                 $.each(placeOverlays, function (i, overlay) {
                     var total = Enumerable.From(places)
                         .Where(function (x) {
-                        return x.id == overlay.placeId;
+                        return x.placeId == overlay.placeId;
                     })
                         .Sum(function (x) {
-                        return isPivotPeople ? x.peopleCount : x.count;
+                        return isPivotPeople ? x.activityPersonIds.length : x.activityIds.length;
                     });
                     overlay.total(total);
                 });

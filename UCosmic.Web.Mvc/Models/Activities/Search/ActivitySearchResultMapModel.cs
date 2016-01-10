@@ -69,6 +69,21 @@ namespace UCosmic.Web.Mvc.Models
         public int? ActivityCount { get; set; }
 
     }
+    public class ActivitySnapShotPlacesCounted
+    {
+        public List<ActivitySnapShotPlacesCounts> counts { get; set; }
+        public List<ActivityTypesApiCountsModel> types { get; set; }
+        public List<ActivityYearApiCountsModel> year { get; set; }
+
+    }
+    public class ActivitySnapShotPlacesCounts
+    {
+        public string Name { get; set; }
+        public int Id { get; set; }
+        public int Count { get; set; }
+        public int PeopleCount { get; set; }
+
+    }
     public class ActivitySearchResultPlacesCountedRegions
     {
         public int Id { get; set; }

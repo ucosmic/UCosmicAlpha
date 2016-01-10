@@ -300,5 +300,42 @@ namespace UCosmic.Repositories
 
             return ActivityMapCounts;
         }
+
+        public IList<ActivitySnapShotApiQueryResultModel> ActivitySnapShot(int ancestorId)
+        {
+            SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
+            string sql = "select distinct aa.revisionid, pp1.revisionid as id, people.revisionId as personId,  at.typeid as typeId, av.startson as startsOn, av.endson as endsOn, av.ongoing, " +
+                  " CASE WHEN (gnt.continentcode = 'AF' and pp1.iscontinent = 1) THEN 'Africa' " +
+                  " WHEN (gnt.continentcode = 'AN' and pp1.iscontinent = 1) THEN 'Antarctica' " +
+                  " WHEN (gnt.continentcode = 'AS' and pp1.iscontinent = 1) THEN 'Asia' " +
+                  " WHEN (gnt.continentcode = 'EU' and pp1.iscontinent = 1) THEN 'Europe' " +
+                  " WHEN (gnt.continentcode = 'NA' and pp1.iscontinent = 1) THEN 'North America' " +
+                  " WHEN (gnt.continentcode = 'OC' and pp1.iscontinent = 1) THEN 'Oceana' " +
+                  " WHEN (gnt.continentcode = 'SA' and pp1.iscontinent = 1) THEN 'South America' " +
+                  "ELSE pp1.officialName END as name  " +
+                  " FROM [ActivitiesV2].[ActivityLocation] al" +
+                  " inner join [ActivitiesV2].[ActivityValues] av on al.activityValuesId=av.revisionid" +
+                  " left outer join [ActivitiesV2].[ActivityType] at on at.activityValuesId=av.revisionid" +
+                  " left outer join [ActivitiesV2].[ActivityTag] atag on atag.activityValuesId=av.revisionid" +//may not have tags
+                  " inner join Places.place pp1 on al.placeId=pp1.revisionid" +
+                  " inner join [ActivitiesV2].[Activity] aa on av.activityId=aa.revisionid" +
+                  " inner join [People].Person people on aa.personId=people.revisionid" +
+                  " left outer join people.affiliation pa on pa.personId=people.revisionid" +
+                  " left outer join establishments.establishmentNode een on pa.establishmentid=een.offspringId" +
+                  " inner join [identity].[user] iu on iu.personId=people.revisionid" +
+                  " inner join Places.geonamestoponym gnt on gnt.placeId=pp1.revisionid" +
+                  " left outer join Places.GeoPlanetPlace gpp on gpp.placeId=pp1.revisionid " +
+                  " left outer join Places.GeoPlanetPlaceBelongTo gppbt on gppbt.placeWoeId=gpp.woeid" +
+                  " left outer join Places.GeoPlanetPlace gpp2 on gppbt.BelongToWoeId=gpp2.woeid" +
+                  " left outer join Places.place pp2 on gpp2.placeId=pp2.revisionid " +
+                  " where (pa.establishmentid=" + ancestorId + " or een.AncestorId=" + ancestorId + ") and aa.mode='public' and av.mode='public' and aa.EditSourceId is null";
+                  //" and (pp1.isregion=0 or (pp1.isregion=1 and gnt.continentcode IS NOT null))";and pp1.isWater = 1
+
+
+
+            IList<ActivitySnapShotApiQueryResultModel> ActivityMapCounts = connectionFactory.SelectList<ActivitySnapShotApiQueryResultModel>(DB.UCosmic, sql);
+
+            return ActivityMapCounts;
+        }
     }
 }
