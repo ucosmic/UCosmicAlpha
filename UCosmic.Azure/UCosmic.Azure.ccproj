@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>2.4</ProductVersion>
+    <ProductVersion>2.8</ProductVersion>
     <ProjectGuid>f8e86a95-a775-449f-a818-60d8ad4b1b0d</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -42,6 +42,7 @@
     <Folder Include="Profiles" />
     <Folder Include="UCosmic.Web.MvcContent\" />
     <Folder Include="UCosmic.WorkContent\" />
+    <Folder Include="WorkerRoleContent\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UCosmic.Web.Mvc\UCosmic.Web.Mvc.csproj">
@@ -52,12 +53,12 @@
       <RoleName>UCosmic.Web.Mvc</RoleName>
       <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
-    <ProjectReference Include="..\UCosmic.Work\UCosmic.Work.csproj">
-      <Name>UCosmic.Work</Name>
-      <Project>{9fea0633-ed91-4345-8b5b-0a28e216324c}</Project>
+    <ProjectReference Include="..\WorkerRole\WorkerRole.csproj">
+      <Name>WorkerRole</Name>
+      <Project>{717add81-15fb-4ce6-8bc7-9c1a9ce8c759}</Project>
       <Private>True</Private>
       <RoleType>Worker</RoleType>
-      <RoleName>UCosmic.Work</RoleName>
+      <RoleName>WorkerRole</RoleName>
       <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
   </ItemGroup>
@@ -71,11 +72,16 @@
   </ItemGroup>
   <ItemGroup>
     <PublishProfile Include="Profiles\UCosmicPlaygroundStaging.azurePubxml" />
+    <PublishProfile Include="Profiles\UCosmicPlaygroundStaging1.azurePubxml" />
+    <PublishProfile Include="Profiles\UCosmicPlaygroundStaging2.azurePubxml" />
+  </ItemGroup>
+  <ItemGroup>
+    <DiagnosticsConfiguration Include="WorkerRoleContent\diagnostics.wadcfgx" />
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
-    <CloudExtensionsDir Condition=" '$(CloudExtensionsDir)' == '' ">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Windows Azure Tools\2.4\</CloudExtensionsDir>
+    <CloudExtensionsDir Condition=" '$(CloudExtensionsDir)' == '' ">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Windows Azure Tools\2.8\</CloudExtensionsDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Emulate' ">
     <OutputPath>bin\Emulate\</OutputPath>

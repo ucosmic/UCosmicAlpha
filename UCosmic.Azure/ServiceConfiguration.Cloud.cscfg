@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ServiceConfiguration serviceName="UCosmic.Azure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="3" osVersion="*" schemaVersion="2014-06.2.4">
+<ServiceConfiguration serviceName="UCosmic.Azure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="3" osVersion="*" schemaVersion="2015-04.2.6">
   <Role name="UCosmic.Web.Mvc">
     <Instances count="2" />
     <ConfigurationSettings>
@@ -18,7 +18,7 @@
       <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="50AE3C46359607209787B18517829EA8DF67FF74" thumbprintAlgorithm="sha1" />
     </Certificates>
   </Role>
-  <Role name="UCosmic.Work">
+  <Role name="WorkerRole">
     <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=ucosmicdiagnostics2;AccountKey=ZtO/dDS0KIosbA9Z7KoPwgwPE9Yv3VTUjsENcqOK9U0if8XSZNYh0KmJK4LR+BrqzQvJmvqKrutNAuRq7C5YEw==" />
@@ -29,7 +29,6 @@
     </ConfigurationSettings>
     <Certificates>
       <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="50AE3C46359607209787B18517829EA8DF67FF74" thumbprintAlgorithm="sha1" />
-      <Certificate name="azureconfig" thumbprint="9975FCFAF342D1FB73631EB5A1CD9BCEF1F102F6" thumbprintAlgorithm="sha1" />
     </Certificates>
   </Role>
 </ServiceConfiguration>

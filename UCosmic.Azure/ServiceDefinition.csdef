@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ServiceDefinition name="UCosmic.Azure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2014-06.2.4">
+<ServiceDefinition name="UCosmic.Azure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2015-04.2.6">
   <WebRole name="UCosmic.Web.Mvc" vmsize="Small">
     <Runtime executionContext="elevated" />
     <Startup>
@@ -20,11 +20,11 @@
       <InputEndpoint name="HttpsEndpoint" protocol="https" port="443" certificate="star.ucosmic.com" />
     </Endpoints>
     <Imports>
-      <Import moduleName="Diagnostics" />
       <Import moduleName="RemoteAccess" />
       <Import moduleName="RemoteForwarder" />
     </Imports>
     <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
     </ConfigurationSettings>
     <Certificates>
       <Certificate name="star.ucosmic.com" storeLocation="LocalMachine" storeName="My" />
@@ -36,17 +36,12 @@
       <LocalStorage name="DiagnosticStore" sizeInMB="20000" cleanOnRoleRecycle="false" />
     </LocalResources>
   </WebRole>
-  <WorkerRole name="UCosmic.Work" vmsize="ExtraSmall">
-    <Runtime executionContext="elevated" />
-    <Startup>
-      <Task commandLine="startup\setupGac.cmd" executionContext="elevated" taskType="simple" />
-    </Startup>
+  <WorkerRole name="WorkerRole" vmsize="Small">
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
+    </ConfigurationSettings>
     <Imports>
-      <Import moduleName="Diagnostics" />
       <Import moduleName="RemoteAccess" />
     </Imports>
-    <Certificates>
-      <Certificate name="azureconfig" storeLocation="LocalMachine" storeName="My" />
-    </Certificates>
   </WorkerRole>
 </ServiceDefinition>
