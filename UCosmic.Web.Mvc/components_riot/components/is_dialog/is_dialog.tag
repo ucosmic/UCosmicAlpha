@@ -44,7 +44,7 @@
     <script>
         var self = this;
         self.on('mount', function () {
-            xmenu.load_tag('/components_riot/is_dialog/fab_close/fab_close.js', document.head);
+            ucosmic.load_tag('/components_riot/is_dialog/fab_close/fab_close.js', document.head);
         });
         self.is_shown = false;
         self.select_item = function(event){

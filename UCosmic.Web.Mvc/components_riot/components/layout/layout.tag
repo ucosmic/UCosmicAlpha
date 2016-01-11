@@ -8,6 +8,7 @@
     <header></header>
     <header_toolbar></header_toolbar>
     <content></content>
+    <toast></toast>
     <script>
         // This is essentially the equivalent of the Flux view-controller.
         // Could be broken down further into more sub-componenets, if you wished to re-use views.
