@@ -26,6 +26,7 @@ public static class MVC
 {
     public static UCosmic.Web.Mvc.Controllers.ActivitiesController Activities = new UCosmic.Web.Mvc.Controllers.T4MVC_ActivitiesController();
     public static UCosmic.Web.Mvc.Controllers.AdminController Admin = new UCosmic.Web.Mvc.Controllers.T4MVC_AdminController();
+    public static UCosmic.Web.Mvc.Controllers.AdminFirebaseController AdminFirebase = new UCosmic.Web.Mvc.Controllers.T4MVC_AdminFirebaseController();
     public static UCosmic.Web.Mvc.Controllers.AgreementsController Agreements = new UCosmic.Web.Mvc.Controllers.T4MVC_AgreementsController();
     public static UCosmic.Web.Mvc.Controllers.ApiTestController ApiTest = new UCosmic.Web.Mvc.Controllers.T4MVC_ApiTestController();
     public static UCosmic.Web.Mvc.Controllers.EmployeesController Employees = new UCosmic.Web.Mvc.Controllers.T4MVC_EmployeesController();
@@ -37,6 +38,7 @@ public static class MVC
     public static UCosmic.Web.Mvc.Controllers.JavaScriptRoutesController JavaScriptRoutes = new UCosmic.Web.Mvc.Controllers.T4MVC_JavaScriptRoutesController();
     public static UCosmic.Web.Mvc.Controllers.MyProfileController MyProfile = new UCosmic.Web.Mvc.Controllers.T4MVC_MyProfileController();
     public static UCosmic.Web.Mvc.Controllers.PeopleController People = new UCosmic.Web.Mvc.Controllers.T4MVC_PeopleController();
+    public static UCosmic.Web.Mvc.Controllers.ReceiveSamlAuthnResponseController ReceiveSamlAuthnResponse = new UCosmic.Web.Mvc.Controllers.T4MVC_ReceiveSamlAuthnResponseController();
     public static UCosmic.Web.Mvc.Controllers.RepsController Reps = new UCosmic.Web.Mvc.Controllers.T4MVC_RepsController();
     public static UCosmic.Web.Mvc.Controllers.SamlMetadataController SamlMetadata = new UCosmic.Web.Mvc.Controllers.T4MVC_SamlMetadataController();
     public static UCosmic.Web.Mvc.Controllers.StudentsController Students = new UCosmic.Web.Mvc.Controllers.T4MVC_StudentsController();
@@ -3613,6 +3615,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string layout_min_css = Url("layout.min.css");
                 public static readonly string logo_png = Url("logo.png");
             }
         
@@ -3636,6 +3639,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string layout_min_css = Url("layout.min.css");
                 public static readonly string logo_png = Url("logo.png");
             }
         
@@ -3659,6 +3663,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string layout_min_css = Url("layout.min.css");
                 public static readonly string logo_png = Url("logo.png");
             }
         
@@ -3682,6 +3687,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string layout_min_css = Url("layout.min.css");
                 public static readonly string logo_png = Url("logo.png");
             }
         
@@ -3705,6 +3711,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string layout_min_css = Url("layout.min.css");
                 public static readonly string logo_png = Url("logo.png");
             }
         
@@ -3728,6 +3735,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string layout_min_css = Url("layout.min.css");
                 public static readonly string logo_png = Url("logo.png");
             }
         
@@ -3751,6 +3759,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string layout_min_css = Url("layout.min.css");
                 public static readonly string logo_png = Url("logo.png");
             }
         
@@ -3765,16 +3774,20 @@ namespace Links
                 public static readonly string designs_scss = Url("designs.scss");
                 public static readonly string designs_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/designs.min.css") ? Url("designs.min.css") : Url("designs.css");
                      
+                public static readonly string designs_min_css = Url("designs.min.css");
                 public static readonly string forms_scss = Url("forms.scss");
                 public static readonly string forms_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/forms.min.css") ? Url("forms.min.css") : Url("forms.css");
                      
+                public static readonly string forms_min_css = Url("forms.min.css");
                 public static readonly string ie8_scss = Url("ie8.scss");
                 public static readonly string ie8_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ie8.min.css") ? Url("ie8.min.css") : Url("ie8.css");
                      
+                public static readonly string ie8_min_css = Url("ie8.min.css");
                 public static readonly string ingot_32_9_gif = Url("ingot-32-9.gif");
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string layout_min_css = Url("layout.min.css");
                 public static readonly string logo_png = Url("logo.png");
             }
         
@@ -3799,6 +3812,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string layout_min_css = Url("layout.min.css");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3821,6 +3835,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string layout_min_css = Url("layout.min.css");
                 public static readonly string logo_png = Url("logo.png");
             }
         
@@ -3844,6 +3859,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string layout_min_css = Url("layout.min.css");
                 public static readonly string logo_png = Url("logo.png");
             }
         
@@ -3867,6 +3883,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string layout_min_css = Url("layout.min.css");
                 public static readonly string logo_png = Url("logo.png");
             }
         
@@ -3890,6 +3907,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string layout_min_css = Url("layout.min.css");
                 public static readonly string logo_png = Url("logo.png");
             }
         

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1D0944A8-022D-413B-85FB-08EFF9022E2B}"
 	ProjectSection(SolutionItems) = preProject
@@ -28,9 +28,9 @@ Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "UCosmic.Azure", "UCosmic.Az
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UCosmic.Web.Mvc", "UCosmic.Web.Mvc\UCosmic.Web.Mvc.csproj", "{57DDDCAD-3A84-4501-994C-B0326C625183}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UCosmic.Work", "UCosmic.Work\UCosmic.Work.csproj", "{9FEA0633-ED91-4345-8B5B-0A28E216324C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{B31B3F8D-8C32-4AAE-A6DD-2AF71F1B8F4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkerRole", "WorkerRole\WorkerRole.csproj", "{717ADD81-15FB-4CE6-8BC7-9C1A9CE8C759}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -102,23 +102,23 @@ Global
 		{57DDDCAD-3A84-4501-994C-B0326C625183}.Release|Any CPU.Build.0 = Release|Any CPU
 		{57DDDCAD-3A84-4501-994C-B0326C625183}.Release|x64.ActiveCfg = Release|x64
 		{57DDDCAD-3A84-4501-994C-B0326C625183}.Release|x64.Build.0 = Release|x64
-		{9FEA0633-ED91-4345-8B5B-0A28E216324C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9FEA0633-ED91-4345-8B5B-0A28E216324C}.Debug|x64.ActiveCfg = Debug|x64
-		{9FEA0633-ED91-4345-8B5B-0A28E216324C}.DebugBuildTs|Any CPU.ActiveCfg = Debug|Any CPU
-		{9FEA0633-ED91-4345-8B5B-0A28E216324C}.DebugBuildTs|x64.ActiveCfg = Debug|x64
-		{9FEA0633-ED91-4345-8B5B-0A28E216324C}.DebugBuildTs|x64.Build.0 = Debug|x64
-		{9FEA0633-ED91-4345-8B5B-0A28E216324C}.Emulate|Any CPU.ActiveCfg = Emulate|Any CPU
-		{9FEA0633-ED91-4345-8B5B-0A28E216324C}.Emulate|Any CPU.Build.0 = Emulate|Any CPU
-		{9FEA0633-ED91-4345-8B5B-0A28E216324C}.Emulate|x64.ActiveCfg = Emulate|x64
-		{9FEA0633-ED91-4345-8B5B-0A28E216324C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9FEA0633-ED91-4345-8B5B-0A28E216324C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9FEA0633-ED91-4345-8B5B-0A28E216324C}.Release|x64.ActiveCfg = Release|x64
+		{717ADD81-15FB-4CE6-8BC7-9C1A9CE8C759}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{717ADD81-15FB-4CE6-8BC7-9C1A9CE8C759}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{717ADD81-15FB-4CE6-8BC7-9C1A9CE8C759}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{717ADD81-15FB-4CE6-8BC7-9C1A9CE8C759}.DebugBuildTs|Any CPU.ActiveCfg = Debug|Any CPU
+		{717ADD81-15FB-4CE6-8BC7-9C1A9CE8C759}.DebugBuildTs|Any CPU.Build.0 = Debug|Any CPU
+		{717ADD81-15FB-4CE6-8BC7-9C1A9CE8C759}.DebugBuildTs|x64.ActiveCfg = Debug|Any CPU
+		{717ADD81-15FB-4CE6-8BC7-9C1A9CE8C759}.Emulate|Any CPU.ActiveCfg = Release|Any CPU
+		{717ADD81-15FB-4CE6-8BC7-9C1A9CE8C759}.Emulate|Any CPU.Build.0 = Release|Any CPU
+		{717ADD81-15FB-4CE6-8BC7-9C1A9CE8C759}.Emulate|x64.ActiveCfg = Release|Any CPU
+		{717ADD81-15FB-4CE6-8BC7-9C1A9CE8C759}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{717ADD81-15FB-4CE6-8BC7-9C1A9CE8C759}.Release|Any CPU.Build.0 = Release|Any CPU
+		{717ADD81-15FB-4CE6-8BC7-9C1A9CE8C759}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F8E86A95-A775-449F-A818-60D8AD4B1B0D} = {B31B3F8D-8C32-4AAE-A6DD-2AF71F1B8F4C}
-		{9FEA0633-ED91-4345-8B5B-0A28E216324C} = {B31B3F8D-8C32-4AAE-A6DD-2AF71F1B8F4C}
 	EndGlobalSection
 EndGlobal

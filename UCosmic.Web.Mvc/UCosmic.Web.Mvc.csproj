@@ -39,6 +39,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PublishDatabases>false</PublishDatabases>
+    <IncludeIisSettings>false</IncludeIisSettings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -47,6 +48,7 @@
     <DefineConstants>TRACE;AZURE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <IncludeIisSettings>true</IncludeIisSettings>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime, Version=3.3.1.7705, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -109,6 +111,10 @@
     <Reference Include="FluentValidation.Mvc">
       <HintPath>..\packages\FluentValidation.MVC4.3.4.6.0\lib\Net40\FluentValidation.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ImageResizer">
       <HintPath>..\packages\ImageResizer.3.3.3\lib\ImageResizer.dll</HintPath>
     </Reference>
@@ -130,17 +136,25 @@
     <Reference Include="LowercaseRoutesMVC4">
       <HintPath>..\packages\LowercaseRoutesMVC4.0.4.1\lib\LowercaseRoutesMVC4.dll</HintPath>
     </Reference>
+    <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.ApplicationServer.Caching.AzureClientHelper, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.4.0.0\lib\net40-full\Microsoft.ApplicationServer.Caching.AzureClientHelper.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.8.0.0\lib\net40-full\Microsoft.ApplicationServer.Caching.AzureClientHelper.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ApplicationServer.Caching.AzureCommon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.4.0.0\lib\net40-full\Microsoft.ApplicationServer.Caching.AzureCommon.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.8.0.0\lib\net40-full\Microsoft.ApplicationServer.Caching.AzureCommon.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ApplicationServer.Caching.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.4.0.0\lib\net40-full\Microsoft.ApplicationServer.Caching.Client.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.8.0.0\lib\net40-full\Microsoft.ApplicationServer.Caching.Client.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ApplicationServer.Caching.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.4.0.0\lib\net40-full\Microsoft.ApplicationServer.Caching.Core.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.8.0.0\lib\net40-full\Microsoft.ApplicationServer.Caching.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -156,7 +170,6 @@
       <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.2\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -173,35 +186,37 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.DistributedCache, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.4.0.0\lib\net40-full\Microsoft.Web.DistributedCache.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unofficial.Microsoft.WindowsAzure.Diagnostics.2.4.0.0\lib\net40\Microsoft.WindowsAzure.Diagnostics.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.8.0.0\lib\net40-full\Microsoft.Web.DistributedCache.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>False</Private>
-      <HintPath>..\packages\Unofficial.Microsoft.WindowsAzure.ServiceRuntime.2.4.0.0\lib\net40\Microsoft.WindowsAzure.ServiceRuntime.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.0.0\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=4.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WindowsAzure.Storage.4.3.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsFabric.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.4.0.0\lib\net40-full\Microsoft.WindowsFabric.Common.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.8.0.0\lib\net40-full\Microsoft.WindowsFabric.Common.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsFabric.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.4.0.0\lib\net40-full\Microsoft.WindowsFabric.Data.Common.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.8.0.0\lib\net40-full\Microsoft.WindowsFabric.Data.Common.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="MoreLinq">
       <HintPath>..\packages\morelinq.2.0.0-alpha01\lib\net35\MoreLinq.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="NGeo, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -262,8 +277,24 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http, Version=2.2.28.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.28\lib\net40\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.28.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.28\lib\net40\System.Net.Http.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.30506.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives, Version=2.2.28.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.28\lib\net40\System.Net.Http.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest, Version=2.2.28.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.28\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime, Version=2.6.8.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -306,14 +337,6 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.WebRequest">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -372,6 +395,9 @@
     <Compile Include="AdminController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="AdminFirebaseController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="AgreementsController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -399,6 +425,8 @@
     <Compile Include="ApiControllers\People\AffiliationsController.cs" />
     <Compile Include="ApiControllers\Students\StudentsController.cs" />
     <Compile Include="ApiControllers\Summary\SummaryController.cs" />
+    <Compile Include="Controllers\AdminFirebaseController.cs" />
+    <Compile Include="Controllers\ReceiveSamlAuthnResponseController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Controllers\SummaryController.cs" />
     <Compile Include="Factories\SqlConnectionFactory.cs" />
@@ -676,6 +704,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="ReceiveSamlAuthnResponseController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\ActivityRepository.cs" />
     <Compile Include="Repositories\AgreementTypeRepository.cs" />
     <Compile Include="Repositories\ActivityDocumentRepository.cs" />
@@ -721,6 +752,15 @@
       <Link>startup\gacutil.exe</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="..\packages\Microsoft.Bcl.1.1.9\lib\net40\System.Runtime.dll">
+      <Link>System.Runtime.dll</Link>
+    </Content>
+    <Content Include="..\packages\Microsoft.Bcl.1.1.9\lib\net40\System.Threading.Tasks.dll">
+      <Link>System.Threading.Tasks.dll</Link>
+    </Content>
+    <Content Include="..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll">
+      <Link>Microsoft.Threading.Tasks.dll</Link>
+    </Content>
     <Content Include="app_offline.html" />
     <None Include="..\Etc\AzureStartup\disableTimeout.cmd">
       <Link>startup\disableTimeout.cmd</Link>
@@ -734,8 +774,14 @@
       <Link>startup\setupGac.cmd</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="components\behaviors\closest\closest.html" />
+    <Content Include="components\behaviors\closest\closest.js" />
     <Content Include="components\behaviors\pagination\pagination.js" />
     <Content Include="components\behaviors\pagination\pagination.html" />
+    <Content Include="components\behaviors\template_helpers\template_helpers.html" />
+    <Content Include="components\behaviors\template_helpers\template_helpers.js" />
+    <Content Include="components\behaviors\toast\toast.html" />
+    <Content Include="components\behaviors\toast\toast.js" />
     <Content Include="components\components\animations\animations.html" />
     <Content Include="components\components\animations\animations.js" />
     <Content Include="components\components\autoComplete_1x\autoComplete.css">
@@ -753,6 +799,9 @@
       <DependentUpon>autoComplete.ts</DependentUpon>
     </Content>
     <Content Include="components\components\autoComplete\autoComplete.scss" />
+    <Content Include="components\components\autoDDL\autoDDL.min.css">
+      <DependentUpon>autoDDL.css</DependentUpon>
+    </Content>
     <Content Include="components\components\autoDDL_1x\autoDDL.css">
       <DependentUpon>autoDDL.scss</DependentUpon>
     </Content>
@@ -779,6 +828,7 @@
     <Content Include="components\components\columns_shown\columns_shown.css">
       <DependentUpon>columns_shown.scss</DependentUpon>
     </Content>
+    <Content Include="components\components\columns_shown\columns_shown.js" />
     <Content Include="components\components\columns_shown\columns_shown.min.css">
       <DependentUpon>columns_shown.css</DependentUpon>
     </Content>
@@ -789,6 +839,7 @@
     <Content Include="components\components\DDL\DDL.html" />
     <Content Include="components\components\DDL\DDL.js" />
     <Content Include="components\components\columns_shown\columns_shown.html" />
+    <Content Include="components\components\filter\filter.js" />
     <Content Include="components\components\filter_tags\filter_tags.css">
       <DependentUpon>filter_tags.scss</DependentUpon>
     </Content>
@@ -801,6 +852,7 @@
     </Content>
     <Content Include="components\components\filter\filter.html" />
     <Content Include="components\components\filter\menu_nav.js" />
+    <Content Include="components\components\filter_tags\filter_tags.js" />
     <Content Include="components\components\popup\map.css" />
     <Content Include="components\components\popup\map.js">
       <DependentUpon>popup.ts</DependentUpon>
@@ -835,38 +887,8 @@
     <Content Include="components\form\inputs\rtf\rtf\rtf.js" />
     <Content Include="components\form\inputs\rtf\rtf\rtf.link.js" />
     <Content Include="components\models\Students.js" />
-    <Content Include="components\pages\Student\New\new.css">
-      <DependentUpon>new.scss</DependentUpon>
-    </Content>
-    <Content Include="components\pages\Student\New\new.html" />
-    <Content Include="components\pages\Student\New\new.min.css">
-      <DependentUpon>new.css</DependentUpon>
-    </Content>
-    <Content Include="components\pages\Student\Table\old_save\table.css">
-      <DependentUpon>table.scss</DependentUpon>
-    </Content>
-    <Content Include="components\pages\Student\Table\old_save\table.html" />
-    <Content Include="components\pages\Student\Table\table.css">
-      <DependentUpon>table.scss</DependentUpon>
-    </Content>
-    <Content Include="components\pages\Student\Table\table.html" />
-    <Content Include="components\pages\Student\Table\table.min.css">
-      <DependentUpon>table.css</DependentUpon>
-    </Content>
-    <Content Include="components\pages\Summary\map\map.css">
-      <DependentUpon>map.scss</DependentUpon>
-    </Content>
-    <Content Include="components\pages\Summary\map\map.html" />
-    <Content Include="components\pages\Summary\map\map.js">
-      <DependentUpon>map.ts</DependentUpon>
-    </Content>
-    <Content Include="components\pages\Summary\report\report.css">
-      <DependentUpon>report.scss</DependentUpon>
-    </Content>
-    <Content Include="components\pages\Summary\report\report.js">
-      <DependentUpon>report.ts</DependentUpon>
-    </Content>
-    <Content Include="components\pages\Summary\report\report.html" />
+    <Content Include="components\form\inputs\required.scss" />
+    <Content Include="components\form\inputs\rtf\rtf.scss" />
     <Content Include="components\pages\Home\editHomePage.js">
       <DependentUpon>editHomePage.ts</DependentUpon>
     </Content>
@@ -877,9 +899,11 @@
       <DependentUpon>addEdit.ts</DependentUpon>
     </Content>
     <Content Include="components\pages\Home\indexHasDomain\addLink\addLink.html" />
+    <Content Include="components\pages\Home\indexHasDomain\addLink\addLink.js" />
     <Content Include="components\pages\Home\indexHasDomain\base.css">
       <DependentUpon>base.scss</DependentUpon>
     </Content>
+    <Content Include="components\pages\Home\indexHasDomain\base.scss" />
     <Content Include="components\pages\Home\indexHasDomain\custom.js">
       <DependentUpon>custom.ts</DependentUpon>
     </Content>
@@ -891,11 +915,54 @@
     <Content Include="components\pages\Home\indexHasDomain\images\user\male-and-female-256.png" />
     <Content Include="components\pages\Home\indexHasDomain\images\user\unisex-a-128.png" />
     <Content Include="components\pages\Home\indexHasDomain\images\user\unisex-a-256.png" />
-    <Content Include="components\pages\Home\indexHasDomain\IndexHasDomainEdit.html" />
-    <Content Include="components\pages\Home\indexHasDomain\IndexHasDomainCustom.html" />
     <Content Include="components\pages\Home\indexHasDomain\IndexHasDomainBase.html" />
-    <Content Include="components\form\inputs\required.scss" />
-    <Content Include="components\form\inputs\rtf\rtf.scss" />
+    <Content Include="components\pages\Home\indexHasDomain\IndexHasDomainCustom.html" />
+    <Content Include="components\pages\Home\indexHasDomain\IndexHasDomainEdit.html" />
+    <Content Include="components\pages\Home\IndexNoDomain.html" />
+    <Content Include="components\pages\Student\New\new.css">
+      <DependentUpon>new.scss</DependentUpon>
+    </Content>
+    <Content Include="components\pages\Student\New\new.css.map" />
+    <Content Include="components\pages\Student\New\new.html" />
+    <Content Include="components\pages\Student\New\new.js" />
+    <Content Include="components\pages\Student\New\new.min.css">
+      <DependentUpon>new.css</DependentUpon>
+    </Content>
+    <Content Include="components\pages\Student\New\new.scss" />
+    <Content Include="components\pages\Student\Table\old_save\table - Copy.js" />
+    <Content Include="components\pages\Student\Table\old_save\table.css">
+      <DependentUpon>table.scss</DependentUpon>
+    </Content>
+    <Content Include="components\pages\Student\Table\old_save\table.html" />
+    <Content Include="components\pages\Student\Table\old_save\table.js" />
+    <Content Include="components\pages\Student\Table\old_save\table.scss" />
+    <Content Include="components\pages\Student\Table\table - Copy.js" />
+    <Content Include="components\pages\Student\Table\table.css">
+      <DependentUpon>table.scss</DependentUpon>
+    </Content>
+    <Content Include="components\pages\Student\Table\table.html" />
+    <Content Include="components\pages\Student\Table\table.js" />
+    <Content Include="components\pages\Student\Table\table.min.css">
+      <DependentUpon>table.css</DependentUpon>
+    </Content>
+    <Content Include="components\pages\Student\Table\table.scss" />
+    <Content Include="components\pages\Summary\map\map.css">
+      <DependentUpon>map.scss</DependentUpon>
+    </Content>
+    <Content Include="components\pages\Summary\map\map.html" />
+    <Content Include="components\pages\Summary\map\map.js">
+      <DependentUpon>map.ts</DependentUpon>
+    </Content>
+    <Content Include="components\pages\Summary\map\map.scss" />
+    <Content Include="components\pages\Summary\map\report.css" />
+    <Content Include="components\pages\Summary\report\report.css">
+      <DependentUpon>report.scss</DependentUpon>
+    </Content>
+    <Content Include="components\pages\Summary\report\report.html" />
+    <Content Include="components\pages\Summary\report\report.js">
+      <DependentUpon>report.ts</DependentUpon>
+    </Content>
+    <Content Include="components\pages\Summary\report\report.scss" />
     <Content Include="components\Polymer\bower.json" />
     <Content Include="components\Polymer\bower_components\ace-element\.bower.json" />
     <Content Include="components\Polymer\bower_components\ace-element\ace-element.html" />
@@ -3112,6 +3179,8 @@
     <Content Include="components\Polymer\bower_components\yt-video\yt-video.html" />
     <Content Include="components\Polymer_1x\bower_components\cors-upload-sample\index.html" />
     <Content Include="components\Polymer_1x\bower_components\cors-upload-sample\upload.js" />
+    <Content Include="components\Polymer_1x\bower_components\es6-promise\promise.js" />
+    <Content Include="components\Polymer_1x\bower_components\es6-promise\promise.min.js" />
     <Content Include="components\Polymer_1x\bower_components\firebase-element\.gitignore" />
     <Content Include="components\Polymer_1x\bower_components\firebase-element\demo\index.html" />
     <Content Include="components\Polymer_1x\bower_components\firebase-element\demo\x-login.html" />
@@ -3205,7 +3274,6 @@
     <Content Include="components\Polymer_1x\bower_components\gold-zip-input\test\index.html" />
     <Content Include="components\Polymer_1x\bower_components\gold-zip-input\zip-validator.html" />
     <Content Include="components\Polymer_1x\bower_components\google-analytics\account-summaries-import.html" />
-    <Content Include="components\Polymer_1x\bower_components\google-analytics\demo\demo.css" />
     <Content Include="components\Polymer_1x\bower_components\google-analytics\demo\index.html" />
     <Content Include="components\Polymer_1x\bower_components\google-analytics\google-analytics-chart.html" />
     <Content Include="components\Polymer_1x\bower_components\google-analytics\google-analytics-dashboard.html" />
@@ -3346,6 +3414,14 @@
     <Content Include="components\Polymer_1x\bower_components\iron-behaviors\test\focused-state.html" />
     <Content Include="components\Polymer_1x\bower_components\iron-behaviors\test\index.html" />
     <Content Include="components\Polymer_1x\bower_components\iron-behaviors\test\test-elements.html" />
+    <Content Include="components\Polymer_1x\bower_components\iron-checked-element-behavior\.gitignore" />
+    <Content Include="components\Polymer_1x\bower_components\iron-checked-element-behavior\demo\index.html" />
+    <Content Include="components\Polymer_1x\bower_components\iron-checked-element-behavior\demo\simple-checkbox.html" />
+    <Content Include="components\Polymer_1x\bower_components\iron-checked-element-behavior\index.html" />
+    <Content Include="components\Polymer_1x\bower_components\iron-checked-element-behavior\iron-checked-element-behavior.html" />
+    <Content Include="components\Polymer_1x\bower_components\iron-checked-element-behavior\test\basic.html" />
+    <Content Include="components\Polymer_1x\bower_components\iron-checked-element-behavior\test\index.html" />
+    <Content Include="components\Polymer_1x\bower_components\iron-checked-element-behavior\test\simple-checkbox.html" />
     <Content Include="components\Polymer_1x\bower_components\iron-collapse\.gitignore" />
     <Content Include="components\Polymer_1x\bower_components\iron-collapse\demo\index.html" />
     <Content Include="components\Polymer_1x\bower_components\iron-collapse\hero.svg" />
@@ -3464,8 +3540,6 @@
     <Content Include="components\Polymer_1x\bower_components\iron-jsonp-library\index.html" />
     <Content Include="components\Polymer_1x\bower_components\iron-jsonp-library\iron-jsonp-library.html" />
     <Content Include="components\Polymer_1x\bower_components\iron-list\.gitignore" />
-    <Content Include="components\Polymer_1x\bower_components\iron-list\demo\demo1.html" />
-    <Content Include="components\Polymer_1x\bower_components\iron-list\demo\demo2.html" />
     <Content Include="components\Polymer_1x\bower_components\iron-list\demo\index.html" />
     <Content Include="components\Polymer_1x\bower_components\iron-list\index.html" />
     <Content Include="components\Polymer_1x\bower_components\iron-list\iron-list.html" />
@@ -3589,6 +3663,10 @@
     <Content Include="components\Polymer_1x\bower_components\iron-validator-behavior\test\simple-validator.html" />
     <Content Include="components\Polymer_1x\bower_components\lodash\lodash.js" />
     <Content Include="components\Polymer_1x\bower_components\lodash\lodash.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\lovefield\dist\lovefield.es6.js" />
+    <Content Include="components\Polymer_1x\bower_components\lovefield\dist\lovefield.externs.js" />
+    <Content Include="components\Polymer_1x\bower_components\lovefield\dist\lovefield.js" />
+    <Content Include="components\Polymer_1x\bower_components\lovefield\dist\lovefield.min.js" />
     <Content Include="components\Polymer_1x\bower_components\marked-element\.gitignore" />
     <Content Include="components\Polymer_1x\bower_components\marked-element\demo\index.html" />
     <Content Include="components\Polymer_1x\bower_components\marked-element\hero.svg" />
@@ -3662,13 +3740,23 @@
     <Content Include="components\Polymer_1x\bower_components\neon-animation\web-animations.html" />
     <Content Include="components\Polymer_1x\bower_components\page.js\index.js" />
     <Content Include="components\Polymer_1x\bower_components\page.js\page.js" />
+    <Content Include="components\Polymer_1x\bower_components\paper-badge\.gitignore" />
+    <Content Include="components\Polymer_1x\bower_components\paper-badge\demo\index.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-badge\demo\test-button.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-badge\index.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-badge\paper-badge.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-badge\test\basic.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-badge\test\index.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-badge\test\test-button.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-behaviors\.gitignore" />
     <Content Include="components\Polymer_1x\bower_components\paper-behaviors\demo\index.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-behaviors\demo\paper-button.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-behaviors\demo\paper-radio-button.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-behaviors\index.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-behaviors\paper-button-behavior.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-behaviors\paper-checked-element-behavior.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-behaviors\paper-inky-focus-behavior.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-behaviors\paper-ripple-behavior.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-behaviors\test\index.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-behaviors\test\paper-button-behavior.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-behaviors\test\paper-radio-button-behavior.html" />
@@ -3680,11 +3768,16 @@
     <Content Include="components\Polymer_1x\bower_components\paper-button\paper-button.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-button\test\index.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-button\test\paper-button.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-card\.gitignore" />
+    <Content Include="components\Polymer_1x\bower_components\paper-card\demo\index.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-card\index.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-card\paper-card.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-card\test\basic.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-card\test\index.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-checkbox\.gitignore" />
     <Content Include="components\Polymer_1x\bower_components\paper-checkbox\demo\index.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-checkbox\index.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-checkbox\metadata.html" />
-    <Content Include="components\Polymer_1x\bower_components\paper-checkbox\paper-checkbox.css" />
     <Content Include="components\Polymer_1x\bower_components\paper-checkbox\paper-checkbox.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-checkbox\test\basic.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-checkbox\test\index.html" />
@@ -3718,6 +3811,12 @@
     <Content Include="components\Polymer_1x\bower_components\paper-drawer-panel\index.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-drawer-panel\paper-drawer-panel.css" />
     <Content Include="components\Polymer_1x\bower_components\paper-drawer-panel\paper-drawer-panel.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-dropdown-menu\.gitignore" />
+    <Content Include="components\Polymer_1x\bower_components\paper-dropdown-menu\demo\index.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-dropdown-menu\index.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-dropdown-menu\paper-dropdown-menu.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-dropdown-menu\test\index.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-dropdown-menu\test\paper-dropdown-menu.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-fab\.gitignore" />
     <Content Include="components\Polymer_1x\bower_components\paper-fab\demo\index.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-fab\index.html" />
@@ -3767,7 +3866,7 @@
     <Content Include="components\Polymer_1x\bower_components\paper-item\index.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-item\paper-icon-item.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-item\paper-item-body.html" />
-    <Content Include="components\Polymer_1x\bower_components\paper-item\paper-item-shared.css" />
+    <Content Include="components\Polymer_1x\bower_components\paper-item\paper-item-shared-styles.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-item\paper-item.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-item\test\index.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-item\test\paper-item.html" />
@@ -3789,7 +3888,9 @@
     <Content Include="components\Polymer_1x\bower_components\paper-menu\demo\index.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-menu\hero.svg" />
     <Content Include="components\Polymer_1x\bower_components\paper-menu\index.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-menu\paper-menu-shared.css" />
     <Content Include="components\Polymer_1x\bower_components\paper-menu\paper-menu.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-menu\paper-submenu.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-menu\test\index.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-menu\test\paper-menu.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-progress\.gitignore" />
@@ -3803,7 +3904,6 @@
     <Content Include="components\Polymer_1x\bower_components\paper-radio-button\demo\index.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-radio-button\hero.svg" />
     <Content Include="components\Polymer_1x\bower_components\paper-radio-button\index.html" />
-    <Content Include="components\Polymer_1x\bower_components\paper-radio-button\paper-radio-button.css" />
     <Content Include="components\Polymer_1x\bower_components\paper-radio-button\paper-radio-button.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-radio-button\test\basic.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-radio-button\test\index.html" />
@@ -3849,8 +3949,8 @@
     <Content Include="components\Polymer_1x\bower_components\paper-slider\demo\index.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-slider\hero.svg" />
     <Content Include="components\Polymer_1x\bower_components\paper-slider\index.html" />
-    <Content Include="components\Polymer_1x\bower_components\paper-slider\paper-slider.css" />
     <Content Include="components\Polymer_1x\bower_components\paper-slider\paper-slider.html" />
+    <Content Include="components\Polymer_1x\bower_components\paper-slider\test\a11y.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-slider\test\basic.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-slider\test\index.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-spinner\.gitignore" />
@@ -3893,7 +3993,6 @@
     <Content Include="components\Polymer_1x\bower_components\paper-toggle-button\demo\index.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-toggle-button\hero.svg" />
     <Content Include="components\Polymer_1x\bower_components\paper-toggle-button\index.html" />
-    <Content Include="components\Polymer_1x\bower_components\paper-toggle-button\paper-toggle-button.css" />
     <Content Include="components\Polymer_1x\bower_components\paper-toggle-button\paper-toggle-button.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-toggle-button\test\basic.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-toggle-button\test\index.html" />
@@ -3909,7 +4008,6 @@
     <Content Include="components\Polymer_1x\bower_components\paper-tooltip\paper-tooltip.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-tooltip\test\basic.html" />
     <Content Include="components\Polymer_1x\bower_components\paper-tooltip\test\index.html" />
-    <Content Include="components\Polymer_1x\bower_components\platinum-push-messaging\demo\index.html" />
     <Content Include="components\Polymer_1x\bower_components\platinum-push-messaging\index.html" />
     <Content Include="components\Polymer_1x\bower_components\platinum-push-messaging\platinum-push-messaging.html" />
     <Content Include="components\Polymer_1x\bower_components\platinum-push-messaging\service-worker.js" />
@@ -3930,18 +4028,32 @@
     <Content Include="components\Polymer_1x\bower_components\prism-element\prism-highlighter.html" />
     <Content Include="components\Polymer_1x\bower_components\prism-element\prism-import.html" />
     <Content Include="components\Polymer_1x\bower_components\prism\components.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-abap.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-abap.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-actionscript.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-actionscript.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-apacheconf.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-apacheconf.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-apl.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-apl.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-applescript.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-applescript.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-aspnet.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-aspnet.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-autohotkey.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-autohotkey.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-autoit.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-autoit.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-bash.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-bash.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-basic.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-basic.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-batch.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-batch.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-bison.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-bison.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-brainfuck.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-brainfuck.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-c.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-c.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-clike.js" />
@@ -3952,16 +4064,26 @@
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-core.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-cpp.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-cpp.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-crystal.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-crystal.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-csharp.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-csharp.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-css-extras.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-css-extras.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-css.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-css.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-d.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-d.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-dart.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-dart.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-diff.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-diff.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-docker.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-docker.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-eiffel.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-eiffel.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-elixir.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-elixir.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-erlang.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-erlang.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-fortran.js" />
@@ -3972,6 +4094,8 @@
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-gherkin.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-git.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-git.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-glsl.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-glsl.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-go.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-go.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-groovy.js" />
@@ -3984,8 +4108,12 @@
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-haskell.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-http.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-http.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-inform7.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-inform7.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-ini.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-ini.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-j.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-j.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-jade.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-jade.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-java.js" />
@@ -3996,24 +4124,40 @@
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-jsx.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-julia.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-julia.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-keyman.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-keyman.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-latex.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-latex.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-less.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-less.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-lolcode.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-lolcode.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-makefile.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-makefile.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-markdown.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-markdown.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-markup.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-markup.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-matlab.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-matlab.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-mel.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-mel.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-mizar.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-mizar.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-monkey.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-monkey.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-nasm.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-nasm.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-nginx.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-nginx.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-nim.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-nim.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-nsis.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-nsis.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-objectivec.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-objectivec.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-ocaml.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-ocaml.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-pascal.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-pascal.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-perl.js" />
@@ -4024,8 +4168,18 @@
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-php.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-powershell.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-powershell.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-processing.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-processing.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-prolog.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-prolog.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-pure.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-pure.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-python.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-python.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-q.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-q.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-qore.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-qore.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-r.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-r.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-rest.js" />
@@ -4038,6 +4192,8 @@
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-rust.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-sas.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-sas.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-sass.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-sass.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-scala.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-scala.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-scheme.js" />
@@ -4054,10 +4210,20 @@
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-stylus.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-swift.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-swift.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-tcl.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-tcl.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-textile.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-textile.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-twig.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-twig.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-typescript.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-typescript.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-verilog.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-verilog.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-vhdl.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-vhdl.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-vim.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-vim.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-wiki.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-wiki.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-yaml.js" />
@@ -4067,6 +4233,8 @@
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\autolinker\prism-autolinker.css" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\autolinker\prism-autolinker.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\autolinker\prism-autolinker.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\autoloader\prism-autoloader.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\autoloader\prism-autoloader.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\file-highlight\prism-file-highlight.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\file-highlight\prism-file-highlight.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\highlight-keywords\prism-highlight-keywords.js" />
@@ -4074,23 +4242,47 @@
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\ie8\prism-ie8.css" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\ie8\prism-ie8.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\ie8\prism-ie8.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\jsonp-highlight\prism-jsonp-highlight.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\jsonp-highlight\prism-jsonp-highlight.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\keep-markup\prism-keep-markup.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\keep-markup\prism-keep-markup.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\line-highlight\prism-line-highlight.css" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\line-highlight\prism-line-highlight.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\line-highlight\prism-line-highlight.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\line-numbers\prism-line-numbers.css" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\line-numbers\prism-line-numbers.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\line-numbers\prism-line-numbers.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\previewer-base\prism-previewer-base.css" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\previewer-base\prism-previewer-base.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\previewer-base\prism-previewer-base.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\previewer-color\prism-previewer-color.css" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\previewer-color\prism-previewer-color.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\previewer-color\prism-previewer-color.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\previewer-easing\prism-previewer-easing.css" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\previewer-easing\prism-previewer-easing.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\previewer-easing\prism-previewer-easing.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\previewer-gradient\prism-previewer-gradient.css" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\previewer-gradient\prism-previewer-gradient.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\previewer-gradient\prism-previewer-gradient.min.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\remove-initial-line-feed\prism-remove-initial-line-feed.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\plugins\remove-initial-line-feed\prism-remove-initial-line-feed.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\show-invisibles\prism-show-invisibles.css" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\show-invisibles\prism-show-invisibles.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\show-invisibles\prism-show-invisibles.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\show-language\prism-show-language.css" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\show-language\prism-show-language.js" />
-    <Content Include="components\Polymer_1x\bower_components\prism\plugins\show-language\prism-show-language.min.css" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\show-language\prism-show-language.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\wpd\prism-wpd.css" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\wpd\prism-wpd.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\plugins\wpd\prism-wpd.min.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\prism.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\helper\components.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\helper\prism-loader.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\helper\test-case.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\helper\test-discovery.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\helper\token-stream-transformer.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\run.js" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\testrunner-tests.js" />
     <Content Include="components\Polymer_1x\bower_components\prism\themes\prism-coy.css" />
     <Content Include="components\Polymer_1x\bower_components\prism\themes\prism-dark.css" />
     <Content Include="components\Polymer_1x\bower_components\prism\themes\prism-funky.css" />
@@ -4218,6 +4410,10 @@
     <Content Include="components\resources\icons\filter_tags.html" />
     <Content Include="components\resources\icons\autoDDL.html" />
     <Content Include="components\resources\icons\filter.html" />
+    <Content Include="components\resources\js\student_in_out_excel.js" />
+    <Content Include="components\resources\js\student_in_out_excel_2.js" />
+    <Content Include="components\resources\js\student_table.js" />
+    <Content Include="components\resources\js\student_table_old.js" />
     <Content Include="components\utilities\firebase-as-array.js" />
     <Content Include="components\utilities\firebase-as-array.min.js" />
     <Content Include="components\utilities\firebase.js" />
@@ -4226,11 +4422,7 @@
     <Content Include="components\utilities\mixins.scss" />
     <Content Include="components\utilities\Notification\notification.css.map" />
     <Content Include="components\utilities\Notification\notification.scss" />
-    <Content Include="components\pages\Home\IndexNoDomain.html" />
     <Content Include="components\form\inputs\button\button.scss" />
-    <Content Include="components\pages\Home\indexHasDomain\base.scss" />
-    <Content Include="components\pages\Summary\report\report.scss" />
-    <Content Include="components\pages\Summary\map\map.scss" />
     <Content Include="components\Polymer\bower_components\color-picker-element\.bower.json" />
     <Content Include="components\Polymer\bower_components\color-picker-element\bower.json" />
     <Content Include="components\Polymer\bower_components\color-picker-element\package.json" />
@@ -4247,8 +4439,6 @@
     <Content Include="components\Polymer\bower_components\firebase\.bower.json" />
     <Content Include="components\Polymer\bower_components\firebase\bower.json" />
     <Content Include="components\Polymer\bower_components\firebase\README.md" />
-    <Content Include="components\pages\Student\New\new.css.map" />
-    <Content Include="components\pages\Student\New\new.scss" />
     <Content Include="components\Polymer\bower_components\firebase-util\.bower.json" />
     <Content Include="components\Polymer\bower_components\firebase-util\bower.json" />
     <Content Include="components\Polymer\bower_components\firebase-util\CONTRIBUTING.md" />
@@ -4257,7 +4447,6 @@
     <Content Include="components\Polymer\bower_components\firebase-util\gulp\header.tpl" />
     <Content Include="components\Polymer\bower_components\firebase-util\LICENSE" />
     <Content Include="components\Polymer\bower_components\firebase-util\README.md" />
-    <Content Include="components\pages\Student\Table\table.scss" />
     <Content Include="components\components\filter\menu_nav.css.map" />
     <Content Include="components\components\filter\menu_nav.js.map" />
     <Content Include="components\components\filter\filter.scss" />
@@ -4269,7 +4458,13 @@
     <Content Include="components\components\DDL_1x\DDL.css.map" />
     <Content Include="components\components\DDL_1x\DDL.scss" />
     <Content Include="components\components\columns_shown\columns_shown.scss" />
-    <Content Include="components\pages\Student\Table\old_save\table.scss" />
+    <Content Include="components\behaviors\closest\closest.js.map" />
+    <Content Include="components\behaviors\template_helpers\template_helpers.js.map" />
+    <Content Include="components\behaviors\toast\toast.js.map" />
+    <Content Include="components\pages\Student\Table\old_save\table.css.map" />
+    <Content Include="components\pages\Student\Table\table.css.map" />
+    <Content Include="components\pages\Summary\map\map.css.map" />
+    <Content Include="components\pages\Summary\report\report.css.map" />
     <None Include="components\Polymer\bower_components\NodeBind\codereview.settings" />
     <None Include="components\Polymer\bower_components\observe-js\codereview.settings" />
     <None Include="components\Polymer\bower_components\polymer-expressions\codereview.settings" />
@@ -4339,6 +4534,11 @@
     <Content Include="components\Polymer\bower_components\polymer-platform\README.md" />
     <None Include="components\Polymer\bower_components\TemplateBinding\codereview.settings" />
     <Content Include="components\utilities\xlsx.full.min.js" />
+    <Content Include="components_riot\components\echo_html\echo_html.js" />
+    <Content Include="components_riot\components\echo_tag\echo_tag.js" />
+    <Content Include="components_riot\components\header\header.js" />
+    <Content Include="components_riot\components\header_toolbar\header_toolbar.js" />
+    <Content Include="components_riot\components\toast\toast.js" />
     <Content Include="content\countries\ne-countries-110m.json" />
     <Content Include="content\countries\ne-countries-50m.json" />
     <Content Include="content\countries\ne-v2.0.0-countries-geojson.zip" />
@@ -4665,9 +4865,6 @@
     <Content Include="components\Polymer_1x\bower_components\paper-scroll-header-panel\.bower.json" />
     <Content Include="components\Polymer_1x\bower_components\paper-scroll-header-panel\bower.json" />
     <Content Include="components\Polymer_1x\bower_components\paper-scroll-header-panel\README.md" />
-    <Content Include="components\Polymer_1x\bower_components\paper-slider\.bower.json" />
-    <Content Include="components\Polymer_1x\bower_components\paper-slider\bower.json" />
-    <Content Include="components\Polymer_1x\bower_components\paper-slider\README.md" />
     <Content Include="components\Polymer_1x\bower_components\paper-spinner\.bower.json" />
     <Content Include="components\Polymer_1x\bower_components\paper-spinner\bower.json" />
     <Content Include="components\Polymer_1x\bower_components\paper-spinner\README.md" />
@@ -4695,7 +4892,6 @@
     <Content Include="components\Polymer_1x\bower_components\platinum-elements\README.md" />
     <Content Include="components\Polymer_1x\bower_components\platinum-push-messaging\.bower.json" />
     <Content Include="components\Polymer_1x\bower_components\platinum-push-messaging\bower.json" />
-    <Content Include="components\Polymer_1x\bower_components\platinum-push-messaging\demo\manifest.json" />
     <Content Include="components\Polymer_1x\bower_components\platinum-push-messaging\README.md" />
     <Content Include="components\Polymer_1x\bower_components\platinum-sw\.bower.json" />
     <Content Include="components\Polymer_1x\bower_components\platinum-sw\bower.json" />
@@ -4706,11 +4902,6 @@
     <Content Include="components\Polymer_1x\bower_components\prism-element\.bower.json" />
     <Content Include="components\Polymer_1x\bower_components\prism-element\bower.json" />
     <Content Include="components\Polymer_1x\bower_components\prism-element\README.md" />
-    <Content Include="components\Polymer_1x\bower_components\prism\.bower.json" />
-    <Content Include="components\Polymer_1x\bower_components\prism\bower.json" />
-    <Content Include="components\Polymer_1x\bower_components\prism\LICENSE" />
-    <Content Include="components\Polymer_1x\bower_components\prism\package.json" />
-    <Content Include="components\Polymer_1x\bower_components\prism\README.md" />
     <Content Include="components\Polymer_1x\bower_components\promise-polyfill\.bower.json" />
     <Content Include="components\Polymer_1x\bower_components\promise-polyfill\bower.json" />
     <Content Include="components\Polymer_1x\bower_components\promise-polyfill\LICENSE" />
@@ -4797,6 +4988,751 @@
     <Content Include="components\Polymer_1x\bower_components\webcomponentsjs\build.log" />
     <Content Include="components\Polymer_1x\bower_components\webcomponentsjs\package.json" />
     <Content Include="components\Polymer_1x\bower_components\webcomponentsjs\README.md" />
+    <Content Include="components\Polymer_1x\bower_components\iron-checked-element-behavior\.bower.json" />
+    <Content Include="components\Polymer_1x\bower_components\iron-checked-element-behavior\bower.json" />
+    <Content Include="components\Polymer_1x\bower_components\iron-checked-element-behavior\README.md" />
+    <Content Include="components\Polymer_1x\bower_components\paper-badge\.bower.json" />
+    <Content Include="components\Polymer_1x\bower_components\paper-badge\bower.json" />
+    <Content Include="components\Polymer_1x\bower_components\paper-badge\README.md" />
+    <Content Include="components\Polymer_1x\bower_components\paper-card\.bower.json" />
+    <Content Include="components\Polymer_1x\bower_components\paper-card\bower.json" />
+    <Content Include="components\Polymer_1x\bower_components\paper-card\README.md" />
+    <Content Include="components\Polymer_1x\bower_components\paper-dropdown-menu\.bower.json" />
+    <Content Include="components\Polymer_1x\bower_components\paper-dropdown-menu\bower.json" />
+    <Content Include="components\Polymer_1x\bower_components\paper-dropdown-menu\README.md" />
+    <Content Include="components\Polymer_1x\bower_components\es6-promise\.bower.json" />
+    <Content Include="components\Polymer_1x\bower_components\es6-promise\bower.json" />
+    <Content Include="components\Polymer_1x\bower_components\lovefield\.bower.json" />
+    <Content Include="components\Polymer_1x\bower_components\lovefield\AUTHORS" />
+    <Content Include="components\Polymer_1x\bower_components\lovefield\bower.json" />
+    <Content Include="components\Polymer_1x\bower_components\lovefield\CONTRIBUTING.md" />
+    <Content Include="components\Polymer_1x\bower_components\lovefield\dist\CHANGELOG.md" />
+    <Content Include="components\Polymer_1x\bower_components\lovefield\dist\error_code.json" />
+    <Content Include="components\Polymer_1x\bower_components\lovefield\dist\lovefield.es6.js.map" />
+    <Content Include="components\Polymer_1x\bower_components\lovefield\dist\lovefield.min.js.map" />
+    <Content Include="components\Polymer_1x\bower_components\lovefield\LICENSE" />
+    <Content Include="components\Polymer_1x\bower_components\lovefield\package.json" />
+    <Content Include="components\Polymer_1x\bower_components\lovefield\README.md" />
+    <Content Include="components\Polymer_1x\bower_components\paper-slider\.bower.json" />
+    <Content Include="components\Polymer_1x\bower_components\paper-slider\bower.json" />
+    <Content Include="components\Polymer_1x\bower_components\paper-slider\README.md" />
+    <Content Include="components\Polymer_1x\bower_components\prism\.bower.json" />
+    <Content Include="components\Polymer_1x\bower_components\prism\bower.json" />
+    <Content Include="components\Polymer_1x\bower_components\prism\CHANGELOG.md" />
+    <Content Include="components\Polymer_1x\bower_components\prism\LICENSE" />
+    <Content Include="components\Polymer_1x\bower_components\prism\package.json" />
+    <Content Include="components\Polymer_1x\bower_components\prism\README.md" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\abap\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\abap\eol-comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\abap\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\abap\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\abap\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\abap\string-template_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\abap\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\actionscript\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\actionscript\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\apacheconf\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\apacheconf\directive-block_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\apacheconf\directive-flags_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\apacheconf\directive-inline_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\apacheconf\regex_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\apacheconf\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\apacheconf\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\apl\assignment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\apl\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\apl\constant_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\apl\dfn_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\apl\dyadic-operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\apl\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\apl\monadic-operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\apl\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\apl\statement_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\apl\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\apl\system-function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\applescript\class_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\applescript\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\applescript\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\applescript\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\applescript\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\applescript\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\aspnet\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\aspnet\page-directive_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autohotkey\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autohotkey\builtin_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autohotkey\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autohotkey\constant_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autohotkey\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autohotkey\important_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autohotkey\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autohotkey\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autohotkey\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autohotkey\selector_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autohotkey\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autohotkey\symbol_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autohotkey\tag_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autohotkey\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autoit\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autoit\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autoit\directive_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autoit\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autoit\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autoit\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autoit\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autoit\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autoit\url_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\autoit\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\bash\arithmetic_environment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\bash\command_substitution_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\bash\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\bash\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\bash\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\bash\shebang_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\bash\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\bash\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\basic\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\basic\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\basic\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\basic\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\basic\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\basic\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\batch\command_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\batch\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\batch\label_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\bison\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\bison\c_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\bison\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\bison\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\bison\property_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\bison\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\brainfuck\all_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\c+pure\c_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\clike\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\clike\class-name_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\clike\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\clike\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\clike\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\clike\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\clike\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\clike\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\coffeescript+haml\coffeescript_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\coffeescript+jade\coffeescript_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\coffeescript\block-regex_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\coffeescript\class-member_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\coffeescript\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\coffeescript\inline-javascript_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\coffeescript\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\coffeescript\property_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\coffeescript\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\cpp+pure\cpp_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\cpp\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\cpp\class-name_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\cpp\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\crystal\attribute_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\crystal\expansion_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\crystal\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\crystal\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\csharp+aspnet\directive_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\csharp\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\csharp\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\csharp\preprocessor_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\csharp\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\css!+css-extras\entity_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\css!+css-extras\hexcode_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\css!+css-extras\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\css!+css-extras\selector_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\css+haml\css+haml_usage.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\css+textile\css_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\css\atrule_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\css\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\css\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\css\important_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\css\property_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\css\selector_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\css\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\css\url_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\c\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\c\macro_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\c\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\c\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\dart\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\dart\metadata_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\dart\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\dart\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\diff\coord_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\diff\diff_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\docker\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\docker\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\docker\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\d\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\d\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\d\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\d\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\d\property_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\d\register_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\d\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\d\token-string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\eiffel\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\eiffel\char_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\eiffel\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\eiffel\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\eiffel\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\eiffel\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\eiffel\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\elixir\atom_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\elixir\attr-name_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\elixir\attribute_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\elixir\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\elixir\capture_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\elixir\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\elixir\issue775.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\elixir\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\elixir\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\elixir\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\elixir\regex_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\elixir\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\erlang\atom_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\erlang\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\erlang\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\erlang\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\erlang\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\erlang\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\erlang\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\erlang\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\erlang\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\fortran+pure\fortran_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\fortran\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\fortran\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\fortran\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\fortran\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\fortran\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\fortran\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\fsharp\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\fsharp\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\fsharp\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\fsharp\preprocessor_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\fsharp\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\gherkin\atrule_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\gherkin\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\gherkin\feature_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\gherkin\outline_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\gherkin\pystring_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\gherkin\scenario_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\gherkin\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\gherkin\table_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\gherkin\tag_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\git\command_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\git\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\git\commit_sha1_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\git\coord_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\git\diff_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\git\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\glsl\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\glsl\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\glsl\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\glsl\preprocessor_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\go\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\go\builtin_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\go\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\go\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\go\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\go\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\groovy\annotation_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\groovy\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\groovy\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\groovy\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\groovy\shebang_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\groovy\spock-block_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\groovy\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\haml\code_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\haml\doctype_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\haml\interpolation_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\haml\multiline-code_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\haml\multiline-comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\haml\tag_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\handlebars+jade\handlebars_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\handlebars\block_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\handlebars\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\handlebars\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\handlebars\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\handlebars\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\haskell\builtin_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\haskell\char_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\haskell\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\haskell\constant_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\haskell\hvariable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\haskell\import_statement_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\haskell\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\haskell\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\haskell\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\haskell\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\http\header-name_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\http\request-line_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\http\response-status_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\inform7\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\inform7\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\inform7\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\inform7\position_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\inform7\property_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\inform7\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\inform7\title_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\inform7\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\inform7\verb_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ini\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ini\important_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ini\key_value_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\jade\code_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\jade\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\jade\doctype_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\jade\flow-control_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\jade\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\jade\mixin_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\jade\multiline-plain-text_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\jade\multiline-script_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\jade\plain-text_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\jade\script_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\jade\tag_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\javascript+haml\javascript_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\javascript+http\javascript_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\javascript\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\javascript\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\javascript\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\javascript\regex_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\javascript\template-string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\java\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\java\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\java\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\jsx\tag_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\julia\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\julia\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\julia\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\julia\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\julia\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\julia\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\j\adverb_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\j\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\j\conjunction_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\j\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\j\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\j\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\j\verb_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\keyman\atrule_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\keyman\bold_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\keyman\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\keyman\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\keyman\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\keyman\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\keyman\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\keyman\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\keyman\tag_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\latex\cdata_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\latex\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\latex\equation_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\latex\headline_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\latex\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\latex\url_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\less+haml\less_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\less+jade\less_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\less\atrule_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\less\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\less\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\less\property_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\less\selector_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\lolcode\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\lolcode\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\lolcode\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\lolcode\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\lolcode\label_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\lolcode\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\lolcode\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\lolcode\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\lolcode\symbol_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\lolcode\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\makefile\builtin_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\makefile\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\makefile\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\makefile\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\makefile\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\makefile\symbol_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\makefile\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markdown+haml\markdown_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markdown+jade\markdown_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markdown\blockquote_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markdown\bold_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markdown\code_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markdown\hr_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markdown\italic_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markdown\list_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markdown\title_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markdown\url-reference_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markdown\url_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markup!+css\css_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markup!+javascript\javascript_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markup+actionscript\xml_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markup+css+wiki\table-tag_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markup+haml\markup_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markup+http\markup_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markup+jade\markup_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markup+javascript+csharp+aspnet\script_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markup+php\markup_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markup\cdata_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markup\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markup\doctype_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markup\entity_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markup\issue585.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markup\prolog_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markup\tag_attribute_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\markup\tag_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\matlab\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\matlab\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\matlab\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\matlab\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\matlab\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\matlab\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\mel\code_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\mel\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\mel\flag_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\mel\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\mel\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\mel\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\mel\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\mel\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\mel\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\mizar\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\mizar\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\mizar\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\mizar\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\mizar\parameter_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\mizar\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\monkey\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\monkey\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\monkey\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\monkey\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\monkey\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\monkey\preprocessor_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\monkey\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\monkey\type-char_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nasm\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nasm\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nasm\label_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nasm\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nasm\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nasm\register_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nasm\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nginx\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nginx\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nginx\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nim\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nim\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nim\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nim\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nim\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nim\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nsis\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nsis\important_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nsis\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nsis\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nsis\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nsis\property_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nsis\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\nsis\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\objectivec\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\objectivec\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\objectivec\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ocaml\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ocaml\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ocaml\directive_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ocaml\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ocaml\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ocaml\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ocaml\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ocaml\type_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\pascal\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\pascal\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\pascal\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\pascal\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\pascal\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\perl\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\perl\filehandle_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\perl\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\perl\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\perl\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\perl\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\perl\regex_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\perl\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\perl\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\perl\vstring_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\php!+php-extras\global_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\php!+php-extras\scope_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\php!+php-extras\this_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\php\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\php\constant_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\php\delimiter_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\php\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\php\package_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\php\property_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\php\shell-comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\php\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\powershell\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\powershell\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\powershell\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\powershell\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\powershell\namespace_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\powershell\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\powershell\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\powershell\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\processing\constant_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\processing\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\processing\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\processing\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\processing\type_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\prolog\builtin_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\prolog\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\prolog\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\prolog\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\prolog\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\prolog\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\prolog\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\pure\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\pure\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\pure\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\pure\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\pure\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\pure\special_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\pure\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\python\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\python\class-name_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\python\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\python\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\python\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\python\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\python\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\python\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\qore\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\qore\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\qore\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\qore\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\qore\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\qore\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\qore\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\qore\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\q\adverb_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\q\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\q\datetime_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\q\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\q\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\q\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\q\symbol_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\q\verb_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rest\command-line-option_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rest\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rest\directive_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rest\doctest-block_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rest\field_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rest\hr_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rest\inline_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rest\link-target_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rest\link_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rest\list-bullet_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rest\literal-block_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rest\quoted-literal-block_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rest\substitution-def_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rest\table_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rest\title_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rip\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rip\builtin_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rip\character_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rip\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rip\date_time_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rip\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rip\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rip\reference_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rip\regex_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rip\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rip\symbol_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ruby\builtin_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ruby\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ruby\constant_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ruby\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ruby\regex_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ruby\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ruby\symbol_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\ruby\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rust\attribute_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rust\closure-params_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rust\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rust\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rust\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rust\macro-rules_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rust\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rust\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\rust\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\r\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\r\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\r\ellipsis_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\r\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\r\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\r\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\r\percent-operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\r\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sass\atrule-line_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sass\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sass\property-line_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sass\selector_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sass\variable-line_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sas\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sas\datalines_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sas\datetime_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sas\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sas\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sas\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sas\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scala\builtin_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scala\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scala\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scala\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scala\symbol_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scheme\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scheme\builtin_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scheme\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scheme\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scheme\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scheme\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scheme\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scheme\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scss+haml\scss_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scss+jade\scss_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scss\atrule_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scss\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scss\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scss\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scss\null_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scss\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scss\placeholder_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scss\selector_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scss\statement_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scss\url_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\scss\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\smalltalk\block-arguments_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\smalltalk\character_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\smalltalk\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\smalltalk\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\smalltalk\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\smalltalk\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\smalltalk\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\smalltalk\symbol_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\smalltalk\temporary-variables_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\smarty\attr-name_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\smarty\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\smarty\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\smarty\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\smarty\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\smarty\smarty-comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\smarty\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\smarty\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sql\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sql\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sql\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sql\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sql\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sql\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\sql\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\stylus+jade\stylus_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\stylus\atrule-declaration_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\stylus\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\stylus\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\stylus\func_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\stylus\hexcode_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\stylus\important_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\stylus\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\stylus\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\stylus\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\stylus\property-declaration_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\stylus\selector_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\stylus\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\stylus\url_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\stylus\variable-declaration_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\swift\atrule_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\swift\builtin_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\swift\constant_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\swift\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\swift\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\swift\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\tcl\builtin_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\tcl\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\tcl\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\tcl\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\tcl\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\tcl\scope_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\tcl\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\tcl\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\textile\acronym_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\textile\block-tag_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\textile\footnote_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\textile\image_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\textile\inline_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\textile\link-ref_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\textile\link_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\textile\list_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\textile\mark_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\textile\table_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\twig+jade\twig_inclusion.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\twig\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\twig\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\twig\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\twig\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\twig\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\twig\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\typescript\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\verilog\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\verilog\constant_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\verilog\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\verilog\important_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\verilog\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\verilog\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\verilog\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\verilog\property_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\verilog\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\vhdl\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\vhdl\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\vhdl\constant_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\vhdl\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\vhdl\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\vhdl\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\vhdl\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\vhdl\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\vhdl\vhdl-vectors_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\vim\builtin_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\vim\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\vim\function_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\vim\keyword_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\vim\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\vim\operator_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\vim\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\wiki\block-comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\wiki\emphasis_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\wiki\heading_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\wiki\hr_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\wiki\nowiki_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\wiki\symbol_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\wiki\url_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\wiki\variable_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\boolean_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\comment_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\datetime_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\directive_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\important_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\key_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\null_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\number_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\scalar_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\string_feature.test" />
+    <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\tag_feature.test" />
+    <Content Include="components_riot\components\pages\students\table\student_table.tag" />
+    <Content Include="components_riot\components\toast\toast.tag" />
+    <Content Include="components_riot\components\echo_html\echo_html.tag" />
+    <Content Include="components_riot\components\echo_tag\echo_tag.tag" />
+    <Content Include="components_riot\components\header\header.tag" />
+    <Content Include="components_riot\components\header_toolbar\header_toolbar.tag" />
     <None Include="content\kendo\2013.2.716\Black\editor.png" />
     <None Include="content\kendo\2013.2.716\Black\imagebrowser.png" />
     <None Include="content\kendo\2013.2.716\Black\loading-image.gif" />
@@ -5020,9 +5956,13 @@
     <Content Include="content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="css\utilities\mixins.css" />
     <Content Include="css\utilities\vars.css" />
+    <Content Include="Eula.htm" />
     <Content Include="images\antarctica_283x35.png" />
     <Content Include="images\bg\ui-bg_flat_black_40x100.png" />
+    <TypeScriptCompile Include="components\behaviors\closest\closest.ts" />
     <TypeScriptCompile Include="components\behaviors\pagination\pagination.ts" />
+    <TypeScriptCompile Include="components\behaviors\template_helpers\template_helpers.ts" />
+    <TypeScriptCompile Include="components\behaviors\toast\toast.ts" />
     <TypeScriptCompile Include="components\components\animations\animations.ts" />
     <TypeScriptCompile Include="components\components\autoComplete_1x\autoComplete.ts" />
     <TypeScriptCompile Include="components\components\autoComplete\autoComplete.ts" />
@@ -5039,6 +5979,12 @@
     <TypeScriptCompile Include="components\form\inputs\required.ts" />
     <TypeScriptCompile Include="components\form\inputs\rtf\rtf.ts" />
     <TypeScriptCompile Include="components\models\Students.ts" />
+    <TypeScriptCompile Include="components\pages\Home\editHomePage.ts" />
+    <TypeScriptCompile Include="components\pages\Home\index.ts" />
+    <TypeScriptCompile Include="components\pages\Home\indexHasDomain\addEdit.ts" />
+    <TypeScriptCompile Include="components\pages\Home\indexHasDomain\addLink\addLink.ts" />
+    <TypeScriptCompile Include="components\pages\Home\indexHasDomain\custom.ts" />
+    <TypeScriptCompile Include="components\pages\Home\indexHasDomain\flasher\flasher.ts" />
     <TypeScriptCompile Include="components\pages\Student\New\new.ts" />
     <TypeScriptCompile Include="components\pages\Student\Table\old_save\table - Copy.ts" />
     <TypeScriptCompile Include="components\pages\Student\Table\old_save\table.ts" />
@@ -5046,16 +5992,13 @@
     <TypeScriptCompile Include="components\pages\Student\Table\table.ts" />
     <TypeScriptCompile Include="components\pages\Summary\map\map.ts" />
     <TypeScriptCompile Include="components\pages\Summary\report\report.ts" />
-    <TypeScriptCompile Include="components\pages\Home\index.ts" />
-    <TypeScriptCompile Include="components\pages\Home\editHomePage.ts" />
-    <TypeScriptCompile Include="components\pages\Home\indexHasDomain\addEdit.ts" />
-    <TypeScriptCompile Include="components\pages\Home\indexHasDomain\addLink\addLink.ts" />
-    <TypeScriptCompile Include="components\pages\Home\indexHasDomain\custom.ts" />
-    <TypeScriptCompile Include="components\pages\Home\indexHasDomain\flasher\flasher.ts" />
     <TypeScriptCompile Include="components\popup\basePopup.ts" />
+    <TypeScriptCompile Include="components\resources\js\student_in_out_excel_2.ts" />
     <TypeScriptCompile Include="components\resources\js\student_table_old.ts" />
     <TypeScriptCompile Include="components\resources\js\student_table.ts" />
     <TypeScriptCompile Include="components\resources\js\student_in_out_excel.ts" />
+    <TypeScriptCompile Include="components\typeDiff\es6-promise.d.ts" />
+    <TypeScriptCompile Include="components\typeDiff\lovefield.d.ts" />
     <TypeScriptCompile Include="components\typeDiff\myTypes.d.ts" />
     <TypeScriptCompile Include="components\typeDiff\rx\rx.aggregates.d.ts" />
     <TypeScriptCompile Include="components\typeDiff\rx\rx.all.d.ts" />
@@ -5163,10 +6106,89 @@
     <None Include="Microsoft.WindowsAzure.Caching\ClientPerfCountersInstaller.exe.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Properties\PublishProfiles\Atlantic_Server.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Content Include="components_riot\bower_components\firebase\firebase-debug.js" />
+    <Content Include="components_riot\bower_components\firebase\firebase.js" />
+    <Content Include="components_riot\bower_components\lodash\lodash.js" />
+    <Content Include="components_riot\bower_components\lodash\lodash.min.js" />
+    <Content Include="components_riot\bower_components\riot-route\dist\amd.route.js" />
+    <Content Include="components_riot\bower_components\riot-route\dist\amd.route.min.js" />
+    <Content Include="components_riot\bower_components\riot-route\dist\riot.route.js" />
+    <Content Include="components_riot\bower_components\riot-route\dist\route.js" />
+    <Content Include="components_riot\bower_components\riot-route\dist\route.min.js" />
+    <Content Include="components_riot\bower_components\riot-route\lib\index.js" />
+    <Content Include="components_riot\bower_components\RiotControl\binary_demo\binary-app.js" />
+    <Content Include="components_riot\bower_components\RiotControl\binary_demo\calcstore.js" />
+    <Content Include="components_riot\bower_components\RiotControl\binary_demo\index.html" />
+    <Content Include="components_riot\bower_components\RiotControl\binary_demo\js\es5-shim.js" />
+    <Content Include="components_riot\bower_components\RiotControl\binary_demo\js\html5-shiv.js" />
+    <Content Include="components_riot\bower_components\RiotControl\binary_demo\js\riot.min.js" />
+    <Content Include="components_riot\bower_components\RiotControl\binary_demo\riotcontrol.js" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\index.html" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\js\es5-shim.js" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\js\html5-shiv.js" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\js\riot.js" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\riotcontrol.js" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\todo.css" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\todo.js" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\todoapp.js" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\todostore.js" />
+    <Content Include="components_riot\bower_components\RiotControl\LICENSE.txt" />
+    <Content Include="components_riot\bower_components\RiotControl\riotcontrol.js" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\index.html" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\item-app.js" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\item-detail.js" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\itemstore.js" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\js\es5-shim.js" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\js\html5-shiv.js" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\js\riot.js" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\riotcontrol.js" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\todo.css" />
+    <Content Include="components_riot\bower_components\riot\compiler.js" />
+    <Content Include="components_riot\bower_components\riot\compiler.min.js" />
+    <Content Include="components_riot\bower_components\riot\riot+compiler.js" />
+    <Content Include="components_riot\bower_components\riot\riot+compiler.min.js" />
+    <Content Include="components_riot\bower_components\riot\riot.js" />
+    <Content Include="components_riot\bower_components\riot\riot.min.js" />
+    <Content Include="components_riot\components\content\content.tag" />
+    <Content Include="components_riot\components\drop_down\drop_down.tag" />
+    <Content Include="components_riot\components\form_elements\is_button\is_button.tag" />
+    <Content Include="components_riot\components\form_elements\textbox\textbox.tag" />
+    <Content Include="components_riot\components\is_dialog\is_dialog.tag">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="components_riot\components\is_loading\is_loading.tag" />
+    <Content Include="components_riot\components\layout\layout.tag" />
+    <Content Include="components_riot\components\pages\page_not_found\page_not_found.tag" />
+    <Content Include="components_riot\bower.json" />
+    <Content Include="components_riot\bower_components\firebase\.bower.json" />
+    <Content Include="components_riot\bower_components\firebase\bower.json" />
+    <Content Include="components_riot\bower_components\firebase\README.md" />
+    <Content Include="components_riot\bower_components\lodash\.bower.json" />
+    <Content Include="components_riot\bower_components\lodash\bower.json" />
+    <Content Include="components_riot\bower_components\lodash\LICENSE" />
+    <Content Include="components_riot\bower_components\riot-route\.bower.json" />
+    <Content Include="components_riot\bower_components\riot-route\bower.json" />
+    <Content Include="components_riot\bower_components\riot-route\doc\README.md" />
+    <Content Include="components_riot\bower_components\riot-route\LICENSE" />
+    <Content Include="components_riot\bower_components\riot-route\Makefile" />
+    <Content Include="components_riot\bower_components\riot-route\package.json" />
+    <Content Include="components_riot\bower_components\riot-route\README.md" />
+    <Content Include="components_riot\bower_components\RiotControl\.bower.json" />
+    <Content Include="components_riot\bower_components\RiotControl\binary_demo\binary-app.tag" />
+    <Content Include="components_riot\bower_components\RiotControl\bower.json" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\todo.tag" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\todoapp.tag" />
+    <Content Include="components_riot\bower_components\RiotControl\package.json" />
+    <Content Include="components_riot\bower_components\RiotControl\README.md" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\item-app.tag" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\item-detail.tag" />
+    <Content Include="components_riot\bower_components\riot\.bower.json" />
+    <Content Include="components_riot\bower_components\riot\bower.json" />
     <None Include="scripts\jquery\jquery-1.9.1.intellisense.js" />
     <Content Include="images\icons\user\male-and-female-256.png" />
     <Content Include="images\placeholders\ExpertiseMock.png" />
@@ -5176,9 +6198,17 @@
     <None Include="scripts\oss\D3-LICENSE.txt" />
     <TypeScriptCompile Include="scripts\app\Routes.d.ts" />
     <TypeScriptCompile Include="scripts\app\DataCacher.ts" />
+    <Content Include="components_riot\components\drop_down\drop_down.js" />
+    <Content Include="components_riot\components\form_elements\is_button\is_button.js" />
+    <Content Include="components_riot\components\form_elements\textbox\textbox.js" />
+    <Content Include="components_riot\components\is_dialog\is_dialog.js" />
+    <Content Include="components_riot\components\is_loading\is_loading.js" />
+    <Content Include="components_riot\components\layout\layout.js" />
+    <Content Include="components_riot\components\pages\page_not_found\page_not_found.js" />
     <None Include="Microsoft.WindowsAzure.Caching\PerformanceCounters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="Readme.html" />
     <Content Include="scripts\app\DataCacher.js">
       <DependentUpon>DataCacher.ts</DependentUpon>
     </Content>
@@ -6666,6 +7696,12 @@
     <Content Include="styles\sass\sheets\people\my-profile.css">
       <DependentUpon>my-profile.scss</DependentUpon>
     </Content>
+    <Content Include="styles\tenants\clemson.edu\layout.min.css">
+      <DependentUpon>layout.css</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\hpu.edu\layout.min.css">
+      <DependentUpon>layout.css</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\hpu.edu\logo.png" />
     <Content Include="styles\tenants\hpu.edu\banner-logo.png" />
     <Content Include="styles\tenants\hpu.edu\designs.css">
@@ -6694,7 +7730,13 @@
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
     <Content Include="styles\tenants\clemson.edu\logo.png" />
+    <Content Include="styles\tenants\lehigh.edu\layout.min.css">
+      <DependentUpon>layout.css</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\lehigh.edu\logo.png" />
+    <Content Include="styles\tenants\napier.ac.uk\layout.min.css">
+      <DependentUpon>layout.css</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\napier.ac.uk\logo.png" />
     <Content Include="styles\tenants\napier.ac.uk\banner-logo.png" />
     <Content Include="styles\tenants\napier.ac.uk\designs.css">
@@ -6709,12 +7751,45 @@
     <Content Include="styles\tenants\napier.ac.uk\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
+    <Content Include="styles\tenants\suny.edu\layout.min.css">
+      <DependentUpon>layout.css</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\suny.edu\logo.png" />
+    <Content Include="styles\tenants\testshib.org\layout.min.css">
+      <DependentUpon>layout.css</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\testshib.org\logo.png" />
+    <Content Include="styles\tenants\uc.edu\designs.min.css">
+      <DependentUpon>designs.css</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\uc.edu\forms.min.css">
+      <DependentUpon>forms.css</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\uc.edu\ie8.min.css">
+      <DependentUpon>ie8.css</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\uc.edu\layout.min.css">
+      <DependentUpon>layout.css</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\uc.edu\logo.png" />
+    <Content Include="styles\tenants\umn.edu\layout.min.css">
+      <DependentUpon>layout.css</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\usf.edu\layout.min.css">
+      <DependentUpon>layout.css</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\usf.edu\logo.png" />
+    <Content Include="styles\tenants\uwi.edu\layout.min.css">
+      <DependentUpon>layout.css</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\uwi.edu\logo.png" />
+    <Content Include="styles\tenants\uwm.edu\layout.min.css">
+      <DependentUpon>layout.css</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\uwm.edu\logo.png" />
+    <Content Include="styles\tenants\westernu.ca\layout.min.css">
+      <DependentUpon>layout.css</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\westernu.ca\logo.png" />
     <Content Include="styles\tenants\westernu.ca\banner-logo.png" />
     <Content Include="styles\tenants\westernu.ca\designs.css">
@@ -6861,6 +7936,9 @@
     <Content Include="styles\tenants\usf.edu\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
+    <Content Include="styles\tenants\_default\layout.min.css">
+      <DependentUpon>layout.css</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\_default\logo.png" />
     <Content Include="styles\tenants\_default\designs.css">
       <DependentUpon>designs.scss</DependentUpon>
@@ -6985,6 +8063,7 @@
     <Content Include="Views\Admin\_TenantLogos.cshtml" />
     <Content Include="Views\Agreements\_Settings.cshtml" />
     <Content Include="Views\Agreements\_SettingsSidebarNav.cshtml" />
+    <Content Include="Views\AdminFirebase\Index.cshtml" />
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />
@@ -7048,6 +8127,9 @@
     <Content Include="Views\Students\_FormFileAttachments.cshtml" />
     <Content Include="Views\Students\Table_old.cshtml" />
     <Content Include="Views\Shared\_Layout3.cshtml" />
+    <Content Include="Views\Identity\SignIn_2.cshtml" />
+    <Content Include="Views\Shared\_Layout_riot.cshtml" />
+    <Content Include="Views\Students\Table_riot.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -7298,7 +8380,18 @@
     <Folder Include="components\Polymer\bower_components\web-animations-next\node_modules\chai\" />
     <Folder Include="components\Polymer\bower_components\web-animations-next\node_modules\mocha\" />
     <Folder Include="components\Polymer_1x\bower_components\gold-elements\demo\" />
+    <Folder Include="components\Polymer_1x\bower_components\lovefield\codelabs\stock_analyzer\src\common\" />
+    <Folder Include="components\Polymer_1x\bower_components\lovefield\codelabs\stock_analyzer\src\final\" />
+    <Folder Include="components\Polymer_1x\bower_components\lovefield\codelabs\stock_analyzer\src\step1\" />
+    <Folder Include="components\Polymer_1x\bower_components\lovefield\codelabs\stock_analyzer\src\step2\" />
+    <Folder Include="components\Polymer_1x\bower_components\lovefield\codelabs\stock_analyzer\src\step3\" />
+    <Folder Include="components\Polymer_1x\bower_components\lovefield\codelabs\stock_analyzer\src\step4\" />
+    <Folder Include="components\Polymer_1x\bower_components\lovefield\codelabs\stock_analyzer\src\step5\" />
+    <Folder Include="components\Polymer_1x\bower_components\lovefield\codelabs\stock_analyzer\src\step6\" />
+    <Folder Include="components\Polymer_1x\bower_components\lovefield\codelabs\stock_analyzer\src\step7\" />
+    <Folder Include="components\Polymer_1x\bower_components\platinum-push-messaging\demo\" />
     <Folder Include="components\Polymer_1x\bower_components\prism\examples\" />
+    <Folder Include="components_riot\components\utilities\" />
     <Folder Include="content\mail\" />
     <Folder Include="css\NewFolder1\" />
   </ItemGroup>
@@ -7329,7 +8422,6 @@
     <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE;DEBUG;AZURE</DefineConstants>
     <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -7338,7 +8430,6 @@
     <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -7347,7 +8438,7 @@
     <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -7403,6 +8494,11 @@
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
     <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
