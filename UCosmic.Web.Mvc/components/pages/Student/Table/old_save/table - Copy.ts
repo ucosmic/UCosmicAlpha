@@ -487,12 +487,6 @@ Polymer({
     }
 
     , mobilities_changed: function (new_value, old_value) {
-        //update page list /index.html#!/xmenu/search
-        //this.page_list = _.map(new_value, (_page: any) => {
-        //    if (_page.type != 'generic') {
-        //        return { 'name': _page.name, 'url': '/index.html#!/' + this.restaurant_name + '/' + _page.name.replace(' ', '_'), 'type': _page.type };
-        //    }
-        //});
     }
 
     , is_false: function (value) {

@@ -638,7 +638,7 @@ Polymer({
             _this.mobilities = _.map(_this.mobility_snapshot, function (value, index) {
                 value.status = value.status == 'IN' ? "Incoming" : "Outgoing";
                 value.affiliation_name = _this.affiliation_list[value.affiliation] ? _this.affiliation_list[value.affiliation].text : "Not Reported";
-                value.student_affiliation_name = _this.student_affiliation_list[value.student_affiliation] ? _this.student_affiliation_list[value.student_affiliation].text : "Not Reported";
+                value.student_affiliation_name = _this.student_affiliation_list[value.student_affiliation] ? _this.student_affiliation_list[value.student_affiliation].text : "No College Designated";
                 value.foreign_affiliation_name = _this.foreign_affiliation_list[value.foreign_affiliation] ? _this.foreign_affiliation_list[value.foreign_affiliation].text : "Not Reported";
                 return value;
             });
@@ -648,7 +648,7 @@ Polymer({
             _this.mobilities = _.map(_this.mobility_snapshot, function (value, index) {
                 value.status = value.status == 'IN' ? "Incoming" : "Outgoing";
                 value.affiliation_name = _this.affiliation_list[value.affiliation] ? _this.affiliation_list[value.affiliation].text : "Not Reported";
-                value.student_affiliation_name = _this.student_affiliation_list[value.student_affiliation] ? _this.student_affiliation_list[value.student_affiliation].text : "Not Reported";
+                value.student_affiliation_name = _this.student_affiliation_list[value.student_affiliation] ? _this.student_affiliation_list[value.student_affiliation].text : "No College Designated";
                 value.foreign_affiliation_name = _this.foreign_affiliation[value.foreign_affiliation] ? _this.foreign_affiliation[value.foreign_affiliation].text : "Not Reported";
                 return value;
             });
@@ -950,10 +950,10 @@ Polymer({
             }
         });
         if (x) {
-            return x.text ? x.text : 'Not Reported';
+            return x.text ? x.text : count == 'student_affiliation' ? 'College Not Reported' : 'Not Reported';
         }
         else {
-            return 'Not Reported';
+            return count == 'student_affiliation' ? 'College Not Reported' : 'Not Reported';
         }
     },
     create_array: function (name, show_all) {
