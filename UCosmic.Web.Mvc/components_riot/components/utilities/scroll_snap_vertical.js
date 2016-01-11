@@ -1,4 +1,4 @@
-xmenu.scroll_snap_vertical = function (container, elements) {
+ucosmic.scroll_snap_vertical = function (container, elements) {
     "use strict";
     container.scrollTop = 1;
     setTimeout(function () {
@@ -143,7 +143,7 @@ xmenu.scroll_snap_vertical = function (container, elements) {
             scroll_to = scroll_to < 100 ? scroll_top == 0 ? elements[elements.length - 1].offsetTop - 1 : 1 : scroll_to;
             last_scroll_position = scroll_to;
             //container.scrollTo(0,scroll_to);
-            if (xmenu.is_ie) {
+            if (ucosmic.is_ie) {
                 container.scrollTop = scroll_to;
                 event.preventDefault();
                 setTimeout(function () {
