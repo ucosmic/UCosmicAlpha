@@ -175,6 +175,13 @@ Polymer('is-page-summary-report', {
         this.isAjaxing = false;
         if (!response.detail.response.error) {
             this.agreementTypeCounts = response.detail.response.items;
+            //this.agreementTypeCounts.forEach(function (element, index, array){
+
+            //})
+            this.agreementTypeCounts = this.agreementTypeCounts.map(function (obj) {
+                obj.type = obj.type.replace(' Agreement', '');
+                return obj;
+            });
             this.agreement_total_location_count = response.detail.response.locationCount;
             this.agreement_total_agreement_count = response.detail.response.typeCount
             //this.agreement_total_location_count = _.sum(this.agreementTypeCounts, function (agreement: any) {
