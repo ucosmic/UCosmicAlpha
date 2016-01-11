@@ -1,21 +1,21 @@
 {
-  "name": "X-Menu",
+  "name": "UCosmic",
   "authors": [
-    "timbow574521 <timtwillis@gmail.com>"
+    "timbow574521 <admin@ucosmic.com>"
   ],
-  "description": "Online Food Ordering System",
+  "description": "International engagement",
   "main": "index.html",
   "moduleType": [],
   "keywords": [
     "Online",
-    "food",
-    "ordering",
+    "international",
+    "students",
     "system",
-    "xmenu",
-    "x-menu"
+    "university",
+    "college"
   ],
   "license": "MIT",
-  "homepage": "xmenu.menu",
+  "homepage": "alpha.ucosmic.com",
   "private": true,
   "ignore": [
     "**/.*",
