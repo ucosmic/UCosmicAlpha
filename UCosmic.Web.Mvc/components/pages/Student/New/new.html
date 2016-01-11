@@ -17,12 +17,12 @@
             <template is="dom-if" if="{{!can_start_file_processing}}">
                 <span style="font-size:24px; margin:20px; background-color:transparent;" class="tennant_colors">Loading...</span>
             </template>
-            <is-columns_shown columns="{{columns}}" id="columns" style="width:230px;" text="Update Default Counts"></is-columns_shown>
+            <is-columns_shown columns="{{columns}}" id="columns" style="width:230px; height: 40px;" text="Update Default Counts"></is-columns_shown>
 
             <is-auto-ddl id="term_auto_ddl" style=" margin-bottom:20px; width: 220px;" selected="{{term_search}}" selectedid="{{selected_term_id}}" label="Choose default terms" on-selected-updated="term_selected"
                          on-search-updated="term_list_search" list="{{term_auto_list}}">
             </is-auto-ddl>
-            <div class="layout horizontal tennant_colors" style="border-radius: 10px; padding: 0 10px; margin-bottom: 20px;">
+            <div class="layout horizontal " style="border-radius: 10px; padding: 0 10px; margin-bottom: 20px;  background-color:#ddd;">
                 <template is="dom-repeat" items="[[default_terms]]" as="term" id="default_terms">
                     <paper-item class="list-item tennant_colors_highlight" style="width: 100px; margin-right:20px;">
                         <span>[[term]]</span>

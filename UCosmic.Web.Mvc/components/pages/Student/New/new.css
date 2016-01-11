@@ -9,6 +9,11 @@ h1, h2, h3, h4, h5, h6 {
 .on-left {
   float: left; }
 
+iron-icon.icon_button {
+  margin: 10px 5px;
+  cursor: pointer;
+  /* pointer-events: none; */ }
+
 /*header {
     margin: 0 0 16px;
     padding: 0;
