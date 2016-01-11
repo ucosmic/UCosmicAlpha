@@ -10,8 +10,8 @@ riot.mount('layout') // Kickoff the Riot app.
 
 var router = function(page,id) {
     function change_page(current_page){
-        RiotControl.trigger('page_changed', current_page, xmenu.last_page)
-        xmenu.last_page = current_page;
+        RiotControl.trigger('page_changed', current_page, ucosmic.last_page)
+        ucosmic.last_page = current_page;
     }
     page = !page ? 'home' : page;
     change_page(page);

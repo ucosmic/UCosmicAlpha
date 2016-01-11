@@ -1,4 +1,4 @@
-var ucosmic = {last_page: '', fire_ref: undefined, tags_loaded: [], user: {}};
+//var ucosmic = {last_page: '', fire_ref: undefined, tags_loaded: [], user: {}};
 ucosmic.load_element = function(value){
     var element = value.srcElement.src.substring(value.srcElement.src.lastIndexOf('/')+1);
     var tag_name = element.substr(0, element.indexOf('.'));
@@ -11,6 +11,14 @@ ucosmic.load_js = function(url, implementationCode, location){
     scriptTag.onload = implementationCode;
     scriptTag.onreadystatechange = implementationCode;
     location.appendChild(scriptTag);
+};
+ucosmic.load_css = function(url, implementationCode, location){
+    var fileref=document.createElement("link");
+    fileref.setAttribute("rel", "stylesheet");
+    fileref.setAttribute("type", "text/css");
+    fileref.setAttribute("href", url);
+    //fileref.onreadystatechange = implementationCode;
+    location.appendChild(fileref);
 };
 ucosmic.load_tag = function(url, location){
     if(ucosmic.tags_loaded.length == 0 || ucosmic.tags_loaded.indexOf(url) == -1){
