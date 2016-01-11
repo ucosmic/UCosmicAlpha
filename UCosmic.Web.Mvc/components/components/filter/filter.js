@@ -47,6 +47,7 @@ Polymer({
         }
     },
     attached: function () {
+        this.toggle();
     },
     change_page: function () {
         this.toggle_nav();

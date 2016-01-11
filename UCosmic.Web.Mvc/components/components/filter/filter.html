@@ -9,7 +9,7 @@
 
     <template>
 
-        <paper-material elevation="2" id="filter_button" class="tennant_colors" on-click="toggle">
+        <paper-material elevation="2" id="filter_button" class="" on-click="toggle" style=" background-color:#ddd;">
             <iron-icon icon="filter:filter-list" class="icon_button"></iron-icon>
         </paper-material>
         <div style="margin: 20px;">
@@ -32,7 +32,7 @@
 
                 <div class="layout vertical filter_container" id="filter_container" style="text-align:left; position:relative;  bottom:10px; right:330px;">
                     <paper-material elevation="2" id="filter" style="border-radius:20px; width:310px;">
-                        <div class="tennant_colors layout vertical" style=" padding: 0 20px 20px 0; border-radius: 20px;">
+                        <div class=" layout vertical" style=" padding: 0 20px 20px 0; border-radius: 20px; background-color:#ddd;">
                             <div style=" overflow:visible;position: absolute; width: 270px;" class="layout horizontal end-justified" on-click="toggle">
                                 <iron-icon style="position:relative; right: -36px;" icon="filter:close" id="close_icon" class="icon_button"></iron-icon>
                             </div>

@@ -89,6 +89,7 @@ Polymer('is-side-filter', {
             this.style.position = 'relative';
             this.style.right = '';
         }
+        this.toggle_menu();
     },
     toggle_menu: function (e) {
         //this.fadeOut(this.$.menu_icon, 100);

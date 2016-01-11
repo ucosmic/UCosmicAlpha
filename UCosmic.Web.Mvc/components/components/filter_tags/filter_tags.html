@@ -10,7 +10,7 @@
     <link href="filter_tags.css" rel="stylesheet" />
     <template>
 
-        <paper-material elevation="2" id="filter_tags_button" class="tennant_colors" on-click="toggle" style="cursor: pointer;">
+        <paper-material elevation="2" id="filter_tags_button" class="" on-click="toggle" style="cursor: pointer; background-color:#ddd;">
             <div style="padding: 0 0 0 8px;">Filter Tags(<span>[[tags_count]]</span>)<iron-icon icon="filter_tags:apps" class="icon_button"></iron-icon></div>
         </paper-material>
         <div style="height: 40px;">
@@ -18,7 +18,7 @@
                 <div class="layout vertical filter_container" id="filter_container" style="text-align:left; position:relative;  bottom:30px; left: 20px;">
                 <!--<div class="layout vertical filter_container" id="filter_container" style="text-align:left; position:relative;  bottom:30px; right: 45px;">-->
                     <div id="filter" style="border-radius:20px; width:310px; right: 20px;height:0;">
-                        <div class="tennant_colors layout vertical" style=" padding: 20px; border-radius: 20px; box-shadow: 2px 2px 5px #888888;">
+                        <div class=" layout vertical" style=" padding: 20px; border-radius: 20px; box-shadow: 2px 2px 5px #888888; background-color:#ddd;">
                             <div style=" overflow:visible;position: absolute; width: 270px;" class="layout horizontal end-justified" on-click="toggle">
                                 <iron-icon style="position:relative; top:-16px;  right: -16px;" icon="filter_tags:close" id="close_icon" class="icon_button"></iron-icon>
                             </div>

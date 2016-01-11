@@ -62,6 +62,7 @@ Polymer({
         //this.$.filter.style.transform = 'scale(0,0)';
         //this.$.filter.style.overflow = 'hidden';
         //this.toggle_nav();
+        this.toggle();
     },
     change_page: function(){
       this.toggle_nav();
