@@ -1,11 +1,11 @@
 
 "use strict";
-ucosmic.add_style = function(content, param){
-    if(!ucosmic.styles_loaded){
-        ucosmic.styles_loaded = [];
+ucosmic.add_style = function(content, name){
+    if(!ucosmic.tennant_styles_loaded){
+        ucosmic.tennant_styles_loaded = [];
     }
-    if(ucosmic.styles_loaded.indexOf(param) === -1){
-        ucosmic.styles_loaded.push(param);
+    if(ucosmic.tennant_styles_loaded.indexOf(name) === -1){
+        ucosmic.tennant_styles_loaded.push(name);
         var style = document.createElement('style');
         style.type = 'text/css';
         style.innerHTML = content;
