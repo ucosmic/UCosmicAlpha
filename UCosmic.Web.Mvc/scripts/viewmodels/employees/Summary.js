@@ -108,9 +108,8 @@ var Employees;
                     var establishmentId = _this.establishmentId();
                     if (!areBindingsApplied || !hasTenancyData || !selectedTenant || selectedTenant == establishmentId)
                         return;
-                    $.when(_this.placeData.reload(), _this.activityCountsData.reload()).done(function () {
-                        _this.establishmentId(selectedTenant);
-                    });
+                    _this.establishmentId(selectedTenant);
+                    _this._reloadPlaceData();
                 });
                 this.tenantOptions = ko.observableArray();
                 this.establishmentData = new App.DataCacher(function () {
@@ -331,15 +330,44 @@ var Employees;
                 // calling .ready() on placeData invokes this
                 var _this = this;
                 var settings = settings || {};
-                var establishmentId = this.selectedTenant() ? this.selectedTenant() : this.establishmentId();
-                var url = '/api/' + this.settings.tenantId + '/employees/snapshot/' + establishmentId;
+                var establishmentId = this.establishmentId() ? this.establishmentId() : this.selectedTenant();
+                var url = '/api/' + this.settings.tenantId + '/employees/snapshot/' + establishmentId + '/' + this.placeId();
                 settings.url = url;
                 this.geoChartSpinner.start();
                 $.ajax(settings)
                     .done(function (response) {
-                    _this.hasPlaceData(response && response.counts.length > 0);
-                    _this.placeData.cached = response;
+                    _this.hasPlaceData(response && response.counts.length != undefined);
+                    _this.placeData.cached = response.counts;
                     _this.placeData.resolve(response);
+                })
+                    .fail(function (xhr) {
+                })
+                    .always(function () {
+                    _this.geoChartSpinner.stop();
+                });
+            };
+            Summary.prototype._reloadPlaceData = function () {
+                // calling .ready() on placeData invokes this
+                var _this = this;
+                var settings = settings || {};
+                var establishmentId = this.establishmentId() ? this.establishmentId() : this.selectedTenant();
+                var url = '/api/' + this.settings.tenantId + '/employees/snapshot/' + establishmentId + '/' + this.placeId();
+                settings.url = url;
+                this.geoChartSpinner.start();
+                this._onPlaceSelected();
+                $.ajax(settings)
+                    .done(function (response) {
+                    _this.hasPlaceData(response && response.counts.length != undefined);
+                    _this.placeData.cached = response.counts;
+                    _this.placeData.resolve(response);
+                    var place = _this._getPlaceById(_this.placeId());
+                    _this._loadActivityCounts();
+                    var optionOverrides = _this._getGeoChartOptions();
+                    optionOverrides.region = !_this.placeId() || _this.placeId() == 1 || !place || !place.countryCode
+                        ? 'world' : place.countryCode;
+                    _this.draw_place_data(response, false, optionOverrides);
+                    _this.draw_activity_type_data(response, false);
+                    _this.draw_activity_year_data(response, false);
                 })
                     .fail(function (xhr) {
                 })
@@ -350,14 +378,14 @@ var Employees;
             Summary.prototype._getPlaceById = function (placeId) {
                 var place = Enumerable.From(this.placeData.cached)
                     .FirstOrDefault(undefined, function (x) {
-                    return x.placeId == placeId;
+                    return x.id == placeId;
                 });
                 return place;
             };
             Summary.prototype._getPlaceByName = function (placeName) {
                 var place = Enumerable.From(this.placeData.cached)
                     .FirstOrDefault(undefined, function (x) {
-                    return x.placeName == placeName;
+                    return x.name == placeName;
                 });
                 return place;
             };
@@ -512,9 +540,9 @@ var Employees;
                 if (placeId != 1 && areBindingsApplied) {
                     $.when(this.placeData).then(function () {
                         var place = _this._getPlaceById(placeId);
-                        _this.selectedPlaceSummary.personCount(place.activityPersonIds.length.toString());
-                        _this.selectedPlaceSummary.activityCount(place.activityIds.length.toString());
-                        _this.selectedPlaceSummary.locationCount(place.placeName);
+                        _this.selectedPlaceSummary.personCount(place.peopleCount.toString());
+                        _this.selectedPlaceSummary.activityCount(place.count.toString());
+                        _this.selectedPlaceSummary.locationCount(place.name);
                     });
                 }
                 else if (areBindingsApplied) {
@@ -525,6 +553,7 @@ var Employees;
             };
             Summary.prototype.clearPlaceSelection = function () {
                 this.placeId(1);
+                this._reloadPlaceData();
             };
             Summary.prototype._getGeoChartOptions = function (overrides) {
                 if (!this._geoChartGradientLo)
@@ -580,6 +609,28 @@ var Employees;
                 }
                 return promise;
             };
+            Summary.prototype.draw_place_data = function (places, needsRedraw, optionOverrides) {
+                var _this = this;
+                if (needsRedraw) {
+                    this._drawGeoChart();
+                    return;
+                }
+                var isPivotPeople = this.isPivotPeople();
+                this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(isPivotPeople ? 'People' : 'Activities'));
+                this._geoChartDataTable.removeRows(0, this._geoChartDataTable.getNumberOfRows());
+                $.each(places.counts, function (i, dataPoint) {
+                    if (!dataPoint.id)
+                        return;
+                    var total = isPivotPeople ? dataPoint.peopleCount : dataPoint.count;
+                    _this._geoChartDataTable.addRow([dataPoint.name, total]);
+                });
+                this.geoChart.draw(this._geoChartDataTable, this._getGeoChartOptions(optionOverrides))
+                    .then(function () {
+                    setTimeout(function () { _this._svgInjectPlaceOverlays(); }, 0);
+                    _this._applyPlaceOverlayTotals(places.counts);
+                    _this._createOverlayTooltips();
+                });
+            };
             Summary.prototype._drawGeoChart = function () {
                 var _this = this;
                 var cachedData = this.placeData.cached;
@@ -596,25 +647,7 @@ var Employees;
                     this.settings.geoChart.keepAspectRatio ? true : false;
                 this._initGeoChart().then(function () {
                     _this.placeData.done(function (places) {
-                        if (needsRedraw) {
-                            _this._drawGeoChart();
-                            return;
-                        }
-                        var isPivotPeople = _this.isPivotPeople();
-                        _this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(isPivotPeople ? 'People' : 'Activities'));
-                        _this._geoChartDataTable.removeRows(0, _this._geoChartDataTable.getNumberOfRows());
-                        $.each(places.counts, function (i, dataPoint) {
-                            if (!dataPoint.id)
-                                return;
-                            var total = isPivotPeople ? dataPoint.peopleCount : dataPoint.count;
-                            _this._geoChartDataTable.addRow([dataPoint.name, total]);
-                        });
-                        _this.geoChart.draw(_this._geoChartDataTable, _this._getGeoChartOptions(optionOverrides))
-                            .then(function () {
-                            setTimeout(function () { _this._svgInjectPlaceOverlays(); }, 0);
-                            _this._applyPlaceOverlayTotals(places.counts);
-                            _this._createOverlayTooltips();
-                        });
+                        _this.draw_place_data(places, needsRedraw, optionOverrides);
                     });
                 });
             };
@@ -624,10 +657,10 @@ var Employees;
                     var rowIndex = selection[0].row;
                     var placeName = this._geoChartDataTable.getFormattedValue(rowIndex, 0);
                     var place = this._getPlaceByName(placeName);
-                    if (this.placeId() == place.placeId) {
+                    if (this.placeId() == place.id) {
                         var paramObject = {
                             placeNames: placeName,
-                            placeIds: place.placeId,
+                            placeIds: place.id,
                             pivot: this.pivot(),
                             keyword: '',
                             ancestorId: this.selectedTenant()
@@ -635,8 +668,9 @@ var Employees;
                         location.href = 'table/?' + $.param(paramObject);
                     }
                     if (place) {
-                        this.placeId(place.placeId);
+                        this.placeId(place.id);
                     }
+                    this._reloadPlaceData();
                 }
             };
             Summary.prototype._onGeoChartRegionClick = function (e) {
@@ -736,30 +770,34 @@ var Employees;
                     location.href = 'table/?' + $.param(paramObject);
                 }
             };
+            Summary.prototype.draw_activity_type_data = function (places, needsRedraws) {
+                var _this = this;
+                if (needsRedraws) {
+                    this._drawActivityTypeChart();
+                    return;
+                }
+                var isPivotPeople = this.isPivotPeople();
+                this._activityTypeChartDataTable.removeRows(0, this._activityTypeChartDataTable.getNumberOfRows());
+                var activityTypes = places.types;
+                this.activityTypes(activityTypes);
+                $.each(activityTypes, function (i, dataPoint) {
+                    var total = isPivotPeople ? dataPoint.peopleCount : dataPoint.count;
+                    _this._activityTypeChartDataTable.addRow([dataPoint.text, total, total, dataPoint.activityTypeId]);
+                });
+                var dataView = new google.visualization.DataView(this._activityTypeChartDataTable);
+                dataView.setColumns([0, 1, 1, 2]);
+                this.activityTypeChart.draw(dataView, this._getActivityTypeChartOptions())
+                    .then(function () {
+                });
+            };
             Summary.prototype._drawActivityTypeChart = function () {
                 var _this = this;
                 var cachedData = this.placeData.cached;
-                var needsRedraw = !cachedData;
+                var needsRedraws = !cachedData;
                 var placeId = this.placeId();
                 this._initActivityTypeChart().then(function () {
                     _this.placeData.done(function (places) {
-                        if (needsRedraw) {
-                            _this._drawActivityTypeChart();
-                            return;
-                        }
-                        var isPivotPeople = _this.isPivotPeople();
-                        _this._activityTypeChartDataTable.removeRows(0, _this._activityTypeChartDataTable.getNumberOfRows());
-                        var activityTypes = places.types;
-                        _this.activityTypes(activityTypes);
-                        $.each(activityTypes, function (i, dataPoint) {
-                            var total = isPivotPeople ? dataPoint.peopleCount : dataPoint.count;
-                            _this._activityTypeChartDataTable.addRow([dataPoint.text, total, total, dataPoint.activityTypeId]);
-                        });
-                        var dataView = new google.visualization.DataView(_this._activityTypeChartDataTable);
-                        dataView.setColumns([0, 1, 1, 2]);
-                        _this.activityTypeChart.draw(dataView, _this._getActivityTypeChartOptions())
-                            .then(function () {
-                        });
+                        _this.draw_activity_type_data(places, needsRedraws);
                     });
                 });
             };
@@ -807,58 +845,34 @@ var Employees;
                 }
                 return promise;
             };
+            Summary.prototype.draw_activity_year_data = function (places, needsRedraws) {
+                var _this = this;
+                if (needsRedraws) {
+                    this._drawActivityYearChart();
+                    return;
+                }
+                var isPivotPeople = this.isPivotPeople();
+                this._activityYearChartDataTable.removeRows(0, this._activityYearChartDataTable.getNumberOfRows());
+                var activityYears = places.year;
+                this.activityYears(activityYears);
+                $.each(activityYears, function (i, dataPoint) {
+                    var total = isPivotPeople ? dataPoint.peopleCount : dataPoint.count;
+                    _this._activityYearChartDataTable.addRow([dataPoint.year.toString(), total]);
+                });
+                this.activityYearChart.draw(this._activityYearChartDataTable, this._getActivityYearChartOptions())
+                    .then(function () {
+                });
+            };
             Summary.prototype._drawActivityYearChart = function () {
                 var _this = this;
                 var cachedData = this.placeData.cached;
-                var needsRedraw = !cachedData;
+                var needsRedraws = !cachedData;
                 var placeId = this.placeId();
                 this._initActivityYearChart().then(function () {
                     _this.placeData.done(function (places) {
-                        if (needsRedraw) {
-                            _this._drawActivityYearChart();
-                            return;
-                        }
-                        var isPivotPeople = _this.isPivotPeople();
-                        _this._activityYearChartDataTable.removeRows(0, _this._activityYearChartDataTable.getNumberOfRows());
-                        var activityYears = places.year;
-                        _this.activityYears(activityYears);
-                        $.each(activityYears, function (i, dataPoint) {
-                            var total = isPivotPeople ? dataPoint.peopleCount : dataPoint.count;
-                            _this._activityYearChartDataTable.addRow([dataPoint.year.toString(), total]);
-                        });
-                        _this.activityYearChart.draw(_this._activityYearChartDataTable, _this._getActivityYearChartOptions())
-                            .then(function () {
-                        });
+                        _this.draw_activity_year_data(places, needsRedraws);
                     });
                 });
-            };
-            Summary.prototype._getActivityYears = function () {
-                var placeId = this.placeId();
-                if (placeId == 1)
-                    placeId = null;
-                var places = this.placeData.cached;
-                var currentYear = 2014;
-                var minYear = 2005;
-                var activityYears = Enumerable.From(places)
-                    .Where(function (x) {
-                    if (placeId == null)
-                        return !x.placeId;
-                    return x.placeId == placeId;
-                })
-                    .SelectMany(function (x) {
-                    return x.years;
-                })
-                    .Distinct(function (x) {
-                    return x.year;
-                })
-                    .OrderBy(function (x) {
-                    return x.year;
-                })
-                    .Where(function (x) {
-                    return x.year >= minYear && x.year <= currentYear;
-                })
-                    .ToArray();
-                return activityYears;
             };
             Summary.prototype._parsePlaceOverlays = function () {
                 var _this = this;
@@ -889,10 +903,10 @@ var Employees;
             };
             Summary.prototype.clickPlaceOverlay = function (overlay, e) {
                 var place = this._getPlaceById(overlay.placeId);
-                if (this.placeId() == place.placeId) {
+                if (this.placeId() == place.id) {
                     var paramObject = {
-                        placeNames: place.placeName,
-                        placeIds: place.placeId,
+                        placeNames: place.name,
+                        placeIds: place.id,
                         pivot: 1,
                         keyword: '',
                         ancestorId: this.selectedTenant()
