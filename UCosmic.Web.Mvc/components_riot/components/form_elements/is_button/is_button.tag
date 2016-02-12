@@ -27,14 +27,14 @@
         }
     </style>
     <div>
-        <button  riot-style="width:{opts.width}; height:{opts.height}; color: {opts.fore_color}; background-color:{opts.back_color}; font-size:{opts.font_size}; fill:{opts.fore_color}">
+        <button type="{opts.type}"  riot-style="width:{opts.width}; height:{opts.height}; color: {opts.fore_color}; background-color:{opts.back_color}; font-size:{opts.font_size}; fill:{opts.fore_color}">
             <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" style="pointer-events: none; display: inline-block; width: 1.2em; height: 1.2em; ">
                 <g>
                     <path d="{opts.path}">
                     </path>
                 </g>
             </svg>
-            <span><yield/></span>
+            <span><yield/>{opts.text}</span>
         </button>
     </div>
 </is_button>

@@ -3,7 +3,6 @@
 ## Monthly Process
 
 1.   `git stash -u` (optional) 
-6.    `git checkout work` 
 7.    `git branch worksafe` 
 8.   `git push -f origin work`  
 11.    `git checkout team`
