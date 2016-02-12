@@ -22,7 +22,7 @@ var find_closest = function (el, selector) {
         else if (child) {
             return child;
         }
-        el = parent;
+        el = parent; 
     }
     return null;
 };

@@ -25,7 +25,7 @@
 
         });
         RiotControl.on('firebase_loaded',function (){
-            ucosmic.fire_ref.child('new').child('Restaurants').child(ucosmic.restaurant).child('Pages').once("value", function (snapshot) {
+            ucosmic.fire_ref.child('new').child('tennants').child(ucosmic.tennant).child('Pages').once("value", function (snapshot) {
                 if(snapshot.val()){
                     ucosmic.pages = Object.keys(snapshot.val()).map(function (key) {return snapshot.val()[key]});
 //                    self.page_names = ucosmic.pages.map(function(page){
@@ -111,7 +111,7 @@
             style_content += '.page_content_fg{ color: ' + ucosmic.theme.Styles.page_content_fg + '; }';
 //            let style_content = '.header_toolbar_bg{ background-color: ' + ucosmic.theme.Styles.header_toolbar_bg + '; }';
 //            style_content += '.header_toolbar_fg{ color: ' + ucosmic.theme.Styles.header_toolbar_fg + '; fill: ' + ucosmic.theme.Styles.header_toolbar_fg + ';  }';
-            ucosmic.add_style(style_content, ucosmic.restaurant);
+            ucosmic.add_style(style_content, ucosmic.tennant);
             //self.update();
         } else {
             RiotControl.on('theme_loaded', function () {
@@ -119,7 +119,7 @@
                 style_content += '.page_content_fg{ color: ' + ucosmic.theme.Styles.page_content_fg + '; }';
 //                let style_content = '.header_toolbar_bg{ background-color: ' + ucosmic.theme.Styles.header_toolbar_bg + '; }';
 //                style_content += '.header_toolbar_fg{ color: ' + ucosmic.theme.Styles.header_toolbar_fg + '; fill: ' + ucosmic.theme.Styles.header_toolbar_fg + ';  }';
-                ucosmic.add_style(style_content, ucosmic.restaurant);
+                ucosmic.add_style(style_content, ucosmic.tennant);
                 //self.update();
             });
         }

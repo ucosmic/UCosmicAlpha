@@ -14,6 +14,8 @@ namespace UCosmic.Web.Mvc.Models
         public int typeId { get; set; }
         public DateTime StartsOn { get; set; }
         public DateTime EndsOn { get; set; }
+        public DateTime StartsOnCalc { get; set; }
+        public DateTime EndsOnCalc { get; set; }
         public string StartsOnFormat { get; set; }
         public string EndsOnFormat { get; set; }
         public string title { get; set; }

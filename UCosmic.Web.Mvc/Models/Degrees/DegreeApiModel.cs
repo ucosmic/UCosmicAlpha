@@ -61,6 +61,8 @@ namespace UCosmic.Web.Mvc.Models
                     {
                         var institution = _entities.Query<Establishment>()
                                                 .SingleOrDefault(x => x.RevisionId == source.InstitutionId);
+                        //var official_name = _entities.Query<EstablishmentName>()
+                        //                        .SingleOrDefault(x => x.ForEstablishment.RevisionId == source.InstitutionId && x.IsOfficialName).Text;
 
                         if (institution != null)
                         {
@@ -69,6 +71,7 @@ namespace UCosmic.Web.Mvc.Models
                                 info += ", ";
                             }
 
+                            //info = string.Format("{0}{1}", info, official_name);
                             info = string.Format("{0}{1}", info, institution.OfficialName);
 
                             var country = institution.Location.Places.FirstOrDefault(x => x.IsCountry);
@@ -95,6 +98,8 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.WhenLastUpdated, o => o.MapFrom(s => s.UpdatedOnUtc))
                     .ForMember(d => d.WhoLastUpdated, o => o.MapFrom(s => s.UpdatedByPrincipal))
                     .ForMember(d => d.Version, o => o.MapFrom(s => Convert.ToBase64String(s.Version)))
+                    //.ForMember(d => d.InstitutionOfficialName, o => o.MapFrom(s =>
+                    //    s.Institution.Names.SingleOrDefault(x => x.IsOfficialName).Text))
                     .ForMember(d => d.InstitutionOfficialName, o => o.MapFrom(s =>
                         s.Institution.OfficialName == s.Institution.TranslatedName.Text ? null : s.Institution.OfficialName))
                     //.ForMember(d => d.InstitutionOfficialName, o => o.MapFrom(s => s.InstitutionId.HasValue ? s.Institution.OfficialName : null))

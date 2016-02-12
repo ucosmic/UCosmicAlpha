@@ -10,7 +10,7 @@ riot.mount('is_loading');
 // Define router function
 
 if(!ucosmic.pages){
-    var router = function (restaurant, page) {
+    var router = function (tennant, page) {
         function change_page(current_page) {
             if(ucosmic.last_page){
                 RiotControl.trigger('page_changed', current_page, ucosmic.last_page)
@@ -36,7 +36,7 @@ if(!ucosmic.pages){
     //    riot.route.exec();
     //});
 }else{
-    var router = function (restaurant, page) {
+    var router = function (tennant, page) {
         function change_page(current_page) {
             RiotControl.trigger('page_changed', current_page, ucosmic.last_page)
             ucosmic.last_page = current_page;

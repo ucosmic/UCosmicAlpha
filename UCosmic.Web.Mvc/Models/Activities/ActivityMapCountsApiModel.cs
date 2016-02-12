@@ -29,6 +29,7 @@ namespace UCosmic.Web.Mvc.Models
     public class ActivitySnapShotApiQueryResultModel
     {
         public int id { get; set; }
+        public int revisionId { get; set; }
         public int personId { get; set; }
         public string name { get; set; }
         public int typeId { get; set; }

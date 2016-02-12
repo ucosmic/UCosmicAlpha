@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using UCosmic.Domain.Degrees;
+using System.Linq;
+using System.Linq.Expressions;
 using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Web.Mvc.Models
@@ -25,6 +27,10 @@ namespace UCosmic.Web.Mvc.Models
             {
                 CreateMap<Degree, DegreePublicViewModel>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
+                    //.ForMember(d => d.Institution.OfficialName, o => o.MapFrom(s =>
+                    //    s.Institution.Names.SingleOrDefault(x => x.IsOfficialName).Text))
+                    //.ForMember(d => d.InstitutionOfficialName, o => o.MapFrom(s =>
+                    //    s.Institution.Names.Where(x => x.IsOfficialName)))
                     ;
             }
         }
