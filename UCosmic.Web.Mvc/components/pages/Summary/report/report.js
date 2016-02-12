@@ -3,6 +3,7 @@
 /// <reference path="../../../../scripts/typings/page.d.ts" />
 Polymer('is-page-summary-report', {
     isAjaxing: false,
+    ancestor: "*none*",
     activityTypeCounts: [],
     agreementTypeCounts: [],
     establishmentSearch: "",
@@ -129,6 +130,12 @@ Polymer('is-page-summary-report', {
         }
     },
     new_tenant_idChanged: function (oldValue, newValue) {
+        if (newValue) {
+            var ancestor = _.find(this.affiliations, function (aff) {
+                return aff._id == newValue;
+            });
+            this.ancestor = ancestor ? encodeURIComponent(ancestor.officialName) : "*none*";
+        }
         this.establishment_search_url = newValue ? newValue : "";
         page('#!/' + this.selectedPlaceId + '/' + this.selectedEstablishmentId + '/' + newValue + '/' + this.establishmentSearch);
     },

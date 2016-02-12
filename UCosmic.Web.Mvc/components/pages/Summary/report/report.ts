@@ -5,6 +5,7 @@
 
 Polymer('is-page-summary-report', {
     isAjaxing: false,
+    ancestor: "*none*",
     activityTypeCounts: [],
     agreementTypeCounts: [],
     establishmentSearch: "",
@@ -148,6 +149,12 @@ Polymer('is-page-summary-report', {
     new_tenant_idChanged: function (oldValue, newValue) {
         //var establishment_keyword_object: any = _.find(this.affiliations, { id: parseInt(newValue) });
         //this.establishment_search_url = establishment_keyword_object ? "\"" + establishment_keyword_object.text + "\"" : "";
+        if (newValue) {
+            var ancestor = _.find(this.affiliations, function (aff: any) {
+                return aff._id == newValue;
+            });
+            this.ancestor = ancestor ? encodeURIComponent(ancestor.officialName) : "*none*";
+        }
         this.establishment_search_url = newValue ? newValue : ""; 
         page('#!/' + this.selectedPlaceId + '/' + this.selectedEstablishmentId + '/' + newValue + '/' + this.establishmentSearch);
     },
