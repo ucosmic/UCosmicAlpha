@@ -28,6 +28,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IHandleCommands<CreateEstablishmentName> _createHandler;
         private readonly IValidator<UpdateEstablishmentName> _updateValidator;
         private readonly IHandleCommands<UpdateEstablishmentName> _updateHandler;
+        private readonly IHandleCommands<UpdateEstablishment> _updateHandler2;
         private readonly IHandleCommands<DeleteEstablishmentName> _deleteHandler;
 
         public EstablishmentNamesController(
@@ -35,6 +36,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             , IHandleCommands<CreateEstablishmentName> createHandler
             , IValidator<CreateEstablishmentName> createValidator
             , IHandleCommands<UpdateEstablishmentName> updateHandler
+            , IHandleCommands<UpdateEstablishment> updateHandler2
             , IValidator<UpdateEstablishmentName> updateValidator
             , IHandleCommands<DeleteEstablishmentName> deleteHandler
         )
@@ -129,10 +131,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public HttpResponseMessage Post(int establishmentId, EstablishmentNameApiModel model)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
-
+            
             if (!FindResources(establishmentId))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             model.OwnerId = establishmentId;
+
 
             var command = new CreateEstablishmentName(User);
             Mapper.Map(model, command);
@@ -146,6 +149,33 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
                 return badRequest;
             }
+
+            //if (model.IsOfficialName)
+            //{
+            //    EstablishmentApiScalarModel establishment = new EstablishmentApiScalarModel();
+
+            //    EstablishmentListRepository establishmentRepository = new EstablishmentListRepository();
+            //    //AgreementTypesRepository AgreementTypesRepository = new AgreementTypesRepository();
+            //    establishment = establishmentRepository.Establishment_By_Id(model.OwnerId);
+
+            //    establishment.OfficialName = model.Text;
+            //    //model.Id = establishmentId;
+            //    var command2 = new UpdateEstablishment(User, establishment.Id);
+            //    Mapper.Map(establishment, command2);
+
+            //    try
+            //    {
+            //        _updateHandler2.Handle(command2);
+            //    }
+            //    catch (ValidationException ex)
+            //    {
+            //        var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
+            //        return badRequest;
+            //    }
+            //}
+
+            
+
 
             //var response = Request.CreateResponse(HttpStatusCode.Created, Get(establishmentId, command.Id));
             var response = Request.CreateResponse(HttpStatusCode.Created,
@@ -189,6 +219,39 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
                 return badRequest;
+            }
+
+            if (model.IsOfficialName)
+            {
+                EstablishmentListRepository establishmentRepository = new EstablishmentListRepository();
+                try
+                {
+                    establishmentRepository.Update_Establishment_Name_By_Id(model.Text, model.OwnerId);
+                }
+                catch (ValidationException ex)
+                {
+                    var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
+                    return badRequest;
+                }
+
+                //EstablishmentApiScalarModel establishment = new EstablishmentApiScalarModel();
+
+                //EstablishmentListRepository establishmentRepository = new EstablishmentListRepository();
+                //establishment = establishmentRepository.Establishment_By_Id(model.OwnerId);
+
+                //establishment.OfficialName = model.Text;
+                //var command2 = new UpdateEstablishment(User, establishment.Id);
+                //Mapper.Map(establishment, command2);
+
+                //try
+                //{
+                //    _updateHandler2.Handle(command2);
+                //}
+                //catch (ValidationException ex)
+                //{
+                //    var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
+                //    return badRequest;
+                //}
             }
 
             var response = Request.CreateResponse(HttpStatusCode.OK, "Establishment name was successfully updated.");
