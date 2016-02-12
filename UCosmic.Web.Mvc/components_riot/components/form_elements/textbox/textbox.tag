@@ -43,11 +43,11 @@
         <label id="label" for="input" class="pre_scale_bottom_center {fade_in: is_shown} {fade_out: !is_shown} {slide_top_bottom: !is_shown}">{opts.place_holder}</label>
         <br/>
         <input type="{opts.type}" pattern="{opts.pattern}" placeholder="{opts.place_holder}" name="{opts.name}" onkeyup="{show_label}" id="input"
-               autocomplete="on" maxlength="{opts.max_length}" value="{opts.input_value}" riot-style="width: {opts.width}; height: {opts.height}">
+               autocomplete="on" maxlength="{opts.max_length}" disabled="{opts.disabled}" value="{opts.input_value}" riot-style="width: {opts.width}; height: {opts.height}">
         <br/>
         <span class="validation_message" show="{validation_message}"  riot-style="width: {opts.width}; height: {opts.height}"><span>{validation_message}</span></span>
     </div>
-    <script>
+    <script type="es6">
         "use strict";
         let self = this;
         self.is_shown = false;

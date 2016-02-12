@@ -47,7 +47,7 @@
         <br/>
         <span class="validation_message" show="{validation_message}"  riot-style="width: {opts.width}; height: {opts.height}"><span>{validation_message}</span></span>
     </div>
-    <script>
+    <script  type="es6">
         "use strict";
         let self = this;
         self.is_shown = false;
