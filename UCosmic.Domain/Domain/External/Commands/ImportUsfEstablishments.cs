@@ -53,7 +53,7 @@ namespace UCosmic.Domain.External
             if (command == null) throw new ArgumentNullException("command");
             var reportBuilder = command.ReportBuilder ?? new WorkReportBuilder("Import USF Departments");
             var service = command.Service;
-
+            string error_details = "";
             try
             {
                 #region Skip import if not necessary
@@ -287,7 +287,7 @@ namespace UCosmic.Domain.External
                     var college = campus.Children
                         .Single(x => x.Names.Any(y => y.Text.Equals(departmentData.CollegeName)));
                     var officialName = string.Format("{0}, {1}, {2}", departmentData.DepartmentName, departmentData.CollegeName, campus.OfficialName);
-
+                    error_details = "test 1";
                     // is the name of the department the same as the name of the college?
                     if (departmentData.DepartmentName == departmentData.CollegeName)
                     {
@@ -302,18 +302,20 @@ namespace UCosmic.Domain.External
                         }
                         continue;
                     }
-
+                    error_details = "test 2";
                     // does the department already exist?
                     var departmentByName = college.Children
                         .SingleOrDefault(x => x.OfficialName.Equals(officialName)
                              || x.Names.Any(y => y.Text.Equals(departmentData.DepartmentName)));
                     var departmentById = college.Children
                         .SingleOrDefault(x => x.CustomIds.Select(y => y.Value).Contains(departmentData.DepartmentId));
+                    error_details = "test 33" + " - " + departmentData.CollegeName + " - " + departmentData.DepartmentId + " - " + departmentData.DepartmentName;
 
                     if (departmentByName == null)
                     {
                         if (departmentById == null)
                         {
+                            error_details = "test 4";
                             var createDepartmentCommand = new CreateEstablishment(command.Principal)
                             {
                                 NoCommit = true,
@@ -340,6 +342,7 @@ namespace UCosmic.Domain.External
                         }
                         else
                         {
+                            error_details = "test 5";
                             var formerContextNames = departmentById.Names.Where(x => x.IsContextName).ToArray();
                             foreach (var formerContextName in formerContextNames)
                                 formerContextName.IsFormerName = true;
@@ -364,6 +367,7 @@ namespace UCosmic.Domain.External
 
                     if (departmentById == null)
                     {
+                        error_details = "test 6";
                         departmentByName.CustomIds.Add(new EstablishmentCustomId
                         {
                             Owner = departmentByName,
@@ -375,38 +379,55 @@ namespace UCosmic.Domain.External
 
                 #endregion
                 #region Populate Unnamed Department Id's
+                error_details = "test 7";
+
 
                 var unnamedDepartments = departmentsData.Departments
+                    //.FirstOrDefault(x => string.IsNullOrWhiteSpace(x.DepartmentName))
                     .Where(x => string.IsNullOrWhiteSpace(x.DepartmentName))
                     .ToArray();
+                //if (unnamedDepartments == null){
+                //    //unnamedDepartments = new string[0];
+                //}else{
+                //    unnamedDepartments = unnamedDepartments;
+                //}
+                    
+                error_details = "test 8";
                 foreach (var departmentData in unnamedDepartments)
                 {
                     var campus = usf.Children
                         .Single(x => x.Names.Any(y => y.Text.Equals(departmentData.CampusName)));
+                    error_details += ", campus" + campus.ExternalId;
                     var college = campus.Children
                         .Single(x => x.Names.Any(y => y.Text.Equals(departmentData.CollegeName)));
+                    error_details += ", college" + college.ExternalId;
                     if (college.CustomIds.All(x => x.Value != departmentData.DepartmentId))
                     {
+                        error_details += " in college.customIds";
                         college.CustomIds.Add(new EstablishmentCustomId
                         {
                             EstablishmentId = college.RevisionId,
                             Owner = college,
                             Value = departmentData.DepartmentId,
                         });
+                        error_details += " 2 ";
                         isChanged = true;
                     }
                 }
 
                 #endregion
 
+                error_details = "test 7";
                 if (isChanged)
                 { // TODO: only update hierarchy when establishments are added or removed
+                    error_details = "test 8";
                     reportBuilder.Report("USF Department import has pending database changes.");
                     _updateHierarchy.Handle(new UpdateEstablishmentHierarchy(usf));
                     _entities.SaveChanges();
                     reportBuilder.Report("USF Department import pending database changes have been committed.");
                 }
 
+                error_details = "test 9";
                 reportBuilder.Report("USF Department import is complete.");
                 reportBuilder.Report("Setting status to '{0}'.", UsfFacultyProfileAttribute.Ready.ToString());
                 command.Service.Status = UsfFacultyProfileAttribute.Ready.ToString();
@@ -421,6 +442,7 @@ namespace UCosmic.Domain.External
                 reportBuilder.Report("USF Department import encountered an exception.");
                 _entities.DiscardChanges();
                 reportBuilder.Report("Setting status to '{0}'.", UsfFacultyProfileAttribute.FailedState.ToString());
+                reportBuilder.Report("error location '{0}'.", error_details);
                 command.Service.Status = UsfFacultyProfileAttribute.FailedState.ToString();
                 _entities.Update(command.Service.Integration);
                 _entities.SaveChanges();

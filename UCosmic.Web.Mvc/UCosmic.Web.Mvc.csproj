@@ -4534,11 +4534,63 @@
     <Content Include="components\Polymer\bower_components\polymer-platform\README.md" />
     <None Include="components\Polymer\bower_components\TemplateBinding\codereview.settings" />
     <Content Include="components\utilities\xlsx.full.min.js" />
+    <Content Include="components_riot\components\content\content.tag" />
+    <Content Include="components_riot\components\drop_down\drop_down.js" />
+    <Content Include="components_riot\components\drop_down\drop_down.tag" />
     <Content Include="components_riot\components\echo_html\echo_html.js" />
+    <Content Include="components_riot\components\echo_html\echo_html.tag" />
     <Content Include="components_riot\components\echo_tag\echo_tag.js" />
+    <Content Include="components_riot\components\echo_tag\echo_tag.tag" />
+    <Content Include="components_riot\components\form_elements\checkbox\checkbox.js" />
+    <Content Include="components_riot\components\form_elements\drop_down\drop_down.js" />
+    <Content Include="components_riot\components\form_elements\drop_down\drop_down.min.js">
+      <DependentUpon>drop_down.js</DependentUpon>
+    </Content>
+    <Content Include="components_riot\components\form_elements\is_button\is_button.js" />
+    <Content Include="components_riot\components\form_elements\is_button\is_button.tag" />
+    <Content Include="components_riot\components\form_elements\multi_textbox\multi_textbox.js" />
+    <Content Include="components_riot\components\form_elements\textbox\textbox.js" />
+    <Content Include="components_riot\components\form_elements\textbox\textbox.tag" />
     <Content Include="components_riot\components\header\header.js" />
+    <Content Include="components_riot\components\header\header.tag" />
     <Content Include="components_riot\components\header_toolbar\header_toolbar.js" />
+    <Content Include="components_riot\components\header_toolbar\header_toolbar.tag" />
+    <Content Include="components_riot\components\is_dialog\fab_close\fab_close.js" />
+    <Content Include="components_riot\components\is_dialog\is_dialog.js" />
+    <Content Include="components_riot\components\is_dialog\is_dialog.tag">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="components_riot\components\is_loading\is_loading.js" />
+    <Content Include="components_riot\components\is_loading\is_loading.tag" />
+    <Content Include="components_riot\components\layout\layout.js" />
+    <Content Include="components_riot\components\layout\layout.tag" />
+    <Content Include="components_riot\components\pages\page_not_found\page_not_found.js" />
+    <Content Include="components_riot\components\pages\page_not_found\page_not_found.tag" />
+    <Content Include="components_riot\components\pages\students\table\student_table.tag" />
     <Content Include="components_riot\components\toast\toast.js" />
+    <Content Include="components_riot\components\toast\toast.tag" />
+    <Content Include="components_riot\components\utilities\add_style.js" />
+    <Content Include="components_riot\components\utilities\add_style.min.js">
+      <DependentUpon>add_style.js</DependentUpon>
+    </Content>
+    <Content Include="components_riot\components\utilities\closest.js" />
+    <Content Include="components_riot\components\utilities\equal.js" />
+    <Content Include="components_riot\components\utilities\load_tag.js" />
+    <Content Include="components_riot\components\utilities\navigation.js" />
+    <Content Include="components_riot\components\utilities\navigation.min.js">
+      <DependentUpon>navigation.js</DependentUpon>
+    </Content>
+    <Content Include="components_riot\components\utilities\navigation_2.js" />
+    <Content Include="components_riot\components\utilities\one_page_scroll.js" />
+    <Content Include="components_riot\components\utilities\scroll_snap_vertical.js" />
+    <Content Include="components_riot\components\utilities\scroll_snap_vertical.min.js">
+      <DependentUpon>scroll_snap_vertical.js</DependentUpon>
+    </Content>
+    <Content Include="components_riot\components\utilities\styles\one_page_scroll.css" />
+    <Content Include="components_riot\components\utilities\tags_loaded.js" />
+    <Content Include="components_riot\components\utilities\tags_loaded.min.js">
+      <DependentUpon>tags_loaded.js</DependentUpon>
+    </Content>
     <Content Include="content\countries\ne-countries-110m.json" />
     <Content Include="content\countries\ne-countries-50m.json" />
     <Content Include="content\countries\ne-v2.0.0-countries-geojson.zip" />
@@ -5727,12 +5779,26 @@
     <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\scalar_feature.test" />
     <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\string_feature.test" />
     <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\tag_feature.test" />
-    <Content Include="components_riot\components\pages\students\table\student_table.tag" />
-    <Content Include="components_riot\components\toast\toast.tag" />
-    <Content Include="components_riot\components\echo_html\echo_html.tag" />
-    <Content Include="components_riot\components\echo_tag\echo_tag.tag" />
-    <Content Include="components_riot\components\header\header.tag" />
-    <Content Include="components_riot\components\header_toolbar\header_toolbar.tag" />
+    <Content Include="components_riot\components\form_elements\checkbox\checkbox.tag" />
+    <Content Include="components_riot\components\form_elements\drop_down\drop_down.tag" />
+    <Content Include="components_riot\components\form_elements\multi_textbox\multi_textbox.tag" />
+    <Content Include="components_riot\components\is_dialog\fab_close\fab_close.tag" />
+    <Content Include="components_riot\components\utilities\closest.js.map" />
+    <Content Include="components_riot\components\utilities\tags_loaded.min.js.map">
+      <DependentUpon>tags_loaded.min.js</DependentUpon>
+    </Content>
+    <Content Include="components_riot\components\utilities\scroll_snap_vertical.min.js.map">
+      <DependentUpon>scroll_snap_vertical.min.js</DependentUpon>
+    </Content>
+    <Content Include="components_riot\components\utilities\add_style.min.js.map">
+      <DependentUpon>add_style.min.js</DependentUpon>
+    </Content>
+    <Content Include="components_riot\components\utilities\navigation.min.js.map">
+      <DependentUpon>navigation.min.js</DependentUpon>
+    </Content>
+    <Content Include="components_riot\components\form_elements\drop_down\drop_down.min.js.map">
+      <DependentUpon>drop_down.min.js</DependentUpon>
+    </Content>
     <None Include="content\kendo\2013.2.716\Black\editor.png" />
     <None Include="content\kendo\2013.2.716\Black\imagebrowser.png" />
     <None Include="content\kendo\2013.2.716\Black\loading-image.gif" />
@@ -6017,6 +6083,7 @@
     <TypeScriptCompile Include="components\utilities\ElRelativeToEl.ts" />
     <TypeScriptCompile Include="components\utilities\Notification\notification.ts" />
     <TypeScriptCompile Include="components\utilities\validation.ts" />
+    <TypeScriptCompile Include="components_riot\components\utilities\closest.ts" />
     <TypeScriptCompile Include="Models\LanguageExpertiseViewModel.cs.d.ts">
       <DependentUpon>LanguageExpertiseViewModel.cs</DependentUpon>
     </TypeScriptCompile>
@@ -6107,6 +6174,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Properties\PublishProfiles\Atlantic_Server.pubxml" />
+    <None Include="Properties\PublishProfiles\UCosmic.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -6154,16 +6222,6 @@
     <Content Include="components_riot\bower_components\riot\riot+compiler.min.js" />
     <Content Include="components_riot\bower_components\riot\riot.js" />
     <Content Include="components_riot\bower_components\riot\riot.min.js" />
-    <Content Include="components_riot\components\content\content.tag" />
-    <Content Include="components_riot\components\drop_down\drop_down.tag" />
-    <Content Include="components_riot\components\form_elements\is_button\is_button.tag" />
-    <Content Include="components_riot\components\form_elements\textbox\textbox.tag" />
-    <Content Include="components_riot\components\is_dialog\is_dialog.tag">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="components_riot\components\is_loading\is_loading.tag" />
-    <Content Include="components_riot\components\layout\layout.tag" />
-    <Content Include="components_riot\components\pages\page_not_found\page_not_found.tag" />
     <Content Include="components_riot\bower.json" />
     <Content Include="components_riot\bower_components\firebase\.bower.json" />
     <Content Include="components_riot\bower_components\firebase\bower.json" />
@@ -6198,13 +6256,6 @@
     <None Include="scripts\oss\D3-LICENSE.txt" />
     <TypeScriptCompile Include="scripts\app\Routes.d.ts" />
     <TypeScriptCompile Include="scripts\app\DataCacher.ts" />
-    <Content Include="components_riot\components\drop_down\drop_down.js" />
-    <Content Include="components_riot\components\form_elements\is_button\is_button.js" />
-    <Content Include="components_riot\components\form_elements\textbox\textbox.js" />
-    <Content Include="components_riot\components\is_dialog\is_dialog.js" />
-    <Content Include="components_riot\components\is_loading\is_loading.js" />
-    <Content Include="components_riot\components\layout\layout.js" />
-    <Content Include="components_riot\components\pages\page_not_found\page_not_found.js" />
     <None Include="Microsoft.WindowsAzure.Caching\PerformanceCounters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -8391,7 +8442,6 @@
     <Folder Include="components\Polymer_1x\bower_components\lovefield\codelabs\stock_analyzer\src\step7\" />
     <Folder Include="components\Polymer_1x\bower_components\platinum-push-messaging\demo\" />
     <Folder Include="components\Polymer_1x\bower_components\prism\examples\" />
-    <Folder Include="components_riot\components\utilities\" />
     <Folder Include="content\mail\" />
     <Folder Include="css\NewFolder1\" />
   </ItemGroup>
