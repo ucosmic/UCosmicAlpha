@@ -203,8 +203,8 @@ module Agreements.ViewModels {
         //#region Sammy Routing
 
         sammy: Sammy.Application;
-        routeFormat: string = '#/{0}/country/{5}/type/{1}/sort/{2}/size/{3}/page/{4}/'
-            .format(this.settings.route).replace('{5}', '{0}');
+        routeFormat: string = '#/{0}/country/{6}/type/{1}/sort/{2}/size/{3}/page/{4}/keyword/{5}'
+            .format(this.settings.route).replace('{6}', '{0}');
         private _isActivated: KnockoutObservable<boolean> = ko.observable(false);
 
         private _runSammy(): void {
@@ -213,7 +213,7 @@ module Agreements.ViewModels {
 
             // sammy will run the first route that it matches
             var beforeRegex = new RegExp('\\{0}'.format(
-                this.routeFormat.format('(.*)', '(.*)', '(.*)', '(.*)', '(.*)').replace(/\//g, '\\/')));
+                this.routeFormat.format('(.*)', '(.*)', '(.*)', '(.*)', '(.*)', '(.*)').replace(/\//g, '\\/')));
             this.sammy.before(
                 beforeRegex,
                 function (): boolean {
@@ -223,7 +223,7 @@ module Agreements.ViewModels {
 
             // do this when we already have hashtag parameters in the page
             this.sammy.get(
-                this.routeFormat.format(':country', ':type', ':sort', ':size', ':number'),
+                this.routeFormat.format(':country', ':type', ':sort', ':size', ':number', ':keyword'),
                 function (): void {
                     var e: Sammy.EventContext = this;
                     viewModel._onRoute(e);
@@ -250,11 +250,20 @@ module Agreements.ViewModels {
             var sort = e.params['sort'];
             var size = e.params['size'];
             var page = e.params['number'];
+            var keyword = e.params['keyword'];
 
             // this will always run when the route is first activated, either explicitly from the URL
             // or after hitting the activation route pattern
             // it will also run when users page back & forward through the history
             // keyword is not stored as part of the route or history
+            if(keyword == '*none*'){
+                this.keyword("");
+            } else {
+                this.keyword(keyword);
+            }
+            //if (!this.keyword() && keyword) {
+            //    this.keyword(keyword);
+            //} 
             this.countryCode(country);
             this.typeCode(type);
             this.orderBy(sort);
@@ -285,8 +294,9 @@ module Agreements.ViewModels {
             var orderBy = this.orderBy();
             var pageSize = this.pager.input.pageSize();
             var pageNumber = this.pager.input.pageNumber();
+            var keyword = this.keyword();
             var route = this.routeFormat.format(countryCode, typeCode,
-                orderBy, pageSize, pageNumber);
+                orderBy, pageSize, pageNumber, keyword);
             return route;
         }
 

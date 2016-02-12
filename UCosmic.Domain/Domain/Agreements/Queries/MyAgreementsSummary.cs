@@ -61,6 +61,7 @@ namespace UCosmic.Domain.Agreements
                 })
                 .VisibleTo(query.Principal, _queryProcessor)
             ;
+            //queryable = queryable.Where(x => x.Status != "inactive");
 
             if (!query.EstablishmentId.HasValue)
                 queryable = queryable.ByOwnerDomain(query.Domain);

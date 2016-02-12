@@ -7,8 +7,10 @@ namespace UCosmic.Web.Mvc.Models
     public class AgreementSummaryApiQueryResultModel
     {
         public int id { get; set; }
+        public int id2 { get; set; }
         public string officialName { get; set; }
         public string type { get; set; }
+        public string type2 { get; set; }
     }
 
     public class AgreementSummaryApiModel

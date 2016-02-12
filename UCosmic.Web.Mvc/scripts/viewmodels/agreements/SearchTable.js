@@ -48,8 +48,8 @@ var Agreements;
                     var typeCode = _this.typeCode();
                     _this.pager.input.pageNumberText("1");
                 });
-                this.routeFormat = '#/{0}/country/{5}/type/{1}/sort/{2}/size/{3}/page/{4}/'
-                    .format(this.settings.route).replace('{5}', '{0}');
+                this.routeFormat = '#/{0}/country/{6}/type/{1}/sort/{2}/size/{3}/page/{4}/keyword/{5}'
+                    .format(this.settings.route).replace('{6}', '{0}');
                 this._isActivated = ko.observable(false);
                 this._route = ko.computed(function () {
                     return _this._computeRoute();
@@ -135,12 +135,12 @@ var Agreements;
             };
             SearchTable.prototype._runSammy = function () {
                 var viewModel = this;
-                var beforeRegex = new RegExp('\\{0}'.format(this.routeFormat.format('(.*)', '(.*)', '(.*)', '(.*)', '(.*)').replace(/\//g, '\\/')));
+                var beforeRegex = new RegExp('\\{0}'.format(this.routeFormat.format('(.*)', '(.*)', '(.*)', '(.*)', '(.*)', '(.*)').replace(/\//g, '\\/')));
                 this.sammy.before(beforeRegex, function () {
                     var e = this;
                     return viewModel._onBeforeRoute(e);
                 });
-                this.sammy.get(this.routeFormat.format(':country', ':type', ':sort', ':size', ':number'), function () {
+                this.sammy.get(this.routeFormat.format(':country', ':type', ':sort', ':size', ':number', ':keyword'), function () {
                     var e = this;
                     viewModel._onRoute(e);
                 });
@@ -159,6 +159,13 @@ var Agreements;
                 var sort = e.params['sort'];
                 var size = e.params['size'];
                 var page = e.params['number'];
+                var keyword = e.params['keyword'];
+                if (keyword == '*none*') {
+                    this.keyword("");
+                }
+                else {
+                    this.keyword(keyword);
+                }
                 this.countryCode(country);
                 this.typeCode(type);
                 this.orderBy(sort);
@@ -182,7 +189,8 @@ var Agreements;
                 var orderBy = this.orderBy();
                 var pageSize = this.pager.input.pageSize();
                 var pageNumber = this.pager.input.pageNumber();
-                var route = this.routeFormat.format(countryCode, typeCode, orderBy, pageSize, pageNumber);
+                var keyword = this.keyword();
+                var route = this.routeFormat.format(countryCode, typeCode, orderBy, pageSize, pageNumber, keyword);
                 return route;
             };
             SearchTable.prototype.setLocation = function () {

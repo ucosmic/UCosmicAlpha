@@ -46,6 +46,8 @@ namespace UCosmic.Domain.Agreements
                 .ByOwnerDomain(query.OwnerDomain)
                 .VisibleTo(query.Principal, _queryProcessor)
             ;
+            //queryable = queryable.Where(x => x.Status != "inactive");
+            
 
             if (query.TypeCode != null && query.TypeCode != "any" && query.TypeCode != "")
             {
