@@ -629,6 +629,9 @@ var Activities;
                             .ToArray();
                     }
                 }
+                places = places.filter(function (place) {
+                    return place.count > 0;
+                });
                 var count = 0;
                 var peopleCount = 0;
                 $.each(places, function (index, place) {

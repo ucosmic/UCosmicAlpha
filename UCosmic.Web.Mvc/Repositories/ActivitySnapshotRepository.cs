@@ -20,7 +20,7 @@ namespace UCosmic.Repositories
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
             // decrypt the password. Use this once all passwords have been encrypted.
             // string pw = FormsAuthentication.HashPasswordForStoringInConfigFile(password.Trim(), "sha1");
-            string sql = "select aa.revisionid as id, pp.revisionId as placeId, people.revisionId as personId  FROM [ActivitiesV2].[ActivityLocation] al" +
+            string sql = "select distinct aa.revisionid as id, pp.revisionId as placeId, people.revisionId as personId  FROM [ActivitiesV2].[ActivityLocation] al" +
                   " inner join [ActivitiesV2].[ActivityValues] av on al.activityValuesId=av.revisionid" +
                   " inner join Places.place pp on al.placeId=pp.revisionid" +
                   " inner join [ActivitiesV2].[Activity] aa on av.activityId=aa.revisionid" +

@@ -61,7 +61,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         /* Returns Affiliation type counts for given place.*/
         [GET("Affiliation-count/{establishmentId?}/{placeId?}")]
-        //[CacheHttpGet(Duration = 3600)]
+        [CacheHttpGet(Duration = 3600)]
         public List<AffiliationSummaryApiModel> GetAffiliationCount(int? establishmentId, int? placeId)
         {
             IList<AffiliationSummaryApiModel> returnModel = new List<AffiliationSummaryApiModel>();

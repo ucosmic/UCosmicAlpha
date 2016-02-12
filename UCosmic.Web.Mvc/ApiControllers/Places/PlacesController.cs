@@ -24,7 +24,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _queryProcessor = queryProcessor;
         }
 
-        //[CacheHttpGet(Duration = 3600)]
+        [CacheHttpGet(Duration = 3600)]
         [GET("")]
         public IEnumerable<PlaceApiModel> Get([FromUri] PlaceFilterInputModel input)
         {
@@ -47,7 +47,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        //[CacheHttpGet(Duration = 3600)]
+        [CacheHttpGet(Duration = 3600)]
         [GET("{placeId:int}")]
         public PlaceApiModel Get(int placeId)
         {
@@ -59,7 +59,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        //[CacheHttpGet(Duration = 3600)]
+        [CacheHttpGet(Duration = 3600)]
         [GET("by-coordinates/{latitude}/{longitude}")]
         public IEnumerable<PlaceApiModel> Get(double latitude, double longitude)
         {
@@ -95,7 +95,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return Enumerable.Empty<PlaceApiModel>();
         }
 
-        //[CacheHttpGet(Duration = 3600)]
+        [CacheHttpGet(Duration = 3600)]
         [GET("{placeId:int}/children")]
         public IEnumerable<PlaceApiModel> GetChildren(int placeId)
         {

@@ -18,15 +18,33 @@ using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Places;
 using UCosmic.Repositories;
 using UCosmic.Web.Mvc.Models;
+using System.Web;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
+    //public static class myHelper
+    //{
+
+    //    public static IEnumerable<TSource> DistinctBy2<TSource, TKey>
+    //(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+    //    {
+    //        HashSet<TKey> seenKeys = new HashSet<TKey>();
+    //        foreach (TSource element in source)
+    //        {
+    //            if (seenKeys.Add(keySelector(element)))
+    //            {
+    //                yield return element;
+    //            }
+    //        }
+    //    }
+    //}
     [RoutePrefix("api")]
     public class EmployeesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IQueryEntities _entities;
         private readonly IStoreBinaryData _binaryData;
+    
 
         public EmployeesController(IProcessQueries queryProcessor, IQueryEntities entities, IStoreBinaryData binaryData)
         {
@@ -66,7 +84,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 PlaceIds = input.PlaceIds,
                 PlaceAgnostic = input.PlaceAgnostic,
             };
-           var views = _queryProcessor.Execute(query);
+            var views = _queryProcessor.Execute(query);
             var models = Mapper.Map<EmployeesPlaceApiModel[]>(views);
             var test = models.Where(x => !x.IsCountry);
             return models;
@@ -126,10 +144,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
             if (establishmentId != 0)
             {
                 ActivitySnapshotRepository activitySnapshotRepository = new ActivitySnapshotRepository();
-                    model = activitySnapshotRepository.LocationsByEstablishment_Place(establishmentId);
-                    locationCount = model.DistinctBy(x => new { x.placeId }).Count();
-                    activityCount = model.DistinctBy(x => new { x.id }).Count();
-                    personCount = model.DistinctBy(x => new { x.personId }).Count();
+                model = activitySnapshotRepository.LocationsByEstablishment_Place(establishmentId);
+                locationCount = model.DistinctBy(x => new { x.placeId }).Count();
+                activityCount = model.DistinctBy(x => new { x.id }).Count();
+                personCount = model.DistinctBy(x => new { x.personId }).Count();
             }
 
 
@@ -238,7 +256,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             var query = new ActivityValuesBy();
             //var input = new ActivitySearchInputModel();
-            
+
             input.PageSize = 10;
             Mapper.Map(input, query);
             var results = _queryProcessor.Execute(query);
@@ -315,7 +333,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 //var distinctContinents = Output.DistinctBy(x => new { x.code });
                 //var 
                 //var distinctContinents = Output.DistinctBy("code");
-                var peopleCount = Output.DistinctBy(x => new { x.personId }).Count()-1;
+                var peopleCount = Output.DistinctBy(x => new { x.personId }).Count() - 1;
                 var grouped = Output.GroupBy(g => g.code).Select(g => new ActivitySearchResultPlacesCounted
                 {
                     ActivityCount = null,
@@ -334,7 +352,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             else
             {
                 return null;
-            }        
+            }
         }
 
         [CacheHttpGet(Duration = 3600)]
@@ -400,7 +418,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 //    }
                 //}
 
-                var peopleCount = Output.DistinctBy(x => new { x.personId }).Count()-1;
+                var peopleCount = Output.DistinctBy(x => new { x.personId }).Count() - 1;
                 //var activityCount = Output.Count();
 
                 var grouped = Output.GroupBy(g => g.id).Select(g => new ActivitySearchResultPlacesCounted
@@ -493,7 +511,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         //                id = type.id,
         //                type = type.type,
         //                count = Output.Where(x => x.typeId == type.id).Count()
-                
+
         //        });
 
         //        }
@@ -505,7 +523,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         //            PeopleCount = g.DistinctBy(x => new { x.personId }).Count(),
         //            Name = g.First().name,
         //            Id = g.First().id,
-                    
+
         //        }).ToList();
         //        var counted = new ActivitySnapShotPlacesCounted
         //        {
@@ -518,65 +536,97 @@ namespace UCosmic.Web.Mvc.ApiControllers
         //        return counted;
 
         //}
-        //[CacheHttpGet(Duration = 3600)]
-         [GET("{tenantId:int}/employees/snapshot/{ancestorId:int}")]
-        public ActivitySnapShotPlacesCounted GetSnapShot(int tenantId, int ancestorId)
+        [CacheHttpGet(Duration = 3600)]
+        [GET("{tenantId:int}/employees/snapshot/{ancestorId:int}/{placeId:int}")]
+        public ActivitySnapShotPlacesCounted GetSnapShot(int tenantId, int ancestorId, int placeId)
         {
 
-
+            IList<ActivitySnapShotApiQueryResultModel> Output = HttpContext.Current.Session["session_snapshot_output"] as IList<ActivitySnapShotApiQueryResultModel>;
+            String last_search = HttpContext.Current.Session["session_snapshot_last_search"] as String;
+            if (last_search != (tenantId + " " + ancestorId + " " + placeId))
+            {
                 ActivityMapCountRepository activityMapCountRepository = new ActivityMapCountRepository();
-                var Output = activityMapCountRepository.ActivitySnapShot(ancestorId);
+                Output = activityMapCountRepository.ActivitySnapShot(ancestorId);
+                HttpContext.Current.Session.Add("session_snapshot_output", Output);
+                last_search = (tenantId + " " + ancestorId + " " + placeId);
+                HttpContext.Current.Session.Add("session_snapshot_last_search", last_search);
+            }
 
-                //var peopleCount = Output.DistinctBy(x => new { x.personId }).Count();
+            if (placeId != 1)
+            {
+                Output = Output.Where(x => x.id == placeId).ToList() as IList<ActivitySnapShotApiQueryResultModel>;
+            }
+            var Output_Year = Output.GroupBy(g => g.revisionId).Select(g => new ActivitySnapShotApiQueryResultModel
+            {
+                id = g.First().id,
+                revisionId = g.First().revisionId,
+                personId = g.First().personId,
+                name = g.First().name,
+                typeId = g.First().typeId,
+                startsOn = g.First().startsOn,
+                endsOn = g.First().endsOn,
+                ongoing = g.First().ongoing
+            }).ToList();
+            //var peopleCount = Output.DistinctBy(x => new { x.personId }).Count();
 
-                ActivityRepository activityTypesRepository = new ActivityRepository();
-                var types = activityTypesRepository.ActivityTypesByEstablishment(tenantId);
-                List<ActivityTypesApiCountsModel> type_counts = new List<ActivityTypesApiCountsModel>();
-                foreach(ActivityTypesApiQueryResultModel type in types){
-                    type_counts.Add( new ActivityTypesApiCountsModel{
-                        activityTypeId = type.id,
-                        text = type.type,    
-                        hasIcon= true,
-                        iconSrc = "/api/my/employee-module-settings/activity-types/" + type.id + "/icon",
-                        count = Output.Where(x => x.typeId == type.id).Count(),
-                        peopleCount = Output.Where(x => x.typeId == type.id).DistinctBy(x => new { x.personId }).Count()
-                
+            ActivityRepository activityTypesRepository = new ActivityRepository();
+            var types = activityTypesRepository.ActivityTypesByEstablishment(tenantId);
+            List<ActivityTypesApiCountsModel> type_counts = new List<ActivityTypesApiCountsModel>();
+            foreach (ActivityTypesApiQueryResultModel type in types)
+            {
+                type_counts.Add(new ActivityTypesApiCountsModel
+                {
+                    activityTypeId = type.id,
+                    text = type.type,
+                    hasIcon = true,
+                    iconSrc = "/api/my/employee-module-settings/activity-types/" + type.id + "/icon",
+                    count = Output.Where(x => x.typeId == type.id).DistinctBy(x => new { x.revisionId }).Count(),
+                    peopleCount = Output.Where(x => x.typeId == type.id).DistinctBy(x => new { x.revisionId }).DistinctBy(x => new { x.personId }).Count()
+
                 });
 
-                }
-                List<ActivityYearApiCountsModel> year_counts = new List<ActivityYearApiCountsModel>();
-                int[] years = new int[6] { 2008, 2009, 2010, 2012, 2013, 2014 };
-                foreach (int year in years)
-                {
-                    year_counts.Add(new ActivityYearApiCountsModel
-                    {
-                        year = year,
-                        count = Output.Where(x => x.startsOn.Year == year || (x.startsOn.Year < year && (x.endsOn.Year > year || x.ongoing)) ).Count(),
-                        peopleCount = Output.Where(x => x.startsOn.Year == year || (x.startsOn.Year < year && (x.endsOn.Year > year || x.ongoing))).DistinctBy(x => new { x.personId }).Count()
+            }
 
-                    });
-
-                }
-
-                var grouped = Output.GroupBy(g => g.name).Select(g => new ActivitySnapShotPlacesCounts
+            //var Types = Output.DistinctBy2(d => new { d.typeId }).Select(y => new ActivityTypeViewModel()
+            //{
+            //    Text = y.name,
+            //    TypeId = y.typeId
+            //}).ToArray();
+            List<ActivityYearApiCountsModel> year_counts = new List<ActivityYearApiCountsModel>();
+            int[] years = new int[6] { 2008, 2009, 2010, 2012, 2013, 2014 };
+            foreach (int year in years)
+            {
+                year_counts.Add(new ActivityYearApiCountsModel
                 {
-                    Count = g.Count(),
-                    PeopleCount = g.DistinctBy(x => new { x.personId }).Count(),
-                    Name = g.First().name,
-                    Id = g.First().id,
-                    
-                }).ToList();
-                var counted = new ActivitySnapShotPlacesCounted
-                {
-                    counts = grouped,
-                    types = type_counts.ToList(),
-                    year = year_counts.ToList()
-                };
+                    year = year,
+                    //count = Output.Where(x => x.startsOn.Year == year || (x.startsOn.Year < year && (x.endsOn.Year > year || x.ongoing)) ).Count(),
+                    //peopleCount = Output.Where(x => x.startsOn.Year == year || (x.startsOn.Year < year && (x.endsOn.Year > year || x.ongoing))).DistinctBy(x => new { x.personId }).Count()
+                    count = Output_Year.Where(x => (x.startsOn.Year <= year && (x.endsOn.Year >= year || x.ongoing))).Count(),
+                    peopleCount = Output_Year.Where(x => (x.startsOn.Year <= year && (x.endsOn.Year >= year || x.ongoing))).DistinctBy(x => new { x.personId }).Count()
+
+                });
+
+            }
+
+            var grouped = Output.GroupBy(g => g.name).Select(g => new ActivitySnapShotPlacesCounts
+            {
+                Count = g.DistinctBy(x => new { x.revisionId }).Count(),
+                PeopleCount = g.DistinctBy(x => new { x.revisionId }).DistinctBy(x => new { x.personId }).Count(),
+                Name = g.First().name,
+                Id = g.First().id,
+
+            }).ToList();
+            var counted = new ActivitySnapShotPlacesCounted
+            {
+                counts = grouped,
+                types = type_counts.ToList(),
+                year = year_counts.ToList()
+            };
 
 
             //var test = grouped.Where(x => x.PlaceType == "water");
-                return counted;
-            
+            return counted;
+
         }
     }
 }

@@ -175,7 +175,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         /* Returns Affiliation type counts for given place.*/
         [GET("Expertise-count/{establishmentId?}/{placeId?}")]
-        //[CacheHttpGet(Duration = 3600)]
+        [CacheHttpGet(Duration = 3600)]
         public List<ExpertiseSummaryApiModel> GetExpertiseCount(int? establishmentId, int? placeId)
         {
             IList<ExpertiseSummaryApiModel> returnModel = new List<ExpertiseSummaryApiModel>();

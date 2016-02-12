@@ -162,7 +162,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         /* Returns people counts for given place. */
         [GET("people-count/{establishmentId?}/{placeId?}")]
-        //[CacheHttpGet(Duration = 3600)]
+        [CacheHttpGet(Duration = 3600)]
         public FacultyStaffSummaryModel GetPeopleCount(int? establishmentId, int? placeId)
         {
             var model = new FacultyStaffSummaryModel();
