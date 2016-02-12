@@ -1,7 +1,7 @@
-﻿<link rel="import" href="../../../../components/Polymer_1x/bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../components/Polymer_1x/bower_components/iron-localstorage/iron-localstorage.html">
-<link rel="import" href="../../../../components/Polymer_1x/bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../../../components/Polymer_1x/bower_components/iron-collapse/iron-collapse.html">
+﻿<link rel="import" href="/components/Polymer_1x/bower_components/polymer/polymer.html">
+<link rel="import" href="/components/Polymer_1x/bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="/components/Polymer_1x/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/components/Polymer_1x/bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="/components/Polymer_1x/bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="/components/Polymer_1x/bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="/components/Polymer_1x/bower_components/iron-pages/iron-pages.html">
@@ -10,11 +10,12 @@
 <link rel="import" href="/components/Polymer_1x/bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="/components/Polymer_1x/bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="/components/Polymer_1x/bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../../../../components/resources/icons/student_table.html">
-<link rel="import" href="../../../../components/components/filter/filter.html">
-<link rel="import" href="../../../../components/components/autoDDL_1x/autoDDL.html">
-<link rel="import" href="../../../../components/components/filter_tags/filter_tags.html">
-<link rel="import" href="../../../../components/components/columns_shown/columns_shown.html">
+<link rel="import" href="/components/Polymer_1x/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/components/resources/icons/student_table.html">
+<link rel="import" href="/components/components/filter/filter.html">
+<link rel="import" href="/components/components/autoDDL_1x/autoDDL.html">
+<link rel="import" href="/components/components/filter_tags/filter_tags.html">
+<link rel="import" href="/components/components/columns_shown/columns_shown.html">
 <link rel="import" href="/components/behaviors/closest/closest.html">
 <link rel="import" href="/components/behaviors/template_helpers/template_helpers.html">
 <script src="../../../Polymer/bower_components/page.js/page.js"></script>
@@ -46,13 +47,13 @@
                         </span>
                     </div>
                     <div class="level_1">
-                        <div style="  color: black; margin-top: 20px; font-size:24px; cursor:pointer;" class="level_1" on-click="count_clicked" id="1">
+                        <div style="  color: black; margin-top: 20px; font-size:24px; cursor:pointer;" class="level_1" id="1">
                             <span class="tennant_colors_text"><b>Total Students</b></span>: <span>[[total]]</span>
                         </div>
                     </div>
                     <template is="dom-repeat" items="[[count_list1]]" as="count_l1" index-as="count_l1_i" id="count_l1" data-id="l1">
                         <div class="level_1">
-                            <div style="  color: black; margin-top: 20px; font-size:24px; cursor:pointer; line-height:34px;" class="level_1" on-click="count_clicked" id="1">
+                            <div style="  color: black; margin-top: 20px; font-size:24px; cursor:pointer; line-height:34px;" class="level_1" on-click="count_clicked" id="{{count_l1.name}}">
                                 <span style="cursor:pointer;">[[count_l1.name]]</span>: <span style="cursor:pointer;">{{get_count(count_l1.name)}}</span>
                                 <span hidden$="[[!is_processing]]" style="cursor:pointer;">
                                     <paper-spinner active></paper-spinner>
@@ -233,11 +234,12 @@
                             </is-auto-ddl>
                         </span>
                         <span hidden$="[[is_greater_than(2, program_list.length)]]">
-                            <is-auto-ddl id="program_auto_ddl" style=" margin-bottom:2px;" selected="{{program_search}}" selectedid="{{selected_program_id}}" label="Type and choose a program" on-selected-updated="program_selected"
+                            <is-auto-ddl id="program_auto_ddl" style=" margin-bottom:2px;" selected="{{program_search}}" selectedid="{{selected_program_id}}" label="Type and choose a field of study" on-selected-updated="program_selected"
                                          on-search-updated="program_list_search" list="{{program_auto_list}}">
                             </is-auto-ddl>
                         </span>
                     </span>
+                    <paper-button on-click="add_tags" class="tennant_colors_reversed" style="margin: 10px 0 0 20px;">Add Tag(s)</paper-button>
                 </is-filter>
             </div>
 

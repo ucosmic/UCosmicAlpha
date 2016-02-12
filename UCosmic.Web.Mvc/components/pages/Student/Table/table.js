@@ -296,6 +296,10 @@ Polymer({
             type: Array,
             notify: true,
             value: []
+        },
+        tags_to_add: {
+            type: Array,
+            value: []
         }
     },
     listeners: {
@@ -506,7 +510,7 @@ Polymer({
             case "Country":
                 return 'Countries';
             case "Program":
-                return 'Programs';
+                return 'Field of Study';
             case "Level":
                 return 'Levels';
             case "Affiliation":
@@ -869,23 +873,26 @@ Polymer({
             chart.drawChart();
         }, 100);
     },
-    count_clicked: function (event, target, test) {
+    count_clicked: function (event) {
         var _this = this;
         var index = 1;
         var tag = event.model.__data__['count_l1'];
         if (this.get_count(tag.name) > 0) {
             this.is_processing = true;
+            var is_closing_expandables = this.is_closing_expandables;
             setTimeout(function () {
                 if (tag.is_clicked) {
                     _this.closest_utility().find_closest(event.target, '#collapse_outer' + event.model.__data__.__key__).opened = false;
                     _this.is_processing = false;
                     setTimeout(function () {
                         tag.is_clicked = false;
+                        tag.is_expanded = false;
                         _this['count_list' + index] = JSON.parse(JSON.stringify(_this['count_list' + index]));
                     }, 500);
                 }
                 else {
                     tag.is_clicked = true;
+                    tag.is_expanded = true;
                     _this['count_list' + index] = JSON.parse(JSON.stringify(_this['count_list' + index]));
                     setTimeout(function () {
                         _this.closest_utility().find_closest(event.target, '#collapse_outer' + event.model.__data__.__key__).opened = true;
@@ -895,7 +902,7 @@ Polymer({
             }, 10);
         }
     },
-    array_clicked: function (event, target, test) {
+    array_clicked: function (event) {
         var _this = this;
         this.is_processing = true;
         setTimeout(function () {
@@ -908,11 +915,13 @@ Polymer({
                 _this.is_processing = false;
                 setTimeout(function () {
                     tag.is_clicked = false;
+                    tag.is_expanded = false;
                     event.model.dataHost.items = JSON.parse(JSON.stringify(event.model.dataHost.items));
                 }, 500);
             }
             else {
                 tag.is_clicked = true;
+                tag.is_expanded = true;
                 var template = _this.closest_utility().find_closest_parent(event.target, 'template');
                 event.model.dataHost.items = JSON.parse(JSON.stringify(event.model.dataHost.items));
                 setTimeout(function () {
@@ -926,7 +935,7 @@ Polymer({
         switch (value) {
             case "Countries":
                 return 'country';
-            case "Programs":
+            case "Field of Study":
                 return 'program';
             case "Levels":
                 return 'level';
@@ -950,10 +959,10 @@ Polymer({
             }
         });
         if (x) {
-            return x.text ? x.text : count == 'student_affiliation' ? 'College Not Reported' : 'Not Reported';
+            return x.text ? x.text : count == 'student_affiliation' ? 'No College Designated' : 'Not Reported';
         }
         else {
-            return count == 'student_affiliation' ? 'College Not Reported' : 'Not Reported';
+            return count == 'student_affiliation' ? 'No College Designated' : 'Not Reported';
         }
     },
     create_array: function (name, show_all) {
@@ -1031,6 +1040,21 @@ Polymer({
             return value[count] == my_array[count];
         });
         return x.length;
+    },
+    add_tags: function (event) {
+        var _this = this;
+        this.tags_to_add.forEach(function (tag) {
+            _this.add_tag(tag.tag_name, tag._id, tag.type);
+        });
+        this.tags_to_add = [];
+        this.$.affiliation_auto_ddl.selected = '';
+        this.$.term_auto_ddl.selected = '';
+        this.$.status_auto_ddl.selected = '';
+        this.$.country_auto_ddl.selected = '';
+        this.$.student_affiliation_auto_ddl.selected = '';
+        this.$.level_auto_ddl.selected = '';
+        this.$.program_auto_ddl.selected = '';
+        this.calculate_counts(this);
     },
     calculate_counts: function (_this) {
         if (_this.tags && _this.tags.length > 0) {
@@ -1255,10 +1279,8 @@ Polymer({
     affiliation_selected: function (event, detail, sender) {
         this.affiliation = this.selected_affiliation_id ? this.selected_affiliation_id : 'all';
         var affiliation_selected = this.affiliation != 'all' ? _.result(_.find(this.affiliation_list, { '_id': this.affiliation }), 'text') : 'all';
-        this.$.affiliation_auto_ddl.selected = '';
         if (affiliation_selected != 'all') {
-            this.add_tag(affiliation_selected, this.affiliation, 'affiliation');
-            this.calculate_counts(this);
+            this.tags_to_add.push({ tag_name: affiliation_selected, _id: this.affiliation, type: 'affiliation' });
         }
     },
     affiliation_list_search: function (event, detail, sender) {
@@ -1278,10 +1300,8 @@ Polymer({
     countrySelected: function (event, detail, sender) {
         this.country = this.selectedCountryId ? this.selectedCountryId : 'all';
         var country_selected = this.country != 'all' ? _.result(_.find(this.country_list, { '_id': this.country }), 'text') : 'all';
-        this.$.country_auto_ddl.selected = '';
         if (country_selected != 'all') {
-            this.add_tag(country_selected, this.country, 'country');
-            this.calculate_counts(this);
+            this.tags_to_add.push({ tag_name: country_selected, _id: this.country, type: 'country' });
         }
     },
     countryListSearch: function (event, detail, sender) {
@@ -1301,10 +1321,8 @@ Polymer({
     program_selected: function (event, detail, sender) {
         this.program = this.selected_program_id ? this.selected_program_id : 'all';
         var program_selected = this.program != 'all' ? _.result(_.find(this.program_list, { '_id': this.program }), 'text') : 'all';
-        this.$.program_auto_ddl.selected = '';
         if (program_selected != 'all') {
-            this.add_tag(program_selected, this.program, 'program');
-            this.calculate_counts(this);
+            this.tags_to_add.push({ tag_name: program_selected, _id: this.program, type: 'program' });
         }
     },
     program_list_search: function (event, detail, sender) {
@@ -1324,10 +1342,8 @@ Polymer({
     level_selected: function (event, detail, sender) {
         this.level = (this.selected_level_id || this.selected_level_id == 0) ? this.selected_level_id : 'all';
         var level_selected = this.level != 'all' ? _.result(_.find(this.level_list, { '_id': this.level }), 'text') : 'all';
-        this.$.level_auto_ddl.selected = '';
         if (level_selected != 'all') {
-            this.add_tag(level_selected, this.level, 'level');
-            this.calculate_counts(this);
+            this.tags_to_add.push({ tag_name: level_selected, _id: this.level, type: 'level' });
         }
     },
     level_list_search: function (event, detail, sender) {
@@ -1336,10 +1352,8 @@ Polymer({
     student_affiliation_selected: function (event, detail, sender) {
         this.student_affiliation = this.selected_student_affiliation_id ? this.selected_student_affiliation_id : 'all';
         var student_affiliation_selected = this.student_affiliation != 'all' ? _.result(_.find(this.student_affiliation_list, { '_id': this.student_affiliation }), 'text') : 'all';
-        this.$.student_affiliation_auto_ddl.selected = '';
         if (student_affiliation_selected != 'all') {
-            this.add_tag(student_affiliation_selected, this.student_affiliation, 'student_affiliation');
-            this.calculate_counts(this);
+            this.tags_to_add.push({ tag_name: student_affiliation_selected, _id: this.student_affiliation, type: 'student_affiliation' });
         }
     },
     student_affiliation_list_search: function (event, detail, sender) {
@@ -1359,10 +1373,8 @@ Polymer({
     foreign_affiliation_selected: function (event, detail, sender) {
         this.foreign_affiliation = this.selected_foreign_affiliation_id ? this.selected_foreign_affiliation_id : 'all';
         var foreign_affiliation_selected = this.foreign_affiliation != 'all' ? _.result(_.find(this.foreign_affiliation_list, { '_id': this.foreign_affiliation }), 'text') : 'all';
-        this.$.foreign_affiliation_auto_ddl.selected = '';
         if (foreign_affiliation_selected != 'all') {
-            this.add_tag(foreign_affiliation_selected, this.foreign_affiliation, 'foreign_affiliation');
-            this.calculate_counts(this);
+            this.tags_to_add.push({ tag_name: foreign_affiliation_selected, _id: this.foreign_affiliation, type: 'foreign_affiliation' });
         }
     },
     foreign_affiliation_list_search: function (event, detail, sender) {
@@ -1382,9 +1394,8 @@ Polymer({
     term_selected: function (event, detail, sender) {
         this.term = this.selected_term_id ? this.selected_term_id : 'all';
         var term_selected = this.term != 'all' ? _.result(_.find(this.term_list, { '_id': this.term }), 'text') : 'all';
-        this.$.term_auto_ddl.selected = '';
         if (term_selected != 'all') {
-            this.add_tag(term_selected, this.term, 'term');
+            this.tags_to_add.push({ tag_name: term_selected, _id: this.term, type: 'term' });
         }
     },
     term_list_search: function (event, detail, sender) {
@@ -1393,9 +1404,8 @@ Polymer({
     status_selected: function (event, detail, sender) {
         this.status = this.selected_status_id ? this.selected_status_id : 'all';
         var status_selected = this.status != 'all' ? _.result(_.find(this.status_list, { '_id': this.status }), 'text') : 'all';
-        this.$.status_auto_ddl.selected = '';
         if (status_selected != 'all') {
-            this.add_tag(status_selected, this.status, 'status');
+            this.tags_to_add.push({ tag_name: status_selected, _id: this.status, type: 'status' });
         }
     },
     status_list_search: function (event, detail, sender) {

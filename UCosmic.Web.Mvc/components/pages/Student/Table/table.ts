@@ -299,6 +299,18 @@ Polymer({
             notify: true,
             value: []
         }
+        , tags_to_add: {
+            type: Array,
+            value: []
+        }
+        //, counts_clicked: {
+        //    type: Array,
+        //    value: []
+        //}
+        //, arrays_clicked: {
+        //    type: Array,
+        //    value: []
+        //}
     },
     listeners: {
         'neon-animation-finish': '_onAnimationFinish'
@@ -501,26 +513,26 @@ Polymer({
         return (t2 - t1) / (24 * 3600 * 1000);
     }
 
-    , compute_term_is_selected: function(tags){
+    , compute_term_is_selected: function (tags) {
         var term_tags = _.uniq(_.filter(tags, function (tag: any) {
             if (tag._type == 'term') {
                 return tag;
             }
         }), '_id');
-        if(term_tags.length > 0){
+        if (term_tags.length > 0) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
     , has_results: function (results) {
-        if (this.mobilities_filtered){
+        if (this.mobilities_filtered) {
             var count = 0
             _.forEach(results, (value: any, key) => {
                 count += this.get_count(value.name)
             });
             return count ? true : false;
-        }else{
+        } else {
             return true;
         }
 
@@ -530,7 +542,7 @@ Polymer({
             case "Country":
                 return 'Countries';
             case "Program":
-                return 'Programs';
+                return 'Field of Study';
             case "Level":
                 return 'Levels';
             case "Affiliation":
@@ -641,7 +653,7 @@ Polymer({
         var student_affiliation_list = [];
         if (this.establishment_list) {
             _.forEach(new_value, (value: any, index) => {
-                student_affiliation_list = value.student_affiliation != 'none' ? _.union(student_affiliation_list, [ this.establishment_list[value.student_affiliation]]) : student_affiliation_list;
+                student_affiliation_list = value.student_affiliation != 'none' ? _.union(student_affiliation_list, [this.establishment_list[value.student_affiliation]]) : student_affiliation_list;
             })
         }
         var foreign_affiliation_list = [];
@@ -759,7 +771,7 @@ Polymer({
     , capitaliseFirstLetter: function (myString) {
         return myString.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
     }
-    , get_expand_icon: function(is_expanded){
+    , get_expand_icon: function (is_expanded) {
         return is_expanded ? 'student_table:unfold-less' : 'student_table:unfold-more';
     }
     , show_all_check: function (show_all, index) {
@@ -797,7 +809,7 @@ Polymer({
             }, 100);
         }
     }
-    , get_chart_name: function(value, name){
+    , get_chart_name: function (value, name) {
 
         switch (value) {
             case 0:
@@ -813,9 +825,9 @@ Polymer({
         return 'column'
     }
     , is_country(name) {
-        if(name == 'Countries'){
+        if (name == 'Countries') {
             return true;
-        }else{
+        } else {
             return false
         }
         console.log(name);
@@ -847,7 +859,7 @@ Polymer({
         chart.rows = rows;
         target.toggle();
         setTimeout(function () {
-        chart.drawChart();
+            chart.drawChart();
         }, 100);
     }
     , chart_selected: function (event, target, test) {
@@ -879,7 +891,7 @@ Polymer({
         }, 100);
 
     }
-    , clear_tags: function(){
+    , clear_tags: function () {
         this.tags = [];
         this.calculate_counts(this);
     }
@@ -913,25 +925,31 @@ Polymer({
             chart.drawChart();
         }, 100);
     }
-    , count_clicked: function (event, target, test) {
-        var index = 1;// event.target.parentElement.id;
-        //var parent = event.model.dataHost.parentElement.children['count_l' + index];
-        //var tag = parent.itemForElement(event.target); 
+    , count_clicked: function (event) {
+        var index = 1;
         var tag = event.model.__data__['count_l1'];
         if (this.get_count(tag.name) > 0) {
             this.is_processing = true;
+            var is_closing_expandables = this.is_closing_expandables;
             setTimeout(() => {
                 if (tag.is_clicked) {
-
+                        //this.counts_clicked = _.remove(this.counts_clicked, event);
+                    //storing counts_clicked so we can restore them on filter tags change
                     this.closest_utility().find_closest(event.target, '#collapse_outer' + event.model.__data__.__key__).opened = false;
                     this.is_processing = false;
                     setTimeout(() => {
                         tag.is_clicked = false;
+                        tag.is_expanded = false;
                         this['count_list' + index] = JSON.parse(JSON.stringify(this['count_list' + index]));
                     }, 500);
 
                 } else {
-                    tag.is_clicked = true;
+                    //if (no_save !== true) {
+                        //this.counts_clicked.push(event);
+                    //}  
+                        //storing counts_clicked so we can restore them on filter tags change
+                        tag.is_clicked = true;
+                        tag.is_expanded = true;
                     this['count_list' + index] = JSON.parse(JSON.stringify(this['count_list' + index]));
                     setTimeout(() => {
                         this.closest_utility().find_closest(event.target, '#collapse_outer' + event.model.__data__.__key__).opened = true;
@@ -943,7 +961,7 @@ Polymer({
         }
         //*** may have to reset the object with json parse stringify
     }
-    , array_clicked: function (event, target, test) {
+    , array_clicked: function (event) {
         this.is_processing = true;
         setTimeout(() => {
             var index = event.target.parentElement.id;
@@ -951,18 +969,22 @@ Polymer({
             var tag = event.model.__data__['array_l1'];
             var collection = event.model.dataHost.dataHost.dataHost.items;
             if (tag.is_clicked) {
+                //this.arrays_clicked = _.remove(this.arrays_clicked, event);//storing arrays_clicked so we can restore them on filter tags change
                 this.closest_utility().find_closest(event.target, 'iron-collapse').opened = false;
                 this.is_processing = false;
                 setTimeout(() => {
                     tag.is_clicked = false;
+                    tag.is_expanded = false;
                     event.model.dataHost.items = JSON.parse(JSON.stringify(event.model.dataHost.items));
                 }, 500);
 
             } else {
+                //this.arrays_clicked.push(event);//storing arrays_clicked so we can restore them on filter tags change
                 tag.is_clicked = true;
+                tag.is_expanded = true;
                 var template = this.closest_utility().find_closest_parent(event.target, 'template');
                 event.model.dataHost.items = JSON.parse(JSON.stringify(event.model.dataHost.items));
-                setTimeout(() => { 
+                setTimeout(() => {
                     this.closest_utility().find_closest(event.target, 'iron-collapse').opened = true;
                     this.is_processing = false;
                 }, 50);
@@ -974,7 +996,7 @@ Polymer({
         switch (value) {
             case "Countries":
                 return 'country';
-            case "Programs":
+            case "Field of Study":
                 return 'program';
             case "Levels":
                 return 'level';
@@ -998,9 +1020,9 @@ Polymer({
             }
         })
         if (x) {
-                return x.text ? x.text : count == 'student_affiliation' ? 'College Not Reported' : 'Not Reported';
-        }else{
-                return count == 'student_affiliation' ? 'College Not Reported' : 'Not Reported';
+            return x.text ? x.text : count == 'student_affiliation' ? 'No College Designated' : 'Not Reported';
+        } else {
+            return count == 'student_affiliation' ? 'No College Designated' : 'Not Reported';
         }
     }
     , create_array: function (name, show_all) {
@@ -1012,9 +1034,9 @@ Polymer({
         if (show_all) {
             return _.sortBy(my_list, (my_array: any) => {
                 return -1 * (
-                _.filter(this.mobilities_filtered, function (value, index) {
+                    _.filter(this.mobilities_filtered, function (value, index) {
                         return value[name] == my_array[name]
-                }).length);
+                    }).length);
             });
         } else {
             return _.take(_.sortBy(my_list, (my_array: any) => {
@@ -1072,8 +1094,57 @@ Polymer({
         });
         return x.length;
     }
+    , add_tags: function (event) {
 
+        this.tags_to_add.forEach((tag) => {
+            this.add_tag(tag.tag_name, tag._id, tag.type);
+        });
+        this.tags_to_add = [];
+        this.$.affiliation_auto_ddl.selected = '';
+        this.$.term_auto_ddl.selected = '';
+        this.$.status_auto_ddl.selected = '';
+        this.$.country_auto_ddl.selected = '';
+        this.$.student_affiliation_auto_ddl.selected = '';
+        this.$.level_auto_ddl.selected = '';
+        this.$.program_auto_ddl.selected = '';
+
+        this.calculate_counts(this);
+    }
+    //, close_expandables: function (_this) {
+    //    //_.each(_this.querySelectorAll('iron-collapse'), function bringMeThatDiv(el: any) {
+    //    //    el.opened = false;
+    //    //});
+    //    //_this.count_list1.forEach(function (column) {
+    //    //        if(column.is_clicked){
+    //    //            column.is_expanded = true;
+    //    //        }
+    //    //});
+    //    _this.count_list1 = _.map(_this.count_list1, function (column: any){
+    //        column.is_expanded = column.is_clicked ? true : false;
+    //        return column;
+    //    })
+        
+    //}
+
+    //, reopen_counts_arrays: function (_this, counts, arrays, is_clicked_once) {
+    //    if (_this.is_processing) {
+    //        setTimeout(function () {
+    //            return _this.reopen_counts_arrays(_this, counts, arrays, is_clicked_once);
+    //        }, 10);
+    //    } else {
+    //        if (counts.length > 0) {
+    //            _this.count_clicked(counts[0], false);
+    //            return _this.reopen_counts_arrays(_this, _.slice(counts, 0, counts.length - 1), arrays, false);
+    //        } else if (arrays.length > 0) {
+    //            _this.array_clicked(arrays[0]);
+    //            return _this.reopen_counts_arrays(_this, counts, _.slice(arrays, 0, arrays.length - 1), false);
+    //        } else {
+    //            return;
+    //        }
+    //    }
+    //}
     , calculate_counts: function (_this) {
+
         if (_this.tags && _this.tags.length > 0) {
             var my_object = JSON.parse(JSON.stringify(_this.mobilities));
 
@@ -1102,11 +1173,17 @@ Polymer({
         this.count_list2 = this.count_list1;
         _this.columns_changed(_this.columns);
         _this.total = _this.mobilities_filtered ? _this.mobilities_filtered.length : 0;
+        //setTimeout(function () {
+        //    _this.close_expandables(_this);
+        //    //setTimeout(function () {
+        //    //    _this.reopen_counts_arrays(_this, _.clone(_this.counts_clicked), _.clone(_this.arrays_clicked));
+        //    //}, 1000);
+        //}, 1000);
     }
     , data_loaded_changed: function (new_value, old_value) {
         var is_data_loaded = true;
         _.forEach(new_value, function (value: any, index) {
-            is_data_loaded = value.is_loaded && is_data_loaded ? true : false; 
+            is_data_loaded = value.is_loaded && is_data_loaded ? true : false;
         });
         this.is_data_loaded = is_data_loaded;
         if (is_data_loaded && (this.mobilities && this.mobilities.length > 0) && _.toArray(new_value).length > 1) {
@@ -1120,7 +1197,7 @@ Polymer({
                 return obj.is_shown;
             })
             this.count_list2 = this.count_list1;
-                this.mobilities_filtered = JSON.parse(JSON.stringify(this.mobilities_filtered));
+            this.mobilities_filtered = JSON.parse(JSON.stringify(this.mobilities_filtered));
         }
     }
     , processing_table: false
@@ -1232,7 +1309,7 @@ Polymer({
                 _this.country = 'all';
                 _this.program = 'all';
                 _this.level = 'all';
-            }            
+            }
         } else {
             setTimeout(function () {
                 _this.filter_table(_this);
@@ -1306,10 +1383,11 @@ Polymer({
 
         this.affiliation = this.selected_affiliation_id ? this.selected_affiliation_id : 'all';
         var affiliation_selected = this.affiliation != 'all' ? _.result(_.find(this.affiliation_list, { '_id': this.affiliation }), 'text') : 'all';// id === index
-        this.$.affiliation_auto_ddl.selected = '';
+        //this.$.affiliation_auto_ddl.selected = '';
         if (affiliation_selected != 'all') {
-            this.add_tag(affiliation_selected, this.affiliation, 'affiliation');
-            this.calculate_counts(this);
+            //this.add_tag(affiliation_selected, this.affiliation, 'affiliation');
+            //this.calculate_counts(this);
+            this.tags_to_add.push({ tag_name: affiliation_selected, _id: this.affiliation, type: 'affiliation' });
         }
 
         //first check to see if url is correct
@@ -1334,10 +1412,11 @@ Polymer({
 
         this.country = this.selectedCountryId ? this.selectedCountryId : 'all';
         var country_selected = this.country != 'all' ? _.result(_.find(this.country_list, { '_id': this.country }), 'text') : 'all';
-        this.$.country_auto_ddl.selected = '';
+        //this.$.country_auto_ddl.selected = '';
         if (country_selected != 'all') {
-            this.add_tag(country_selected, this.country, 'country');
-            this.calculate_counts(this);
+            //this.add_tag(country_selected, this.country, 'country');
+            //this.calculate_counts(this);
+            this.tags_to_add.push({ tag_name: country_selected, _id: this.country, type: 'country' });
         }
         //this.filter_table(this);
     },
@@ -1358,10 +1437,11 @@ Polymer({
 
         this.program = this.selected_program_id ? this.selected_program_id : 'all';
         var program_selected = this.program != 'all' ? _.result(_.find(this.program_list, { '_id': this.program }), 'text') : 'all';
-        this.$.program_auto_ddl.selected = '';
+        //this.$.program_auto_ddl.selected = '';
         if (program_selected != 'all') {
-            this.add_tag(program_selected, this.program, 'program');
-            this.calculate_counts(this);
+            //this.add_tag(program_selected, this.program, 'program');
+            //this.calculate_counts(this);
+            this.tags_to_add.push({ tag_name: program_selected, _id: this.program, type: 'program' });
         }
         //this.filter_table(this);
     },
@@ -1383,10 +1463,11 @@ Polymer({
         this.level = (this.selected_level_id || this.selected_level_id == 0) ? this.selected_level_id : 'all';
 
         var level_selected = this.level != 'all' ? _.result(_.find(this.level_list, { '_id': this.level }), 'text') : 'all';
-        this.$.level_auto_ddl.selected = '';
+        //this.$.level_auto_ddl.selected = '';
         if (level_selected != 'all') {
-            this.add_tag(level_selected, this.level, 'level');
-            this.calculate_counts(this);
+            //this.add_tag(level_selected, this.level, 'level');
+            //this.calculate_counts(this);
+            this.tags_to_add.push({ tag_name: level_selected, _id: this.level, type: 'level' });
         }
     },
     level_list_search: function (event, detail, sender) {
@@ -1397,10 +1478,11 @@ Polymer({
         this.student_affiliation = this.selected_student_affiliation_id ? this.selected_student_affiliation_id : 'all';
 
         var student_affiliation_selected = this.student_affiliation != 'all' ? _.result(_.find(this.student_affiliation_list, { '_id': this.student_affiliation }), 'text') : 'all';
-        this.$.student_affiliation_auto_ddl.selected = '';
+        //this.$.student_affiliation_auto_ddl.selected = '';
         if (student_affiliation_selected != 'all') {
-            this.add_tag(student_affiliation_selected, this.student_affiliation, 'student_affiliation');
-            this.calculate_counts(this);
+            //this.add_tag(student_affiliation_selected, this.student_affiliation, 'student_affiliation');
+            //this.calculate_counts(this);
+            this.tags_to_add.push({ tag_name: student_affiliation_selected, _id: this.student_affiliation, type: 'student_affiliation' });
         }
     },
     student_affiliation_list_search: function (event, detail, sender) {
@@ -1420,10 +1502,11 @@ Polymer({
         this.foreign_affiliation = this.selected_foreign_affiliation_id ? this.selected_foreign_affiliation_id : 'all';
 
         var foreign_affiliation_selected = this.foreign_affiliation != 'all' ? _.result(_.find(this.foreign_affiliation_list, { '_id': this.foreign_affiliation }), 'text') : 'all';
-        this.$.foreign_affiliation_auto_ddl.selected = '';
+        //this.$.foreign_affiliation_auto_ddl.selected = '';
         if (foreign_affiliation_selected != 'all') {
-            this.add_tag(foreign_affiliation_selected, this.foreign_affiliation, 'foreign_affiliation');
-            this.calculate_counts(this);
+            //this.add_tag(foreign_affiliation_selected, this.foreign_affiliation, 'foreign_affiliation');
+            //this.calculate_counts(this);
+            this.tags_to_add.push({ tag_name: foreign_affiliation_selected, _id: this.foreign_affiliation, type: 'foreign_affiliation' });
         }
     },
     foreign_affiliation_list_search: function (event, detail, sender) {
@@ -1443,9 +1526,10 @@ Polymer({
         this.term = this.selected_term_id ? this.selected_term_id : 'all';
 
         var term_selected = this.term != 'all' ? _.result(_.find(this.term_list, { '_id': this.term }), 'text') : 'all';
-        this.$.term_auto_ddl.selected = '';
+        //this.$.term_auto_ddl.selected = '';
         if (term_selected != 'all') {
-            this.add_tag(term_selected, this.term, 'term');
+            //this.add_tag(term_selected, this.term, 'term');
+            this.tags_to_add.push({ tag_name: term_selected, _id: this.term, type: 'term' });
         }
     },
     term_list_search: function (event, detail, sender) {
@@ -1456,9 +1540,10 @@ Polymer({
         this.status = this.selected_status_id ? this.selected_status_id : 'all';
 
         var status_selected = this.status != 'all' ? _.result(_.find(this.status_list, { '_id': this.status }), 'text') : 'all';
-        this.$.status_auto_ddl.selected = '';
+        //this.$.status_auto_ddl.selected = '';
         if (status_selected != 'all') {
-            this.add_tag(status_selected, this.status, 'status');
+            //this.add_tag(status_selected, this.status, 'status');
+            this.tags_to_add.push({ tag_name: status_selected, _id: this.status, type: 'status' });
         }
     },
     status_list_search: function (event, detail, sender) {

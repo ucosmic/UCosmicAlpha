@@ -909,7 +909,7 @@ Polymer({
     setup_routing: function () {
         page.base(window.location.pathname);
         page('/:page/:page_count/:affiliation/:continent/:country/:program/:level/:status/:start_date/:end_date/:order_by/:asc_desc', this.navigate);
-        //page('/:restaurant_id/:page_id', this.navigate);
+        //page('/:tennant_id/:page_id', this.navigate);
         page('*', this.navigate);
         page({ hashbang: true });
     },
