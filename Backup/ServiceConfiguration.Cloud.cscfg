@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="UCosmic.Azure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="3" osVersion="*" schemaVersion="2014-06.2.4">
+  <Role name="UCosmic.Web.Mvc">
+    <Instances count="2" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=ucosmicdiagnostics2;AccountKey=ZtO/dDS0KIosbA9Z7KoPwgwPE9Yv3VTUjsENcqOK9U0if8XSZNYh0KmJK4LR+BrqzQvJmvqKrutNAuRq7C5YEw==" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="UCosmicBriarhill" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCEEKcETAj6UihRRKiJpADWNEwDQYJKoZIhvcNAQEBBQAEggEAjrwzUOUBBgGiew2YV6rrGoZlAMCk4ByDypEq8tyvDDDiusGk0pBu8up/TVKwDLwhrIP53YIQ3d32OYu5VC1j1011C6+SeRfv/pMm5ch0jGCpjXGGMGXZot4B/NHxbKukyWC0zhVyt/+dkrZWgZfnxKXACRVHjGC7SlzrLVyvzR60O9VUigACcyNffdOwWSenak7NQ40Rowv6MruePUG57rRxq8Z2JuBWK88sMh0/BZfKFXmvSWhTroZQ1SB76Tt5sbLC9idH66t+Ff89/8kZ/6ufmf+cY33Ws+DyOiTf07MFTnYB5bXXqwAs2aafbGWaX7mSvCWQPGxNp+r9BQNqNTAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECHFDv+9cfETjgBDuFLiODQWwnZFI8/dPQytb" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2014-11-09T23:59:59.0000000-05:00" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteForwarder.Enabled" value="true" />
+    </ConfigurationSettings>
+    <Certificates>
+      <Certificate name="star.ucosmic.com" thumbprint="CF08C5ADD19169562945942D2FDD0A06DD8112FD" thumbprintAlgorithm="sha1" />
+      <Certificate name="azureconfig" thumbprint="9975FCFAF342D1FB73631EB5A1CD9BCEF1F102F6" thumbprintAlgorithm="sha1" />
+      <Certificate name="saml.ucosmic.com" thumbprint="F98BAF8C0A12C49819AA16AF32233FF523F672FF" thumbprintAlgorithm="sha1" />
+      <Certificate name="saml.ucosmic.dev" thumbprint="1945D599DF7F3B3D6513C87A8CDDF4CE6E0899B6" thumbprintAlgorithm="sha1" />
+      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="50AE3C46359607209787B18517829EA8DF67FF74" thumbprintAlgorithm="sha1" />
+    </Certificates>
+  </Role>
+  <Role name="UCosmic.Work">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=ucosmicdiagnostics2;AccountKey=ZtO/dDS0KIosbA9Z7KoPwgwPE9Yv3VTUjsENcqOK9U0if8XSZNYh0KmJK4LR+BrqzQvJmvqKrutNAuRq7C5YEw==" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="UCosmicBriarhill" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCEEKcETAj6UihRRKiJpADWNEwDQYJKoZIhvcNAQEBBQAEggEAjrwzUOUBBgGiew2YV6rrGoZlAMCk4ByDypEq8tyvDDDiusGk0pBu8up/TVKwDLwhrIP53YIQ3d32OYu5VC1j1011C6+SeRfv/pMm5ch0jGCpjXGGMGXZot4B/NHxbKukyWC0zhVyt/+dkrZWgZfnxKXACRVHjGC7SlzrLVyvzR60O9VUigACcyNffdOwWSenak7NQ40Rowv6MruePUG57rRxq8Z2JuBWK88sMh0/BZfKFXmvSWhTroZQ1SB76Tt5sbLC9idH66t+Ff89/8kZ/6ufmf+cY33Ws+DyOiTf07MFTnYB5bXXqwAs2aafbGWaX7mSvCWQPGxNp+r9BQNqNTAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECHFDv+9cfETjgBDuFLiODQWwnZFI8/dPQytb" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2014-11-09T23:59:59.0000000-05:00" />
+    </ConfigurationSettings>
+    <Certificates>
+      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="50AE3C46359607209787B18517829EA8DF67FF74" thumbprintAlgorithm="sha1" />
+      <Certificate name="azureconfig" thumbprint="9975FCFAF342D1FB73631EB5A1CD9BCEF1F102F6" thumbprintAlgorithm="sha1" />
+    </Certificates>
+  </Role>
+</ServiceConfiguration>

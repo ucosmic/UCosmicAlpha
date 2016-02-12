@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceDefinition name="UCosmic.Azure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2014-06.2.4">
+  <WebRole name="UCosmic.Web.Mvc" vmsize="Small">
+    <Runtime executionContext="elevated" />
+    <Startup>
+      <Task commandLine="startup\disableTimeout.cmd" executionContext="elevated" taskType="simple" />
+      <!--http://blogs.infosupport.com/adding-assemblies-to-the-gac-in-windows-azure/-->
+      <Task commandLine="startup\setupGac.cmd" executionContext="elevated" taskType="simple" />
+    </Startup>
+    <Sites>
+      <Site name="Web">
+        <Bindings>
+          <Binding name="HttpBinding" endpointName="HttpEndpoint" />
+          <Binding name="HttpsBinding" endpointName="HttpsEndpoint" />
+        </Bindings>
+      </Site>
+    </Sites>
+    <Endpoints>
+      <InputEndpoint name="HttpEndpoint" protocol="http" port="80" />
+      <InputEndpoint name="HttpsEndpoint" protocol="https" port="443" certificate="star.ucosmic.com" />
+    </Endpoints>
+    <Imports>
+      <Import moduleName="Diagnostics" />
+      <Import moduleName="RemoteAccess" />
+      <Import moduleName="RemoteForwarder" />
+    </Imports>
+    <ConfigurationSettings>
+    </ConfigurationSettings>
+    <Certificates>
+      <Certificate name="star.ucosmic.com" storeLocation="LocalMachine" storeName="My" />
+      <Certificate name="azureconfig" storeLocation="LocalMachine" storeName="My" />
+      <Certificate name="saml.ucosmic.com" storeLocation="LocalMachine" storeName="My" />
+      <Certificate name="saml.ucosmic.dev" storeLocation="LocalMachine" storeName="My" />
+    </Certificates>
+    <LocalResources>
+      <LocalStorage name="DiagnosticStore" sizeInMB="20000" cleanOnRoleRecycle="false" />
+    </LocalResources>
+  </WebRole>
+  <WorkerRole name="UCosmic.Work" vmsize="ExtraSmall">
+    <Runtime executionContext="elevated" />
+    <Startup>
+      <Task commandLine="startup\setupGac.cmd" executionContext="elevated" taskType="simple" />
+    </Startup>
+    <Imports>
+      <Import moduleName="Diagnostics" />
+      <Import moduleName="RemoteAccess" />
+    </Imports>
+    <Certificates>
+      <Certificate name="azureconfig" storeLocation="LocalMachine" storeName="My" />
+    </Certificates>
+  </WorkerRole>
+</ServiceDefinition>

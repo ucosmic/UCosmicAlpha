@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <configSections>
+    <section name="dataCache" type="Microsoft.ApplicationServer.Caching.DataCacheSection, Microsoft.ApplicationServer.Caching.Core" allowLocation="true" allowDefinition="Everywhere" />
+  </configSections>
+  <dataCache size="Small">
+    <advancedProperties>
+      <transportProperties maxBufferSize="103913912" maxBufferPoolSize="203913912" />
+    </advancedProperties>
+  </dataCache>
+</configuration>
+
+
