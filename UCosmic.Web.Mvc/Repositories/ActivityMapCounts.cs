@@ -304,7 +304,10 @@ namespace UCosmic.Repositories
         public IList<ActivitySnapShotApiQueryResultModel> ActivitySnapShot(int ancestorId)
         {
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
-            string sql = "select distinct aa.revisionid, pp1.revisionid as id, people.revisionId as personId,  at.typeid as typeId, av.startson as startsOn, av.endson as endsOn, av.ongoing, " +
+            string sql = "select distinct aa.revisionid, pp1.revisionid as id, people.revisionId as personId,  at.typeid as typeId, av.startson as startsOn, av.endson as endsOn, av.ongoing, " + 
+                " CASE WHEN av.endsOn is not null THEN av.endsOn When ongoing = 1 then '2999-01-01 00:00:00.000' " + 
+                " When av.startsOn is not null then av.startsOn ELSE '1901-01-01 00:00:00.000' End as endson,  " +
+                " CASE When startsOn is not null THEN startsOn ELSE '1901-01-01 00:00:00.000' End as startsOn, " + 
                   " CASE WHEN (gnt.continentcode = 'AF' and pp1.iscontinent = 1) THEN 'Africa' " +
                   " WHEN (gnt.continentcode = 'AN' and pp1.iscontinent = 1) THEN 'Antarctica' " +
                   " WHEN (gnt.continentcode = 'AS' and pp1.iscontinent = 1) THEN 'Asia' " +
@@ -330,7 +333,10 @@ namespace UCosmic.Repositories
                   " left outer join Places.place pp2 on gpp2.placeId=pp2.revisionid " +
                   " where (pa.establishmentid=" + ancestorId + " or een.AncestorId=" + ancestorId + ") and aa.mode='public' and av.mode='public' and aa.EditSourceId is null";
                   //" and (pp1.isregion=0 or (pp1.isregion=1 and gnt.continentcode IS NOT null))";and pp1.isWater = 1
-
+            //if (placeId != 1)
+            //{
+            //    sql += " and pp1.revisionid = " + placeId;
+            //}
 
 
             IList<ActivitySnapShotApiQueryResultModel> ActivityMapCounts = connectionFactory.SelectList<ActivitySnapShotApiQueryResultModel>(DB.UCosmic, sql);
