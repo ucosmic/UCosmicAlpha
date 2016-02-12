@@ -38,7 +38,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         
         /* Returns activity type counts for given place.*/
         [GET("activity-count/{selectedEstablishment}/{establishmentId?}/{placeId?}/{selectedEstablishmentId?}")]
-        //[CacheHttpGet(Duration = 3600)]
+        [CacheHttpGet(Duration = 3600)]
         public ActivitySummaryApiModel GetActivityCount(string selectedEstablishment, int? establishmentId, int? placeId, int? selectedEstablishmentId)
         {
             ActivitySummaryApiModel returnModel = new ActivitySummaryApiModel();
@@ -268,8 +268,17 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     SummaryRepository summaryRepository = new SummaryRepository();
                     AgreementTypesRepository AgreementTypesRepository = new AgreementTypesRepository();
                     model = summaryRepository.AgreementSummaryByEstablishment_Place(establishmentId, placeId, selectedEstablishmentId);
-                    var modelDistinct = model.DistinctBy(x => new { x.id, x.type });
-                    var locationDistinct = model.DistinctBy(x => x.officialName);
+                    //var test2 = model.DistinctBy(x => new { x.id, x.type });
+                    //var test = model.DistinctBy(x => new { x.id2, x.type2 });
+                    //var new_model = test.Concat(test2);
+                    //var test3 = model.DistinctBy(x => new { x.id });
+                    //var test4 = model.DistinctBy(x => new { x.id2 });
+                    //var test5 = model.DistinctBy(x => new { x.id });
+                    //var test6 = model.DistinctBy(x => new { x.id2 });
+                    //var test7 = test5.DistinctBy(x => new { x.type });
+                    //var test8 = test6.DistinctBy(x => new { x.type2 });
+                    var modelDistinct = model.DistinctBy(x => new { x.id, x.type });// test.Concat(test2);// new_model.DistinctBy(x => new { x.id, x.type });
+                    var locationDistinct = model.Where(x => x.officialName != null).DistinctBy(x => x.officialName);
                     returnModel.TypeCount = modelDistinct.Count();
                     returnModel.LocationCount = locationDistinct.Count();
 
@@ -279,7 +288,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     {
                         var typeCount = modelDistinct.Where(x => x.type == type.type).Count();
                         //var locationCount = locationDistinct.Where(x => x.type == type.type).Count();
-                        var locationCount = modelDistinct.Where(x => x.type == type.type).DistinctBy(x => x.officialName).Count();
+                        var locationCount = model.Where(x => x.officialName != null).Where(x => x.type == type.type).DistinctBy(x => x.officialName).Count();
                         returnItems.Add(new AgreementSummaryItemsApiModel { LocationCount = locationCount, TypeCount = typeCount, Type = type.type, TypeId = type.id });
                     }
                 }
