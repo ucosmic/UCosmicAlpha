@@ -133,6 +133,7 @@ namespace UCosmic.Web.Mvc.Controllers
             
             var personModel = GetPerson(personId);
             ViewBag.Username = personModel.Username;
+            //model.Items.All(x => x.Institution)
             return View(model);
         }
 

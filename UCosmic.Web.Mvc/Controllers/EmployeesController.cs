@@ -108,6 +108,60 @@ namespace UCosmic.Web.Mvc.Controllers
                 //    BoundingBox = null,
                 //}).ToArray();
 
+                DateTime Since = Convert.ToDateTime(input.Since);
+
+                DateTime Until = Convert.ToDateTime(input.Until);
+                bool include_undated;
+                if (input.IncludeUndated != null)
+                {
+                    if (input.IncludeUndated == false)
+                    {
+                        include_undated = false;
+                    }
+                    else
+                    {
+                        include_undated = true;
+                    }
+                }
+                else
+                {
+                    include_undated = false;
+                }
+
+                //Output = Output.Where(x => (x.StartsOnCalc.Year <= Until.Year && (x.EndsOnCalc.Year >= Since.Year || x.onGoing))).ToList();
+
+                if (include_undated)
+                {
+                    if (input.Since != null && input.Until != null)
+                    {
+                        Output = Output.Where(x => ((x.StartsOnCalc <= Until || x.StartsOnCalc == null) && (x.EndsOnCalc >= Since || x.EndsOnCalc == null || x.onGoing))).ToList();
+                    }
+                    else if (input.Since != null)
+                    {
+                        Output = Output.Where(x => ((x.StartsOnCalc <= Since || x.StartsOnCalc == null) && (x.EndsOnCalc >= Since || x.EndsOnCalc == null || x.onGoing))).ToList();
+                    }
+                    else if (input.Until != null)
+                    {
+                        Output = Output.Where(x => ((x.StartsOnCalc <= Until || x.StartsOnCalc == null) && (x.EndsOnCalc >= Until || x.EndsOnCalc == null || x.onGoing))).ToList();
+                    }
+                }
+                else
+                {
+                    if (input.Since != null && input.Until != null)
+                    {
+                        Output = Output.Where(x => (x.StartsOnCalc <= Until && (x.EndsOnCalc >= Since || x.onGoing))).ToList();
+                    }
+                    else if (input.Since != null)
+                    {
+                        Output = Output.Where(x => (x.StartsOnCalc <= Since && (x.EndsOnCalc >= Since || x.onGoing))).ToList();
+                    }
+                    else if (input.Until != null)
+                    {
+                        Output = Output.Where(x => (x.StartsOnCalc <= Until && (x.EndsOnCalc >= Until || x.onGoing))).ToList();
+                    }
+                }
+                //Output.for
+
                 var results = Output.GroupBy(g => g.id).Select(x => new ActivitySearchResultModel
                 {
                     ActivityId = x.First().id,

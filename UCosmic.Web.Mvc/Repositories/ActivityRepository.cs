@@ -65,46 +65,79 @@ namespace UCosmic.Repositories
                 }
                 sql += ")";
             }
-            if (input.IncludeUndated != null)
-            {
-                if (input.IncludeUndated == false)
-                {
-                    if (input.Since != null && input.Since != "")
-                    {
-                        sql += " and (av.startson >= '" + input.Since + "' or av.endson >= '" + input.Since + "' or av.ongoing=1)";
-                    }
-                    if (input.Until != null && input.Until != "")
-                    {
-                        sql += " and (av.endson <= '" + input.Until + "' or av.startson <= '" + input.Until + "')";
-                    }
-                    if ((input.Until == null || input.Until == "") && (input.Since == null || input.Since == ""))
-                    {
-                        sql += " and (av.endson <= '" + DateTime.Now + "' or av.startson <= '" + DateTime.Now + "')";
-                    }
-                }
-                else
-                {
-                    if (input.Since != null && input.Since != "")
-                    {
-                        sql += " and (av.startson >= '" + input.Since + "' or av.startson is null or av.endson >= '" + input.Since + "' or av.ongoing=1)";
-                    }
-                    if (input.Until != null && input.Until != "")
-                    {
-                        sql += " and (av.endson <= '" + input.Until + "' or av.endson is null or av.startson <= '" + input.Until + "')";
-                    }
-                }
-            }
-            else
-            {
-                if (input.Since != null && input.Since != "")
-                {
-                    sql += " and av.startson >= '" + input.Since + "' or av.endson >= '" + input.Since + "' or av.ongoing=1";
-                }
-                if (input.Until != null && input.Until != "")
-                {
-                    sql += " and (av.endson <= '" + input.Until + "' or av.startson <= '" + input.Until + "'";
-                }
-            }
+            //if (input.IncludeUndated != null)
+            //{
+            //    if (input.IncludeUndated == false)
+            //    {
+            //        if (input.Since != null && input.Since != "" && input.Until != null && input.Until != "")
+            //        {
+            //            sql += " and ((av.startson <= '" + input.Until + "'or av.startson is null) and ((av.endson >= '" + input.Since + "' or av.ongoing=1) or av.endson is null))";
+            //            sql += " and ((av.startson is not null) and (av.endson is not null))";
+            //            //sql += " and (av.startson <= '" + input.Until + "' and av.endson >= '" + input.Since + "' or av.ongoing=1)";
+            //        }
+            //        else if (input.Since != null && input.Since != "")
+            //        {
+            //            sql += " and (av.startson >= '" + input.Since + "' or av.endson >= '" + input.Since + "' or av.ongoing=1)";
+            //        }
+            //        else if (input.Until != null && input.Until != "")
+            //        {
+            //            sql += " and (av.endson <= '" + input.Until + "' or av.startson <= '" + input.Until + "')";
+            //        }
+            //        //if ((input.Until == null || input.Until == "") && (input.Since == null || input.Since == ""))
+            //        else
+            //        {
+            //            sql += " and (av.endson <= '" + DateTime.Now + "' or av.startson <= '" + DateTime.Now + "')";
+            //        }
+            //    }
+            //    else
+            //    {
+            //        if (input.Since != null && input.Since != "" && input.Until != null && input.Until != "")
+            //        {
+            //            sql += " and ((av.startson <= '" + input.Until + "'or av.startson is null) and ((av.endson >= '" + input.Since + "' or av.ongoing=1) or av.endson is null))";
+            //        }
+            //        else if (input.Since != null && input.Since != "")
+            //        {
+            //            sql += " and (av.startson >= '" + input.Since + "' or av.startson is null or av.endson >= '" + input.Since + "' or av.ongoing=1)";
+            //        }
+            //        else if (input.Until != null && input.Until != "")
+            //        {
+            //            sql += " and (av.endson <= '" + input.Until + "' or av.endson is null or av.startson <= '" + input.Until + "')";
+            //        }
+            //        //if (input.Since != null && input.Since != "")
+            //        //{
+            //        //    sql += " and (av.startson >= '" + input.Since + "' or av.startson is null or av.endson >= '" + input.Since + "' or av.ongoing=1)";
+            //        //}
+            //        //if (input.Until != null && input.Until != "")
+            //        //{
+            //        //    sql += " and (av.endson <= '" + input.Until + "' or av.endson is null or av.startson <= '" + input.Until + "')";
+            //        //}
+            //    }
+            //}
+            //else
+            //{
+            //    if (input.Since != null && input.Since != "" && input.Until != null && input.Until != "")
+            //    {
+            //        sql += " and ((av.startson <= '" + input.Until + "'or av.startson is null) and ((av.endson >= '" + input.Since + "' or av.ongoing=1) or av.endson is null))";
+            //        sql += " and ((av.startson is not null) and (av.endson is not null))";
+            //        //sql += " and (av.startson <= '" + input.Until + "' and av.endson >= '" + input.Since + "' or av.ongoing=1)";
+            //    }
+            //    else if (input.Since != null && input.Since != "")
+            //    {
+            //        sql += " and (av.startson >= '" + input.Since + "' or av.endson >= '" + input.Since + "' or av.ongoing=1)";
+            //    }
+            //    else if (input.Until != null && input.Until != "")
+            //    {
+            //        sql += " and (av.endson <= '" + input.Until + "' or av.startson <= '" + input.Until + "')";
+            //    }
+            //    //if (input.Since != null && input.Since != "")
+            //    //{
+            //    //    sql += " and av.startson >= '" + input.Since + "' or av.endson >= '" + input.Since + "' or av.ongoing=1";
+            //    //}
+            //    //if (input.Until != null && input.Until != "")
+            //    //{
+            //    //    sql += " and (av.endson <= '" + input.Until + "' or av.startson <= '" + input.Until + "'";
+            //    //}
+            //}
             if (input.Keyword != null && input.Keyword != "")
             {
                 List<string> keywords;
@@ -180,10 +213,10 @@ namespace UCosmic.Repositories
         public static IList<ActivityQueryResultModel> ActivitiesPageBy(ActivitySearchInputModel input, int? ancestorId)
         {
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
-            string sql = "select distinct aa.revisionid as id,  startsOn, endsOn, people.revisionId as personId, av.title, " +
-                  " CASE WHEN endsOn is not null THEN endsOn When ongoing = 1 then '2999-01-01 00:00:00.000' When startsOn is not null then startsOn ELSE '1901-01-01 00:00:00.000' End as lastDate, " +
-                //" CASE When startsOn is not null THEN startsOn when endsOn is not null then endsOn ELSE '2999-01-01 00:00:00.000' End as firstDate, " +
-                  " CASE When startsOn is not null THEN startsOn ELSE '1901-01-01 00:00:00.000' End as firstDate, " +
+            string sql = "select distinct aa.revisionid as id,  people.revisionId as personId, av.title, startsOn, endsOn," +
+                  " CASE WHEN endsOn is not null THEN endsOn When ongoing = 1 then '2999-01-01 00:00:00.000' When startsOn is not null then startsOn ELSE '1901-01-01 00:00:00.000' End as endsOnCalc, " +
+                //" CASE When startsOn is not null THEN startsOn when endsOn is not null then endsOn ELSE '2999-01-01 00:00:00.000' End as startsOn, " +
+                  " CASE When startsOn is not null THEN startsOn ELSE '1901-01-01 00:00:00.000' End as startsOnCalc, " +
                   " CASE When lastName is not null THEN lastName ELSE 'zzzzzzzz' End as lastNameSort, " +
                   " CASE When firstName is not null THEN firstName ELSE 'zzzzzzzz' End as firstNameSort, " +
                   " CASE When ongoing = 1 THEN 1  ELSE 0 End as onGoingSort, " +
@@ -241,36 +274,36 @@ namespace UCosmic.Repositories
                     {
                         if (ascDesc.Contains("desc"))
                         {
-                            sql += " order by onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
+                            sql += " order by onGoingSort desc, endsOn desc, startsOn desc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
                         }
                         else
                         {
-                            sql += " order by onGoingSort asc, firstDate asc, lastDate asc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
+                            sql += " order by onGoingSort asc, startsOn asc, endsOn asc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
                         }
                     }
                     else if (orderBy.Contains("lastname"))
                     {
                         orderBy = "lastNameSort";
-                        sql += " order by " + orderBy + " " + ascDesc + ", firstNameSort asc, onGoingSort desc, lastDate desc, firstDate desc, locationName asc, av.title asc";
+                        sql += " order by " + orderBy + " " + ascDesc + ", firstNameSort asc, onGoingSort desc, endsOn desc, startsOn desc, locationName asc, av.title asc";
                     }
                     else if (orderBy.Contains("locationName"))
                     {
-                        sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, lastDate desc, firstDate desc, lastNameSort asc, firstNameSort asc, av.title asc";
+                        sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, endsOn desc, startsOn desc, lastNameSort asc, firstNameSort asc, av.title asc";
                     }
                     else if (orderBy.Contains("title"))
                     {
-                        sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc, firstNameSort asc";
+                        sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, endsOn desc, startsOn desc, locationName asc, lastNameSort asc, firstNameSort asc";
                     }
                     else
                     {
-                        sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
+                        sql += " order by " + orderBy + " " + ascDesc + ", onGoingSort desc, endsOn desc, startsOn desc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
                     }
 
                 }
             }
             else
             {
-                sql += " order by onGoingSort desc, lastDate desc, firstDate desc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
+                sql += " order by onGoingSort desc, endsOn desc, startsOn desc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
 
             }
 
