@@ -41,6 +41,8 @@ namespace UCosmic.Domain.Degrees
             var queryable = _entities.Query<Degree>()
                 .EagerLoad(_entities, query.EagerLoad);
 
+            queryable = queryable.Where(x => x.Person.IsActive == true);
+
             if (query.EstablishmentId.HasValue)
             {
                 queryable = queryable.Where(x => x.Person.Affiliations.Any(y => y.EstablishmentId == query.EstablishmentId.Value));
