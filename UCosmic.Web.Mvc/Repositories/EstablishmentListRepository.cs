@@ -6,6 +6,7 @@ using System.Web.Security;
 using System;
 using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
+using UCosmic.Domain.Establishments;
 
 
 namespace UCosmic.Repositories
@@ -37,7 +38,48 @@ namespace UCosmic.Repositories
             
             return activityLocations;
         }
+
+        public EstablishmentApiScalarModel Establishment_By_Id(int EstablishmentId)
+        {
+            
+            SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
+            string sql = "SELECT revisionId as id, parentId, verticalRank as rank, typeId, UCosmicCode, CollegeBoardDesignatedIndicator as ceebCode, officialName, officialName as contextName, isUnverified " + 
+                " FROM [Establishments].[Establishment]  " +
+                  " where revisionId = " + EstablishmentId;
+            IList<EstablishmentApiScalarModel> establishments = connectionFactory.SelectList<EstablishmentApiScalarModel>(DB.UCosmic, sql);
+
+            return establishments[0];
+        }
         
+        public bool Update_Establishment_Name_By_Id(string officialName, int id)
+        {
+
+            SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
+            string sql = "update [Establishments].[Establishment] set officialName = @officialName where revisionid=@id";
+            connectionFactory.Execute(DB.UCosmic, sql, new 
+            { 
+                officialName = officialName, 
+                id = id
+            }, System.Data.CommandType.Text);
+            return true;
+
+
+            //SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
+
+
+            //string sql = "update `Order` set paid = @paid where id=@orderId";
+
+
+
+
+            ////IList<Account> users = connectionFactory.SelectList<Account>(DB.TrustaffMed, sql, new { un = username, pw = password });
+            //connectionFactory.Execute(DB.OrderFoodLive, sql, new
+            //{
+            //    paid = 1,
+            //    orderId = Convert.ToInt32(orderId)
+            //}, commandType: System.Data.CommandType.Text);
+
+        }
 	}
     public class EstablishmentListAllRepository// : ISummaryRepository
 	{
