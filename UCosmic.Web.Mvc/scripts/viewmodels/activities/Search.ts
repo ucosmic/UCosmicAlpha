@@ -527,8 +527,14 @@ module Activities.ViewModels {
                 $('input[name="placeNames"]').bind("change keyup input", function () {
                     if (this.value == "") {
                         $('input[name="placeIds"]')[0].value = '';
-                        myThis._submitForm();
+                        //myThis._submitForm();
                     }
+                });
+                $('input[name="placeIds"]').bind("change keyup input", function () {
+                    //if (this.value == "") {
+                        //$('input[name="placeIds"]')[0].value = '';
+                        myThis._submitForm();
+                    //}
                 });
             }, 500);
             

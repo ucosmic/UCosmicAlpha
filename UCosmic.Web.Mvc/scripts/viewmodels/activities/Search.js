@@ -424,8 +424,10 @@ var Activities;
                     $('input[name="placeNames"]').bind("change keyup input", function () {
                         if (this.value == "") {
                             $('input[name="placeIds"]')[0].value = '';
-                            myThis._submitForm();
                         }
+                    });
+                    $('input[name="placeIds"]').bind("change keyup input", function () {
+                        myThis._submitForm();
                     });
                 }, 500);
             };
