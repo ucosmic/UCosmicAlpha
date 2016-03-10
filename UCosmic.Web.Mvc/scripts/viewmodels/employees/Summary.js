@@ -93,6 +93,7 @@ var Employees;
                 }).extend({ throttle: 1 });
                 this.hasPlaceData = ko.observable(false);
                 this.placeData = $.Deferred();
+                this.placeDataOriginal = $.Deferred();
                 this.hasTenancyData = ko.observable(false);
                 this.isCreatingSelectEstablishments = false;
                 this.tenancyData = new App.DataCacher(function () {
@@ -339,6 +340,8 @@ var Employees;
                     _this.hasPlaceData(response && response.counts.length != undefined);
                     _this.placeData.cached = response.counts;
                     _this.placeData.resolve(response);
+                    _this.placeDataOriginal.cached = response.counts;
+                    _this.placeDataOriginal.resolve(response);
                 })
                     .fail(function (xhr) {
                 })
@@ -376,14 +379,14 @@ var Employees;
                 });
             };
             Summary.prototype._getPlaceById = function (placeId) {
-                var place = Enumerable.From(this.placeData.cached)
+                var place = Enumerable.From(this.placeDataOriginal.cached)
                     .FirstOrDefault(undefined, function (x) {
                     return x.id == placeId;
                 });
                 return place;
             };
             Summary.prototype._getPlaceByName = function (placeName) {
-                var place = Enumerable.From(this.placeData.cached)
+                var place = Enumerable.From(this.placeDataOriginal.cached)
                     .FirstOrDefault(undefined, function (x) {
                     return x.name == placeName;
                 });
@@ -538,7 +541,7 @@ var Employees;
                 var placeId = this.placeId();
                 var areBindingsApplied = this.areBindingsApplied();
                 if (placeId != 1 && areBindingsApplied) {
-                    $.when(this.placeData).then(function () {
+                    $.when(this.placeDataOriginal).then(function () {
                         var place = _this._getPlaceById(placeId);
                         _this.selectedPlaceSummary.personCount(place.peopleCount.toString());
                         _this.selectedPlaceSummary.activityCount(place.count.toString());
@@ -618,7 +621,7 @@ var Employees;
                 var isPivotPeople = this.isPivotPeople();
                 this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(isPivotPeople ? 'People' : 'Activities'));
                 this._geoChartDataTable.removeRows(0, this._geoChartDataTable.getNumberOfRows());
-                $.each(places.counts, function (i, dataPoint) {
+                $.each(this.placeDataOriginal.cached, function (i, dataPoint) {
                     if (!dataPoint.id)
                         return;
                     var total = isPivotPeople ? dataPoint.peopleCount : dataPoint.count;
@@ -627,13 +630,13 @@ var Employees;
                 this.geoChart.draw(this._geoChartDataTable, this._getGeoChartOptions(optionOverrides))
                     .then(function () {
                     setTimeout(function () { _this._svgInjectPlaceOverlays(); }, 0);
-                    _this._applyPlaceOverlayTotals(places.counts);
+                    _this._applyPlaceOverlayTotals(_this.placeDataOriginal.cached);
                     _this._createOverlayTooltips();
                 });
             };
             Summary.prototype._drawGeoChart = function () {
                 var _this = this;
-                var cachedData = this.placeData.cached;
+                var cachedData = this.placeDataOriginal.cached;
                 var needsRedraw = !cachedData;
                 var placeId = this.placeId();
                 if (this.placeId() == 17) {
@@ -646,7 +649,7 @@ var Employees;
                 optionOverrides.keepAspectRatio = placeId && placeId > 1 && place && place.countryCode ? false :
                     this.settings.geoChart.keepAspectRatio ? true : false;
                 this._initGeoChart().then(function () {
-                    _this.placeData.done(function (places) {
+                    _this.placeDataOriginal.done(function (places) {
                         _this.draw_place_data(places, needsRedraw, optionOverrides);
                     });
                 });

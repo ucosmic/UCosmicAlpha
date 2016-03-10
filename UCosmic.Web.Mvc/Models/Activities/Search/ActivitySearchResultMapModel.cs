@@ -82,6 +82,7 @@ namespace UCosmic.Web.Mvc.Models
         public int Id { get; set; }
         public int Count { get; set; }
         public int PeopleCount { get; set; }
+        public string CountryCode { get; set; }
 
     }
     public class ActivitySearchResultPlacesCountedRegions

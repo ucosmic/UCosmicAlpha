@@ -23,6 +23,7 @@ namespace UCosmic.Repositories
             string sql = "select distinct aa.revisionid as id, pp.revisionId as placeId, people.revisionId as personId  FROM [ActivitiesV2].[ActivityLocation] al" +
                   " inner join [ActivitiesV2].[ActivityValues] av on al.activityValuesId=av.revisionid" +
                   " inner join Places.place pp on al.placeId=pp.revisionid" +
+                  //" inner join Places.GeoPlanetPlace gpp on gpp.placeId=pp.revisionid" +
                   " inner join [ActivitiesV2].[Activity] aa on av.activityId=aa.revisionid" +
                   " inner join [People].Person people on aa.personId=people.revisionid" +
                   " left outer join people.affiliation pa on pa.personId=people.revisionid" +

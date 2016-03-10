@@ -562,6 +562,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 revisionId = g.First().revisionId,
                 personId = g.First().personId,
                 name = g.First().name,
+                countryCode = g.First().countryCode,
                 typeId = g.First().typeId,
                 startsOn = g.First().startsOn,
                 endsOn = g.First().endsOn,
@@ -614,6 +615,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 PeopleCount = g.DistinctBy(x => new { x.revisionId }).DistinctBy(x => new { x.personId }).Count(),
                 Name = g.First().name,
                 Id = g.First().id,
+                CountryCode = g.First().countryCode,
 
             }).ToList();
             var counted = new ActivitySnapShotPlacesCounted

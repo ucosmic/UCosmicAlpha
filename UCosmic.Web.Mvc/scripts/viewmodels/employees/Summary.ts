@@ -370,6 +370,7 @@
         hasPlaceData = ko.observable<boolean>(false);
 
         placeData: any = $.Deferred();
+        placeDataOriginal: any = $.Deferred();
 
         private _loadPlaceData() {
             // calling .ready() on placeData invokes this
@@ -387,6 +388,8 @@
                 this.hasPlaceData(response && response.counts.length != undefined);
                 this.placeData.cached = response.counts;
                 this.placeData.resolve(response);
+                this.placeDataOriginal.cached = response.counts;
+                this.placeDataOriginal.resolve(response);
             })
                 .fail(function (xhr) {
             })
@@ -467,7 +470,7 @@
         //}
 
         private _getPlaceById(placeId: number): ApiModels.EmployeesPlaceApiModel {
-            var place: ApiModels.EmployeesPlaceApiModel = Enumerable.From(this.placeData.cached)
+            var place: ApiModels.EmployeesPlaceApiModel = Enumerable.From(this.placeDataOriginal.cached)
                 .FirstOrDefault(undefined, function (x): boolean {
                 return x.id == placeId;
             });
@@ -476,7 +479,7 @@
         }
 
         private _getPlaceByName(placeName: string): ApiModels.EmployeesPlaceApiModel {
-            var place: ApiModels.EmployeesPlaceApiModel = Enumerable.From(this.placeData.cached)
+            var place: ApiModels.EmployeesPlaceApiModel = Enumerable.From(this.placeDataOriginal.cached)
                 .FirstOrDefault(undefined, function (x): boolean {
                 return x.name == placeName;
             });
@@ -726,7 +729,7 @@
             var placeId = this.placeId();
             var areBindingsApplied = this.areBindingsApplied();
             if (placeId != 1 && areBindingsApplied) {
-                $.when(this.placeData).then((): void => {
+                $.when(this.placeDataOriginal).then((): void => {
                     var place: any = this._getPlaceById(placeId);
                     this.selectedPlaceSummary.personCount(place.peopleCount.toString());
                     this.selectedPlaceSummary.activityCount(place.count.toString());
@@ -837,7 +840,8 @@
             var isPivotPeople = this.isPivotPeople();
             this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(isPivotPeople ? 'People' : 'Activities'));
             this._geoChartDataTable.removeRows(0, this._geoChartDataTable.getNumberOfRows());
-            $.each(places.counts, (i: number, dataPoint: any): void => {
+            $.each(this.placeDataOriginal.cached, (i: number, dataPoint: any): void => {
+                //$.each(places.counts, (i: number, dataPoint: any): void => {
                 // do not count the agnostic place
                 if (!dataPoint.id) return;
                 var total = isPivotPeople ? dataPoint.peopleCount : dataPoint.count;
@@ -846,13 +850,14 @@
             this.geoChart.draw(this._geoChartDataTable, this._getGeoChartOptions(optionOverrides))
                 .then((): void => {
                 setTimeout((): void => { this._svgInjectPlaceOverlays(); }, 0);
-                this._applyPlaceOverlayTotals(places.counts);
+                this._applyPlaceOverlayTotals(this.placeDataOriginal.cached); 
+                //this._applyPlaceOverlayTotals(places.counts); 
                 this._createOverlayTooltips();
             });
         }
         private _drawGeoChart(): void {
             // the data may not yet be loaded, and if not, going to redraw after it is loaded
-            var cachedData = this.placeData.cached;
+            var cachedData = this.placeDataOriginal.cached;
             var needsRedraw = !cachedData;
 
             // decide which part of the map to select
@@ -875,7 +880,7 @@
 
             // hit the server up for data and redraw
             this._initGeoChart().then((): void => {
-                this.placeData.done((places): void => {
+                this.placeDataOriginal.done((places): void => {
                     this.draw_place_data(places, needsRedraw, optionOverrides);
                 });
             });
