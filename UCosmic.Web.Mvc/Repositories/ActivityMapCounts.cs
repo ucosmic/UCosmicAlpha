@@ -304,7 +304,8 @@ namespace UCosmic.Repositories
         public IList<ActivitySnapShotApiQueryResultModel> ActivitySnapShot(int ancestorId)
         {
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
-            string sql = "select distinct aa.revisionid, pp1.revisionid as id, people.revisionId as personId,  at.typeid as typeId, av.startson as startsOn, av.endson as endsOn, av.ongoing, " + 
+            string sql = "select distinct aa.revisionid, pp1.revisionid as id, people.revisionId as personId,  at.typeid as typeId, " +
+                " av.startson as startsOn, av.endson as endsOn, av.ongoing, gpp.countryCode, " + 
                 " CASE WHEN av.endsOn is not null THEN av.endsOn When ongoing = 1 then '2999-01-01 00:00:00.000' " + 
                 " When av.startsOn is not null then av.startsOn ELSE '1901-01-01 00:00:00.000' End as endson,  " +
                 " CASE When startsOn is not null THEN startsOn ELSE '1901-01-01 00:00:00.000' End as startsOn, " + 

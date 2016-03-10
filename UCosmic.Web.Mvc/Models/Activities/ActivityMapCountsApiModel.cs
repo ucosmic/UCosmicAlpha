@@ -32,6 +32,7 @@ namespace UCosmic.Web.Mvc.Models
         public int revisionId { get; set; }
         public int personId { get; set; }
         public string name { get; set; }
+        public string countryCode { get; set; }
         public int typeId { get; set; }
         public DateTime startsOn { get; set; }
         public DateTime endsOn { get; set; }
