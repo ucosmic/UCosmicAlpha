@@ -62,23 +62,18 @@ namespace UCosmic.Repositories
                 id = id
             }, System.Data.CommandType.Text);
             return true;
+        }
+        public bool Update_Establishment_Url_By_Id(string websiteUrl, int id)
+        {
 
-
-            //SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
-
-
-            //string sql = "update `Order` set paid = @paid where id=@orderId";
-
-
-
-
-            ////IList<Account> users = connectionFactory.SelectList<Account>(DB.TrustaffMed, sql, new { un = username, pw = password });
-            //connectionFactory.Execute(DB.OrderFoodLive, sql, new
-            //{
-            //    paid = 1,
-            //    orderId = Convert.ToInt32(orderId)
-            //}, commandType: System.Data.CommandType.Text);
-
+            SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
+            string sql = "update [Establishments].[Establishment] set websiteUrl = @websiteUrl where revisionid=@id";
+            connectionFactory.Execute(DB.UCosmic, sql, new
+            {
+                websiteUrl = websiteUrl,
+                id = id
+            }, System.Data.CommandType.Text);
+            return true;
         }
 	}
     public class EstablishmentListAllRepository// : ISummaryRepository
