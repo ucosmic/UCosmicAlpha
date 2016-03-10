@@ -17,7 +17,7 @@ self.addEventListener('message', function (e) {
         });
         return res;
     }
-    var excel = '', sheet = JSON.parse(e.data.sheet), my_array = JSON.parse(e.data.my_array), fire_establishments = null, fire_students_terms = null, fire_students_levels = null, fire_students_programs = null, fire_members = new Firebase("https://UCosmic.firebaseio.com/Members/"), fire_students_mobilities_join = null, fire_countries = null, establishment_list = JSON.parse(e.data.establishment_list), country_list = JSON.parse(e.data.country_list), term_list = JSON.parse(e.data.term_list), level_list = JSON.parse(e.data.level_list), program_list = JSON.parse(e.data.program_list), controller = null, end_row = null, end_col = null, externalId = "", status = "", uCosmicAffiliation = "", level = "", rank = 0, termDescription = "", country = "", progCode = 0, uCosmicStudentAffiliation = "", uCosmicForiegnAffiliation = "", tenant_id = e.data.tenant_id, next_letter = function (s) {
+    var excel = '', sheet = JSON.parse(e.data.sheet), my_array = JSON.parse(e.data.my_array), fire_establishments = null, fire_students_terms = null, fire_students_levels = null, fire_students_programs = null, fire_members = new Firebase("https://UCosmic.firebaseio.com/Members/"), fire_students_mobilities_join = null, fire_countries = null, establishment_list = JSON.parse(e.data.establishment_list), country_list = JSON.parse(e.data.country_list), term_list = JSON.parse(e.data.term_list), level_list = JSON.parse(e.data.level_list), program_list = JSON.parse(e.data.program_list), controller = null, end_row = null, end_col = null, externalId = "", status = "", gender = "", immigrationStatus = "", uCosmicAffiliation = "", level = "", rank = 0, termDescription = "", country = "", progCode = 0, uCosmicStudentAffiliation = "", uCosmicForiegnAffiliation = "", tenant_id = e.data.tenant_id, next_letter = function (s) {
         return s.replace(/([a-zA-Z])[^a-zA-Z]*$/, function (a) {
             var c = a.charCodeAt(0);
             switch (c) {
@@ -40,6 +40,12 @@ self.addEventListener('message', function (e) {
                 break;
             case "status":
                 status = col;
+                break;
+            case "gender":
+                gender = col;
+                break;
+            case "immigrationstatus":
+                immigrationStatus = col;
                 break;
             case "rank":
                 rank = col;
@@ -71,6 +77,8 @@ self.addEventListener('message', function (e) {
         if (sheet[externalId + row]) {
             var externalId2 = sheet[externalId + row].v;
             var status2 = sheet[status + row].v;
+            var gender2 = sheet[gender + row].v;
+            var immigrationStatus2 = sheet[immigrationStatus + row].v;
             var level2 = sheet[level + row].v;
             var term2 = sheet[termDescription + row].v;
             var term = _.find(term_list, { 'name': term2 });
@@ -82,7 +90,7 @@ self.addEventListener('message', function (e) {
             var options = {
                 status: status2, level: level2, term: term2, country: country2, program: progCode2, establishment: tenant_id,
                 affiliation: affiliation, student_affiliation: student_affiliation, foreign_affiliation: foreign_affiliation,
-                student_external_id: externalId2
+                student_external_id: externalId2, gender: gender2, immigration_status: immigrationStatus2
             };
             var my_student_activity = new Student.Excel(options);
             student_activity_array.push(my_student_activity);
@@ -114,6 +122,8 @@ self.addEventListener('message', function (e) {
             var response = {
                 country_id: _.findKey(country_list, { 'country': data.country }) ? _.findKey(country_list, { 'country': data.country }) : '',
                 status: data.status,
+                gender: data.gender,
+                immigration_status: data.immigration_status,
                 country_name: data.country,
                 term_name: data.term,
                 program_id: program_id,
@@ -144,9 +154,9 @@ self.addEventListener('message', function (e) {
         }
         var has_error = false;
         var subscription2 = student_new_data.subscribe(function (x) {
-            //x.mobility_program = x.mobility_program.toString().replace(".", "_");
-            //console.log(x);
             var status = x.status;
+            var gender = x.gender;
+            var immigration_status = x.immigration_status;
             var country = x.country_name;
             var affiliation_name = x.affiliation_name.replace(".", " ").replace("/", " ");
             affiliation_name = affiliation_name.replace(".", " ").replace("/", " ");
@@ -162,7 +172,10 @@ self.addEventListener('message', function (e) {
             program = program.replace(".", " ").replace("/", " ");
             var student = { external_id: x.student_external_id };
             var fire_members_tenant = fire_members.child(tenant_id);
-            var mobility = { affiliation: x.affiliation_id, country: x.country_id, foreign_affiliation: x.foreign_affiliation_id, level: level, program: x.program_id, status: status, student_affiliation: x.student_affiliation_id, term: x.term_name };
+            var mobility = {
+                affiliation: x.affiliation_id, country: x.country_id, foreign_affiliation: x.foreign_affiliation_id, level: level, program: x.program_id,
+                status: status, gender: gender, immigration_status: immigration_status, student_affiliation: x.student_affiliation_id, term: x.term_name
+            };
             fire_members_tenant.child('Mobilities').child('Values').child(status).child(x.term_name).child(x.student_external_id).set(mobility, function (error) {
                 if (!has_error) {
                     if (error) {
