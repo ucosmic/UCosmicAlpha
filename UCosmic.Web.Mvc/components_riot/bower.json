@@ -27,9 +27,11 @@
   "dependencies": {
     "riot": "~2.2.4",
     "firebase": "~2.3.1",
-    "rxjs": "~4.0.6",
     "lodash": "~3.10.1",
     "RiotControl": "riotcontrol#*",
-    "riot-ts": "~0.0.17"
+    "kefir": "^3.2.1"
+  },
+  "resolutions": {
+    "riot": "~2.3.11"
   }
 }
