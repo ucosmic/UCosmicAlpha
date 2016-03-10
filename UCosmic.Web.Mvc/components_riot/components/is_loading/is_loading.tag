@@ -49,13 +49,21 @@
         }
 
     </style>
-    <div id="spinner_container" class="layout horizontal center center-justified" riot-style="width:{opts.container_width}; height:{opts.container_height}">
-        <div  riot-style="margin-right: 10px; {opts.text_styles}" show="{opts.is_showing && opts.text}">
+    <div id="spinner_container" class="layout horizontal center center-justified {fade_in: opts.is_showing} {fade_out: !opts.is_showing}" riot-style="width:{opts.container_width}; height:{opts.container_height}">
+        <div  riot-style="margin-right: 10px; {opts.text_styles}" show="{opts.text}">
             {opts.text}
         </div>
-        <div class="spinner"  riot-style="height:{opts.height}; width:{opts.width}" show="{opts.is_showing}">
+        <div class="spinner"  riot-style="height:{opts.height}; width:{opts.width}" >
             <div class="dot1" riot-style="background-color: {opts.color}"></div>
             <div class="dot2" riot-style="background-color: {opts.color}"></div>
         </div>
     </div>
+    <script type="es6">
+        "use strict";
+        let self = this;
+
+        self.on('update', () => {
+
+        })
+    </script>
 </is_loading>

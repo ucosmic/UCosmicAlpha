@@ -1,0 +1,2 @@
+C:\Users\Tim\UCosmic\UCosmicGit\Layout3\Layout3\UCosmic.Web.Mvc\components_riot
+bower update

@@ -11,6 +11,7 @@ Object.equal = function( x, y ) {
     // test there constructor.
 
     for ( var p in x ) {
+        if(x[p] !== y[p]) return false;
         if ( ! x.hasOwnProperty( p ) ) continue;
         // other properties were tested using x.constructor === y.constructor
 
@@ -23,13 +24,16 @@ Object.equal = function( x, y ) {
         if ( typeof( x[ p ] ) !== "object" ) return false;
         // Numbers, Strings, Functions, Booleans must be strictly equal
 
+
         if ( ! Object.equals( x[ p ],  y[ p ] ) ) return false;
         // Objects and Arrays must be tested recursively
+
     }
 
     for ( p in y ) {
         if ( y.hasOwnProperty( p ) && ! x.hasOwnProperty( p ) ) return false;
         // allows x[ p ] to be set to undefined
+        if(x[p] !== y[p]) return false;
     }
     return true;
 }
