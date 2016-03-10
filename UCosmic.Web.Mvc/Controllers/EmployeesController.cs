@@ -15,6 +15,7 @@ using UCosmic.Domain.Establishments;
 using UCosmic.Domain.LanguageExpertises;
 using UCosmic.Repositories;
 using UCosmic.Web.Mvc.Models;
+using WebApiContrib.Messages;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -107,10 +108,24 @@ namespace UCosmic.Web.Mvc.Controllers
                 //    Center = g.First().center,
                 //    BoundingBox = null,
                 //}).ToArray();
+                DateTime Since;
+                DateTime Until;
+                try
+                {
+                Since = Convert.ToDateTime(input.Since);
+                }
+                catch{
+                    Since = new DateTime(int.Parse(input.Since), 1, 1);
+                }
+                try
+                {
+                    Until = Convert.ToDateTime(input.Until);
+                }
+                catch
+                {
+                    Until = new DateTime(int.Parse(input.Until), 1, 1);
+                }
 
-                DateTime Since = Convert.ToDateTime(input.Since);
-
-                DateTime Until = Convert.ToDateTime(input.Until);
                 bool include_undated;
                 if (input.IncludeUndated != null)
                 {

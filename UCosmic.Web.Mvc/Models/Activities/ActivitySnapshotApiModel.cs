@@ -8,6 +8,7 @@ namespace UCosmic.Web.Mvc.Models
         public int id { get; set; }
         public int placeId { get; set; }
         public int personId { get; set; }
+        //public string countryCode { get; set; }
     }
     //public class ActivitySnapshotApiModel
     //{
