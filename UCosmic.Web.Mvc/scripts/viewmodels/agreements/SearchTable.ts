@@ -337,7 +337,7 @@ module Agreements.ViewModels {
         }).extend({ throttle: 1, });
 
         private _onRequestDirty(): void {
-            if (!this._isActivated()) return;
+            //if (!this._isActivated()) return; //this was causing the sammy route to never initialize if there was # in the url, like from a back button.
 
             var requestHistory = this._requestHistory();
             var lastRequest: SearchTableInput = requestHistory.length
