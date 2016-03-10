@@ -12,6 +12,7 @@ using AutoMapper;
 using FluentValidation;
 using FluentValidation.Results;
 using UCosmic.Domain.Establishments;
+using UCosmic.Repositories;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
@@ -150,6 +151,21 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
                 return badRequest;
+            }
+
+            if (model.IsOfficialUrl)
+            {
+                EstablishmentListRepository establishmentRepository = new EstablishmentListRepository();
+                try
+                {
+                    establishmentRepository.Update_Establishment_Url_By_Id(model.Value, model.OwnerId);
+                }
+                catch (ValidationException ex)
+                {
+                    var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
+                    return badRequest;
+                }
+
             }
 
             var response = Request.CreateResponse(HttpStatusCode.OK, "Establishment URL was successfully updated.");

@@ -234,24 +234,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     return badRequest;
                 }
 
-                //EstablishmentApiScalarModel establishment = new EstablishmentApiScalarModel();
-
-                //EstablishmentListRepository establishmentRepository = new EstablishmentListRepository();
-                //establishment = establishmentRepository.Establishment_By_Id(model.OwnerId);
-
-                //establishment.OfficialName = model.Text;
-                //var command2 = new UpdateEstablishment(User, establishment.Id);
-                //Mapper.Map(establishment, command2);
-
-                //try
-                //{
-                //    _updateHandler2.Handle(command2);
-                //}
-                //catch (ValidationException ex)
-                //{
-                //    var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
-                //    return badRequest;
-                //}
             }
 
             var response = Request.CreateResponse(HttpStatusCode.OK, "Establishment name was successfully updated.");
