@@ -18,15 +18,14 @@
     "test",
     "tests"
   ],
-  "version": "2.3.0",
-  "_release": "2.3.0",
+  "version": "2.3.15",
+  "_release": "2.3.15",
   "_resolution": {
     "type": "version",
-    "tag": "2.3.0",
-    "commit": "1915664bec61205fd96052e085da109fe3f95156"
+    "tag": "v2.3.15",
+    "commit": "0536d6e04889de735ddb30389d081193a20a5b9f"
   },
   "_source": "git://github.com/riot/route.git",
   "_target": "~2.3.0",
-  "_originalSource": "riot-route",
-  "_direct": true
+  "_originalSource": "riot-route"
 }

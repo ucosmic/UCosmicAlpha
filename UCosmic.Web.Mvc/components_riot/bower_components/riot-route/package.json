@@ -1,13 +1,15 @@
 {
   "name": "riot-route",
-  "version": "2.3.0",
-  "description": "Simple client-side router",
+  "version": "2.3.15",
+  "description": "Simple isomorphic router",
   "main": "lib/index.js",
+  "jsnext:main": "dist/es6.route.js",
   "directories": {
     "lib": "lib",
     "doc": "doc"
   },
   "scripts": {
+    "pretest": "make build",
     "test": "make test",
     "prepublish": "make build"
   },
@@ -20,22 +22,22 @@
     "router"
   ],
   "dependencies": {
-    "riot-observable": "^2.3.0-beta.4"
+    "riot-observable": "^2.3.14"
   },
   "devDependencies": {
-    "chokidar-cli": "^1.1.1",
-    "coveralls": "^2.11.4",
-    "eslint": "^1.8.0",
+    "chokidar-cli": "^1.2.0",
+    "coveralls": "^2.11.6",
+    "eslint": "^1.10.3",
     "expect.js": "^0.3.1",
-    "karma": "^0.13.14",
+    "karma": "^0.13.19",
     "karma-coverage": "^0.5.3",
-    "karma-mocha": "^0.2.0",
-    "karma-browserstack-launcher": "^0.1.6",
-    "karma-mocha-reporter": "^1.1.1",
-    "karma-phantomjs-launcher": "^0.2.1",
-    "mocha": "^2.3.3",
-    "phantomjs": "^1.9.18",
-    "uglify-js": "^2.5.0"
+    "karma-mocha": "^0.2.1",
+    "karma-browserstack-launcher": "^0.1.8",
+    "karma-mocha-reporter": "^1.1.5",
+    "karma-phantomjs-launcher": "^0.2.3",
+    "mocha": "^2.3.4",
+    "phantomjs": "^1.9.19",
+    "uglify-js": "^2.6.1"
   },
   "author": "Muut, Inc. and other contributors",
   "license": "MIT",

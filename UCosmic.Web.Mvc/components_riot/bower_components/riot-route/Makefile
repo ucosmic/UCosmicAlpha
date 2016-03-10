@@ -13,12 +13,16 @@ REPLACER2 = "/module.exports = route/d"
 REPLACER3 = "s/observable(/riot.observable(/g"
 
 # Riot adapter
-R_START_FRAG = ";(function(riot) { if (!window) return;\n" #TODO: remove `if` after server-side supported
+R_START_FRAG = ";(function(riot) {\n"
 R_END_FRAG   = "riot.route = route\n})(riot)"
 
 # AMD adapter
 A_START_FRAG = ";define(function(require, exports, module) {\n 'use strict' \n"
 A_END_FRAG   = "});"
+
+# ES6
+ES6_START_FRAG   = "import observable from 'riot-observable'"
+ES6_END_FRAG   = "export default route"
 
 # Standalone adapter
 S_START_FRAG = ";(function() {\n 'use strict'\n /* istanbul ignore next */\n"
@@ -40,11 +44,15 @@ build:
 	@ cat lib/index.js | sed $(REPLACER1) | sed $(REPLACER2) >> dist/route.js
 	@ echo $(S_END_FRAG) >> dist/route.js
 	@ $(UGLIFY) dist/route.js --comments --mangle -o dist/route.min.js
+	# ES6
+	@ echo $(ES6_START_FRAG) > dist/es6.route.js
+	@ cat lib/index.js | sed $(REPLACER1) | sed $(REPLACER2) >> dist/es6.route.js
+	@ echo $(ES6_END_FRAG) >> dist/es6.route.js
 
 watch:
 	@ $(CHOKIDAR) lib/* lib/**/* -c 'make build'
 
-test: eslint test-karma
+test: eslint test-karma test-server
 
 test-browsers:
 	@ BROWSERSTACK=1 $(KARMA) start test/karma.conf.js
@@ -56,8 +64,11 @@ eslint:
 test-karma:
 	@ $(KARMA) start test/karma.conf.js
 
+test-server:
+	@ $(MOCHA) test/specs/server.specs.js
+
 test-coveralls:
 	@ RIOT_COV=1 cat ./coverage/lcov.info ./coverage/report-lcov/lcov.info | $(COVERALLS)
 
 
-.PHONY: build test eslint test-karma test-coveralls
+.PHONY: build test eslint test-karma test-server test-coveralls

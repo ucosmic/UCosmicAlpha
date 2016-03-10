@@ -5,7 +5,8 @@ The Riot Router is the minimal router implementation with such technologies:
 - pushState and history API
 - multiple routing groups
 - replacable parser
-- compatible with IE9 and higher
+- isomorphic
+- use a [polyfill](https://github.com/devote/HTML5-History-API) for ie9 support and earlier.  Because ie.
 
 ## Setup routing
 
@@ -104,11 +105,11 @@ var subRoute = route.create()
 subRoute('/fruit/apple', function() { /* */ })
 ```
 
-See also [Routing group](#routing-group) and [Routing priority](#routing-priority) section, for detail.
+See also [Routing group](#routing-groups) and [Routing priority](#routing-priority) section, for detail.
 
 ## Use router
 
-### route(to[, title])
+### route(to[, title, shouldReplace])
 
 Changes the browser URL and notifies all the listeners assigned with `route(callback)`. For example:
 
@@ -121,12 +122,46 @@ From v2.3, you can set the title, too:
 route('customers/267393/edit', 'Editing customer page')
 ```
 
+With the third argument, you can replace the current history. It's useful when the app needs redirect to another page.
+
+```javascript
+route('not-found', 'Not found', true)
+```
+
+Internally...
+
+- without `shouldReplace`, `history.pushState()` will be used.
+- with `shouldReplace`, `history.replaceState()` will be used.
+
 ### route.start()
 
 Start listening the url changes.
 
 ```javascript
 route.start()
+<<<<<<< HEAD
+=======
+```
+
+<span class="tag red">&gt;= v2.3</span>
+
+Riot doesn't `start` its router automatically. DON'T FORGET TO START IT BY YOURSELF. This also means that you can choose your favorite router.
+(Note: before v2.3 Riot started the router automatically. The behavior was changed)
+
+### route.start(autoExec)
+
+Start listening the url changes and also exec routing on the current url.
+
+```js
+route.start(true)
+```
+
+This is a shorthand for:
+
+```js
+route.start()
+route.exec()
+>>>>>>> master
 ```
 
 <span class="tag red">&gt;= v2.3</span>
@@ -163,7 +198,7 @@ subRoute.stop()
 
 ### route.exec()
 
-Study the current path "in place" emit routing without waiting for it to change. For example:
+Study the current browser path "in place" and emit routing without waiting for it to change.  
 
 ```javascript
 route(function() { /* define routing */ })
