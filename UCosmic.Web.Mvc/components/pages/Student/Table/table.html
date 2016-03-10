@@ -19,6 +19,7 @@
 <link rel="import" href="/components/behaviors/closest/closest.html">
 <link rel="import" href="/components/behaviors/template_helpers/template_helpers.html">
 <script src="../../../Polymer/bower_components/page.js/page.js"></script>
+<script src="/components/lib/pouchdb-5.2.1.min.js"></script>
 <dom-module id="is-page-student-table">
     <link href="table.css" rel="stylesheet" />
     <template>
@@ -129,7 +130,8 @@
                                         <template is="dom-repeat" items="{{create_array(count_l1.name, count_l1.show_all)}}" as="array_l1" index-as="array_l1_i" id="{{set_id('array_l', count_l1_i)}}" class="count_l2">
                                             <div style="  color: black; " class="item" id="[[count_l1_i]]">
                                                 <div on-click="array_clicked" style="cursor:pointer;">
-                                                    <span>{{get_name(array_l1, count_l1.name)}}</span><span style="cursor:pointer;">: </span><span style="cursor:pointer;">{{get_count_inner(array_l1, count_l1.name)}}</span>
+                                                    <span>{{get_name(array_l1, count_l1.name)}}</span><span style="cursor:pointer;">: </span><span style="cursor:pointer;">[[array_l1.count]]</span>
+                                                    <span></span>
                                                     <span hidden$="[[!is_processing]]" style="cursor:pointer;">
                                                         <paper-spinner active></paper-spinner>
                                                     </span>
@@ -198,7 +200,7 @@
                     </template>
                 </div>
                 <div class="flex"></div>
-                <is-filter_tags tags="{{tags}}" id="tags" tags_count="{{tags_count}}" style="position: relative;right: 35px; z-index:2;"></is-filter_tags>
+                <is-filter_tags tags="{{tags}}" id="tags" tags_count="{{tags_count}}" style="position: relative;right: 35px; z-index:2;height: 0;"></is-filter_tags>
                 <is-filter style="overflow:visible; margin-left: 20px; width:0px; " filter_closed="{{filter_closed}}">
                     <div style="height:0; overflow:visible; position:relative; top: -5px; left: 20px; text-decoration:underline; cursor: pointer;" on-click="clear_tags">Clear Tag(s)</div>
                     <is-auto-ddl id="term_auto_ddl" style=" margin-bottom:2px;" selected="{{term_search}}" selectedid="{{selected_term_id}}" label="Choose a term" on-selected-updated="term_selected"
@@ -215,7 +217,7 @@
                                          on-search-updated="affiliation_list_search" list="{{affiliation_auto_list}}">
                             </is-auto-ddl>
                         </span>
-                        <is-auto-ddl id="country_auto_ddl" style=" margin-bottom:2px;" selected="{{countrySearch}}" selectedid="{{selectedCountryId}}" label="Type and choose a country" on-selected-updated="countrySelected"
+                        <is-auto-ddl id="country_auto_ddl" style=" margin-bottom:2px;" selected="{{countrySearch}}" selectedid="{{selectedCountryId}}" label="Type and choose a location" on-selected-updated="countrySelected"
                                      on-search-updated="countryListSearch" list="{{country_auto_list}}">
                         </is-auto-ddl>
                         <span hidden$="[[is_greater_than(2, student_affiliation_list.length)]]">
@@ -238,14 +240,24 @@
                                          on-search-updated="program_list_search" list="{{program_auto_list}}">
                             </is-auto-ddl>
                         </span>
+                        <span hidden$="[[is_greater_than(2, gender_list.length)]]">
+                            <is-auto-ddl id="gender_auto_ddl" style=" margin-bottom:2px;" selected="{{gender_search}}" selectedid="{{selected_gender_id}}" label="Type and choose a gender" on-selected-updated="gender_selected"
+                                         on-search-updated="gender_list_search" list="{{gender_auto_list}}">
+                            </is-auto-ddl>
+                        </span>
+                        <span hidden$="[[is_greater_than(2, immigration_status_list.length)]]">
+                            <is-auto-ddl id="immigration_status_auto_ddl" style=" margin-bottom:2px;" selected="{{immigration_status_search}}" selectedid="{{selected_immigration_status_id}}" label="Type and choose an immigration status" on-selected-updated="immigration_status_selected"
+                                         on-search-updated="immigration_status_list_search" list="{{immigration_status_auto_list}}">
+                            </is-auto-ddl>
+                        </span>
                     </span>
-                    <paper-button on-click="add_tags" class="tennant_colors_reversed" style="margin: 10px 0 0 20px;">Add Tag(s)</paper-button>
+                    <paper-button on-click="add_tags" class="tennant_colors_reversed" style="margin: 10px 0 0 20px;">(Re)Filter</paper-button>
                 </is-filter>
             </div>
 
         </div>
-        <iron-localstorage name="student_table_storage" id="student_table_storage" value="{{student_table_storage}}" on-iron-localstorage-load="student_table_storage_loaded" on-iron-localstorage-load-empty="student_table_storage_loaded">
-        </iron-localstorage>
+        <!--<iron-localstorage name="student_table_storage" id="student_table_storage" value="{{student_table_storage}}" on-iron-localstorage-load="student_table_storage_loaded" on-iron-localstorage-load-empty="student_table_storage_loaded">
+        </iron-localstorage>-->
     </template>
     <script src="../../../models/students.js"></script>
     <script src="table.js"></script>

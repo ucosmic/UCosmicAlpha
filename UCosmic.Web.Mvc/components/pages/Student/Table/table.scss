@@ -51,7 +51,9 @@ paper-item span {
         font-weight: bold;
     }
     .chart_counts{
-        margin-left: 10px;
+        margin-left: 10px;    
+        overflow: hidden;
+        height: 3em;
     }
     .action_close_container{
         margin-right: 5px;

@@ -114,7 +114,9 @@ paper-item span {
   .is-page-student-table .chart_count_item span:first-child {
     font-weight: bold; }
   .is-page-student-table .chart_counts {
-    margin-left: 10px; }
+    margin-left: 10px;
+    overflow: hidden;
+    height: 3em; }
   .is-page-student-table .action_close_container {
     margin-right: 5px; }
   .is-page-student-table .dropdown-content {

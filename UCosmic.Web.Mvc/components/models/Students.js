@@ -29,9 +29,11 @@ var Students;
     })();
     Students.Student = Student;
     var Mobility = (function () {
-        function Mobility(student_id, status, level_id, term_id, country, country_id, program_id, establishment, establishment_id) {
+        function Mobility(student_id, status, gender, immigration_status, level_id, term_id, country, country_id, program_id, establishment, establishment_id) {
             this.student_id = student_id;
             this.status = status;
+            this.gender = gender;
+            this.immigration_status = immigration_status;
             this.level_id = level_id;
             this.term_id = term_id;
             this.country = country;
@@ -47,6 +49,8 @@ var Students;
         function Excel(options) {
             this.establishment = options.establishment;
             this.status = options.status;
+            this.gender = options.gender;
+            this.immigration_status = options.immigration_status;
             this.level = options.level;
             this.term = options.term;
             this.country = options.country;

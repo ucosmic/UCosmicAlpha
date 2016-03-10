@@ -181,6 +181,36 @@ Polymer({
             notify: true,
             value: []
         },
+        immigration_status_search: {
+            type: String,
+            notify: true,
+            value: ""
+        },
+        selected_immigration_status_id: {
+            type: Number,
+            notify: true,
+            value: 0
+        },
+        immigration_status_auto_list: {
+            type: Array,
+            notify: true,
+            value: []
+        },
+        gender_search: {
+            type: String,
+            notify: true,
+            value: ""
+        },
+        selected_gender_id: {
+            type: Number,
+            notify: true,
+            value: 0
+        },
+        gender_auto_list: {
+            type: Array,
+            notify: true,
+            value: []
+        },
         tags_count: {
             type: Number,
             notify: true,
@@ -220,6 +250,14 @@ Polymer({
             notify: true,
         },
         program_list: {
+            type: Array,
+            notify: true,
+        },
+        gender_list: {
+            type: Array,
+            notify: true,
+        },
+        immigration_status_list: {
             type: Array,
             notify: true,
         },
@@ -300,6 +338,10 @@ Polymer({
         tags_to_add: {
             type: Array,
             value: []
+        },
+        db: {
+            type: Object,
+            value: {}
         }
     },
     listeners: {
@@ -344,6 +386,56 @@ Polymer({
             });
         }
     },
+    setup_db: function (_this) {
+        _this.db_name = 'students_' + _this.tenant_id;
+        _this.db = new PouchDB(_this.db_name);
+        _this.db.get('student_table', function (error, response) {
+            if (!error) {
+                _this._rev = response._rev;
+                _this.student_table_storage = response.data;
+            }
+            if (_this.student_table_storage && _this.student_table_storage.mobilities && _this.student_table_storage.mobilities.length && !(_this.student_table_storage.date_stored ? (_this.in_days(_this.student_table_storage.date_stored, Date.now()) > 1 ? true : false) : false)) {
+                _this.mobilities = _this.student_table_storage.mobilities;
+                _this.establishment_list = _this.student_table_storage.establishment_list;
+                _this.country_list = _this.student_table_storage.country_list;
+                _this.program_list = _this.student_table_storage.program_list;
+                _this.level_list = _this.student_table_storage.level_list;
+                _this.tags = _this.student_table_storage.tags;
+                _this.last_term_tags = _this.student_table_storage.last_term_tags;
+                _this.last_status = _this.student_table_storage.last_status;
+                _this.terms_statuses = _this.student_table_storage.terms_statuses ? _this.student_table_storage.terms_statuses : {};
+                _this.count_list_original = _.map(_this.student_table_storage.columns, function (value, index) {
+                    if (value) {
+                        return { name: _this.process_text_to_name(value.text), is_clicked: false, show_all: false };
+                    }
+                });
+                _this.columns = _this.student_table_storage.columns;
+                _this.filter_table(_this);
+            }
+            else if (!_this.mobilities && !_this.establishment_list && !_this.country_list && !_this.program_list && !_this.level_list && !_this.tags) {
+                if (_this.student_table_storage) {
+                    _this.student_table_storage.date_stored = Date.now();
+                }
+                _this.mobilities = [];
+                _this.establishment_list = [];
+                _this.country_list = [];
+                _this.program_list = [];
+                _this.gender_list = [];
+                _this.level_list = [];
+                _this.tags = [];
+                _this.last_term_tags = [];
+                _this.last_status = [];
+                _this.terms_statuses = {};
+                _this.start_setup_filter();
+            }
+            if (_this.columns) {
+                _this.start_setup_filter();
+            }
+            else {
+                _this.load_settings_counts(_this);
+            }
+        });
+    },
     fire_students_tenant_keys: null,
     get_mobility_value: function (column_name, mobility) {
         switch (column_name.replace(" ", "_").toLowerCase()) {
@@ -354,6 +446,8 @@ Polymer({
             case "level": return mobility.level;
             case "program": return mobility.program_name;
             case "student_affiliation": return mobility.student_affiliation_name;
+            case "immigration_status": return mobility.immigration_status_name;
+            case "gender": return mobility.gender_name;
             case "foreign affiliation": return mobility.foreign_affiliation_name;
             default: return "";
         }
@@ -392,12 +486,20 @@ Polymer({
             console.log("The read failed: " + errorObject.code);
         });
         this.fire_countries.once("value", function (snapshot) {
-            _this.country_list = _.map(snapshot.val(), function (value, index) {
+            var associations = [];
+            var country_list = _.map(snapshot.val(), function (value, index) {
                 if (value) {
-                    var object = { _id: index, text: value.country };
+                    var object = { _id: index, text: value.country, associations: value.associations };
+                    if (value.associations) {
+                        value.associations.forEach(function (association, index_2) {
+                            associations.push({ _id: association.id, text: association.name });
+                        });
+                    }
                     return object;
                 }
             });
+            _this.region_list = _.uniqBy(associations, 'text');
+            _this.country_list = country_list.concat(_this.region_list);
             _this.start_setup_filter();
         }, function (errorObject) {
             console.log("The read failed: " + errorObject.code);
@@ -444,15 +546,42 @@ Polymer({
         var counter = 0;
         this.fire_students_tenant_values = new Firebase("https://UCosmic.firebaseio.com/Members/" + this.tenant_id + '/Mobilities/Values');
         this.load_settings_counts(this);
+        this.setup_db(this);
     },
     start_setup_filter: _.after(8, function () {
-        if (!this.is_routing_setup) {
-            this.setup_routing();
+        this.filter_table(this);
+    }),
+    pouchDB_save: function (my_this) {
+        if (!my_this.db_updating) {
+            my_this.db_updating = true;
+            my_this.db.get('student_table', function (error, response) {
+                if (!error) {
+                    my_this._rev = response._rev;
+                }
+                if (my_this._rev) {
+                    my_this.db.put({ _id: 'student_table', _rev: my_this._rev, data: my_this.student_table_storage }).then(function (response) {
+                        my_this.db_updating = false;
+                    }).catch(function (err) {
+                        my_this.db_updating = false;
+                        console.log(err);
+                    });
+                }
+                else {
+                    my_this.db.put({ _id: 'student_table', data: my_this.student_table_storage }).then(function (response) {
+                        my_this.db_updating = false;
+                    }).catch(function (err) {
+                        my_this.db_updating = false;
+                        console.log(err);
+                    });
+                }
+            });
         }
         else {
-            this.filter_table(this);
+            setTimeout(function () {
+                my_this.pouchDB_save(my_this);
+            }, 50);
         }
-    }),
+    },
     student_table_storage_compute: function (mobilities, establishment_list, country_list, program_list, level_list, tags, columns, last_term_tags, last_status, terms_statuses) {
         var date_stored = this.student_table_storage ? this.student_table_storage.date_stored : undefined;
         if (!date_stored || terms_statuses != this.student_table_storage.terms_statuses) {
@@ -471,7 +600,7 @@ Polymer({
             terms_statuses: terms_statuses,
             date_stored: date_stored
         };
-        this.$.student_table_storage.save();
+        this.pouchDB_save(this);
         return this.student_table_storage;
     },
     in_days: function (t1, t2) {
@@ -480,7 +609,7 @@ Polymer({
         return (t2 - t1) / (24 * 3600 * 1000);
     },
     compute_term_is_selected: function (tags) {
-        var term_tags = _.uniq(_.filter(tags, function (tag) {
+        var term_tags = _.uniqBy(_.filter(tags, function (tag) {
             if (tag._type == 'term') {
                 return tag;
             }
@@ -521,53 +650,17 @@ Polymer({
                 return 'Terms';
             case "Student Affiliation":
                 return 'Student Affiliations';
+            case "Immigration Status":
+                return 'Immigration Status';
+            case "Gender":
+                return 'Gender';
             case "Foreign Affiliation":
                 return 'Foreign Affiliations';
+            case "Region":
+                return 'Regions';
         }
     },
     student_table_storage_loaded: function () {
-        var my_this = this;
-        if (!this.student_table_storage_computed) {
-            if (this.student_table_storage && this.student_table_storage.mobilities && this.student_table_storage.mobilities.length && !(this.student_table_storage.date_stored ? (this.in_days(this.student_table_storage.date_stored, Date.now()) > 1 ? true : false) : false)) {
-                this.mobilities = this.student_table_storage.mobilities;
-                this.establishment_list = this.student_table_storage.establishment_list;
-                this.country_list = this.student_table_storage.country_list;
-                this.program_list = this.student_table_storage.program_list;
-                this.level_list = this.student_table_storage.level_list;
-                this.tags = this.student_table_storage.tags;
-                this.last_term_tags = this.student_table_storage.last_term_tags;
-                this.last_status = this.student_table_storage.last_status;
-                this.terms_statuses = this.student_table_storage.terms_statuses ? this.student_table_storage.terms_statuses : {};
-                this.count_list_original = _.map(this.student_table_storage.columns, function (value, index) {
-                    if (value) {
-                        return { name: my_this.process_text_to_name(value.text), is_clicked: false, show_all: false };
-                    }
-                });
-                this.columns = this.student_table_storage.columns;
-                this.setup_routing();
-            }
-            else if (!this.mobilities && !this.establishment_list && !this.country_list && !this.program_list && !this.level_list && !this.tags) {
-                if (this.student_table_storage) {
-                    this.student_table_storage.date_stored = Date.now();
-                }
-                this.mobilities = [];
-                this.establishment_list = [];
-                this.country_list = [];
-                this.program_list = [];
-                this.level_list = [];
-                this.tags = [];
-                this.last_term_tags = [];
-                this.last_status = [];
-                this.terms_statuses = {};
-                this.start_setup_filter();
-            }
-        }
-        if (this.columns) {
-            this.start_setup_filter();
-        }
-        else {
-            my_this.load_settings_counts(my_this);
-        }
     },
     load_settings_counts: _.after(2, function (my_this) {
         var _this = this;
@@ -589,7 +682,6 @@ Polymer({
         });
     }),
     student_table_storage_loaded_empty: function () {
-        this.start_setup_filter();
     },
     init2: function () {
     },
@@ -619,6 +711,18 @@ Polymer({
                 student_affiliation_list = value.student_affiliation != 'none' ? _.union(student_affiliation_list, [_this.establishment_list[value.student_affiliation]]) : student_affiliation_list;
             });
         }
+        var immigration_status_list = _.uniqBy(new_value, 'immigration_status').map(function (value, index) {
+            var new_value = { _id: 0, text: '' };
+            new_value._id = index;
+            new_value.text = value.immigration_status;
+            return new_value;
+        });
+        var gender_list = _.uniqBy(new_value, 'gender').map(function (value, index) {
+            var new_value = { _id: 0, text: '' };
+            new_value._id = index;
+            new_value.text = value.gender;
+            return new_value;
+        });
         var foreign_affiliation_list = [];
         if (this.establishment_list) {
             _.forEach(new_value, function (value, index) {
@@ -626,6 +730,8 @@ Polymer({
             });
         }
         this.student_affiliation_list = student_affiliation_list;
+        this.gender_list = gender_list;
+        this.immigration_status_list = immigration_status_list;
         this.affiliation_list = affiliation_list;
         this.foreign_affiliation_list = foreign_affiliation_list;
     },
@@ -635,28 +741,6 @@ Polymer({
         }
         else {
             return true;
-        }
-    },
-    _load_mobility_data: function (_this) {
-        if (_this.mobilities && _this.mobilities.length > 0) {
-            _this.mobilities = _.map(_this.mobility_snapshot, function (value, index) {
-                value.status = value.status == 'IN' ? "Incoming" : "Outgoing";
-                value.affiliation_name = _this.affiliation_list[value.affiliation] ? _this.affiliation_list[value.affiliation].text : "Not Reported";
-                value.student_affiliation_name = _this.student_affiliation_list[value.student_affiliation] ? _this.student_affiliation_list[value.student_affiliation].text : "No College Designated";
-                value.foreign_affiliation_name = _this.foreign_affiliation_list[value.foreign_affiliation] ? _this.foreign_affiliation_list[value.foreign_affiliation].text : "Not Reported";
-                return value;
-            });
-            _this.start_setup_filter();
-        }
-        else {
-            _this.mobilities = _.map(_this.mobility_snapshot, function (value, index) {
-                value.status = value.status == 'IN' ? "Incoming" : "Outgoing";
-                value.affiliation_name = _this.affiliation_list[value.affiliation] ? _this.affiliation_list[value.affiliation].text : "Not Reported";
-                value.student_affiliation_name = _this.student_affiliation_list[value.student_affiliation] ? _this.student_affiliation_list[value.student_affiliation].text : "No College Designated";
-                value.foreign_affiliation_name = _this.foreign_affiliation[value.foreign_affiliation] ? _this.foreign_affiliation[value.foreign_affiliation].text : "Not Reported";
-                return value;
-            });
-            _this.start_setup_filter();
         }
     },
     tags_count_changed: function (new_value, old_value) {
@@ -671,54 +755,65 @@ Polymer({
         this.tags_split_union();
     },
     tags_splitter: function (tags) {
-        var affiliation_tags = _.uniq(_.filter(tags, function (tag) {
+        var affiliation_tags = _.uniqBy(_.filter(tags, function (tag) {
             if (tag._type == 'affiliation') {
                 return tag;
             }
         }), '_id');
-        var country_tags = _.uniq(_.filter(tags, function (tag) {
+        var country_tags = _.uniqBy(_.filter(tags, function (tag) {
             if (tag._type == 'country') {
                 return tag;
             }
         }), '_id');
-        var program_tags = _.uniq(_.filter(tags, function (tag) {
+        var program_tags = _.uniqBy(_.filter(tags, function (tag) {
             if (tag._type == 'program') {
                 return tag;
             }
         }), '_id');
-        var level_tags = _.uniq(_.filter(tags, function (tag) {
+        var level_tags = _.uniqBy(_.filter(tags, function (tag) {
             if (tag._type == 'level') {
                 return tag;
             }
         }), '_id');
-        var term_tags = _.uniq(_.filter(tags, function (tag) {
+        var term_tags = _.uniqBy(_.filter(tags, function (tag) {
             if (tag._type == 'term') {
                 return tag;
             }
         }), '_id');
-        var status_tags = _.uniq(_.filter(tags, function (tag) {
+        var status_tags = _.uniqBy(_.filter(tags, function (tag) {
             if (tag._type == 'status') {
                 return tag;
             }
         }), '_id');
-        var foreign_affiliation_tags = _.uniq(_.filter(tags, function (tag) {
+        var foreign_affiliation_tags = _.uniqBy(_.filter(tags, function (tag) {
             if (tag._type == 'foreign_affiliation') {
                 return tag;
             }
         }), '_id');
-        var student_affiliation_tags = _.uniq(_.filter(tags, function (tag) {
+        var student_affiliation_tags = _.uniqBy(_.filter(tags, function (tag) {
             if (tag._type == 'student_affiliation') {
+                return tag;
+            }
+        }), '_id');
+        var gender_tags = _.uniqBy(_.filter(tags, function (tag) {
+            if (tag._type == 'gender') {
+                return tag;
+            }
+        }), '_id');
+        var immigration_status_tags = _.uniqBy(_.filter(tags, function (tag) {
+            if (tag._type == 'immigration_status') {
                 return tag;
             }
         }), '_id');
         return {
             affiliation_tags: affiliation_tags, country_tags: country_tags, program_tags: program_tags, level_tags: level_tags, term_tags: term_tags,
-            status_tags: status_tags, foreign_affiliation_tags: foreign_affiliation_tags, student_affiliation_tags: student_affiliation_tags
+            status_tags: status_tags, foreign_affiliation_tags: foreign_affiliation_tags, student_affiliation_tags: student_affiliation_tags,
+            gender_tags: gender_tags, immigration_status_tags: immigration_status_tags
         };
     },
     tags_split_union: function () {
         var _this = document.querySelector("#page_student_table");
-        var union_tags = _.union(_this.tags_split.affiliation_tags, _this.tags_split.country_tags, _this.tags_split.program_tags, _this.tags_split.level_tags, _this.tags_split.term_tags, _this.tags_split.status_tags, _this.tags_split.foreign_affiliation_tags, _this.tags_split.student_affiliation_tags);
+        var union_tags = _.union(_this.tags_split.affiliation_tags, _this.tags_split.country_tags, _this.tags_split.program_tags, _this.tags_split.level_tags, _this.tags_split.term_tags, _this.tags_split.status_tags, _this.tags_split.foreign_affiliation_tags, _this.tags_split.student_affiliation_tags, _this.tags_split.gender_tags, _this.tags_split.immigration_status_tags);
         if (_this.tags.length != union_tags.length) {
             _this.tags = union_tags;
         }
@@ -947,15 +1042,21 @@ Polymer({
                 return 'term';
             case "Student Affiliations":
                 return 'student_affiliation';
+            case "Gender":
+                return 'gender';
+            case "Immigration Status":
+                return 'immigration_status';
             case "Foreign Affiliations":
                 return 'foreign_affiliation';
+            default:
+                return 'region';
         }
     },
     get_name: function (my_array, count) {
         count = this.get_count_name(count);
         var x = _.find(this[count + '_list'], function (value, index) {
             if (value) {
-                return value._id == my_array[count];
+                return value._id == my_array[count] || value.text == my_array[count];
             }
         });
         if (x) {
@@ -968,37 +1069,68 @@ Polymer({
     create_array: function (name, show_all) {
         var _this = this;
         var name = this.get_count_name(name);
-        var my_list = _.union(_.uniq(this.mobilities_filtered, name), my_list);
-        if (show_all) {
-            return _.sortBy(my_list, function (my_array) {
-                return -1 * (_.filter(_this.mobilities_filtered, function (value, index) {
-                    return value[name] == my_array[name];
-                }).length);
+        var my_list = [];
+        if (name == 'region') {
+            var new_array = [], new_array_length;
+            _.forEach(this.mobilities_filtered, function (val, index) {
+                my_list = _.uniqBy(_.union(my_list, val.regions), 'name');
+            });
+            my_list.map(function (val) {
+                val.region = val.id;
+                return val;
             });
         }
         else {
-            return _.take(_.sortBy(my_list, function (my_array) {
-                return -1 * (_.filter(_this.mobilities_filtered, function (value, index) {
-                    return value[name] == my_array[name];
+            my_list = _.union(_.uniqBy(this.mobilities_filtered, name), my_list);
+        }
+        if (show_all) {
+            return _.sortBy(my_list, function (my_array, index) {
+                var count = (_.filter(_this.mobilities_filtered, function (value, index) {
+                    if (Array.isArray(value[name + 's'])) {
+                        return value[name + 's'].find(function (v2) {
+                            return v2.name == my_array.name;
+                        });
+                    }
+                    else {
+                        return value[name] == my_array[name];
+                    }
                 }).length);
+                my_array.count = count;
+                return -1 * count;
+            });
+        }
+        else {
+            return _.take(_.sortBy(my_list, function (my_array, index) {
+                var count = (_.filter(_this.mobilities_filtered, function (value, index) {
+                    if (Array.isArray(value[name + 's'])) {
+                        return value[name + 's'].find(function (v2) {
+                            return v2.name == my_array.name;
+                        });
+                    }
+                    else {
+                        return value[name] == my_array[name];
+                    }
+                }).length);
+                my_array.count = count;
+                return -1 * count;
             }), 10);
         }
     },
-    get_count: function () {
-        var _this = this;
-        var count = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            count[_i - 0] = arguments[_i];
-        }
+    get_count: function (count) {
         var my_array = JSON.parse(JSON.stringify(this.mobilities_filtered));
         var my_list = [];
-        _.forEach(count, function (value, index) {
-            value = _this.get_count_name(value);
-            my_array = _.filter(my_array, function (value2, index) {
-                return value2[value] != 'none';
-            });
-            my_list = _.union(_.uniq(my_array, value), my_list);
+        var value = this.get_count_name(count);
+        _.remove(my_array, function (value2, index) {
+            return value2[value] == 'none';
         });
+        if (value == 'region') {
+            _.forEach(my_array, function (val, index) {
+                my_list = _.uniqBy(_.union(my_list, val.regions), 'name');
+            });
+        }
+        else {
+            my_list = _.union(_.uniqBy(my_array, value), my_list);
+        }
         return my_list.length;
     },
     check_is_clicked: function (name, index) {
@@ -1021,15 +1153,28 @@ Polymer({
             if (index % 2 != 0) {
                 var x = _this.get_count_name(count[index - 1]);
                 my_list = _.union(_.filter(my_array, function (value2, index) {
-                    return value2[x] == value[x];
+                    return Array.isArray(value2[x + 's']) ? value2[x + 's'].find(function (val) {
+                        return val.id == value[x];
+                    }) : value2[x] == value[x];
                 }));
             }
             if (index + 1 == array_length) {
                 var x = _this.get_count_name(value);
                 my_list = _.filter(my_list, function (value2, index) {
-                    return value2[x] != 'none';
+                    return Array.isArray(value2[x + 's']) ? value2[x + 's'].find(function (val) {
+                        return val.id != 'none';
+                    }) : value2[x] != 'none';
                 });
-                my_list = _.uniq(my_list, x);
+                if (x == 'region') {
+                    var my_list_2 = [];
+                    _.forEach(my_list, function (val, index) {
+                        my_list_2 = _.uniqBy(_.union(my_list_2, val.regions), 'name');
+                    });
+                    my_list = my_list_2;
+                }
+                else {
+                    my_list = _.uniqBy(my_list, x);
+                }
             }
         });
         return my_list.length;
@@ -1037,7 +1182,9 @@ Polymer({
     get_count_inner: function (my_array, count) {
         count = this.get_count_name(count);
         var x = _.filter(this.mobilities_filtered, function (value, index) {
-            return value[count] == my_array[count];
+            return Array.isArray(value[count + 's']) ? value[count + 's'].find(function (val) {
+                return val.id == my_array[count];
+            }) : my_array[count] == value[count];
         });
         return x.length;
     },
@@ -1052,6 +1199,8 @@ Polymer({
         this.$.status_auto_ddl.selected = '';
         this.$.country_auto_ddl.selected = '';
         this.$.student_affiliation_auto_ddl.selected = '';
+        this.$.immigration_status_auto_ddl.selected = '';
+        this.$.gender_auto_ddl.selected = '';
         this.$.level_auto_ddl.selected = '';
         this.$.program_auto_ddl.selected = '';
         this.calculate_counts(this);
@@ -1065,7 +1214,14 @@ Polymer({
                     var my_object_filtered = [];
                     _.forEach(tags, function (tag, tag_index) {
                         my_object_filtered = _.union(my_object_filtered, _.filter(my_object, function (value) {
-                            return value[tags_index] == tag._id;
+                            if (tag._type == 'country') {
+                                return value[tags_index] == tag._id ? value[tags_index] == tag._id : value['regions'] && value['regions'] != 'none' ? value['regions'].find(function (val) {
+                                    return val.id == tag._id;
+                                }) : false;
+                            }
+                            else {
+                                return value[tags_index] == tag._id;
+                            }
                         }));
                     });
                     my_object = my_object_filtered;
@@ -1107,6 +1263,14 @@ Polymer({
     last_term_tags: {},
     last_status: '',
     filter_table: function (_this) {
+        function add_regions(snap) {
+            var new_term = _.map(_.toArray(snap.val()), function (value, index) {
+                var country = _this.country_list[parseInt(value.country)];
+                value.regions = country ? _this.country_list[parseInt(value.country)].associations : 'none';
+                return value;
+            });
+            return new_term;
+        }
         if (!_this.processing_table) {
             var terms = _this.tags_split.term_tags;
             var status = _this.tags_split.status_tags.length == 1 ? _this.tags_split.status_tags[0] : 'all';
@@ -1145,7 +1309,7 @@ Polymer({
                         }
                         else {
                             _this.fire_students_tenant_values.child(_this.status).child(term.text).once("value", function (snap) {
-                                _this.terms_statuses[_this.status + snap.key()] = _.toArray(snap.val());
+                                _this.terms_statuses[_this.status + snap.key()] = add_regions(snap);
                                 _this.mobilities = _.union(_this.mobilities, _this.terms_statuses[_this.status + term.text]);
                                 if (!_this.mobilities_filtered || _this.mobilities_filtered.length == 0) {
                                     _this.calculate_counts(_this);
@@ -1172,7 +1336,7 @@ Polymer({
                         }
                         else {
                             _this.fire_students_tenant_values.child('IN').child(term.text).once("value", function (snap) {
-                                _this.terms_statuses['IN' + snap.key()] = _.toArray(snap.val());
+                                _this.terms_statuses['IN' + snap.key()] = add_regions(snap);
                                 _this.mobilities = _.union(_this.mobilities, _this.terms_statuses['IN' + term.text]);
                                 if (!_this.mobilities_filtered || _this.mobilities_filtered.length == 0) {
                                     _this.calculate_counts(_this);
@@ -1197,7 +1361,7 @@ Polymer({
                         }
                         else {
                             _this.fire_students_tenant_values.child('OUT').child(term.text).once("value", function (snap) {
-                                _this.terms_statuses['OUT' + snap.key()] = _.toArray(snap.val());
+                                _this.terms_statuses['OUT' + snap.key()] = add_regions(snap);
                                 _this.mobilities = _.union(_this.mobilities, _this.terms_statuses['OUT' + term.text]);
                                 if (!_this.mobilities_filtered || _this.mobilities_filtered.length == 0) {
                                     _this.calculate_counts(_this);
@@ -1210,6 +1374,8 @@ Polymer({
                     });
                 }
                 _this.affiliation = 'all';
+                _this.gender = 'all';
+                _this.immigration_status = 'all';
                 _this.country = 'all';
                 _this.program = 'all';
                 _this.level = 'all';
@@ -1221,57 +1387,11 @@ Polymer({
             }, 100);
         }
     },
-    navigate: function (ctx, next) {
-        var _this = document.querySelector("#page_student_table");
-        _this.page = ctx.params.page;
-        _this.page_count = ctx.params.page_count;
-        _this.affiliation = ctx.params.affiliation;
-        _this.continent = ctx.params.continent;
-        _this.country = ctx.params.country;
-        _this.program = ctx.params.program;
-        _this.level = ctx.params.level;
-        _this.status = ctx.params.status;
-        _this.start_date = ctx.params.start_date;
-        _this.end_date = ctx.params.end_date;
-        _this.order_by = ctx.params.order_by;
-        _this.asc_desc = ctx.params.asc_desc;
-        var affiliation_selected = _this.affiliation != 'all' && _this.affiliation_list[_this.affiliation] ? _this.affiliation_list[_this.affiliation].text : 'all';
-        _this.$.affiliation_auto_ddl.selected = '';
-        if (affiliation_selected != 'all') {
-            _this.add_tag(affiliation_selected, _this.affiliation, 'affiliation');
-        }
-        var country_selected = _this.country != 'all' && _this.country ? _.result(_.find(_this.country_list, { '_id': _this.country }), 'text') : 'all';
-        _this.$.country_auto_ddl.selected = '';
-        if (country_selected != 'all') {
-            _this.add_tag(country_selected, _this.country, 'country');
-        }
-        var program_selected = _this.program != 'all' && _this.program ? _.result(_.find(_this.program_list, { '_id': _this.program }), 'text') : 'all';
-        _this.$.program_auto_ddl.selected = '';
-        if (program_selected != 'all') {
-            _this.add_tag(program_selected, _this.program, 'program');
-        }
-        var level_selected = _this.level != 'all' && _this.level ? _.result(_.find(_this.level_list, { '_id': _this.level }), 'text') : 'all';
-        _this.$.level_auto_ddl.selected = '';
-        if (level_selected != 'all') {
-            _this.add_tag(level_selected, _this.level, 'level');
-        }
-        _this.filter_table(_this);
-    },
-    setup_routing: function () {
-        page.base(window.location.pathname);
-        page('/:page/:page_count/:affiliation/:continent/:country/:program/:level/:status/:start_date/:end_date/:order_by/:asc_desc', this.navigate);
-        page('*', this.navigate);
-        page({ hashbang: true });
-        this.is_routing_setup = true;
-    },
     leave_affiliation_search: function (event, detail, sender) {
         var _this = this;
         setTimeout(function () {
             _this.affiliation_list = [];
         }, 200);
-    },
-    update_page: function (_this) {
-        page('#!/' + _this.page + '/' + _this.page_count + '/' + _this.affiliation + '/' + _this.continent + '/' + _this.country + '/' + _this.program + '/' + _this.level + '/' + _this.status + '/' + _this.start_date + '/' + _this.end_date + '/' + _this.order_by + '/' + _this.asc_desc);
     },
     add_tag: function (text, _id, _type) {
         this.tags = _.union(this.tags, [{ text: text.replace(".", " ").replace("/", " "), _id: _id, _type: _type }]);
@@ -1368,6 +1488,48 @@ Polymer({
                 }
             });
             this.student_affiliation_auto_list = list;
+        }
+    },
+    immigration_status_selected: function (event, detail, sender) {
+        this.immigration_status = this.selected_immigration_status_id ? this.selected_immigration_status_id : 'all';
+        var immigration_status_selected = this.immigration_status != 'all' ? _.result(_.find(this.immigration_status_list, { '_id': this.immigration_status }), 'text') : 'all';
+        if (immigration_status_selected != 'all') {
+            this.tags_to_add.push({ tag_name: immigration_status_selected, _id: this.immigration_status, type: 'immigration_status' });
+        }
+    },
+    immigration_status_list_search: function (event, detail, sender) {
+        var _this = this;
+        if (this.immigration_status_search == "") {
+            this.immigration_status_auto_list = this.immigration_status_list;
+        }
+        else {
+            var list = _.filter(this.immigration_status_list, function (value) {
+                if (value) {
+                    return (value.text.toLowerCase().indexOf(_this.immigration_status_search.toLowerCase()) > -1);
+                }
+            });
+            this.immigration_status_auto_list = list;
+        }
+    },
+    gender_selected: function (event, detail, sender) {
+        this.gender = this.selected_gender_id ? this.selected_gender_id : 'all';
+        var gender_selected = this.gender != 'all' ? _.result(_.find(this.gender_list, { '_id': this.gender }), 'text') : 'all';
+        if (gender_selected != 'all') {
+            this.tags_to_add.push({ tag_name: gender_selected, _id: this.gender, type: 'gender' });
+        }
+    },
+    gender_list_search: function (event, detail, sender) {
+        var _this = this;
+        if (this.gender_search == "") {
+            this.gender_auto_list = this.gender_list;
+        }
+        else {
+            var list = _.filter(this.gender_list, function (value) {
+                if (value) {
+                    return (value.text.toLowerCase().indexOf(_this.gender_search.toLowerCase()) > -1);
+                }
+            });
+            this.gender_auto_list = list;
         }
     },
     foreign_affiliation_selected: function (event, detail, sender) {
