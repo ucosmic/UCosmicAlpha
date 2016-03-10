@@ -48,7 +48,7 @@ Polymer('is-page-summary-report', {
             myThis.last_tenant_id = tenant_id;
             myThis.new_tenant_id = tenant_id && tenant_id != 0 ? tenant_id : myThis.new_tenant_id ? myThis.new_tenant_id : myThis.tenant_id ? myThis.tenant_id : 0;
             var selectedIndex;
-            if (!myThis.affiliations) {
+            if (!myThis.affiliations || myThis.affiliations.length == 0) {
                 myThis.$.ajax_affiliations.go();
             }
             else {
@@ -185,7 +185,11 @@ Polymer('is-page-summary-report', {
         this.isAjaxing = false;
         this.affiliationCountLoaded = true;
         if (!response.detail.response.error) {
-            this.affiliations = response.detail.response[0];
+            this.affiliations = response.detail.response[0].sort(function (a, b) {
+                var textA = a.text.toUpperCase();
+                var textB = b.text.toUpperCase();
+                return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+            });
         }
         else {
             console.log(response.detail.response.error);
@@ -249,6 +253,10 @@ Polymer('is-page-summary-report', {
                     affiliation.text = affiliation.officialName;
                 }
                 return affiliation;
+            }).sort(function (a, b) {
+                var textA = a.text.toUpperCase();
+                var textB = b.text.toUpperCase();
+                return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
             });
             this.$.cascading_ddl.item_selected = this.new_tenant_id;
         }

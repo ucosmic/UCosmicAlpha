@@ -28,12 +28,18 @@ interface capitaliseFirstLetter {
 interface Document {
     timeline: any;
 }
+
+//interface EventTarget {
+//    result: any;
+//}
 //interface Element {
 //    style: any;
 //}
 
 interface Window {
     chrome: string;
+    mozIndexedDB: any;
+    webkitIndexedDB: any;
 }
 
 declare module _ {
@@ -41,6 +47,7 @@ declare module _ {
         insert: any;
         sum: any;
         slice: any;
+        uniqBy: any;
     }
 
     interface LoDashObjectWrapper<T> {
@@ -66,3 +73,6 @@ declare var Animation: any;
 declare var XLSX: any;
 declare var Firebase: any;
 declare var is_animations: any;
+declare var loki: any;
+declare var PouchDB: any;
+declare var LokiIndexedAdapter: any;

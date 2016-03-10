@@ -60,7 +60,7 @@ Polymer('is-page-summary-report', {
             myThis.new_tenant_id = tenant_id && tenant_id != 0 ? tenant_id : myThis.new_tenant_id ? myThis.new_tenant_id : myThis.tenant_id ? myThis.tenant_id : 0;// should also ajax get name and put in text field.
             //myThis.affiliation_selected = myThis.new_tenant_id;
             var selectedIndex;
-            if (!myThis.affiliations) {
+            if (!myThis.affiliations || myThis.affiliations.length == 0) {
                 myThis.$.ajax_affiliations.go();
             } else {
                 myThis.$.cascading_ddl.item_selected = myThis.new_tenant_id;
@@ -216,7 +216,11 @@ Polymer('is-page-summary-report', {
         this.isAjaxing = false;
         this.affiliationCountLoaded = true;
         if (!response.detail.response.error) {
-            this.affiliations = response.detail.response[0];
+            this.affiliations = response.detail.response[0].sort(function (a, b) {
+                var textA = a.text.toUpperCase();
+                var textB = b.text.toUpperCase();
+                return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+            });
         } else {
 
             console.log(response.detail.response.error)
@@ -290,7 +294,11 @@ Polymer('is-page-summary-report', {
                 }
                 //delete country.id, delete country.name, delete country.continentId, delete country.continentCode, delete country.continentName, delete country.center, delete country.box;
                 return affiliation;
-            })
+            }).sort(function (a, b) {
+                var textA = a.text.toUpperCase();
+                var textB = b.text.toUpperCase();
+                return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+            });
             this.$.cascading_ddl.item_selected = this.new_tenant_id;
             //this.$.cascading_ddl2.item_selected = this.new_tenant_id;
             //this.create_affiliation_select(this.new_tenant_id);

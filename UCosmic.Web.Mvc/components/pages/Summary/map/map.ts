@@ -184,7 +184,7 @@ Polymer('is-page-summary-map', {
     },
     domReady: function () {
         this.setup_mouse_tracer();
-        if (!this.affiliations) {
+        if (!this.affiliations || this.affiliations.length == 0) {
             this.$.ajax_affiliations.go();
         } else {
             this.$.cascading_ddl.item_selected = this.new_tenant_id;
@@ -680,7 +680,11 @@ Polymer('is-page-summary-map', {
                 }
                 //delete country.id, delete country.name, delete country.continentId, delete country.continentCode, delete country.continentName, delete country.center, delete country.box;
                 return affiliation;
-            })
+            }).sort(function (a, b) {
+                var textA = a.text.toUpperCase();
+                var textB = b.text.toUpperCase();
+                return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+            });
             this.$.cascading_ddl.item_selected = this.new_tenant_id;
             //this.$.cascading_ddl2.item_selected = this.new_tenant_id;
             //this.create_affiliation_select(this.new_tenant_id);

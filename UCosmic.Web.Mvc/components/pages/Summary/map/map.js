@@ -125,7 +125,7 @@ Polymer('is-page-summary-map', {
     },
     domReady: function () {
         this.setup_mouse_tracer();
-        if (!this.affiliations) {
+        if (!this.affiliations || this.affiliations.length == 0) {
             this.$.ajax_affiliations.go();
         }
         else {
@@ -494,6 +494,10 @@ Polymer('is-page-summary-map', {
                     affiliation.text = affiliation.officialName;
                 }
                 return affiliation;
+            }).sort(function (a, b) {
+                var textA = a.text.toUpperCase();
+                var textB = b.text.toUpperCase();
+                return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
             });
             this.$.cascading_ddl.item_selected = this.new_tenant_id;
         }
