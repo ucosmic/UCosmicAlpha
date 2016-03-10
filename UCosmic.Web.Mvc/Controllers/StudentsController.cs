@@ -131,7 +131,7 @@ namespace UCosmic.Web.Mvc.Controllers
             CountryListAllRepository countryListRepository = new CountryListAllRepository();
             //AgreementTypesRepository AgreementTypesRepository = new AgreementTypesRepository();
             model = countryListRepository.Country_List_All();
-
+            var countries = model.DistinctBy2(d => new { d.official_name }).ToList();
 
             using (var client = new HttpClient())
             {
@@ -140,9 +140,19 @@ namespace UCosmic.Web.Mvc.Controllers
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                foreach (CountryListAllApiReturn country in model) // Loop through List with foreach.
+                foreach (CountryListAllApiReturn country in countries) // Loop through List with foreach.
                 {
-                    var xx = new { country = country.official_name };
+                    var xx = new
+                    {
+                        country = country.official_name,
+                        associations = model.Where(x => x.country == country.country && x.place_type != "").ToArray()
+                        //associations = new
+                        //{
+                        //    name = country.name,
+                        //    id = country.id,
+                        //    place_type = country.place_type
+                        //}
+                    };
                     //client.PutAsJsonAsync("students/countries/" + country.country + ".json", xx);
                     try
                     {
@@ -257,31 +267,31 @@ namespace UCosmic.Web.Mvc.Controllers
             return View("new", "_Layout3");
         }
 
-        [POST("/students/new")]
-        public virtual ActionResult New(HttpPostedFileBase file)
-        {
-            //Check if the file is null - we'll probably want to return an error in this case
-            if (file != null && file.ContentLength > 0 && file.ContentLength < 10000000)
-            {
-                var fileName = Path.GetFileName(file.FileName);
-                var path = Path.Combine(Server.MapPath("~/App_Data/uploads"), fileName);
-                file.SaveAs(path);
+        //[POST("/students/new")]
+        //public virtual ActionResult New(HttpPostedFileBase file)
+        //{
+        //    //Check if the file is null - we'll probably want to return an error in this case
+        //    if (file != null && file.ContentLength > 0 && file.ContentLength < 10000000)
+        //    {
+        //        var fileName = Path.GetFileName(file.FileName);
+        //        var path = Path.Combine(Server.MapPath("~/App_Data/uploads"), fileName);
+        //        file.SaveAs(path);
 
-                var excel = new ExcelQueryFactory(path);
-                IList<StudentImportApi> data = (from c in excel.Worksheet<StudentImportApi>("StudentActivity") select c).ToList<StudentImportApi>();
+        //        var excel = new ExcelQueryFactory(path);
+        //        IList<StudentImportApi> data = (from c in excel.Worksheet<StudentImportApi>("StudentActivity") select c).ToList<StudentImportApi>();
 
-                StudentActivityRepository repository = new StudentActivityRepository();
-                var rows_changed = repository.uploadStudents(data);
-                ViewBag.Success = rows_changed.success;
-                ViewBag.Failure = rows_changed.success;
+        //        StudentActivityRepository repository = new StudentActivityRepository();
+        //        var rows_changed = repository.uploadStudents(data);
+        //        ViewBag.Success = rows_changed.success;
+        //        ViewBag.Failure = rows_changed.success;
 
-            }
-            return View();
-        }
+        //    }
+        //    return View();
+        //}
 
 
 
-        [GET("{domain}/students/table/")]
+        [GET("/students/table/")]
         public virtual ActionResult Table(string domain)
         {
 
@@ -317,8 +327,8 @@ namespace UCosmic.Web.Mvc.Controllers
                 return HttpNotFound();
             }
         }
-        [GET("{domain}/students/table_riot/")]
-        public virtual ActionResult Table_riot(string domain)
+        [GET("/students/map/")]
+        public virtual ActionResult Map(string domain)
         {
 
             //load filter parameter values
@@ -346,7 +356,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 ViewBag.programs = student_rep.getPrograms(establishment.OfficialName);
                 ViewBag.terms = student_rep.getTerms(establishment.OfficialName);
 
-                return View("Table", "_Layout_riot");
+                return View("Map_riot", "_Layout_riot");
             }
             else
             {
@@ -355,20 +365,20 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
 
-        [GET("{domain}/students/map")]
-        public virtual ActionResult Map(string domain, ActivitySearchInputModel input)
-        {
+        //[GET("{domain}/students/map")]
+        //public virtual ActionResult Map(string domain, ActivitySearchInputModel input)
+        //{
 
-            ViewBag.EmployeesDomain = domain;
-            return View();
-        }
+        //    ViewBag.EmployeesDomain = domain;
+        //    return View();
+        //}
 
 
-        [GET("{domain}/students")]
-        public virtual ActionResult TenantIndex(string domain)
-        {
-            return View();
-        }
+        //[GET("{domain}/students")]
+        //public virtual ActionResult TenantIndex(string domain)
+        //{
+        //    return View();
+        //}
 
     }
 }
