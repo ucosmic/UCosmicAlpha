@@ -39,6 +39,7 @@ Polymer('is-cascading-ddl', {
             paper_dropdown_menu.setAttribute('selectedid', "{{item_selected_id}}");
             paper_dropdown_menu.setAttribute('layout', "");
             paper_dropdown_menu.setAttribute('horizontal', "");
+            //paper_dropdown_menu.setAttribute('max-height', "90%");
             if (myThis.layout_type == "horizontal") {
                 paper_dropdown_menu.setAttribute('flex', "");
                 paper_dropdown_menu.style.marginRight = '10px';

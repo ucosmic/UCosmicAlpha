@@ -886,6 +886,11 @@
     <Content Include="components\form\inputs\rtf\rtf\rtf.image.js" />
     <Content Include="components\form\inputs\rtf\rtf\rtf.js" />
     <Content Include="components\form\inputs\rtf\rtf\rtf.link.js" />
+    <Content Include="components\lib\lodash.min.js" />
+    <Content Include="components\lib\loki.min.js" />
+    <Content Include="components\lib\loki_indexed_adapter.js" />
+    <Content Include="components\lib\mini_mongo.min.js" />
+    <Content Include="components\lib\pouchdb-5.2.1.min.js" />
     <Content Include="components\models\Students.js" />
     <Content Include="components\form\inputs\required.scss" />
     <Content Include="components\form\inputs\rtf\rtf.scss" />
@@ -4534,63 +4539,131 @@
     <Content Include="components\Polymer\bower_components\polymer-platform\README.md" />
     <None Include="components\Polymer\bower_components\TemplateBinding\codereview.settings" />
     <Content Include="components\utilities\xlsx.full.min.js" />
-    <Content Include="components_riot\components\content\content.tag" />
+    <Content Include="components_riot\.idea\encodings.xml" />
+    <Content Include="components_riot\.idea\misc.xml" />
+    <Content Include="components_riot\.idea\modules.xml" />
+    <Content Include="components_riot\.idea\watcherTasks.xml" />
+    <Content Include="components_riot\.idea\workspace.xml" />
+    <Content Include="components_riot\bower_components\firebase\firebase-debug.js" />
+    <Content Include="components_riot\bower_components\firebase\firebase.js" />
+    <Content Include="components_riot\bower_components\kefir\dist\kefir.js" />
+    <Content Include="components_riot\bower_components\kefir\dist\kefir.min.js" />
+    <Content Include="components_riot\bower_components\kefir\LICENSE.txt" />
+    <Content Include="components_riot\bower_components\lodash\lodash.js" />
+    <Content Include="components_riot\bower_components\lodash\lodash.min.js" />
+    <Content Include="components_riot\bower_components\riot-route\dist\amd.route.js" />
+    <Content Include="components_riot\bower_components\riot-route\dist\amd.route.min.js" />
+    <Content Include="components_riot\bower_components\riot-route\dist\es6.route.js" />
+    <Content Include="components_riot\bower_components\riot-route\dist\riot.route.js" />
+    <Content Include="components_riot\bower_components\riot-route\dist\route.js" />
+    <Content Include="components_riot\bower_components\riot-route\dist\route.min.js" />
+    <Content Include="components_riot\bower_components\riot-route\lib\index.js" />
+    <Content Include="components_riot\bower_components\RiotControl\binary_demo\binary-app.js" />
+    <Content Include="components_riot\bower_components\RiotControl\binary_demo\calcstore.js" />
+    <Content Include="components_riot\bower_components\RiotControl\binary_demo\index.html" />
+    <Content Include="components_riot\bower_components\RiotControl\binary_demo\js\es5-shim.js" />
+    <Content Include="components_riot\bower_components\RiotControl\binary_demo\js\html5-shiv.js" />
+    <Content Include="components_riot\bower_components\RiotControl\binary_demo\js\riot.min.js" />
+    <Content Include="components_riot\bower_components\RiotControl\binary_demo\riotcontrol.js" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\index.html" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\js\es5-shim.js" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\js\html5-shiv.js" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\js\riot.js" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\riotcontrol.js" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\todo.css" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\todo.js" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\todoapp.js" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\todostore.js" />
+    <Content Include="components_riot\bower_components\RiotControl\LICENSE.txt" />
+    <Content Include="components_riot\bower_components\RiotControl\riotcontrol.js" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\index.html" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\item-app.js" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\item-detail.js" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\itemstore.js" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\js\es5-shim.js" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\js\html5-shiv.js" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\js\riot.js" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\riotcontrol.js" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\todo.css" />
+    <Content Include="components_riot\bower_components\riot\riot+compiler.js" />
+    <Content Include="components_riot\bower_components\riot\riot+compiler.min.js" />
+    <Content Include="components_riot\bower_components\riot\riot.js" />
+    <Content Include="components_riot\bower_components\riot\riot.min.js" />
     <Content Include="components_riot\components\drop_down\drop_down.js" />
-    <Content Include="components_riot\components\drop_down\drop_down.tag" />
     <Content Include="components_riot\components\echo_html\echo_html.js" />
-    <Content Include="components_riot\components\echo_html\echo_html.tag" />
+    <Content Include="components_riot\components\echo_html\echo_html.min.js" />
     <Content Include="components_riot\components\echo_tag\echo_tag.js" />
-    <Content Include="components_riot\components\echo_tag\echo_tag.tag" />
+    <Content Include="components_riot\components\echo_tag\echo_tag.min.js" />
+    <Content Include="components_riot\components\expander\expander.js" />
+    <Content Include="components_riot\components\expander\expander.min.js" />
+    <Content Include="components_riot\components\fab_close\fab_close.js" />
+    <Content Include="components_riot\components\fab_close\fab_close.min.js" />
+    <Content Include="components_riot\components\fab_close\fab_close.min.min.js" />
+    <Content Include="components_riot\components\form_elements\checkboxes\checkboxes.js" />
+    <Content Include="components_riot\components\form_elements\checkboxes\checkboxes.min.js" />
     <Content Include="components_riot\components\form_elements\checkbox\checkbox.js" />
     <Content Include="components_riot\components\form_elements\drop_down\drop_down.js" />
-    <Content Include="components_riot\components\form_elements\drop_down\drop_down.min.js">
-      <DependentUpon>drop_down.js</DependentUpon>
-    </Content>
+    <Content Include="components_riot\components\form_elements\drop_down\drop_down.min.js" />
     <Content Include="components_riot\components\form_elements\is_button\is_button.js" />
-    <Content Include="components_riot\components\form_elements\is_button\is_button.tag" />
+    <Content Include="components_riot\components\form_elements\is_button\is_button.min.js" />
     <Content Include="components_riot\components\form_elements\multi_textbox\multi_textbox.js" />
+    <Content Include="components_riot\components\form_elements\multi_textbox\multi_textbox.min.js" />
     <Content Include="components_riot\components\form_elements\textbox\textbox.js" />
-    <Content Include="components_riot\components\form_elements\textbox\textbox.tag" />
+    <Content Include="components_riot\components\form_elements\textbox\textbox.min.js" />
     <Content Include="components_riot\components\header\header.js" />
-    <Content Include="components_riot\components\header\header.tag" />
     <Content Include="components_riot\components\header_toolbar\header_toolbar.js" />
-    <Content Include="components_riot\components\header_toolbar\header_toolbar.tag" />
+    <Content Include="components_riot\components\image_slide\image_slide.js" />
     <Content Include="components_riot\components\is_dialog\fab_close\fab_close.js" />
     <Content Include="components_riot\components\is_dialog\is_dialog.js" />
-    <Content Include="components_riot\components\is_dialog\is_dialog.tag">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="components_riot\components\is_dialog\is_dialog.min.js" />
     <Content Include="components_riot\components\is_loading\is_loading.js" />
-    <Content Include="components_riot\components\is_loading\is_loading.tag" />
+    <Content Include="components_riot\components\is_loading\is_loading.min.js" />
     <Content Include="components_riot\components\layout\layout.js" />
-    <Content Include="components_riot\components\layout\layout.tag" />
     <Content Include="components_riot\components\pages\page_not_found\page_not_found.js" />
-    <Content Include="components_riot\components\pages\page_not_found\page_not_found.tag" />
-    <Content Include="components_riot\components\pages\students\table\student_table.tag" />
+    <Content Include="components_riot\components\pages\students\map\student_map.js" />
+    <Content Include="components_riot\components\stores\app_store.js" />
+    <Content Include="components_riot\components\stores\app_store.min.js" />
     <Content Include="components_riot\components\toast\toast.js" />
-    <Content Include="components_riot\components\toast\toast.tag" />
+    <Content Include="components_riot\components\toast\toast.min.js" />
     <Content Include="components_riot\components\utilities\add_style.js" />
-    <Content Include="components_riot\components\utilities\add_style.min.js">
-      <DependentUpon>add_style.js</DependentUpon>
-    </Content>
+    <Content Include="components_riot\components\utilities\add_style.min.js" />
     <Content Include="components_riot\components\utilities\closest.js" />
+    <Content Include="components_riot\components\utilities\closest.min.js" />
+    <Content Include="components_riot\components\utilities\el_relative_to_el.js" />
+    <Content Include="components_riot\components\utilities\el_relative_to_el.min.js" />
     <Content Include="components_riot\components\utilities\equal.js" />
+    <Content Include="components_riot\components\utilities\equal.min.js" />
     <Content Include="components_riot\components\utilities\load_tag.js" />
+    <Content Include="components_riot\components\utilities\load_tag2.js" />
+    <Content Include="components_riot\components\utilities\load_tag_3.js" />
+    <Content Include="components_riot\components\utilities\load_tag_3.min.js" />
+    <Content Include="components_riot\components\utilities\mount_riot.js" />
+    <Content Include="components_riot\components\utilities\mount_riot.min.js" />
     <Content Include="components_riot\components\utilities\navigation.js" />
-    <Content Include="components_riot\components\utilities\navigation.min.js">
-      <DependentUpon>navigation.js</DependentUpon>
-    </Content>
+    <Content Include="components_riot\components\utilities\navigation.min.js" />
     <Content Include="components_riot\components\utilities\navigation_2.js" />
     <Content Include="components_riot\components\utilities\one_page_scroll.js" />
+    <Content Include="components_riot\components\utilities\one_page_scroll.min.js" />
+    <Content Include="components_riot\components\utilities\replaceAll.js" />
+    <Content Include="components_riot\components\utilities\replaceAll.min.js" />
     <Content Include="components_riot\components\utilities\scroll_snap_vertical.js" />
     <Content Include="components_riot\components\utilities\scroll_snap_vertical.min.js">
       <DependentUpon>scroll_snap_vertical.js</DependentUpon>
+    </Content>
+    <Content Include="components_riot\components\utilities\scroll_snap_vertical.min.js.map">
+      <DependentUpon>scroll_snap_vertical.min.js</DependentUpon>
     </Content>
     <Content Include="components_riot\components\utilities\styles\one_page_scroll.css" />
     <Content Include="components_riot\components\utilities\tags_loaded.js" />
     <Content Include="components_riot\components\utilities\tags_loaded.min.js">
       <DependentUpon>tags_loaded.js</DependentUpon>
     </Content>
+    <Content Include="components_riot\components\utilities\tags_loaded.min.js.map">
+      <DependentUpon>tags_loaded.min.js</DependentUpon>
+    </Content>
+    <Content Include="components_riot\components\utilities\uniq_id.js" />
+    <Content Include="components_riot\components\utilities\uniq_id.min.js" />
+    <Content Include="components_riot\notes.txt" />
     <Content Include="content\countries\ne-countries-110m.json" />
     <Content Include="content\countries\ne-countries-50m.json" />
     <Content Include="content\countries\ne-v2.0.0-countries-geojson.zip" />
@@ -5779,26 +5852,63 @@
     <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\scalar_feature.test" />
     <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\string_feature.test" />
     <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\tag_feature.test" />
+    <Content Include="components_riot\.idea\.name" />
+    <Content Include="components_riot\.idea\components_riot.iml" />
+    <Content Include="components_riot\bower.json" />
+    <Content Include="components_riot\bower_components\firebase\.bower.json" />
+    <Content Include="components_riot\bower_components\firebase\bower.json" />
+    <Content Include="components_riot\bower_components\firebase\README.md" />
+    <Content Include="components_riot\bower_components\kefir\.bower.json" />
+    <Content Include="components_riot\bower_components\kefir\bower.json" />
+    <Content Include="components_riot\bower_components\kefir\dist\kefir.min.js.map" />
+    <Content Include="components_riot\bower_components\lodash\.bower.json" />
+    <Content Include="components_riot\bower_components\lodash\bower.json" />
+    <Content Include="components_riot\bower_components\lodash\LICENSE" />
+    <Content Include="components_riot\bower_components\riot-route\.bower.json" />
+    <Content Include="components_riot\bower_components\riot-route\bower.json" />
+    <Content Include="components_riot\bower_components\riot-route\doc\README.md" />
+    <Content Include="components_riot\bower_components\riot-route\LICENSE" />
+    <Content Include="components_riot\bower_components\riot-route\Makefile" />
+    <Content Include="components_riot\bower_components\riot-route\package.json" />
+    <Content Include="components_riot\bower_components\riot-route\README.md" />
+    <Content Include="components_riot\bower_components\RiotControl\.bower.json" />
+    <Content Include="components_riot\bower_components\RiotControl\binary_demo\binary-app.tag" />
+    <Content Include="components_riot\bower_components\RiotControl\bower.json" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\todo.tag" />
+    <Content Include="components_riot\bower_components\RiotControl\demo\todoapp.tag" />
+    <Content Include="components_riot\bower_components\RiotControl\package.json" />
+    <Content Include="components_riot\bower_components\RiotControl\README.md" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\item-app.tag" />
+    <Content Include="components_riot\bower_components\RiotControl\routing_demo\item-detail.tag" />
+    <Content Include="components_riot\bower_components\riot\.bower.json" />
+    <Content Include="components_riot\bower_components\riot\bower.json" />
+    <Content Include="components_riot\components\content\content.tag" />
+    <Content Include="components_riot\components\drop_down\drop_down.tag" />
+    <Content Include="components_riot\components\echo_html\echo_html.tag" />
+    <Content Include="components_riot\components\echo_tag\echo_tag.tag" />
+    <Content Include="components_riot\components\expander\expander.tag" />
+    <Content Include="components_riot\components\fab_close\fab_close.tag" />
+    <Content Include="components_riot\components\form_elements\checkboxes\checkboxes.tag" />
     <Content Include="components_riot\components\form_elements\checkbox\checkbox.tag" />
+    <Content Include="components_riot\components\form_elements\drop_down\drop_down.min.js.map" />
     <Content Include="components_riot\components\form_elements\drop_down\drop_down.tag" />
+    <Content Include="components_riot\components\form_elements\is_button\is_button.tag" />
     <Content Include="components_riot\components\form_elements\multi_textbox\multi_textbox.tag" />
+    <Content Include="components_riot\components\form_elements\textbox\textbox.tag" />
+    <Content Include="components_riot\components\header\header.tag" />
+    <Content Include="components_riot\components\header_toolbar\header_toolbar.tag" />
+    <Content Include="components_riot\components\image_slide\image_slide.tag" />
     <Content Include="components_riot\components\is_dialog\fab_close\fab_close.tag" />
+    <Content Include="components_riot\components\is_dialog\is_dialog.tag" />
+    <Content Include="components_riot\components\is_loading\is_loading.tag" />
+    <Content Include="components_riot\components\layout\layout.tag" />
+    <Content Include="components_riot\components\pages\page_not_found\page_not_found.tag" />
+    <Content Include="components_riot\components\pages\students\map\student_map.tag" />
+    <Content Include="components_riot\components\toast\toast.tag" />
+    <Content Include="components_riot\components\utilities\add_style.min.js.map" />
     <Content Include="components_riot\components\utilities\closest.js.map" />
-    <Content Include="components_riot\components\utilities\tags_loaded.min.js.map">
-      <DependentUpon>tags_loaded.min.js</DependentUpon>
-    </Content>
-    <Content Include="components_riot\components\utilities\scroll_snap_vertical.min.js.map">
-      <DependentUpon>scroll_snap_vertical.min.js</DependentUpon>
-    </Content>
-    <Content Include="components_riot\components\utilities\add_style.min.js.map">
-      <DependentUpon>add_style.min.js</DependentUpon>
-    </Content>
-    <Content Include="components_riot\components\utilities\navigation.min.js.map">
-      <DependentUpon>navigation.min.js</DependentUpon>
-    </Content>
-    <Content Include="components_riot\components\form_elements\drop_down\drop_down.min.js.map">
-      <DependentUpon>drop_down.min.js</DependentUpon>
-    </Content>
+    <Content Include="components_riot\components\utilities\mount_riot.min.js.map" />
+    <Content Include="components_riot\components\utilities\navigation.min.js.map" />
     <None Include="content\kendo\2013.2.716\Black\editor.png" />
     <None Include="content\kendo\2013.2.716\Black\imagebrowser.png" />
     <None Include="content\kendo\2013.2.716\Black\loading-image.gif" />
@@ -6179,74 +6289,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Content Include="components_riot\bower_components\firebase\firebase-debug.js" />
-    <Content Include="components_riot\bower_components\firebase\firebase.js" />
-    <Content Include="components_riot\bower_components\lodash\lodash.js" />
-    <Content Include="components_riot\bower_components\lodash\lodash.min.js" />
-    <Content Include="components_riot\bower_components\riot-route\dist\amd.route.js" />
-    <Content Include="components_riot\bower_components\riot-route\dist\amd.route.min.js" />
-    <Content Include="components_riot\bower_components\riot-route\dist\riot.route.js" />
-    <Content Include="components_riot\bower_components\riot-route\dist\route.js" />
-    <Content Include="components_riot\bower_components\riot-route\dist\route.min.js" />
-    <Content Include="components_riot\bower_components\riot-route\lib\index.js" />
-    <Content Include="components_riot\bower_components\RiotControl\binary_demo\binary-app.js" />
-    <Content Include="components_riot\bower_components\RiotControl\binary_demo\calcstore.js" />
-    <Content Include="components_riot\bower_components\RiotControl\binary_demo\index.html" />
-    <Content Include="components_riot\bower_components\RiotControl\binary_demo\js\es5-shim.js" />
-    <Content Include="components_riot\bower_components\RiotControl\binary_demo\js\html5-shiv.js" />
-    <Content Include="components_riot\bower_components\RiotControl\binary_demo\js\riot.min.js" />
-    <Content Include="components_riot\bower_components\RiotControl\binary_demo\riotcontrol.js" />
-    <Content Include="components_riot\bower_components\RiotControl\demo\index.html" />
-    <Content Include="components_riot\bower_components\RiotControl\demo\js\es5-shim.js" />
-    <Content Include="components_riot\bower_components\RiotControl\demo\js\html5-shiv.js" />
-    <Content Include="components_riot\bower_components\RiotControl\demo\js\riot.js" />
-    <Content Include="components_riot\bower_components\RiotControl\demo\riotcontrol.js" />
-    <Content Include="components_riot\bower_components\RiotControl\demo\todo.css" />
-    <Content Include="components_riot\bower_components\RiotControl\demo\todo.js" />
-    <Content Include="components_riot\bower_components\RiotControl\demo\todoapp.js" />
-    <Content Include="components_riot\bower_components\RiotControl\demo\todostore.js" />
-    <Content Include="components_riot\bower_components\RiotControl\LICENSE.txt" />
-    <Content Include="components_riot\bower_components\RiotControl\riotcontrol.js" />
-    <Content Include="components_riot\bower_components\RiotControl\routing_demo\index.html" />
-    <Content Include="components_riot\bower_components\RiotControl\routing_demo\item-app.js" />
-    <Content Include="components_riot\bower_components\RiotControl\routing_demo\item-detail.js" />
-    <Content Include="components_riot\bower_components\RiotControl\routing_demo\itemstore.js" />
-    <Content Include="components_riot\bower_components\RiotControl\routing_demo\js\es5-shim.js" />
-    <Content Include="components_riot\bower_components\RiotControl\routing_demo\js\html5-shiv.js" />
-    <Content Include="components_riot\bower_components\RiotControl\routing_demo\js\riot.js" />
-    <Content Include="components_riot\bower_components\RiotControl\routing_demo\riotcontrol.js" />
-    <Content Include="components_riot\bower_components\RiotControl\routing_demo\todo.css" />
-    <Content Include="components_riot\bower_components\riot\compiler.js" />
-    <Content Include="components_riot\bower_components\riot\compiler.min.js" />
-    <Content Include="components_riot\bower_components\riot\riot+compiler.js" />
-    <Content Include="components_riot\bower_components\riot\riot+compiler.min.js" />
-    <Content Include="components_riot\bower_components\riot\riot.js" />
-    <Content Include="components_riot\bower_components\riot\riot.min.js" />
-    <Content Include="components_riot\bower.json" />
-    <Content Include="components_riot\bower_components\firebase\.bower.json" />
-    <Content Include="components_riot\bower_components\firebase\bower.json" />
-    <Content Include="components_riot\bower_components\firebase\README.md" />
-    <Content Include="components_riot\bower_components\lodash\.bower.json" />
-    <Content Include="components_riot\bower_components\lodash\bower.json" />
-    <Content Include="components_riot\bower_components\lodash\LICENSE" />
-    <Content Include="components_riot\bower_components\riot-route\.bower.json" />
-    <Content Include="components_riot\bower_components\riot-route\bower.json" />
-    <Content Include="components_riot\bower_components\riot-route\doc\README.md" />
-    <Content Include="components_riot\bower_components\riot-route\LICENSE" />
-    <Content Include="components_riot\bower_components\riot-route\Makefile" />
-    <Content Include="components_riot\bower_components\riot-route\package.json" />
-    <Content Include="components_riot\bower_components\riot-route\README.md" />
-    <Content Include="components_riot\bower_components\RiotControl\.bower.json" />
-    <Content Include="components_riot\bower_components\RiotControl\binary_demo\binary-app.tag" />
-    <Content Include="components_riot\bower_components\RiotControl\bower.json" />
-    <Content Include="components_riot\bower_components\RiotControl\demo\todo.tag" />
-    <Content Include="components_riot\bower_components\RiotControl\demo\todoapp.tag" />
-    <Content Include="components_riot\bower_components\RiotControl\package.json" />
-    <Content Include="components_riot\bower_components\RiotControl\README.md" />
-    <Content Include="components_riot\bower_components\RiotControl\routing_demo\item-app.tag" />
-    <Content Include="components_riot\bower_components\RiotControl\routing_demo\item-detail.tag" />
-    <Content Include="components_riot\bower_components\riot\.bower.json" />
-    <Content Include="components_riot\bower_components\riot\bower.json" />
     <None Include="scripts\jquery\jquery-1.9.1.intellisense.js" />
     <Content Include="images\icons\user\male-and-female-256.png" />
     <Content Include="images\placeholders\ExpertiseMock.png" />
@@ -8180,7 +8222,7 @@
     <Content Include="Views\Shared\_Layout3.cshtml" />
     <Content Include="Views\Identity\SignIn_2.cshtml" />
     <Content Include="Views\Shared\_Layout_riot.cshtml" />
-    <Content Include="Views\Students\Table_riot.cshtml" />
+    <Content Include="Views\Students\Map_riot.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -8328,6 +8370,7 @@
     <Folder Include="App_Data\binary-data\" />
     <Folder Include="App_Data\lucene\" />
     <Folder Include="App_Data\mail\" />
+    <Folder Include="components\lib\NewFolder1\" />
     <Folder Include="components\Polymer\bower_components\code-mirror\codemirror-4.0\bin\" />
     <Folder Include="components\Polymer\bower_components\core-action-icons\" />
     <Folder Include="components\Polymer\bower_components\core-ajax\tests\html\" />
