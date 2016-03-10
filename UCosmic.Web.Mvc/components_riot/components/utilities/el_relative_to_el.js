@@ -1,4 +1,4 @@
-xmenu.ElRelativeToEl = function (toThisElement, bindThisElement) {
+ucosmic.ElRelativeToEl = function (toThisElement, bindThisElement) {
     var rect = toThisElement[0].getBoundingClientRect();
     bindThisElement
         .css({
