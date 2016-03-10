@@ -109,7 +109,7 @@
                         <div  class="layout horizontal highlight-text checkbox_container" onclick="{select_item}" data-_id="{i}">
                             <input type="checkbox" value="{item.title}" checked="{selected_items.indexOf(i) > -1}" onclick="{prevent_default}" data-_id="{i}" />
                             <span data-_id="{i}">{item.title}</span>
-                            <span if="{item.cost}" data-_id="{i}">&nbsp;{xmenu.currency(item.cost)}</span>
+                            <span if="{item.cost}" data-_id="{i}">&nbsp;{ucosmic.currency(item.cost)}</span>
                         </div>
                         <div class="flex" if="{has_index(i)}" >
                             <!--{JSON.stringify(item,null,2)}-->
@@ -123,7 +123,7 @@
         </div>
         <!--<is_dialog id="menu_checkbox_dialog" _id="menu_checkbox_dialog" is_shown="{is_shown}" width="95%" max_width="600px" style="color: black" >-->
             <!--<h2>{parent.opts.title}</h2>-->
-            <!--<div if="{parent.opts.free}">Comes with {xmenu.currency(parent.opts.free)} of free {parent.opts.title}</div>-->
+            <!--<div if="{parent.opts.free}">Comes with {ucosmic.currency(parent.opts.free)} of free {parent.opts.title}</div>-->
             <!--<div id="checks_container">-->
                 <!--<ul id="list">-->
                     <!--<li class="check_list" each="{ item, i in parent.opts.list }">-->
@@ -131,7 +131,7 @@
                             <!--<div  class="layout horizontal highlight-text checkbox_container" onclick="{parent.parent.select_item}" data-_id="{i}">-->
                                 <!--<input type="checkbox" value="{item.title}" checked="{parent.parent.selected_items.indexOf(i) > -1}" onclick="{parent.parent.prevent_default}" data-_id="{i}" />-->
                                 <!--<span data-_id="{i}">{item.title}</span>-->
-                                <!--<span if="{item.cost}" data-_id="{i}">&nbsp;{xmenu.currency(item.cost)}</span>-->
+                                <!--<span if="{item.cost}" data-_id="{i}">&nbsp;{ucosmic.currency(item.cost)}</span>-->
                             <!--</div>-->
                             <!--<div class="flex" if="{parent.parent.has_index(i)}" >-->
                                 <!--<menu_drop_down data-_id="{i}" my_path="{my_path}" id="menu_item_ddl" list="{item.options.items}" pre_scale_class="pre_scale_top_center" is_shown="{parent.parent.show_option}" title="{item.options.title}"-->

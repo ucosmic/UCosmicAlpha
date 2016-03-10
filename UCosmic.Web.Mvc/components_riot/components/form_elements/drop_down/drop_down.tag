@@ -27,6 +27,10 @@
         li:not(:last-child) {
             margin-bottom: 10px;
         }
+        #list{
+            max-height: 70%;
+            overflow-y: scroll;
+        }
         .float_text{
             font-size: .7em;
             margin:0;
@@ -37,6 +41,7 @@
             /*opacity: .7;*/
             color: gray;
             mix-blend-mode: difference;
+            white-space: nowrap;
         }
         .float_text div{
             position: relative;
@@ -56,7 +61,8 @@
                         <div class="{float_text: selected_item} " show="{selected_item}"><div>{opts.title}</div></div>
                         <div show="{!selected_item}"><div>Select {opts.title}</div></div>
                         <!--<div class="{float_text: selected_item} pre_scale_bottom_center {slide_top_bottom: !selected_item}"><div>Select {opts.title}</div></div>-->
-                        <div style="font-weight: bold" show="{selected_item}">{selected_item.title}</div>
+                        <!--<div style="font-weight: bold" show="{selected_item}">{selected_item.title}</div>-->
+                        <div style="font-weight: bold" show="{selected_item}">{selected_item.title}<span if="{selected_item.cost}" data-_id="{i}">&nbsp;{ucosmic.currency(selected_item.cost)}</span></div>
                     </div>
                     <div class="flex"></div>
                     <div style="height:20px; width:20px;">
@@ -84,7 +90,7 @@
                 <!--<div style="height: 1px; background-color:black;"></div>-->
             <!--</div>-->
         </div>
-        <div id="ddl_container" riot-style=" direction: {opts.direction};">
+        <div id="ddl_container" riot-style=" direction: {opts.direction}; left: {opts.ddl_container_left};">
             <!--<div id="ddl_container" riot-style="width: {container_width}; direction: {opts.direction};">-->
             <ul id="list" class="{opts.pre_scale_class} {fade_in: is_shown} {fade_out: !is_shown} {scale: !is_shown && opts.scale_type != 'scale_height'}  {scale_height: !is_shown && opts.scale_type == 'scale_height'}"
                 riot-style="background-color:{opts.background_color};   ">
@@ -100,7 +106,7 @@
         let self = this;
         self.is_shown = false;
         self.item_selected = "";
-        self.selected_item = self.opts.selected_item_id ? self.opts.list[self.opts.selected_item_id] : null;
+        //self.selected_item = self.opts.selected_item_id && self.opts.list ? self.opts.list[self.opts.selected_item_id] : null;
 
         self.select_item = function(event){
             "use strict";
@@ -141,8 +147,12 @@
         self.get_container_width = function(){
             self.container_width = self.title.offsetWidth + 'px';
         }
+        self.get_list_height = function(){
+            self.list.style.overflowY = self.list.scrollHeight > self.list.offsetHeight ? 'scroll' : 'visible';
+        }
         self.on('mount', () => {
             self.get_container_width();
+            self.get_list_height();
         });
         self.on('update', function() {
             let default_item
@@ -154,7 +164,8 @@
                 });
             }
             self.get_container_width();
-            self.selected_item = self.opts.selected_item_id != undefined ? self.opts.list[self.opts.selected_item_id] : default_item && default_item.length > 0 ? default_item[0] : null;
+            self.get_list_height();
+            self.selected_item = self.opts.selected_item_id != undefined && self.opts.list ? self.opts.list[self.opts.selected_item_id] : default_item && default_item.length > 0 ? default_item[0] : null;
         })
     </script>
 </drop_down>
