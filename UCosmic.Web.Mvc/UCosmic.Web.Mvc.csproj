@@ -389,6 +389,9 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AboutController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="ActivitiesController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -427,6 +430,7 @@
     <Compile Include="ApiControllers\Summary\SummaryController.cs" />
     <Compile Include="Controllers\AdminFirebaseController.cs" />
     <Compile Include="Controllers\ReceiveSamlAuthnResponseController.cs" />
+    <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Controllers\SummaryController.cs" />
     <Compile Include="Factories\SqlConnectionFactory.cs" />
@@ -4589,6 +4593,8 @@
     <Content Include="components_riot\bower_components\riot\riot+compiler.min.js" />
     <Content Include="components_riot\bower_components\riot\riot.js" />
     <Content Include="components_riot\bower_components\riot\riot.min.js" />
+    <Content Include="components_riot\components\content_slider\content_slider.js" />
+    <Content Include="components_riot\components\content_slider\content_slider.min.js" />
     <Content Include="components_riot\components\drop_down\drop_down.js" />
     <Content Include="components_riot\components\echo_html\echo_html.js" />
     <Content Include="components_riot\components\echo_html\echo_html.min.js" />
@@ -4619,8 +4625,10 @@
     <Content Include="components_riot\components\is_loading\is_loading.js" />
     <Content Include="components_riot\components\is_loading\is_loading.min.js" />
     <Content Include="components_riot\components\layout\layout.js" />
+    <Content Include="components_riot\components\lib\pouchdb-5.2.1.min.js" />
     <Content Include="components_riot\components\pages\page_not_found\page_not_found.js" />
     <Content Include="components_riot\components\pages\students\map\student_map.js" />
+    <Content Include="components_riot\components\side_bar_filter\side_bar_filter.js" />
     <Content Include="components_riot\components\stores\app_store.js" />
     <Content Include="components_riot\components\stores\app_store.min.js" />
     <Content Include="components_riot\components\toast\toast.js" />
@@ -4663,7 +4671,11 @@
     </Content>
     <Content Include="components_riot\components\utilities\uniq_id.js" />
     <Content Include="components_riot\components\utilities\uniq_id.min.js" />
+    <Content Include="components_riot\components\workers\firebase_sync.js" />
     <Content Include="components_riot\notes.txt" />
+    <Content Include="components_riot\styles\animations.css" />
+    <Content Include="components_riot\styles\index.css" />
+    <Content Include="components_riot\styles\mixins.css" />
     <Content Include="content\countries\ne-countries-110m.json" />
     <Content Include="content\countries\ne-countries-50m.json" />
     <Content Include="content\countries\ne-v2.0.0-countries-geojson.zip" />
@@ -5903,12 +5915,34 @@
     <Content Include="components_riot\components\is_loading\is_loading.tag" />
     <Content Include="components_riot\components\layout\layout.tag" />
     <Content Include="components_riot\components\pages\page_not_found\page_not_found.tag" />
-    <Content Include="components_riot\components\pages\students\map\student_map.tag" />
+    <Content Include="components_riot\components\pages\students\map\student_map.tag">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="components_riot\components\toast\toast.tag" />
     <Content Include="components_riot\components\utilities\add_style.min.js.map" />
     <Content Include="components_riot\components\utilities\closest.js.map" />
     <Content Include="components_riot\components\utilities\mount_riot.min.js.map" />
     <Content Include="components_riot\components\utilities\navigation.min.js.map" />
+    <Content Include="components_riot\styles\animations.css.map" />
+    <Content Include="components_riot\styles\animations.scss" />
+    <Content Include="components_riot\styles\index.css.map" />
+    <Content Include="components_riot\styles\index.scss" />
+    <Content Include="components_riot\styles\mixins.css.map" />
+    <Content Include="components_riot\styles\mixins.scss" />
+    <Content Include="components_riot\components\side_bar_filter\side_bar_filter.tag" />
+    <Content Include="components_riot\components\content_slider\content_slider.tag" />
+    <Content Include="components\Polymer_1x\bower_components\prism\components\prism-vim.min.js.map">
+      <DependentUpon>prism-vim.min.js</DependentUpon>
+    </Content>
+    <Content Include="components_riot\components\expander\expander.min.js.map">
+      <DependentUpon>expander.min.js</DependentUpon>
+    </Content>
+    <Content Include="components_riot\components\form_elements\checkboxes\checkboxes.min.js.map">
+      <DependentUpon>checkboxes.min.js</DependentUpon>
+    </Content>
+    <Content Include="components_riot\components\toast\toast.min.js.map">
+      <DependentUpon>toast.min.js</DependentUpon>
+    </Content>
     <None Include="content\kendo\2013.2.716\Black\editor.png" />
     <None Include="content\kendo\2013.2.716\Black\imagebrowser.png" />
     <None Include="content\kendo\2013.2.716\Black\loading-image.gif" />
@@ -6301,6 +6335,9 @@
     <None Include="Microsoft.WindowsAzure.Caching\PerformanceCounters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="node_server\aggregator.js" />
+    <Content Include="node_server\firebase_establishments_ancestors.js" />
+    <Content Include="node_server\firebase_student_aggregator.js" />
     <Content Include="Readme.html" />
     <Content Include="scripts\app\DataCacher.js">
       <DependentUpon>DataCacher.ts</DependentUpon>
@@ -8157,6 +8194,9 @@
     <Content Include="Views\Agreements\_Settings.cshtml" />
     <Content Include="Views\Agreements\_SettingsSidebarNav.cshtml" />
     <Content Include="Views\AdminFirebase\Index.cshtml" />
+    <Content Include="Views\About\about.cshtml" />
+    <Content Include="Views\About\_Bib.cshtml" />
+    <Content Include="Views\Agreements\Info.cshtml" />
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />
@@ -8223,6 +8263,9 @@
     <Content Include="Views\Identity\SignIn_2.cshtml" />
     <Content Include="Views\Shared\_Layout_riot.cshtml" />
     <Content Include="Views\Students\Map_riot.cshtml" />
+    <Content Include="Views\FacultyStaff\Info.cshtml" />
+    <Content Include="Views\Summary\Info.cshtml" />
+    <Content Include="Views\Students\Info.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

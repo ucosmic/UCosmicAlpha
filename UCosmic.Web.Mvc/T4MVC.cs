@@ -24,6 +24,7 @@ using T4MVC;
 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
 public static class MVC
 {
+    public static UCosmic.Web.Mvc.Controllers.StudentsController Students = new UCosmic.Web.Mvc.Controllers.T4MVC_StudentsController();
     public static UCosmic.Web.Mvc.Controllers.ActivitiesController Activities = new UCosmic.Web.Mvc.Controllers.T4MVC_ActivitiesController();
     public static UCosmic.Web.Mvc.Controllers.AdminController Admin = new UCosmic.Web.Mvc.Controllers.T4MVC_AdminController();
     public static UCosmic.Web.Mvc.Controllers.AdminFirebaseController AdminFirebase = new UCosmic.Web.Mvc.Controllers.T4MVC_AdminFirebaseController();
@@ -41,10 +42,10 @@ public static class MVC
     public static UCosmic.Web.Mvc.Controllers.ReceiveSamlAuthnResponseController ReceiveSamlAuthnResponse = new UCosmic.Web.Mvc.Controllers.T4MVC_ReceiveSamlAuthnResponseController();
     public static UCosmic.Web.Mvc.Controllers.RepsController Reps = new UCosmic.Web.Mvc.Controllers.T4MVC_RepsController();
     public static UCosmic.Web.Mvc.Controllers.SamlMetadataController SamlMetadata = new UCosmic.Web.Mvc.Controllers.T4MVC_SamlMetadataController();
-    public static UCosmic.Web.Mvc.Controllers.StudentsController Students = new UCosmic.Web.Mvc.Controllers.T4MVC_StudentsController();
     public static UCosmic.Web.Mvc.Controllers.SummaryController Summary = new UCosmic.Web.Mvc.Controllers.T4MVC_SummaryController();
     public static UCosmic.Web.Mvc.Controllers.TenancyController Tenancy = new UCosmic.Web.Mvc.Controllers.T4MVC_TenancyController();
     public static UCosmic.Web.Mvc.Controllers.UsersController Users = new UCosmic.Web.Mvc.Controllers.T4MVC_UsersController();
+    public static T4MVC.AboutController About = new T4MVC.AboutController();
     public static T4MVC.SharedController Shared = new T4MVC.SharedController();
 }
 
