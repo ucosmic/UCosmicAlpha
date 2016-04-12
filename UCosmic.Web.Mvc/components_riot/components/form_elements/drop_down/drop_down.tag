@@ -8,9 +8,11 @@
             height: 0;
             width: 0;
             overflow: visible;
+            z-index: 1;
         }
         ul{
-            position: fixed;
+            white-space: nowrap;
+            overflow-y: visible;
             margin-right: 10px;
             display: inline-block;
             padding: 10px 5px;
@@ -21,15 +23,21 @@
             border-radius:10px;
             box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
             margin: 0;
+            max-height: 50%;
             z-index: 1;
             width: initial;
+            width: auto;
+        }
+        li{
+            margin-right: 15px;
         }
         li:not(:last-child) {
             margin-bottom: 10px;
         }
         #list{
+            position: inherit;
             max-height: 70%;
-            overflow-y: scroll;
+            top: 0px;
         }
         .float_text{
             font-size: .7em;
@@ -56,7 +64,7 @@
                 <yield/>
             </div>
             <div onclick="{toggle}" show="{opts.title}">
-                <div class="layout horizontal">
+                <div class="layout horizontal end">
                     <div>
                         <div class="{float_text: selected_item} " show="{selected_item}"><div>{opts.title}</div></div>
                         <div show="{!selected_item}"><div>Select {opts.title}</div></div>
@@ -65,7 +73,7 @@
                         <div style="font-weight: bold" show="{selected_item}">{selected_item.title}<span if="{selected_item.cost}" data-_id="{i}">&nbsp;{ucosmic.currency(selected_item.cost)}</span></div>
                     </div>
                     <div class="flex"></div>
-                    <div style="height:20px; width:20px;">
+                    <div style="height:20px; width:40px;">
                         <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" class="style-scope iron-icon" style="pointer-events: none; display: block; width: 100%; height: 100%;">
                             <g class="style-scope iron-icon">
                                 <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" class="style-scope iron-icon">
@@ -92,13 +100,15 @@
         </div>
         <div id="ddl_container" riot-style=" direction: {opts.direction}; left: {opts.ddl_container_left};">
             <!--<div id="ddl_container" riot-style="width: {container_width}; direction: {opts.direction};">-->
-            <ul id="list" class="{opts.pre_scale_class} {fade_in: is_shown} {fade_out: !is_shown} {scale: !is_shown && opts.scale_type != 'scale_height'}  {scale_height: !is_shown && opts.scale_type == 'scale_height'}"
-                riot-style="background-color:{opts.background_color};   ">
-                <!--<li class="highlight-text" each="{ item, i in opts.list }" onclick="{select_item}" data-_id="{i}">{item.title}</li>-->
-                <li class="layout horizontal start-justified highlight-text" each="{ item, i in opts.list }" onclick="{select_item}" data-_id="{i}">
-                    <span style="display: flex;" data-_id="{i}">{item.title}</span><span if="{item.cost}" data-_id="{i}">&nbsp;{ucosmic.currency(item.cost)}</span>
-                </li>
-            </ul>
+            <div id="list" class="{opts.pre_scale_class} {fade_in: is_shown} {fade_out: !is_shown} {scale: !is_shown && opts.scale_type != 'scale_height'}
+            {scale_height: !is_shown && opts.scale_type == 'scale_height'}" >
+                <ul id="list_ul" riot-style="background-color:{opts.background_color};  max-height:{opts.max_height}; width:{opts.max_width} ">
+
+                    <li class="layout horizontal start-justified highlight-text" each="{ item, i in opts.list }" onclick="{select_item}" data-_id="{i}">
+                        <span style="display: flex; white-space: normal;" data-_id="{i}">{item.title}</span><span if="{item.cost}" data-_id="{i}">&nbsp;{ucosmic.currency(item.cost)}</span>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
     <script type="es6">
@@ -108,17 +118,15 @@
         self.item_selected = "";
         //self.selected_item = self.opts.selected_item_id && self.opts.list ? self.opts.list[self.opts.selected_item_id] : null;
 
-        self.select_item = function(event){
+        self.select_item = function(event, id){
             "use strict";
-            //self.is_shown = false;
-            //self.update();
+
             self.toggle();
-
-            //self.opts.selected_item_id = [event.target.dataset._id];//ids;
-
-            //RiotControl.trigger(self.opts._id + '_selected_changed', event);
-            self.opts.selected_callback(parseInt(event.target.dataset._id));
-            //self.opts.selected_callback(null);
+            if(id !== undefined){
+                self.opts.selected_callback(id);
+            }else{
+                self.opts.selected_callback(parseInt(event.target.dataset._id));
+            }
 
 
         }
@@ -134,12 +142,13 @@
             "use strict";
             self.is_shown = self.is_shown ? false : true;
             if(self.is_shown){
-                self.list.style.top = (event.target.getBoundingClientRect().top + event.target.offsetHeight) + 'px';
+                // self.list.style.top = (event.target.getBoundingClientRect().top + event.target.offsetHeight) + 'px';
                 setTimeout(function(){
                     document.body.addEventListener("click", self.document_click_handler);
                 }, 0);
             }else{
                 document.body.removeEventListener("click", self.document_click_handler);
+                self.get_list_height();//self.list_ul.clientHeight < self.list_ul.scrollHeight ? self.list_ul.style.overflowY= 'scroll' : self.list_ul.style.overflowY= 'visible';
             }
             self.update();
         }
@@ -148,7 +157,11 @@
             self.container_width = self.title.offsetWidth + 'px';
         }
         self.get_list_height = function(){
-            self.list.style.overflowY = self.list.scrollHeight > self.list.offsetHeight ? 'scroll' : 'visible';
+            if(self.list_ul.length > 1){
+                self.list_ul[0].style.overflowY = self.list_ul[0].scrollHeight > self.list_ul[0].offsetHeight ? 'scroll' : 'visible';
+            }else{
+                self.list_ul.style.overflowY = self.list_ul.scrollHeight > self.list_ul.offsetHeight ? 'scroll' : 'visible';
+            }
         }
         self.on('mount', () => {
             self.get_container_width();
@@ -157,14 +170,18 @@
         self.on('update', function() {
             let default_item
             if(self.opts.list && self.opts.list.length > 0){
-                default_item = self.opts.list.filter(function(item){
-                    if(item.default){
-                        return item;
-                    }
-                });
+                if(self.opts.list.length > 1 || self.opts.selected_item_id !== undefined){
+                    default_item = self.opts.list.filter(function(item){
+                        if(item.default){
+                            return item;
+                        }
+                    });
+                }else{
+                    default_item = [self.opts.list[0]];
+                }
             }
-            self.get_container_width();
-            self.get_list_height();
+            self.opts.list && self.opts.list.length > 0 ? self.get_container_width() : null;
+            self.opts.list && self.opts.list.length > 0 ? self.get_list_height() : null;
             self.selected_item = self.opts.selected_item_id != undefined && self.opts.list ? self.opts.list[self.opts.selected_item_id] : default_item && default_item.length > 0 ? default_item[0] : null;
         })
     </script>
