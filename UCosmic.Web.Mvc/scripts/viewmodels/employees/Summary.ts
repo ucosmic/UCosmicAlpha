@@ -102,6 +102,7 @@
         }
 
         ajaxMapData;
+        do_not_apply_state = false;
         MapDataIsLoading = ko.observable<boolean>(false);
         //MapDataIsLoading = ko.observable<boolean>(true);
         private _ConstructMapData() {
@@ -357,10 +358,16 @@
         }
 
         private _applyState(): void {
-            this.activityCountsData.ready();
-            this._drawGeoChart();
-            this._drawActivityTypeChart();
-            this._drawActivityYearChart();
+            if (this.do_not_apply_state != true) {
+                this.activityCountsData.ready();
+                this._drawGeoChart(null);
+                this._drawActivityTypeChart();
+                this._drawActivityYearChart();
+            } else {
+                setTimeout(() => {
+                    this.do_not_apply_state = false;
+                }, 250)
+            }
         }
 
         //#endregion
@@ -399,7 +406,7 @@
         }
         private _reloadPlaceData() {
             // calling .ready() on placeData invokes this
-            
+            this.do_not_apply_state = true;
             var settings = settings || {};
 
             //var establishmentId = this.selectedTenant() ? this.selectedTenant() : this.establishmentId();
@@ -429,6 +436,7 @@
                 this.draw_place_data(response, false, optionOverrides);
                 this.draw_activity_type_data(response, false);
                 this.draw_activity_year_data(response, false);
+                this.do_not_apply_state = true;
                 //this._applyState();
             })
                 .fail(function (xhr) {
@@ -834,14 +842,14 @@
         private draw_place_data(places, needsRedraw, optionOverrides) {
 
             if (needsRedraw) {
-                this._drawGeoChart();
+                this._drawGeoChart(places); 
                 return;
             }
             var isPivotPeople = this.isPivotPeople();
             this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(isPivotPeople ? 'People' : 'Activities'));
             this._geoChartDataTable.removeRows(0, this._geoChartDataTable.getNumberOfRows());
-            $.each(this.placeDataOriginal.cached, (i: number, dataPoint: any): void => {
-                //$.each(places.counts, (i: number, dataPoint: any): void => {
+            //$.each(this.placeDataOriginal.cached, (i: number, dataPoint: any): void => {
+                $.each(places.counts, (i: number, dataPoint: any): void => {
                 // do not count the agnostic place
                 if (!dataPoint.id) return;
                 var total = isPivotPeople ? dataPoint.peopleCount : dataPoint.count;
@@ -850,14 +858,14 @@
             this.geoChart.draw(this._geoChartDataTable, this._getGeoChartOptions(optionOverrides))
                 .then((): void => {
                 setTimeout((): void => { this._svgInjectPlaceOverlays(); }, 0);
-                this._applyPlaceOverlayTotals(this.placeDataOriginal.cached); 
-                //this._applyPlaceOverlayTotals(places.counts); 
+                //this._applyPlaceOverlayTotals(this.placeDataOriginal.cached); 
+                this._applyPlaceOverlayTotals(places.counts); 
                 this._createOverlayTooltips();
             });
         }
-        private _drawGeoChart(): void {
+        private _drawGeoChart(places): void {
             // the data may not yet be loaded, and if not, going to redraw after it is loaded
-            var cachedData = this.placeDataOriginal.cached;
+            var cachedData = places && places.counts ? places.counts : this.placeDataOriginal.cached;
             var needsRedraw = !cachedData;
 
             // decide which part of the map to select

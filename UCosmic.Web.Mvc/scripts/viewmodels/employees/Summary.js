@@ -45,6 +45,7 @@ var Employees;
             function Summary(settings) {
                 var _this = this;
                 this.settings = settings;
+                this.do_not_apply_state = false;
                 this.MapDataIsLoading = ko.observable(false);
                 this._bindingsApplied = $.Deferred();
                 this.bindingsApplied = this._bindingsApplied;
@@ -322,10 +323,18 @@ var Employees;
                 this.establishmentId(state.establishmentId);
             };
             Summary.prototype._applyState = function () {
-                this.activityCountsData.ready();
-                this._drawGeoChart();
-                this._drawActivityTypeChart();
-                this._drawActivityYearChart();
+                var _this = this;
+                if (this.do_not_apply_state != true) {
+                    this.activityCountsData.ready();
+                    this._drawGeoChart(null);
+                    this._drawActivityTypeChart();
+                    this._drawActivityYearChart();
+                }
+                else {
+                    setTimeout(function () {
+                        _this.do_not_apply_state = false;
+                    }, 250);
+                }
             };
             Summary.prototype._loadPlaceData = function () {
                 // calling .ready() on placeData invokes this
@@ -350,8 +359,8 @@ var Employees;
                 });
             };
             Summary.prototype._reloadPlaceData = function () {
-                // calling .ready() on placeData invokes this
                 var _this = this;
+                this.do_not_apply_state = true;
                 var settings = settings || {};
                 var establishmentId = this.establishmentId() ? this.establishmentId() : this.selectedTenant();
                 var url = '/api/' + this.settings.tenantId + '/employees/snapshot/' + establishmentId + '/' + this.placeId();
@@ -371,6 +380,7 @@ var Employees;
                     _this.draw_place_data(response, false, optionOverrides);
                     _this.draw_activity_type_data(response, false);
                     _this.draw_activity_year_data(response, false);
+                    _this.do_not_apply_state = true;
                 })
                     .fail(function (xhr) {
                 })
@@ -615,13 +625,13 @@ var Employees;
             Summary.prototype.draw_place_data = function (places, needsRedraw, optionOverrides) {
                 var _this = this;
                 if (needsRedraw) {
-                    this._drawGeoChart();
+                    this._drawGeoChart(places);
                     return;
                 }
                 var isPivotPeople = this.isPivotPeople();
                 this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(isPivotPeople ? 'People' : 'Activities'));
                 this._geoChartDataTable.removeRows(0, this._geoChartDataTable.getNumberOfRows());
-                $.each(this.placeDataOriginal.cached, function (i, dataPoint) {
+                $.each(places.counts, function (i, dataPoint) {
                     if (!dataPoint.id)
                         return;
                     var total = isPivotPeople ? dataPoint.peopleCount : dataPoint.count;
@@ -630,13 +640,13 @@ var Employees;
                 this.geoChart.draw(this._geoChartDataTable, this._getGeoChartOptions(optionOverrides))
                     .then(function () {
                     setTimeout(function () { _this._svgInjectPlaceOverlays(); }, 0);
-                    _this._applyPlaceOverlayTotals(_this.placeDataOriginal.cached);
+                    _this._applyPlaceOverlayTotals(places.counts);
                     _this._createOverlayTooltips();
                 });
             };
-            Summary.prototype._drawGeoChart = function () {
+            Summary.prototype._drawGeoChart = function (places) {
                 var _this = this;
-                var cachedData = this.placeDataOriginal.cached;
+                var cachedData = places && places.counts ? places.counts : this.placeDataOriginal.cached;
                 var needsRedraw = !cachedData;
                 var placeId = this.placeId();
                 if (this.placeId() == 17) {
