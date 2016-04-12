@@ -1,0 +1,69 @@
+﻿@using UCosmic.Web.Mvc.Models
+@{
+    ViewBag.Title = "UCosmic - About";
+        var tenancy = Request.Tenancy();
+        var styleDomain = tenancy != null ? tenancy.StyleDomain : "default";
+        var tenantId = tenancy != null ? tenancy.TenantId : 0;
+        var hasStyleDomain = !string.IsNullOrWhiteSpace(styleDomain) && !"default".Equals(styleDomain, StringComparison.OrdinalIgnoreCase);
+}
+
+@section bib
+{
+    <nav class="bib" data-current-bib="map">
+    @Html.Partial(MVC.About.Views._Bib, new StudentsBibNavModel { })
+</nav>
+}
+
+@section styles
+{
+<link rel="stylesheet" type="text/css" href="~/styles/sass/sheets/employees/summary.css" />
+<link rel="stylesheet" type="text/css" href="~/components_riot/styles/index.css" />
+
+}
+<script>
+    var ucosmic = { last_page: '', fire_ref: undefined, tags_loaded: [], user: {}, pages: [] };
+    (function detectIE_mobile() {
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf('MSIE ');
+        var trident = ua.indexOf('Trident/');
+        var edge = ua.indexOf('Edge/');
+        if (msie > 0 || (trident > 0) || (edge > 0)) {
+            ucosmic.is_ie = true;
+        }
+        ucosmic.is_mobile = typeof window.orientation !== 'undefined' ? true : false;
+        //            ucosmic.is_mobile =  (/Mobi/.test(navigator.userAgent));
+    })();
+</script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script src="~/components_riot/bower_components/RiotControl/riotcontrol.js"></script>
+<script src="~/components_riot/bower_components/kefir/dist/kefir.min.js"></script>
+@*<script src="/lib/cta.min.js"></script>*@
+
+<script src="~/components_riot/components/utilities/closest.js" ></script>
+<script src="~/components_riot/components/utilities/equal.js" ></script>
+<script src="~/components_riot/components/utilities/add_style.js" ></script>
+<script src="~/components_riot/components/utilities/load_tag_3.js" ></script>
+<script src="~/components_riot/components/utilities/uniq_id.js" ></script>
+<script src="~/components_riot/components/utilities/tags_loaded.js" ></script>
+
+<script src="~/components_riot/components/stores/app_store.js" ></script>
+<script src="~/components_riot/components/is_loading/is_loading.js" ></script>
+
+<script src="~/components_riot/components/pages/about/about.js"></script>
+@*<script src="~/components_riot/components/side_bar_filter/side_bar_filter.js"></script>
+<script src="~/components_riot/components/form_elements/drop_down/drop_down.js"></script>*@
+@*<script src="~/components_riot/components/lib/pouchdb-5.2.1.min.js"></script>*@
+<div class="content fixed" data-current-module="students">
+    <about id="page_about" style_domain="@styleDomain" tenant_id="@tenantId" firebase_token="@ViewBag.firebase_token"></about>
+</div>
+<script>
+    var SharedMixin = {
+        observable: riot.observable()
+    };
+
+    var app_store = new ucosmic.app_store()
+    RiotControl.addStore(app_store)
+    riot.mount('about') // Kickoff the Riot app.
+</script>
