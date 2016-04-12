@@ -8,13 +8,13 @@
             position: relative;
         }
         .image_list_icon.left{
-            right: .8em;
-            width:1.5em;
+            /*right: .8em;*/
+            /*width:1.5em;*/
             overflow: visible;
         }
         .image_list_icon.right{
-            right: .8em;
-            width:1.5em;
+            /*right: .8em;*/
+            /*width:1.5em;*/
             overflow: visible;
         }
 
@@ -27,7 +27,7 @@
 
     <div class="layout horizontal center center-justified" if="{opts.list && opts.list.length > 0}">
         <div onclick="{left}" class="image_list_icon left" if="{opts.list.length > 1}">
-            <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" style="pointer-events: none; display: inline-block; width: 3em; ">
+            <svg viewBox="0 0 24 24" preserveAspectRatio="none" style="pointer-events: none; display: inline-block; width: 3em; height: 8em; ">
                 <g>
                     <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z">
                     </path>
@@ -38,7 +38,7 @@
             <img riot-src="{calc_img_src(image)}" style="width: 100%;" show="{i == parent.image_index}">
         </div>
         <div onclick="{right}" class="image_list_icon right" if="{opts.list.length > 1}" >
-            <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" style="pointer-events: none; display: inline-block; width: 3em;  ">
+            <svg viewBox="0 0 24 24" preserveAspectRatio="none" style="pointer-events: none; display: inline-block; width: 3em; height: 8em; ">
                 <g>
                     <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z">
                     </path>
