@@ -10,9 +10,10 @@
             overflow: visible;
         }
         ul{
-            position: fixed;
+            white-space: nowrap;
+            overflow-y: visible;
             margin-right: 10px;
-            display: table;
+            display: inline-block;
             padding: 10px 5px;
             list-style-type: none;
             background-color: rgba(255,255,255,.9);
@@ -21,11 +22,18 @@
             border-radius:10px;
             box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
             margin: 0;
+            max-height: 50%;
             z-index: 1;
             width: initial;
+            width: auto;
         }
         li:not(:last-child) {
             margin-bottom: 10px;
+        }
+        #list{
+            position: absolute;
+            max-height: 70%;
+            top: 0px;
         }
         .float_text{
             font-size: .7em;
@@ -183,7 +191,7 @@
             "use strict";
             self.is_shown = self.is_shown ? false : true;
             if(self.is_shown){
-                self.list.style.top = (event.target.getBoundingClientRect().top + event.target.offsetHeight) + 'px';
+                // self.list.style.top = (event.target.getBoundingClientRect().top + event.target.offsetHeight) + 'px';
                 setTimeout(function(){
                     document.body.addEventListener("click", self.document_click_handler);
                 }, 0);
