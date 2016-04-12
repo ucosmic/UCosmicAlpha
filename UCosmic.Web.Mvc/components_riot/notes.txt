@@ -1,2 +1,13 @@
 C:\Users\Tim\UCosmic\UCosmicGit\Layout3\Layout3\UCosmic.Web.Mvc\components_riot
 bower update
+
+JSON.stringify(obj, null, 2);
+
+
+group mobilities by status -> term -> country
+then add affiliation, and student_affiliation to the fields as arrays
+use the student_affiliation over the affiliation
+
+download the status term countries
+aggregate them together
+then when an affiliation is selected take it and filter using establishments and parent id's
