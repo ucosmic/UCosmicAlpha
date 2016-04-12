@@ -11,7 +11,7 @@
 
         #expander_content {
             width: 100%;
-            overflow: hidden;
+
         }
     </style>
     <div class="layout vertical" id="expander_container">
@@ -32,7 +32,7 @@
                 <div id="expander_title_text"><echo_html id="echo_title" content="{opts.my_title}"></echo_html></div>
             </div>
         </div>
-        <div id="expander_content" >
+        <div id="expander_content" style="overflow: hidden;" >
             <div id="inner_content" riot-style="background-color:{opts.background_color}; " class=" {opts.background_class}">
                 <yield/>
             </div>
@@ -74,8 +74,10 @@
                 let inner_content_height = self.inner_content.offsetHeight != undefined ? self.inner_content.offsetHeight : self.inner_content[0].offsetHeight;
                 if (self.is_shown) {
                     self.expand_collapse(parseInt(self.opts.time), inner_content_height, expander_content.offsetHeight, 1, self.is_shown, expander_content);
+                    Array.isArray(self.expander_content) ? self.expander_content[0].style.overflow = 'hidden' :  self.expander_content.style.overflow = 'hidden';
                 } else {
                     self.expand_collapse(parseInt(self.opts.time), inner_content_height, 1, 1, self.is_shown, expander_content);
+                    Array.isArray(self.expander_content) ? self.expander_content[0].style.overflow = 'visible' :  self.expander_content.style.overflow = 'visible';
                 }
                 self.is_shown = self.is_shown ? false : true;
             }else{
