@@ -1,0 +1,412 @@
+/* make keyframes that tell the start state and the end state of our object */
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0; }
+  to {
+    opacity: 1; } }
+@-moz-keyframes fadeIn {
+  from {
+    opacity: 0; }
+  to {
+    opacity: 1; } }
+@keyframes fadeIn {
+  from {
+    opacity: 0; }
+  to {
+    opacity: 1; } }
+@-webkit-keyframes fadeOut {
+  from {
+    opacity: 1; }
+  to {
+    opacity: 0; } }
+@-moz-keyframes fadeOut {
+  from {
+    opacity: 1; }
+  to {
+    opacity: 0; } }
+@keyframes fadeOut {
+  from {
+    opacity: 1; }
+  to {
+    opacity: 0; } }
+input[type="text"], input[type="password"] {
+  max-width: 400px; }
+
+
+body {
+  min-height: 100%;
+  overflow: auto; }
+
+body.fullbleed {
+  margin: 0;
+  height: 100vh; }
+
+.highlight-text:hover, .highlight-text:focus, .highlight-text:active {
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.8);
+  cursor: pointer; }
+
+.validation_message {
+  color: red;
+  background-color: white;
+  border-radius: 5px;
+  line-height: 2em;
+  box-shadow: 1px 1px 5px black;
+  margin: 4px 10px; }
+
+.pre_scale_top_right {
+  transition: transform .3s linear;
+  transform-origin: top right;
+  transform-style: preserve-3D; }
+
+.pre_scale_top_left {
+  transition: transform .3s linear;
+  transform-origin: top left;
+  transform-style: preserve-3D; }
+
+.pre_scale_top_center {
+  transition: transform .3s linear;
+  transform-origin: top center;
+  transform-style: preserve-3D; }
+
+.pre_scale_bottom_center {
+  transition: transform .3s linear;
+  transform-origin: bottom center;
+  transform-style: preserve-3D; }
+
+.pre_scale_bottom_right {
+  transition: transform .3s linear;
+  transform-origin: bottom right;
+  transform-style: preserve-3D; }
+
+.pre_scale_center_center {
+  transition: transform .3s linear;
+  transform-origin: center center;
+  transform-style: preserve-3D; }
+
+.scale {
+  transform: scale(0, 0); }
+
+.scale_2_4 {
+  transform: scale(2, 4); }
+
+.scale_height {
+  transform: scaleY(0); }
+
+.scale_width {
+  transform: scaleX(0); }
+
+.slide_top_bottom {
+  transform: translateY(20px); }
+
+.fade_in {
+  opacity: 0;
+  /* make things invisible upon start */
+  -webkit-animation: fadeIn ease-in 1;
+  /* call our keyframe named fadeIn, use animattion ease-in and repeat it only 1 time */
+  -moz-animation: fadeIn ease-in 1;
+  animation: fadeIn ease-in 1;
+  -webkit-animation-fill-mode: forwards;
+  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+  -moz-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-duration: 300ms;
+  -moz-animation-duration: 300ms;
+  animation-duration: 300ms; }
+
+.fade_out {
+  opacity: 1;
+  /* make things invisible upon start */
+  -webkit-animation: fadeOut ease-in 1;
+  /* call our keyframe named fadeOut, use animattion ease-in and repeat it only 1 time */
+  -moz-animation: fadeOut ease-in 1;
+  animation: fadeOut ease-in 1;
+  -webkit-animation-fill-mode: forwards;
+  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+  -moz-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-duration: 300ms;
+  -moz-animation-duration: 300ms;
+  animation-duration: 300ms; }
+
+.fade_in_100 {
+  opacity: 0;
+  /* make things invisible upon start */
+  -webkit-animation: fadeIn ease-in 1;
+  /* call our keyframe named fadeIn, use animattion ease-in and repeat it only 1 time */
+  -moz-animation: fadeIn ease-in 1;
+  animation: fadeIn ease-in 1;
+  -webkit-animation-fill-mode: forwards;
+  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+  -moz-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-duration: 100ms;
+  -moz-animation-duration: 100ms;
+  animation-duration: 100ms; }
+
+.fade_out_100 {
+  opacity: 1;
+  /* make things invisible upon start */
+  -webkit-animation: fadeOut ease-in 1;
+  /* call our keyframe named fadeOut, use animattion ease-in and repeat it only 1 time */
+  -moz-animation: fadeOut ease-in 1;
+  animation: fadeOut ease-in 1;
+  -webkit-animation-fill-mode: forwards;
+  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+  -moz-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-duration: 100ms;
+  -moz-animation-duration: 100ms;
+  animation-duration: 100ms; }
+
+/*******************************
+          Flex Layout
+*******************************/
+.layout.horizontal,
+.layout.horizontal-reverse,
+.layout.vertical,
+.layout.vertical-reverse {
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex; }
+
+.layout.inline {
+  display: -ms-inline-flexbox;
+  display: -webkit-inline-flex;
+  display: inline-flex; }
+
+.layout.horizontal {
+  -ms-flex-direction: row;
+  -webkit-flex-direction: row;
+  flex-direction: row; }
+
+.layout.horizontal-reverse {
+  -ms-flex-direction: row-reverse;
+  -webkit-flex-direction: row-reverse;
+  flex-direction: row-reverse; }
+
+.layout.vertical {
+  -ms-flex-direction: column;
+  -webkit-flex-direction: column;
+  flex-direction: column; }
+
+.layout.vertical-reverse {
+  -ms-flex-direction: column-reverse;
+  -webkit-flex-direction: column-reverse;
+  flex-direction: column-reverse; }
+
+.layout.wrap {
+  -ms-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap; }
+
+.layout.wrap-reverse {
+  -ms-flex-wrap: wrap-reverse;
+  -webkit-flex-wrap: wrap-reverse;
+  flex-wrap: wrap-reverse; }
+
+.flex-auto {
+  -ms-flex: 1 1 auto;
+  -webkit-flex: 1 1 auto;
+  flex: 1 1 auto; }
+
+.flex-none {
+  -ms-flex: none;
+  -webkit-flex: none;
+  flex: none; }
+
+.flex,
+.flex-1 {
+  -ms-flex: 1;
+  -webkit-flex: 1;
+  flex: 1; }
+
+.flex-2 {
+  -ms-flex: 2;
+  -webkit-flex: 2;
+  flex: 2; }
+
+.flex-3 {
+  -ms-flex: 3;
+  -webkit-flex: 3;
+  flex: 3; }
+
+.flex-4 {
+  -ms-flex: 4;
+  -webkit-flex: 4;
+  flex: 4; }
+
+.flex-5 {
+  -ms-flex: 5;
+  -webkit-flex: 5;
+  flex: 5; }
+
+.flex-6 {
+  -ms-flex: 6;
+  -webkit-flex: 6;
+  flex: 6; }
+
+.flex-7 {
+  -ms-flex: 7;
+  -webkit-flex: 7;
+  flex: 7; }
+
+.flex-8 {
+  -ms-flex: 8;
+  -webkit-flex: 8;
+  flex: 8; }
+
+.flex-9 {
+  -ms-flex: 9;
+  -webkit-flex: 9;
+  flex: 9; }
+
+.flex-10 {
+  -ms-flex: 10;
+  -webkit-flex: 10;
+  flex: 10; }
+
+.flex-11 {
+  -ms-flex: 11;
+  -webkit-flex: 11;
+  flex: 11; }
+
+.flex-12 {
+  -ms-flex: 12;
+  -webkit-flex: 12;
+  flex: 12; }
+
+/* alignment in cross axis */
+.layout.start {
+  -ms-flex-align: start;
+  -webkit-align-items: flex-start;
+  align-items: flex-start; }
+
+.layout.center,
+.layout.center-center {
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center; }
+
+.layout.end {
+  -ms-flex-align: end;
+  -webkit-align-items: flex-end;
+  align-items: flex-end; }
+
+/* alignment in main axis */
+.layout.start-justified {
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start; }
+
+.layout.center-justified,
+.layout.center-center {
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center; }
+
+.layout.end-justified {
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end; }
+
+.layout.around-justified {
+  -ms-flex-pack: around;
+  -webkit-justify-content: space-around;
+  justify-content: space-around; }
+
+.layout.justified {
+  -ms-flex-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between; }
+
+/* self alignment */
+.self-start {
+  -ms-align-self: flex-start;
+  -webkit-align-self: flex-start;
+  align-self: flex-start; }
+
+.self-center {
+  -ms-align-self: center;
+  -webkit-align-self: center;
+  align-self: center; }
+
+.self-end {
+  -ms-align-self: flex-end;
+  -webkit-align-self: flex-end;
+  align-self: flex-end; }
+
+.self-stretch {
+  -ms-align-self: stretch;
+  -webkit-align-self: stretch;
+  align-self: stretch; }
+
+/*******************************
+          Other Layout
+*******************************/
+.block {
+  display: block; }
+
+/* IE 10 support for HTML5 hidden attr */
+[hidden] {
+  display: none !important; }
+
+.invisible {
+  visibility: hidden !important; }
+
+.relative {
+  position: relative; }
+
+.fit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0; }
+
+.scroll {
+  -webkit-overflow-scrolling: touch;
+  overflow: auto; }
+
+.fixed-bottom,
+.fixed-left,
+.fixed-right,
+.fixed-top {
+  position: fixed; }
+
+.fixed-top {
+  top: 0;
+  left: 0;
+  right: 0; }
+
+.fixed-right {
+  top: 0;
+  right: 0;
+  botttom: 0; }
+
+.fixed-bottom {
+  right: 0;
+  bottom: 0;
+  left: 0; }
+
+.fixed-left {
+  top: 0;
+  botttom: 0;
+  left: 0; }
+
+.row {
+  width: 100%; }
+
+.capitalize {
+  text-transform: capitalize; }
+
+.un_capitalize {
+  text-transform: initial; }
+
+@media (max-width: 700px) {
+  input[type="text"], input[type="password"] {
+    max-width: 300px; } }
+@media (max-width: 500px) {
+  input[type="text"], input[type="password"] {
+    max-width: 200px; } }
+
+/*# sourceMappingURL=index.css.map */

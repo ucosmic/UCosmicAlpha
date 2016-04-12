@@ -53,7 +53,7 @@
 .defaultSkin table.mceListBoxEnabled:hover .mceText, .defaultSkin .mceListBoxHover .mceText, .defaultSkin .mceListBoxSelected .mceText {border:1px solid #A2ABC0; border-right:0; background:#FFF}
 .defaultSkin table.mceListBoxEnabled:hover .mceOpen, .defaultSkin .mceListBoxHover .mceOpen, .defaultSkin .mceListBoxSelected .mceOpen {background-color:#FFF; border:1px solid #A2ABC0}
 .defaultSkin .mceListBoxDisabled a.mceText {color:gray; background-color:transparent;}
-.defaultSkin .mceListBoxMenu {overflow:auto; overflow-x:hidden}
+.defaultSkin .mceListBoucosmic {overflow:auto; overflow-x:hidden}
 .defaultSkin .mceOldBoxModel .mceListBox .mceText {height:22px}
 .defaultSkin .mceOldBoxModel .mceListBox .mceOpen {width:11px; height:22px;}
 .defaultSkin select.mceNativeListBox {font-family:'MS Sans Serif',sans-serif,Verdana,Arial; font-size:7pt; background:#F0F0EE; border:1px solid gray; margin-right:2px;}

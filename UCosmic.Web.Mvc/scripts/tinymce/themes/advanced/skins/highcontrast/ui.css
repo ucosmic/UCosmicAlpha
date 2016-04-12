@@ -41,7 +41,7 @@
 .highcontrastSkin .mceListBox:focus a.mceText, .highcontrastSkin .mceListBox:active a.mceText { border-width: 5px; padding: 1px 10px 1px 6px;}
 .highcontrastSkin .mceListBox:focus a.mceOpen, .highcontrastSkin .mceListBox:active a.mceOpen { border-width: 5px; padding: 1px 0px 1px 4px;}
 
-.highcontrastSkin .mceListBoxMenu {overflow-y:auto}
+.highcontrastSkin .mceListBoucosmic {overflow-y:auto}
 
 /* SplitButton */
 .highcontrastSkin .mceSplitButtonDisabled .mceAction {opacity:0.3; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=30)}
