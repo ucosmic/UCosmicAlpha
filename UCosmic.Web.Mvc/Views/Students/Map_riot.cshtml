@@ -16,7 +16,8 @@
 
 @section styles
 {
-    <link rel="stylesheet" type="text/css" href="~/styles/sass/sheets/employees/summary.css" />
+<link rel="stylesheet" type="text/css" href="~/styles/sass/sheets/employees/summary.css" />
+<link rel="stylesheet" type="text/css" href="~/components_riot/styles/index.css" />
 
 }
 <script>
@@ -49,8 +50,11 @@
 
 <script src="~/components_riot/components/stores/app_store.js" ></script>
 <script src="~/components_riot/components/is_loading/is_loading.js" ></script>
-<script src="~/components_riot/components/pages/students/map/student_map.js"></script>
 
+<script src="~/components_riot/components/pages/students/map/student_map.js"></script>
+<script src="~/components_riot/components/side_bar_filter/side_bar_filter.js"></script>
+<script src="~/components_riot/components/form_elements/drop_down/drop_down.js"></script>
+@*<script src="~/components_riot/components/lib/pouchdb-5.2.1.min.js"></script>*@
 <div class="content fixed" data-current-module="students">
     <student_map id="page_student_table" style_domain="@styleDomain" tenant_id="@tenantId" firebase_token="@ViewBag.firebase_token"></student_map>
 </div>
