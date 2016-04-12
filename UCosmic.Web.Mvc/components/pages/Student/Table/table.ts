@@ -388,145 +388,6 @@ Polymer({
         this.controller = this;
 
 
-        //indexedDB.deleteDatabase('_pouch_student')
-        
-
-
-
-
-
-
-
-
-
-        //var dbName = "todo";
-        //var dbVersion = 1.0;
-        //var todoDB: any = {};
-        //var indexedDB = window.indexedDB ||
-        //    window.webkitIndexedDB ||
-        //    window.mozIndexedDB;
-        //todoDB.indexedDB = {};
-        //todoDB.indexedDB.db = null;
-        //todoDB.indexedDB.open = function () {
-        //    var request = indexedDB.open(dbName, dbVersion);
-
-        //    request.onupgradeneeded = function (e) {
-        //        console.log("going to upgrade our DB!");
-
-        //        todoDB.indexedDB.db = e.target.result;
-        //        var db = todoDB.indexedDB.db;
-        //        if (db.objectStoreNames.contains("todo")) {
-        //            db.deleteObjectStore("todo");
-        //        }
-
-        //        var store = db.createObjectStore("todo",
-        //            { keyPath: "timeStamp" });
-
-        //        todoDB.indexedDB.getAllTodoItems();
-        //    }
-        //}
-
-
-
-
-
-
-
-
-
-
-
-
-        //var IndexedDb = minimongo.IndexedDb;
-
-        //// Create IndexedDb
-        //this.db = new IndexedDb({ namespace: "mydb" }, function () {
-        //    // Add a collection to the database
-        //    this.db.addCollection("animals", function () {
-        //        const doc = { species: "dog", name: "Bingo" };
-
-        //        // Always use upsert for both inserts and modifies
-        //        this.db.animals.upsert(doc, function () {
-        //            // Success:
-
-        //            // Query dog (with no query options beyond a selector)
-        //            this.db.animals.findOne({ species: "dog" }, {}, function (res) {
-        //                console.log("Dog's name is: " + res.name);
-        //            });
-        //        });
-        //    });
-        //}, function () { alert("some error!"); });
-
-
-
-
-
-
-
-
-
-
-
-
-        //this.indexDb_setup(this);
-
-        //var idbAdapter = new LokiIndexedAdapter('loki');
-        //var db = new loki('students.db',
-        //    {
-        //        autoload: true,
-        //        autoloadCallback: this.update_loki_data,
-        //        autosave: true,
-        //        autosaveInterval: 10000,
-        //        adapter: idbAdapter
-        //    });
-        //var idbAdapter = new LokiIndexedAdapter('finance');
-        //var db = new loki('test', { adapter: idbAdapter });
-        //var coll = db.addCollection('testColl');
-        //db.loadDatabase({}, function (result) {
-        //    console.log('done');
-        //});
-        //this.db = new loki("viewsaving", {
-        //    autosave: true,
-        //    autosaveInterval: 5000,
-        //    autoload: true,
-        //    //autoloadCallback: function () {
-        //    //    var coll = this.db.getCollection('student_table');
-        //    //    if (coll === null) {
-        //    //        this.student_table_collection = this.db.addCollection('student_table');
-        //    //    }
-
-        //    //    this.student_table_collection.insert({ name: 'student_table', data: this.student_table_storage })
-        //    //}
-        //});
-        //var idbAdapter = new LokiIndexedAdapter('loki');
-        //this.db = new loki('student_table',
-        //    {
-        //        autosave: true,
-        //        autosaveInterval: 10000,
-        //        adapter: idbAdapter
-        //    });
-
-        //var coll = this.db.getCollection('student_table');
-        //if (coll === null) {
-        //    this.student_table_collection = this.db.addCollection('student_table');
-        //}
-        //db.loadDatabase({}, function (result) {
-        //    console.log('done');
-        //    var coll = this.db.getCollection('student_table');
-        //    if (coll === null) {
-        //        this.student_table_collection = this.db.addCollection('student_table');
-        //    }
-
-        //    this.student_table_collection.insert({ name: 'student_table', data: this.student_table_storage })
-        //});
-        //function loadHandler() {
-        //    // if database did not exist it will be empty so I will intitialize here
-        //}
-
-
-
-        //this.db = new loki('students.db');
-        //var student_table = this.student_table_collection.findOne({ name: 'student_table' });
     },
     attached: function () {
         if (this.firebase_token) {
@@ -741,54 +602,10 @@ Polymer({
     }
 
     , start_setup_filter: _.after(8, function () {
-        //if (!this.is_routing_setup) {
-        //    this.setup_routing();
-        //} else {
             this.filter_table(this);
-        //}
     })
-//, indexDb_setup: (my_this) => { 
-//    window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-//    var request = window.indexedDB.open("student_table_storage", 1);
-//    //var db;
-//    request.onerror = function (event) {
-//        console.log("Error opening DB", event);
-//    }
-//    request.onupgradeneeded = function (event: any) {
-//        console.log("Upgrading");
-            
-//        my_this.db = event.target.result;
-//        var objectStore = my_this.db.createObjectStore("students", { keyPath: "student_table" });
-//    };
-//    request.onsuccess = function (event: any) {
-//        console.log("Success opening DB");
-//        my_this.db = event.target.result;
-//    }
-//}
-//, indexDb_save: (my_this, student_table_storage) => {
-//    if (my_this.db.version) {
-//        var transaction = my_this.db.transaction(["students"], "readwrite");
-//        transaction.oncomplete = function (event) {
-//            console.log("Success");
-//        };
-
-//        transaction.onerror = function (event) {
-//            console.log("Error");
-//        };
-//        var objectStore = transaction.objectStore("students");
-
-//        objectStore.add({ student_table: student_table_storage });
-//    } else {
-//        setTimeout(() => {
-//            my_this.indexDb_save(my_this, student_table_storage);
-//        }, 50)
-//    }
-//}
     , pouchDB_save: function (my_this) {
 
-        //if (my_this._rev) {
-        //    my_this.db.put({ _id: 'student_table', _rev: my_this._rev, data: my_this.student_table_storage });//this won't save without the correct _rev id thingy
-        //} else {
         if (!my_this.db_updating) {
             my_this.db_updating = true;
             my_this.db.get('student_table', (error, response) => {
@@ -1590,7 +1407,7 @@ Polymer({
     , calculate_counts: function (_this) {
 
         if (_this.tags && _this.tags.length > 0) {
-            var my_object = JSON.parse(JSON.stringify(_this.mobilities));
+            var my_object = JSON.parse(JSON.stringify(_this.mobilities ? _this.mobilities : {}));
 
 
             _.forEach(_this.tags_split, function (tags: any, tags_index: any) {
@@ -1687,7 +1504,7 @@ Polymer({
                 if (!how_many) {
                     _this.processing_table = false;
                 }
-                if (_this.terms_statuses.length || _this.terms_statuses.length == 0) {
+                if (!_this.terms_statuses || _this.terms_statuses.length || _this.terms_statuses.length == 0) {
                     _this.terms_statuses = {};
                 }
                 if (status != 'all') {
@@ -1704,9 +1521,10 @@ Polymer({
                             _this.data_loaded[term.text + _this.status].is_loaded = true;
                             _this.data_loaded_changed(_this.data_loaded);
                         } else {
-                            _this.fire_students_tenant_values.child(_this.status).child(term.text).once("value", (snap) => {
+                            _this.fire_students_tenant_values.child(_this.status).child(term.text).child('Values').once("value", (snap) => {
 
-                                _this.terms_statuses[_this.status + snap.key()] = add_regions(snap);
+                                _this.terms_statuses[_this.status + term.text] = add_regions(snap);
+                                //_this.terms_statuses[_this.status + snap.key()] = add_regions(snap);
                                 _this.mobilities = _.union(_this.mobilities, _this.terms_statuses[_this.status + term.text]);
                                 if (!_this.mobilities_filtered || _this.mobilities_filtered.length == 0) {
                                     _this.calculate_counts(_this);
@@ -1731,8 +1549,9 @@ Polymer({
                             _this.data_loaded[term.text + 'IN'].is_loaded = true;
                             _this.data_loaded_changed(_this.data_loaded);
                         } else {
-                            _this.fire_students_tenant_values.child('IN').child(term.text).once("value", (snap) => {
-                                _this.terms_statuses['IN' + snap.key()] = add_regions(snap);
+                            _this.fire_students_tenant_values.child('IN').child(term.text).child('Values').once("value", (snap) => {
+                                _this.terms_statuses['IN' + term.text] = add_regions(snap);
+                                //_this.terms_statuses['IN' + snap.key()] = add_regions(snap);
                                 //_this.terms_statuses['IN' + snap.key()] = _.toArray(snap.val());
                                 _this.mobilities = _.union(_this.mobilities, _this.terms_statuses['IN' + term.text]);
                                 if (!_this.mobilities_filtered || _this.mobilities_filtered.length == 0) {
@@ -1756,8 +1575,9 @@ Polymer({
                             _this.data_loaded[term.text + 'OUT'].is_loaded = true;
                             _this.data_loaded_changed(_this.data_loaded);
                         } else {
-                            _this.fire_students_tenant_values.child('OUT').child(term.text).once("value", (snap) => {
-                                _this.terms_statuses['OUT' + snap.key()] = add_regions(snap);
+                            _this.fire_students_tenant_values.child('OUT').child(term.text).child('Values').once("value", (snap) => {
+                                _this.terms_statuses['OUT' + term.text] = add_regions(snap);
+                                //_this.terms_statuses['OUT' + snap.key()] = add_regions(snap);
                                 //_this.terms_statuses['OUT' + snap.key()] = _.toArray(snap.val());
                                 _this.mobilities = _.union(_this.mobilities, _this.terms_statuses['OUT' + term.text]);
                                 if (!_this.mobilities_filtered || _this.mobilities_filtered.length == 0) {

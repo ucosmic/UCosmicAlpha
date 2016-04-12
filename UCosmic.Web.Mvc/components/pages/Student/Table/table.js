@@ -1207,7 +1207,7 @@ Polymer({
     },
     calculate_counts: function (_this) {
         if (_this.tags && _this.tags.length > 0) {
-            var my_object = JSON.parse(JSON.stringify(_this.mobilities));
+            var my_object = JSON.parse(JSON.stringify(_this.mobilities ? _this.mobilities : {}));
             _.forEach(_this.tags_split, function (tags, tags_index) {
                 tags_index = tags_index.replace('_tags', '');
                 if (tags.length > 0) {
@@ -1291,7 +1291,7 @@ Polymer({
                 if (!how_many) {
                     _this.processing_table = false;
                 }
-                if (_this.terms_statuses.length || _this.terms_statuses.length == 0) {
+                if (!_this.terms_statuses || _this.terms_statuses.length || _this.terms_statuses.length == 0) {
                     _this.terms_statuses = {};
                 }
                 if (status != 'all') {
@@ -1308,8 +1308,8 @@ Polymer({
                             _this.data_loaded_changed(_this.data_loaded);
                         }
                         else {
-                            _this.fire_students_tenant_values.child(_this.status).child(term.text).once("value", function (snap) {
-                                _this.terms_statuses[_this.status + snap.key()] = add_regions(snap);
+                            _this.fire_students_tenant_values.child(_this.status).child(term.text).child('Values').once("value", function (snap) {
+                                _this.terms_statuses[_this.status + term.text] = add_regions(snap);
                                 _this.mobilities = _.union(_this.mobilities, _this.terms_statuses[_this.status + term.text]);
                                 if (!_this.mobilities_filtered || _this.mobilities_filtered.length == 0) {
                                     _this.calculate_counts(_this);
@@ -1335,8 +1335,8 @@ Polymer({
                             _this.data_loaded_changed(_this.data_loaded);
                         }
                         else {
-                            _this.fire_students_tenant_values.child('IN').child(term.text).once("value", function (snap) {
-                                _this.terms_statuses['IN' + snap.key()] = add_regions(snap);
+                            _this.fire_students_tenant_values.child('IN').child(term.text).child('Values').once("value", function (snap) {
+                                _this.terms_statuses['IN' + term.text] = add_regions(snap);
                                 _this.mobilities = _.union(_this.mobilities, _this.terms_statuses['IN' + term.text]);
                                 if (!_this.mobilities_filtered || _this.mobilities_filtered.length == 0) {
                                     _this.calculate_counts(_this);
@@ -1360,8 +1360,8 @@ Polymer({
                             _this.data_loaded_changed(_this.data_loaded);
                         }
                         else {
-                            _this.fire_students_tenant_values.child('OUT').child(term.text).once("value", function (snap) {
-                                _this.terms_statuses['OUT' + snap.key()] = add_regions(snap);
+                            _this.fire_students_tenant_values.child('OUT').child(term.text).child('Values').once("value", function (snap) {
+                                _this.terms_statuses['OUT' + term.text] = add_regions(snap);
                                 _this.mobilities = _.union(_this.mobilities, _this.terms_statuses['OUT' + term.text]);
                                 if (!_this.mobilities_filtered || _this.mobilities_filtered.length == 0) {
                                     _this.calculate_counts(_this);
