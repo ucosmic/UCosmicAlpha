@@ -813,7 +813,7 @@ xmap
 xmapc
 xmapclear
 xme
-xmenu
+ucosmic
 XMLent
 XMLns
 xn
@@ -1643,7 +1643,7 @@ yank
 	["keyword", "xmapc"],
 	["keyword", "xmapclear"],
 	["keyword", "xme"],
-	["keyword", "xmenu"],
+	["keyword", "ucosmic"],
 	["keyword", "XMLent"],
 	["keyword", "XMLns"],
 	["keyword", "xn"],
