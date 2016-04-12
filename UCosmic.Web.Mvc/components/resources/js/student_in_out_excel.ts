@@ -120,8 +120,8 @@ self.addEventListener('message', function (e: any) {
             if (sheet[externalId + row]) {
                 var externalId2 = sheet[externalId + row].v;
                 var status2 = sheet[status + row].v;
-                var gender2 = sheet[gender + row].v;
-                var immigrationStatus2 = sheet[immigrationStatus + row].v;
+                var gender2 = sheet[gender + row] ? sheet[gender + row].v : 'none';
+                var immigrationStatus2 = sheet[immigrationStatus + row] ? sheet[immigrationStatus + row].v : 'none';
                 var level2 = sheet[level + row].v;
                 var term2 = sheet[termDescription + row].v;
                 var term: any = _.find(term_list, { 'name': term2 });
@@ -229,7 +229,11 @@ self.addEventListener('message', function (e: any) {
                         status: status, gender: gender, immigration_status: immigration_status, student_affiliation: x.student_affiliation_id, term: x.term_name
                     }
 
-                    fire_members_tenant.child('Mobilities').child('Values').child(status).child(x.term_name).child(x.student_external_id).set(mobility, (error) => {
+                    fire_members_tenant.child('Mobilities').child('Values').child(status).child(x.term_name).child('last_updated').set(Firebase.ServerValue.TIMESTAMP, (error) => {
+
+                    })
+
+                    fire_members_tenant.child('Mobilities').child('Values').child(status).child(x.term_name).child('Values').child(x.student_external_id).set(mobility, (error) => {
                         if (!has_error) {
                             if (error) {
                                 has_error = true;
@@ -238,6 +242,15 @@ self.addEventListener('message', function (e: any) {
                             process_response()
                         }
                     });
+                    //fire_members_tenant.child('Mobilities').child('Values').child(status).child(x.term_name).child(x.student_external_id).set(mobility, (error) => {
+                    //    if (!has_error) {
+                    //        if (error) {
+                    //            has_error = true;
+                    //            _this.postMessage('Error uploading, please try again - (' + error + ')');
+                    //        }
+                    //        process_response()
+                    //    }
+                    //});
 
                     fire_members_tenant.child('Students').child(x.student_external_id).set(student, (error) => {
                         process_response()
