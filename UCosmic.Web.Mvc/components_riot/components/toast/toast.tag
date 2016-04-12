@@ -29,11 +29,10 @@
     </style>
     <div id="toast_container" class="layout horizontal end-justified">
         <div class="flex"></div>
-        <div id="message" class=" layout horizontal center center-justified pre_scale_bottom_right {fade_in: is_shown} {fade_out: !is_shown} {scale: !is_shown}"
+        <div id="message" class=" layout horizontal start start-justified pre_scale_bottom_right {fade_in: is_shown} {fade_out: !is_shown} {scale: !is_shown}"
             riot-style="background-color:{color}; color:{forecolor}; margin: 20px;">
-
-            <fab_close onclick="{close}" style="right: 40px; "></fab_close>
-            <div style="padding: 5px 45px 5px 5px;">{message}</div>
+            <div class="flex layout vertical center center-justified self-stretch" style="padding: 5px 45px 5px 5px;"><div>{message}</div></div>
+            <fab_close onclick="{close}" style=" width: inherit;  position: relative;  left: 20px; height: 35px;"></fab_close>
         </div>
     </div>
     <script type="es6">
