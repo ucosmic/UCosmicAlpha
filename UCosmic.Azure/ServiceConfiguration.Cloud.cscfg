@@ -11,7 +11,7 @@
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteForwarder.Enabled" value="true" />
     </ConfigurationSettings>
     <Certificates>
-      <Certificate name="star.ucosmic.com" thumbprint="CF08C5ADD19169562945942D2FDD0A06DD8112FD" thumbprintAlgorithm="sha1" />
+      <Certificate name="star.ucosmic.com" thumbprint="7F180EE05EC901E915CFD192A0BA819CA4F4B5E0" thumbprintAlgorithm="sha1" />
       <Certificate name="azureconfig" thumbprint="9975FCFAF342D1FB73631EB5A1CD9BCEF1F102F6" thumbprintAlgorithm="sha1" />
       <Certificate name="saml.ucosmic.com" thumbprint="F98BAF8C0A12C49819AA16AF32233FF523F672FF" thumbprintAlgorithm="sha1" />
       <Certificate name="saml.ucosmic.dev" thumbprint="1945D599DF7F3B3D6513C87A8CDDF4CE6E0899B6" thumbprintAlgorithm="sha1" />
