@@ -25,11 +25,11 @@
         <div class="container">
             <div class="content group">
                 <div class="left">
-                    <div class="group">
+                    @*<div class="group">
                         <a href="http://www.ucosmic.org" target="_blank">Powered by UCosmic</a>
                         <a href="http://ucosmic.wordpress.com" target="_blank">Blog</a>
                         @Html.Partial(MVC.Shared.Views._UserVoiceLink, new UserVoiceLinkModel(Request, ViewData) { CssClass = "user-voice" })
-                    </div>
+                    </div>*@
                 </div>
                 <div class="right">
                     <div class="group">
@@ -163,6 +163,11 @@
                             Faculty & Staff
                         </a>
                     </li>
+                    <li class="employees">
+                        <a href="/Summary/Map">
+                            Summary
+                        </a>
+                    </li>
                     @*<li class="alumni">
                             <a href="@Url.Action(MVC.Home.Alumni())">
                                 Alumni
@@ -215,17 +220,74 @@
         for some reason, kendo web ui does not work when jQuery is minified & bundled.
         current solution is to get jQuery separately from google's CDN and exclude it from the layout bundle.
     *@
-    @if (!Html.IsOffline())
+    @*@if (!Html.IsOffline())
     {
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     }
     else
     {
         @Scripts.Render("~/bundles/jquery")
-    }
-    
-        <script type="text/javascript">
-            //Obtruders.placeholder = placeholder;
+    }*@
+
+
+    <script type="text/javascript">
+        function moduleNav(selector) {
+            var current = document.querySelector('[data-current-module]').dataset.currentModule;
+            var current_el = document.querySelector('nav.modules li.' + current);
+            current_el ? current_el.classList.add('current') : null;
+
+            document.querySelector('nav.modules').classList.remove('hide');
+        }
+        function bibNav(selector) {
+            var current_bib_el = document.querySelector('[data-current-bib]')
+            if (current_bib_el) {
+                current = current_bib_el.dataset.currentBib;
+                var current_el = document.querySelector('nav.bib li.' + current);
+                current_el ? current_el.classList.add('current') : null;
+                document.querySelector('nav.bib').classList.remove('hide');
+            }
+        }
+        bibNav("body");
+        moduleNav("body");
+        //debugger;
+
+
+        if('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+            .then(function() {
+
+            })
+            .catch(function () {
+
+            });
+            function sendMessage(message) {
+                // This wraps the message posting/response in a promise, which will
+                // resolve if the response doesn't contain an error, and reject with
+                // the error if it does. If you'd prefer, it's possible to call
+                // controller.postMessage() and set up the onmessage handler
+                // independently of a promise, but this is a convenient wrapper.
+                return new Promise(function (resolve, reject) {
+                    var messageChannel = new MessageChannel();
+                    messageChannel.port1.onmessage = function (event) {
+                        if (event.data.error) {
+                            reject(event.data.error);
+                        } else {
+                            resolve(event.data);
+                        }
+                    };
+
+                    // https://html.spec.whatwg.org/multipage/workers.html#dom-worker-postmessage
+                    navigator.serviceWorker.controller.postMessage(message, [messageChannel.port2]);
+                });
+            }
+            setTimeout(function () {
+                //sendMessage('test');
+            }, 5000)
+        }
+
+    </script>
+
+        @*<script type="text/javascript">
             function moduleNav(selector) {
                 $(selector).find('[data-current-module]').each(function () {
                     var current = $(this).data('current-module');
@@ -233,7 +295,6 @@
                 });
                 $('nav.modules').removeClass('hide');
             }
-            //Obtruders.moduleNav = moduleNav;
             function bibNav(selector) {
                 $(selector).find('[data-current-bib]').each(function () {
                     var current = $(this).data('current-bib');
@@ -243,9 +304,7 @@
             }
             bibNav("body");
             moduleNav("body");
-
-            //Obtruders.bibNav = bibNav;
-        </script>
+        </script>*@
     @RenderSection("scripts", required: false)
 
     <script>

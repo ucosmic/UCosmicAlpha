@@ -30,11 +30,11 @@
         <div class="container">
             <div class="content group">
                 <div class="left">
-                    <div class="group">
-                        <a href="http://www.ucosmic.org" target="_blank">Powered by UCosmic</a>
-                        <a href="http://ucosmic.wordpress.com" target="_blank">Blog</a>
-                        @Html.Partial(MVC.Shared.Views._UserVoiceLink, new UserVoiceLinkModel(Request, ViewData) { CssClass = "user-voice" })
-                    </div>
+                    @*<div class="group">
+                            <a href="http://www.ucosmic.org" target="_blank">Powered by UCosmic</a>
+                            <a href="http://ucosmic.wordpress.com" target="_blank">Blog</a>
+                            @Html.Partial(MVC.Shared.Views._UserVoiceLink, new UserVoiceLinkModel(Request, ViewData) { CssClass = "user-voice" })
+                        </div>*@
                 </div>
                 <div class="right">
                     <div class="group">
@@ -168,6 +168,11 @@
                             Faculty & Staff
                         </a>
                     </li>
+                    <li class="employees">
+                        <a href="/Summary/Map">
+                            Summary
+                        </a>
+                    </li>
                     @*<li class="alumni">
                             <a href="@Url.Action(MVC.Home.Alumni())">
                                 Alumni
@@ -228,41 +233,48 @@
     {
         @Scripts.Render("~/bundles/jquery")
     }
-    
-        <script type="text/javascript">
-            //Obtruders.placeholder = placeholder;
-            function moduleNav(selector) {
-                $(selector).find('[data-current-module]').each(function () {
-                    var current = $(this).data('current-module');
-                    $('nav.modules li.' + current).addClass('current');
-                });
-                $('nav.modules').removeClass('hide');
-            }
-            //Obtruders.moduleNav = moduleNav;
-            function bibNav(selector) {
-                $(selector).find('[data-current-bib]').each(function () {
-                    var current = $(this).data('current-bib');
-                    $('nav.bib li.' + current).addClass('current');
-                });
-                $('nav.bib').removeClass('hide');
-            }
-            bibNav("body");
-            moduleNav("body");
+    <script type="text/javascript">
+        function moduleNav(selector) {
+            var current = document.querySelector('[data-current-module]').dataset.currentModule;
+            var current_el = document.querySelector('nav.modules li.' + current);
+            current_el ? current_el.classList.add('current') : null;
 
-            //Obtruders.bibNav = bibNav;
-        </script>
+            document.querySelector('nav.modules').classList.remove('hide');
+        }
+        function bibNav(selector) {
+            var current_bib_el = document.querySelector('[data-current-bib]')
+            if (current_bib_el) {
+                current = current_bib_el.dataset.currentBib;
+                var current_el = document.querySelector('nav.bib li.' + current);
+                current_el ? current_el.classList.add('current') : null;
+                document.querySelector('nav.bib').classList.remove('hide');
+            }
+        }
+        bibNav("body");
+        moduleNav("body");
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+            .then(function () {
+
+            })
+            .catch(function () {
+
+            });
+        }
+    </script>
+
     @RenderSection("scripts", required: false)
 
     <script>
-    (function (i, s, o, g, r, a, m) {
-        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-            (i[r].q = i[r].q || []).push(arguments)
-        }, i[r].l = 1 * new Date(); a = s.createElement(o),
-        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-    ga('create', 'UA-56131112-1', 'auto');
-    ga('send', 'pageview');
+        ga('create', 'UA-56131112-1', 'auto');
+        ga('send', 'pageview');
 
     </script>
 </body>

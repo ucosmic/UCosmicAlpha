@@ -22,11 +22,11 @@
         <div class="container">
             <div class="content group">
                 <div class="left">
-                    <div class="group">
+                    @*<div class="group">
                         <a href="http://www.ucosmic.org" target="_blank">Powered by UCosmic</a>
                         <a href="http://ucosmic.wordpress.com" target="_blank">Blog</a>
                         @Html.Partial(MVC.Shared.Views._UserVoiceLink, new UserVoiceLinkModel(Request, ViewData) { CssClass = "user-voice" })
-                    </div>
+                    </div>*@
                 </div>
                 <div class="right">
                     <div class="group">
@@ -160,6 +160,11 @@
                             Faculty & Staff
                         </a>
                     </li>
+                    <li class="employees">
+                        <a href="/Summary/Map">
+                            Summary
+                        </a>
+                    </li>
                     @*<li class="alumni">
                             <a href="@Url.Action(MVC.Home.Alumni())">
                                 Alumni
@@ -237,6 +242,15 @@
         $('a[href="#/flashshort"]').on('click', function () {
             App.flasher.flash('Here is a short feedback message.');
         });
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+            .then(function () {
+
+            })
+            .catch(function () {
+
+            });
+        }
 
     </script>
 
