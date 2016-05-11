@@ -23,6 +23,8 @@ self.addEventListener('message', function (e: any) {
         return res;
     }
 
+
+
     var excel = '',
         sheet = JSON.parse(e.data.sheet),
         my_array = JSON.parse(e.data.my_array),
@@ -30,6 +32,7 @@ self.addEventListener('message', function (e: any) {
         fire_students_terms = null,
         fire_students_levels = null,
         fire_students_programs = null,
+        firebase_token = JSON.parse(e.data.firebase_token),
         fire_members = new Firebase("https://UCosmic.firebaseio.com/Members/"),
         fire_students_mobilities_join = null,
         fire_countries = null,
@@ -124,7 +127,7 @@ self.addEventListener('message', function (e: any) {
                 var immigrationStatus2 = sheet[immigrationStatus + row] ? sheet[immigrationStatus + row].v : 'none';
                 var level2 = sheet[level + row].v;
                 var term2 = sheet[termDescription + row].v;
-                var term: any = _.find(term_list, { 'name': term2 });
+                //var term: any =  _.find(term_list, { 'name': term2 });
                 var country2 = sheet[country + row].v;
                 var progCode2 = sheet[progCode + row] ? sheet[progCode + row].v.toFixed(4) : 'none';
                 var affiliation = sheet[uCosmicAffiliation + row] ? sheet[uCosmicAffiliation + row].v : 'none';
@@ -153,6 +156,7 @@ self.addEventListener('message', function (e: any) {
         create_student_imports = function () {
             var student_original_data = Rx.Observable.fromArray(excel);
             var _this = this, excel_length = excel.length, count_2 = 0;
+            //var last_rank = term_list;
 
             var student_new_data = student_original_data
                 .map((data: Student.Excel, index) => {
@@ -203,7 +207,6 @@ self.addEventListener('message', function (e: any) {
 
             var subscription2 = student_new_data.subscribe(
                 function (x: any) {
-
                     // ************************ here do the error checking, use the other ref's like terms and make sure it exists ***********************
                     var status = x.status;
                     var gender = x.gender;
@@ -229,9 +232,21 @@ self.addEventListener('message', function (e: any) {
                         status: status, gender: gender, immigration_status: immigration_status, student_affiliation: x.student_affiliation_id, term: x.term_name
                     }
 
+                    if (!term_list[x.term_name]) {
+                        const rank = Object.keys(term_list).length;
+                        const name = x.term_name
+                        term_list[x.term_name] = true;
+                        //setTimeout(() => {
+                            fire_members_tenant.child('Terms').child(name).set({ rank: rank }, (error) => {
+                            })
+                        //}, 1000)
+                    }
+
                     fire_members_tenant.child('Mobilities').child('Values').child(status).child(x.term_name).child('last_updated').set(Firebase.ServerValue.TIMESTAMP, (error) => {
 
                     })
+
+
 
                     fire_members_tenant.child('Mobilities').child('Values').child(status).child(x.term_name).child('Values').child(x.student_external_id).set(mobility, (error) => {
                         if (!has_error) {
@@ -270,5 +285,15 @@ self.addEventListener('message', function (e: any) {
     end_row = sheet["!ref"].substr(4);
     process_sheet_columns(sheet, 'A'); // may need to impliment => http://raganwald.com/2013/03/28/trampolines-in-javascript.html
     excel = process_sheet(2, my_array);
-    create_student_imports();
+
+    if (firebase_token) {
+        fire_members.authWithCustomToken(firebase_token, function (error, authData) {
+            if (error) {
+                console.log("Login Failed!", error);
+            } else {
+                console.log("Login Succeeded!", authData);
+                create_student_imports();
+            }
+        });
+    }
 });

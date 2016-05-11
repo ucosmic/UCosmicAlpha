@@ -17,7 +17,7 @@ self.addEventListener('message', function (e) {
         });
         return res;
     }
-    var excel = '', sheet = JSON.parse(e.data.sheet), my_array = JSON.parse(e.data.my_array), fire_establishments = null, fire_students_terms = null, fire_students_levels = null, fire_students_programs = null, fire_members = new Firebase("https://UCosmic.firebaseio.com/Members/"), fire_students_mobilities_join = null, fire_countries = null, establishment_list = JSON.parse(e.data.establishment_list), country_list = JSON.parse(e.data.country_list), term_list = JSON.parse(e.data.term_list), level_list = JSON.parse(e.data.level_list), program_list = JSON.parse(e.data.program_list), controller = null, end_row = null, end_col = null, externalId = "", status = "", gender = "", immigrationStatus = "", uCosmicAffiliation = "", level = "", rank = 0, termDescription = "", country = "", progCode = 0, uCosmicStudentAffiliation = "", uCosmicForiegnAffiliation = "", tenant_id = e.data.tenant_id, next_letter = function (s) {
+    var excel = '', sheet = JSON.parse(e.data.sheet), my_array = JSON.parse(e.data.my_array), fire_establishments = null, fire_students_terms = null, fire_students_levels = null, fire_students_programs = null, firebase_token = JSON.parse(e.data.firebase_token), fire_members = new Firebase("https://UCosmic.firebaseio.com/Members/"), fire_students_mobilities_join = null, fire_countries = null, establishment_list = JSON.parse(e.data.establishment_list), country_list = JSON.parse(e.data.country_list), term_list = JSON.parse(e.data.term_list), level_list = JSON.parse(e.data.level_list), program_list = JSON.parse(e.data.program_list), controller = null, end_row = null, end_col = null, externalId = "", status = "", gender = "", immigrationStatus = "", uCosmicAffiliation = "", level = "", rank = 0, termDescription = "", country = "", progCode = 0, uCosmicStudentAffiliation = "", uCosmicForiegnAffiliation = "", tenant_id = e.data.tenant_id, next_letter = function (s) {
         return s.replace(/([a-zA-Z])[^a-zA-Z]*$/, function (a) {
             var c = a.charCodeAt(0);
             switch (c) {
@@ -81,7 +81,6 @@ self.addEventListener('message', function (e) {
             var immigrationStatus2 = sheet[immigrationStatus + row] ? sheet[immigrationStatus + row].v : 'none';
             var level2 = sheet[level + row].v;
             var term2 = sheet[termDescription + row].v;
-            var term = _.find(term_list, { 'name': term2 });
             var country2 = sheet[country + row].v;
             var progCode2 = sheet[progCode + row] ? sheet[progCode + row].v.toFixed(4) : 'none';
             var affiliation = sheet[uCosmicAffiliation + row] ? sheet[uCosmicAffiliation + row].v : 'none';
@@ -176,6 +175,13 @@ self.addEventListener('message', function (e) {
                 affiliation: x.affiliation_id, country: x.country_id, foreign_affiliation: x.foreign_affiliation_id, level: level, program: x.program_id,
                 status: status, gender: gender, immigration_status: immigration_status, student_affiliation: x.student_affiliation_id, term: x.term_name
             };
+            if (!term_list[x.term_name]) {
+                var rank_1 = Object.keys(term_list).length;
+                var name_1 = x.term_name;
+                term_list[x.term_name] = true;
+                fire_members_tenant.child('Terms').child(name_1).set({ rank: rank_1 }, function (error) {
+                });
+            }
             fire_members_tenant.child('Mobilities').child('Values').child(status).child(x.term_name).child('last_updated').set(Firebase.ServerValue.TIMESTAMP, function (error) {
             });
             fire_members_tenant.child('Mobilities').child('Values').child(status).child(x.term_name).child('Values').child(x.student_external_id).set(mobility, function (error) {
@@ -199,5 +205,15 @@ self.addEventListener('message', function (e) {
     end_row = sheet["!ref"].substr(4);
     process_sheet_columns(sheet, 'A');
     excel = process_sheet(2, my_array);
-    create_student_imports();
+    if (firebase_token) {
+        fire_members.authWithCustomToken(firebase_token, function (error, authData) {
+            if (error) {
+                console.log("Login Failed!", error);
+            }
+            else {
+                console.log("Login Succeeded!", authData);
+                create_student_imports();
+            }
+        });
+    }
 });
