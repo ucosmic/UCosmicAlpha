@@ -35,6 +35,11 @@ Polymer({
             notify: true,
             observer: 'columns_changed'
         },
+        term_list_2: {
+            type: Array,
+            notify: true,
+            observer: 'term_list_2_changed'
+        },
         term_search: {
             type: String,
             notify: true,
@@ -95,16 +100,6 @@ Polymer({
         });
     },
     attached: function () {
-        if (this.firebase_token) {
-            this.my_fire.authWithCustomToken(this.firebase_token, function (error, authData) {
-                if (error) {
-                    console.log("Login Failed!", error);
-                }
-                else {
-                    console.log("Login Succeeded!", authData);
-                }
-            });
-        }
         this.$.file_input.addEventListener('change', this.handleFile, false);
     },
     columns_changed: function (new_value, old_value) {
@@ -123,20 +118,30 @@ Polymer({
             });
         }
     },
+    term_list_2_changed: function (new_value, old_value) {
+        if (old_value) {
+            var my_object = {};
+            _.forEach(new_value, function (value, index) {
+                my_object[value.text] = { rank: value.rank };
+            });
+            this.fire_members_terms.set(my_object, function (error) {
+            });
+        }
+    },
     tenant_id_changed: function (new_value, old_value) {
         var _this = this;
         this.fire_members_terms = new Firebase("https://UCosmic.firebaseio.com/Members/" + new_value + "/Terms");
         this.fire_students_levels = new Firebase("https://UCosmic.firebaseio.com/Members/" + new_value + "/Levels");
         this.fire_members_settings_mobility_counts = new Firebase("https://UCosmic.firebaseio.com/Members/" + new_value + "/Settings/Mobility_Counts");
         this.fire_members_settings_mobility_terms = new Firebase("https://UCosmic.firebaseio.com/Members/" + new_value + "/Settings/Terms");
-        this.fire_members_terms.on("value", function (snapshot) {
+        this.fire_members_terms.once("value", function (snapshot) {
             _this.term_list = snapshot.val();
-            _this.term_list_2 = _.map(snapshot.val(), function (value, index) {
+            _this.term_list_2 = _.sortBy(_.map(snapshot.val(), function (value, index) {
                 if (value) {
-                    var object = { _id: index, text: index };
+                    var object = { _id: index, text: index, rank: value.rank };
                     return object;
                 }
-            });
+            }), function (o) { return o.rank; });
             _this.toggle_can_start_file_processing();
         }, function (errorObject) {
             console.log("The read failed: " + errorObject.code);
@@ -169,7 +174,8 @@ Polymer({
             'country_list': JSON.stringify(_this.country_list),
             'program_list': JSON.stringify(_this.program_list),
             'term_list': JSON.stringify(_this.term_list),
-            'level_list': JSON.stringify(_this.level_list)
+            'level_list': JSON.stringify(_this.level_list),
+            'firebase_token': JSON.stringify(_this.firebase_token)
         });
     },
     check_if_can_start_file_process: function (sheet, my_array, _this) {

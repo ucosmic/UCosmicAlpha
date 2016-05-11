@@ -3,12 +3,13 @@
 <link rel="import" href="../../../../components/Polymer_1x/bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../components/components/autoDDL_1x/autoDDL.html">
 <link rel="import" href="../../../../components/components/columns_shown/columns_shown.html">
+<link rel="import" href="../../../../components/pages/Student/New/terms_available/terms_available.html">
 <link rel="import" href="../../../../components/resources/icons/student_new.html">
 <dom-module id="is-page-student-new">
     <!--attributes="styledomain, tenant_id, firebase_token"-->
     <template>
         <link href="new.css" rel="stylesheet" />
-        <div class="layout vertical">
+        <div class="layout vertical" style="margin-bottom:200px;">
             <header>
                 <h2>
                     Student Mobility Settings
@@ -31,18 +32,19 @@
                     </paper-item>
                 </template>
             </div>
+            <is-terms_available terms="{{term_list_2}}" id="terms" style="width:230px; height: 40px; margin: 0 0 25px 0" text="Update Terms Available"></is-terms_available>
             <div class="layout horizontal">
                 <input type="file" name="file_input" id="file_input" on-change="handleFile" />
                 <!--<core-ajax url="/api/studentsa"
-                           params='{"Description":"test",
-                           "Links": "test",
-                           "Title": "test"}'
-                           handleas="json"
-                           method="post"
-                           on-core-response="{{student_import_response}}"
-                           on-core-error="{{ajax_error}}"
-                           id="ajax_student_import">
-                </core-ajax>-->
+                       params='{"Description":"test",
+                       "Links": "test",
+                       "Title": "test"}'
+                       handleas="json"
+                       method="post"
+                       on-core-response="{{student_import_response}}"
+                       on-core-error="{{ajax_error}}"
+                       id="ajax_student_import">
+            </core-ajax>-->
                 <!--<input type="button" name="test" id="test" on-click="{{test}}" value="test" />-->
                 <span>[[progress]]</span>
             </div>
