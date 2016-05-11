@@ -49,9 +49,9 @@ namespace UCosmic.Web.Mvc.Controllers
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ActionResult Table()
+        public System.Web.Mvc.ActionResult Info()
         {
-            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Table);
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Info);
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -69,19 +69,21 @@ namespace UCosmic.Web.Mvc.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass
         {
-            public readonly string Map = "Map";
             public readonly string Index = "Index";
             public readonly string New = "New";
             public readonly string Table = "Table";
+            public readonly string Map = "Map";
+            public readonly string Info = "Info";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
-            public const string Map = "Map";
             public const string Index = "Index";
             public const string New = "New";
             public const string Table = "Table";
+            public const string Map = "Map";
+            public const string Info = "Info";
         }
 
 
@@ -93,11 +95,11 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string domain = "domain";
         }
-        static readonly ActionParamsClass_Table s_params_Table = new ActionParamsClass_Table();
+        static readonly ActionParamsClass_Info s_params_Info = new ActionParamsClass_Info();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ActionParamsClass_Table TableParams { get { return s_params_Table; } }
+        public ActionParamsClass_Info InfoParams { get { return s_params_Info; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_Table
+        public class ActionParamsClass_Info
         {
             public readonly string domain = "domain";
         }
@@ -114,6 +116,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _Bib = "_Bib";
                 public readonly string _FormFileAttachments = "_FormFileAttachments";
                 public readonly string Index = "Index";
+                public readonly string Info = "Info";
                 public readonly string Map = "Map";
                 public readonly string Map_riot = "Map_riot";
                 public readonly string New = "New";
@@ -124,6 +127,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _Bib = "~/Views/Students/_Bib.cshtml";
             public readonly string _FormFileAttachments = "~/Views/Students/_FormFileAttachments.cshtml";
             public readonly string Index = "~/Views/Students/Index.cshtml";
+            public readonly string Info = "~/Views/Students/Info.cshtml";
             public readonly string Map = "~/Views/Students/Map.cshtml";
             public readonly string Map_riot = "~/Views/Students/Map_riot.cshtml";
             public readonly string New = "~/Views/Students/New.cshtml";
@@ -138,13 +142,6 @@ namespace UCosmic.Web.Mvc.Controllers
     {
         public T4MVC_StudentsController() : base(Dummy.Instance) { }
 
-        public override System.Web.Mvc.ActionResult Map(string domain)
-        {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Map);
-            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
-            return callInfo;
-        }
-
         public override System.Web.Mvc.ActionResult Index()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
@@ -157,9 +154,22 @@ namespace UCosmic.Web.Mvc.Controllers
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult Table(string domain)
+        public override System.Web.Mvc.ActionResult Table()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Table);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Map(string domain)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Map);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Info(string domain)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Info);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
             return callInfo;
         }

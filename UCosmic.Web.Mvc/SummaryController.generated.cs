@@ -41,6 +41,12 @@ namespace UCosmic.Web.Mvc.Controllers
             return RedirectToRoutePermanent(callInfo.RouteValueDictionary);
         }
 
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult Info()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Info);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public SummaryController Actions { get { return MVC.Summary; } }
@@ -59,6 +65,7 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string Report = "Report";
             public readonly string Map = "Map";
+            public readonly string Info = "Info";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -66,9 +73,18 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public const string Report = "Report";
             public const string Map = "Map";
+            public const string Info = "Info";
         }
 
 
+        static readonly ActionParamsClass_Info s_params_Info = new ActionParamsClass_Info();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Info InfoParams { get { return s_params_Info; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Info
+        {
+            public readonly string domain = "domain";
+        }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewsClass Views { get { return s_views; } }
@@ -80,10 +96,12 @@ namespace UCosmic.Web.Mvc.Controllers
             public class _ViewNamesClass
             {
                 public readonly string _Bib = "_Bib";
+                public readonly string Info = "Info";
                 public readonly string Map = "Map";
                 public readonly string Report = "Report";
             }
             public readonly string _Bib = "~/Views/Summary/_Bib.cshtml";
+            public readonly string Info = "~/Views/Summary/Info.cshtml";
             public readonly string Map = "~/Views/Summary/Map.cshtml";
             public readonly string Report = "~/Views/Summary/Report.cshtml";
         }
@@ -103,6 +121,13 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult Map()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Map);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Info(string domain)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Info);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
             return callInfo;
         }
 

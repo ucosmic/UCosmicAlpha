@@ -786,6 +786,36 @@
     <Content Include="components\behaviors\template_helpers\template_helpers.js" />
     <Content Include="components\behaviors\toast\toast.html" />
     <Content Include="components\behaviors\toast\toast.js" />
+    <Content Include="components\bower_components\sw-toolbox\companion.js" />
+    <Content Include="components\bower_components\sw-toolbox\recipes\cache-expiration-options\app.js" />
+    <Content Include="components\bower_components\sw-toolbox\recipes\cache-expiration-options\index.html" />
+    <Content Include="components\bower_components\sw-toolbox\recipes\cache-expiration-options\service-worker.js" />
+    <Content Include="components\bower_components\sw-toolbox\recipes\cache-expiration-options\styles.css" />
+    <Content Include="components\bower_components\sw-toolbox\recipes\common.css" />
+    <Content Include="components\bower_components\sw-toolbox\recipes\index.html" />
+    <Content Include="components\bower_components\sw-toolbox\sw-toolbox.js" />
+    <Content Include="components\bower_components\sw-toolbox\test\browser-tests\precache\precache.js" />
+    <Content Include="components\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\arrays.js" />
+    <Content Include="components\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\custom-install.js" />
+    <Content Include="components\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\mix.js" />
+    <Content Include="components\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\non-existant-files.js" />
+    <Content Include="components\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\promise-arrays.js" />
+    <Content Include="components\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\promises.js" />
+    <Content Include="components\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\simple.js" />
+    <Content Include="components\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\single-item.js" />
+    <Content Include="components\bower_components\sw-toolbox\test\data\files\text-1.txt" />
+    <Content Include="components\bower_components\sw-toolbox\test\data\files\text-2.txt" />
+    <Content Include="components\bower_components\sw-toolbox\test\data\files\text-3.txt" />
+    <Content Include="components\bower_components\sw-toolbox\test\data\files\text-4.txt" />
+    <Content Include="components\bower_components\sw-toolbox\test\data\files\text-5.txt" />
+    <Content Include="components\bower_components\sw-toolbox\test\data\files\text-6.txt" />
+    <Content Include="components\bower_components\sw-toolbox\test\data\files\text-7.txt" />
+    <Content Include="components\bower_components\sw-toolbox\test\data\files\text-8.txt" />
+    <Content Include="components\bower_components\sw-toolbox\test\data\files\text.txt" />
+    <Content Include="components\bower_components\sw-toolbox\test\data\test-iframe.html" />
+    <Content Include="components\bower_components\sw-toolbox\test\index.html" />
+    <Content Include="components\bower_components\sw-toolbox\test\libs\helper-functions.js" />
+    <Content Include="components\bower_components\sw-toolbox\test\server\index.js" />
     <Content Include="components\components\animations\animations.html" />
     <Content Include="components\components\animations\animations.js" />
     <Content Include="components\components\autoComplete_1x\autoComplete.css">
@@ -928,6 +958,10 @@
     <Content Include="components\pages\Home\indexHasDomain\IndexHasDomainCustom.html" />
     <Content Include="components\pages\Home\indexHasDomain\IndexHasDomainEdit.html" />
     <Content Include="components\pages\Home\IndexNoDomain.html" />
+    <Content Include="components\pages\Student\New\terms_available\terms_available.css">
+      <DependentUpon>terms_available.scss</DependentUpon>
+    </Content>
+    <Content Include="components\pages\Student\New\terms_available\terms_available.html" />
     <Content Include="components\pages\Student\New\new.css">
       <DependentUpon>new.scss</DependentUpon>
     </Content>
@@ -938,6 +972,9 @@
       <DependentUpon>new.css</DependentUpon>
     </Content>
     <Content Include="components\pages\Student\New\new.scss" />
+    <Content Include="components\pages\Student\New\terms_available\terms_available.min.css">
+      <DependentUpon>terms_available.css</DependentUpon>
+    </Content>
     <Content Include="components\pages\Student\Table\old_save\table - Copy.js" />
     <Content Include="components\pages\Student\Table\old_save\table.css">
       <DependentUpon>table.scss</DependentUpon>
@@ -4413,6 +4450,7 @@
     <Content Include="components\Polymer_1x\bower_components\webcomponentsjs\webcomponents.min.js" />
     <Content Include="components\popup\basePopup.css.map" />
     <Content Include="components\popup\basePopup.scss" />
+    <Content Include="components\resources\icons\terms_available.html" />
     <Content Include="components\resources\icons\columns_shown.html" />
     <Content Include="components\resources\icons\student_new.html" />
     <Content Include="components\resources\icons\student_table.html" />
@@ -4474,6 +4512,14 @@
     <Content Include="components\pages\Student\Table\table.css.map" />
     <Content Include="components\pages\Summary\map\map.css.map" />
     <Content Include="components\pages\Summary\report\report.css.map" />
+    <Content Include="components\pages\Student\New\terms_available\terms_available.scss" />
+    <Content Include="components\bower_components\sw-toolbox\.bower.json" />
+    <Content Include="components\bower_components\sw-toolbox\bower.json" />
+    <Content Include="components\bower_components\sw-toolbox\CONTRIBUTING.md" />
+    <Content Include="components\bower_components\sw-toolbox\LICENSE" />
+    <Content Include="components\bower_components\sw-toolbox\package.json" />
+    <Content Include="components\bower_components\sw-toolbox\README.md" />
+    <Content Include="components\bower_components\sw-toolbox\sw-toolbox.map.json" />
     <None Include="components\Polymer\bower_components\NodeBind\codereview.settings" />
     <None Include="components\Polymer\bower_components\observe-js\codereview.settings" />
     <None Include="components\Polymer\bower_components\polymer-expressions\codereview.settings" />
@@ -4593,6 +4639,36 @@
     <Content Include="components_riot\bower_components\riot\riot+compiler.min.js" />
     <Content Include="components_riot\bower_components\riot\riot.js" />
     <Content Include="components_riot\bower_components\riot\riot.min.js" />
+    <Content Include="components_riot\bower_components\sw-toolbox\companion.js" />
+    <Content Include="components_riot\bower_components\sw-toolbox\recipes\cache-expiration-options\app.js" />
+    <Content Include="components_riot\bower_components\sw-toolbox\recipes\cache-expiration-options\index.html" />
+    <Content Include="components_riot\bower_components\sw-toolbox\recipes\cache-expiration-options\service-worker.js" />
+    <Content Include="components_riot\bower_components\sw-toolbox\recipes\cache-expiration-options\styles.css" />
+    <Content Include="components_riot\bower_components\sw-toolbox\recipes\common.css" />
+    <Content Include="components_riot\bower_components\sw-toolbox\recipes\index.html" />
+    <Content Include="components_riot\bower_components\sw-toolbox\sw-toolbox.js" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\browser-tests\precache\precache.js" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\arrays.js" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\custom-install.js" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\mix.js" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\non-existant-files.js" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\promise-arrays.js" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\promises.js" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\simple.js" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\single-item.js" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\data\files\text-1.txt" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\data\files\text-2.txt" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\data\files\text-3.txt" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\data\files\text-4.txt" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\data\files\text-5.txt" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\data\files\text-6.txt" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\data\files\text-7.txt" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\data\files\text-8.txt" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\data\files\text.txt" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\data\test-iframe.html" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\index.html" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\libs\helper-functions.js" />
+    <Content Include="components_riot\bower_components\sw-toolbox\test\server\index.js" />
     <Content Include="components_riot\components\content_slider\content_slider.js" />
     <Content Include="components_riot\components\content_slider\content_slider.min.js" />
     <Content Include="components_riot\components\drop_down\drop_down.js" />
@@ -4626,8 +4702,31 @@
     <Content Include="components_riot\components\is_loading\is_loading.min.js" />
     <Content Include="components_riot\components\layout\layout.js" />
     <Content Include="components_riot\components\lib\pouchdb-5.2.1.min.js" />
+    <Content Include="components_riot\components\pages\about\about\about.js" />
+    <Content Include="components_riot\components\pages\about\about\about.tag" />
+    <Content Include="components_riot\components\pages\about\benefits_fees\benefits_fees.tag" />
+    <Content Include="components_riot\components\pages\about\blog\blog.tag" />
+    <Content Include="components_riot\components\pages\about\current_modules\current_modules.js" />
+    <Content Include="components_riot\components\pages\about\current_modules\current_modules.tag" />
+    <Content Include="components_riot\components\pages\about\future_modules\future_modules.js" />
+    <Content Include="components_riot\components\pages\about\future_modules\future_modules.tag" />
+    <Content Include="components_riot\components\pages\about\join\join.tag" />
+    <Content Include="components_riot\components\pages\about\members\members.tag" />
+    <Content Include="components_riot\components\pages\about\news\news.tag" />
+    <Content Include="components_riot\components\pages\agreements\info\info.js" />
+    <Content Include="components_riot\components\pages\agreements\info\info.tag" />
+    <Content Include="components_riot\components\pages\facultystaff\info\info.js" />
+    <Content Include="components_riot\components\pages\facultystaff\info\info.tag" />
     <Content Include="components_riot\components\pages\page_not_found\page_not_found.js" />
+    <Content Include="components_riot\components\pages\page_not_found\page_not_found.tag" />
+    <Content Include="components_riot\components\pages\students\info\info.js" />
+    <Content Include="components_riot\components\pages\students\info\info.tag" />
     <Content Include="components_riot\components\pages\students\map\student_map.js" />
+    <Content Include="components_riot\components\pages\students\map\student_map.tag">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="components_riot\components\pages\summary\info\info.js" />
+    <Content Include="components_riot\components\pages\summary\info\info.tag" />
     <Content Include="components_riot\components\side_bar_filter\side_bar_filter.js" />
     <Content Include="components_riot\components\stores\app_store.js" />
     <Content Include="components_riot\components\stores\app_store.min.js" />
@@ -5914,10 +6013,6 @@
     <Content Include="components_riot\components\is_dialog\is_dialog.tag" />
     <Content Include="components_riot\components\is_loading\is_loading.tag" />
     <Content Include="components_riot\components\layout\layout.tag" />
-    <Content Include="components_riot\components\pages\page_not_found\page_not_found.tag" />
-    <Content Include="components_riot\components\pages\students\map\student_map.tag">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="components_riot\components\toast\toast.tag" />
     <Content Include="components_riot\components\utilities\add_style.min.js.map" />
     <Content Include="components_riot\components\utilities\closest.js.map" />
@@ -5942,6 +6037,16 @@
     </Content>
     <Content Include="components_riot\components\toast\toast.min.js.map">
       <DependentUpon>toast.min.js</DependentUpon>
+    </Content>
+    <Content Include="components_riot\bower_components\sw-toolbox\.bower.json" />
+    <Content Include="components_riot\bower_components\sw-toolbox\bower.json" />
+    <Content Include="components_riot\bower_components\sw-toolbox\CONTRIBUTING.md" />
+    <Content Include="components_riot\bower_components\sw-toolbox\LICENSE" />
+    <Content Include="components_riot\bower_components\sw-toolbox\package.json" />
+    <Content Include="components_riot\bower_components\sw-toolbox\README.md" />
+    <Content Include="components_riot\bower_components\sw-toolbox\sw-toolbox.map.json" />
+    <Content Include="components_riot\components\is_dialog\is_dialog.min.js.map">
+      <DependentUpon>is_dialog.min.js</DependentUpon>
     </Content>
     <None Include="content\kendo\2013.2.716\Black\editor.png" />
     <None Include="content\kendo\2013.2.716\Black\imagebrowser.png" />
@@ -6167,6 +6272,8 @@
     <Content Include="css\utilities\mixins.css" />
     <Content Include="css\utilities\vars.css" />
     <Content Include="Eula.htm" />
+    <Content Include="firebase\app\index.html" />
+    <Content Include="firebase\notes.txt" />
     <Content Include="images\antarctica_283x35.png" />
     <Content Include="images\bg\ui-bg_flat_black_40x100.png" />
     <TypeScriptCompile Include="components\behaviors\closest\closest.ts" />
@@ -6195,6 +6302,7 @@
     <TypeScriptCompile Include="components\pages\Home\indexHasDomain\addLink\addLink.ts" />
     <TypeScriptCompile Include="components\pages\Home\indexHasDomain\custom.ts" />
     <TypeScriptCompile Include="components\pages\Home\indexHasDomain\flasher\flasher.ts" />
+    <TypeScriptCompile Include="components\pages\Student\New\terms_available\terms_available.ts" />
     <TypeScriptCompile Include="components\pages\Student\New\new.ts" />
     <TypeScriptCompile Include="components\pages\Student\Table\old_save\table - Copy.ts" />
     <TypeScriptCompile Include="components\pages\Student\Table\old_save\table.ts" />
@@ -6311,6 +6419,9 @@
     <Content Include="css\utilities\site.scss" />
     <Content Include="css\utilities\vars.css.map" />
     <Content Include="css\utilities\vars.scss" />
+    <Content Include="firebase\rules.bolt" />
+    <Content Include="firebase\rules.json" />
+    <Content Include="firebase\firebase.json" />
     <None Include="Microsoft.WindowsAzure.Caching\ClientPerfCountersInstaller.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -6335,6 +6446,7 @@
     <None Include="Microsoft.WindowsAzure.Caching\PerformanceCounters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="sw.js" />
     <Content Include="node_server\aggregator.js" />
     <Content Include="node_server\firebase_establishments_ancestors.js" />
     <Content Include="node_server\firebase_student_aggregator.js" />
@@ -8197,6 +8309,13 @@
     <Content Include="Views\About\about.cshtml" />
     <Content Include="Views\About\_Bib.cshtml" />
     <Content Include="Views\Agreements\Info.cshtml" />
+    <Content Include="Views\About\current_modules.cshtml" />
+    <Content Include="Views\About\future_modules.cshtml" />
+    <Content Include="Views\About\news.cshtml" />
+    <Content Include="Views\About\members.cshtml" />
+    <Content Include="Views\About\benefits_fees.cshtml" />
+    <Content Include="Views\About\join.cshtml" />
+    <Content Include="Views\About\blog.cshtml" />
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />
@@ -8530,6 +8649,7 @@
     <Folder Include="components\Polymer_1x\bower_components\prism\examples\" />
     <Folder Include="content\mail\" />
     <Folder Include="css\NewFolder1\" />
+    <Folder Include="js\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
