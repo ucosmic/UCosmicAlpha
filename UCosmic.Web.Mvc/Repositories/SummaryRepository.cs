@@ -123,8 +123,12 @@ namespace UCosmic.Repositories
             {
                 sql += " and pp.revisionid=" + PlaceId;
             }
+            if (selectedEstablishmentId > 0)
+            {
+                sql += " and aap2.establishmentId=" + selectedEstablishmentId;
+            }
 
-            sql += "union  " +
+            sql += " union  " +
                 "SELECT Distinct    aa2.id , aa2.[Type],pp.OfficialName " +
                 "FROM establishments.establishment ee " +
                 "left outer join establishments.establishmentNode een2 on een2.ancestorid = ee.revisionid " +
@@ -139,10 +143,10 @@ namespace UCosmic.Repositories
             {
                 sql += " and pp.revisionid=" + PlaceId;
             }
-            //if (selectedEstablishmentId > 0)
-            //{
-            //    sql += " and aap2.establishmentId=" + selectedEstablishmentId;
-            //}
+            if (selectedEstablishmentId > 0)
+            {
+                sql += " and aap2.establishmentId=" + selectedEstablishmentId;
+            }
             IList<AgreementSummaryApiQueryResultModel> agreementSummary = connectionFactory.SelectList<AgreementSummaryApiQueryResultModel>(DB.UCosmic, sql);
 
             return agreementSummary;
@@ -168,7 +172,7 @@ namespace UCosmic.Repositories
                 sql += " and pp.revisionid=" + PlaceId;
             }
 
-            sql += "union  " +
+            sql += " union  " +
                 "SELECT Distinct   aa2.[Id] , pp.OfficialName,gnt.CountryCode " +
                 "FROM establishments.establishment ee " +
                 "left outer join establishments.establishmentNode een2 on een2.ancestorid = ee.revisionid " +
