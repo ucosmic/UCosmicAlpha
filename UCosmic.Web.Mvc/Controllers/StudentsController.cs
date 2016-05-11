@@ -59,7 +59,6 @@ namespace UCosmic.Web.Mvc.Controllers
             IList<EstablishmentListAllApiReturn> model = new List<EstablishmentListAllApiReturn>();
 
             EstablishmentListAllRepository establishmentListRepository = new EstablishmentListAllRepository();
-            //AgreementTypesRepository AgreementTypesRepository = new AgreementTypesRepository();
             model = establishmentListRepository.EstablishmentList_All_By_establishment();
 
 
@@ -73,10 +72,8 @@ namespace UCosmic.Web.Mvc.Controllers
                 foreach (EstablishmentListAllApiReturn establishment in model) // Loop through List with foreach.
                 {
                     var xx = new { establishment = establishment.official_name, parent_id = establishment.parent_id };
-                    //client.PutAsJsonAsync("students/establishments/" + establishment.establishment + ".json", xx);
                     try
                     {
-                        //client.PutAsJsonAsync("students/establishments/" + establishment.establishment + ".json", xx);
                         HttpResponseMessage response = await client.PutAsJsonAsync("Establishments/Establishments/" + establishment.establishment + ".json", xx);
                     }
                     catch (Exception e)
@@ -90,14 +87,10 @@ namespace UCosmic.Web.Mvc.Controllers
         public virtual async Task<ActionResult> update_establishments()
         {
 
-            //Action<CancellationToken> workItem = Run_Firebase_establishment_sync;
-            //HostingEnvironment.QueueBackgroundWorkItem(workItem);
             new Thread(() =>
             {
                 Run_Firebase_establishment_sync();
             }).Start();
-            //HttpResponseMessage x2 = await Run_Firebase_establishment_sync().ConfigureAwait(false);
-            //HttpResponseMessage x2 = await Run_Firebase_establishment_sync();
             using (var client = new HttpClient())
             {
 
@@ -129,7 +122,6 @@ namespace UCosmic.Web.Mvc.Controllers
             IList<CountryListAllApiReturn> model = new List<CountryListAllApiReturn>();
 
             CountryListAllRepository countryListRepository = new CountryListAllRepository();
-            //AgreementTypesRepository AgreementTypesRepository = new AgreementTypesRepository();
             model = countryListRepository.Country_List_All();
             var countries = model.DistinctBy2(d => new { d.official_name }).ToList();
 
@@ -146,17 +138,9 @@ namespace UCosmic.Web.Mvc.Controllers
                     {
                         country = country.official_name,
                         associations = model.Where(x => x.country == country.country && x.place_type != "").ToArray()
-                        //associations = new
-                        //{
-                        //    name = country.name,
-                        //    id = country.id,
-                        //    place_type = country.place_type
-                        //}
                     };
-                    //client.PutAsJsonAsync("students/countries/" + country.country + ".json", xx);
                     try
                     {
-                        //client.PutAsJsonAsync("students/countries/" + country.country + ".json", xx);
                         HttpResponseMessage response = await client.PutAsJsonAsync("Places/Countries/" + country.country + ".json", xx);
                     }
                     catch (Exception e)
@@ -213,7 +197,6 @@ namespace UCosmic.Web.Mvc.Controllers
             IList<ProgramListAllApiReturn> model = new List<ProgramListAllApiReturn>();
 
             ProgramListAllRepository programListRepository = new ProgramListAllRepository();
-            //AgreementTypesRepository AgreementTypesRepository = new AgreementTypesRepository();
             model = programListRepository.Program_List_All();
 
 
@@ -227,10 +210,8 @@ namespace UCosmic.Web.Mvc.Controllers
                 foreach (ProgramListAllApiReturn program in model) // Loop through List with foreach.
                 {
                     var xx = new { name = program.name, is_standard = program.is_standard, establishment_id = program.establishment_id };
-                    //client.PutAsJsonAsync("students/programs/" + program.program + ".json", xx);
                     try
                     {
-                        //client.PutAsJsonAsync("students/programs/" + program.program + ".json", xx);
                         HttpResponseMessage response = await client.PutAsJsonAsync("Students/Programs/" + program.program.Replace(".", "_") + ".json", xx);
                     }
                     catch (Exception e)
@@ -267,32 +248,11 @@ namespace UCosmic.Web.Mvc.Controllers
             return View("new", "_Layout3");
         }
 
-        //[POST("/students/new")]
-        //public virtual ActionResult New(HttpPostedFileBase file)
-        //{
-        //    //Check if the file is null - we'll probably want to return an error in this case
-        //    if (file != null && file.ContentLength > 0 && file.ContentLength < 10000000)
-        //    {
-        //        var fileName = Path.GetFileName(file.FileName);
-        //        var path = Path.Combine(Server.MapPath("~/App_Data/uploads"), fileName);
-        //        file.SaveAs(path);
-
-        //        var excel = new ExcelQueryFactory(path);
-        //        IList<StudentImportApi> data = (from c in excel.Worksheet<StudentImportApi>("StudentActivity") select c).ToList<StudentImportApi>();
-
-        //        StudentActivityRepository repository = new StudentActivityRepository();
-        //        var rows_changed = repository.uploadStudents(data);
-        //        ViewBag.Success = rows_changed.success;
-        //        ViewBag.Failure = rows_changed.success;
-
-        //    }
-        //    return View();
-        //}
 
 
 
         [GET("/students/table/")]
-        public virtual ActionResult Table(string domain)
+        public virtual ActionResult Table()
         {
 
             //load filter parameter values
@@ -368,53 +328,8 @@ namespace UCosmic.Web.Mvc.Controllers
         public virtual ActionResult Info(string domain)
         {
 
-            //load filter parameter values
-            //Establishment establishment = null;
-            //StudentActivityRepository student_rep = new StudentActivityRepository();
-            //PlacesRepository places_rep = new PlacesRepository();
-
-            //var tenancy = Request.Tenancy() ?? new Tenancy();
-            //if (tenancy.TenantId.HasValue)
-            //{
-            //    establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
-            //}
-            //else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
-            //{
-            //    establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
-            //}
-
-            //if (establishment != null)
-            //{
-            //    //Load filter parameters
-            //    ViewBag.firebase_token = Request.Cookies.Get("firebase_token") != null ? Request.Cookies.Get("firebase_token").Value : null;
-            //    ViewBag.campus = establishment.Children; // list of campuses
-            //    ViewBag.continents = places_rep.getContinentList();
-            //    ViewBag.countries = places_rep.getCountryList();
-            //    ViewBag.programs = student_rep.getPrograms(establishment.OfficialName);
-            //    ViewBag.terms = student_rep.getTerms(establishment.OfficialName);
-
-            //}
-            //else
-            //{
-            //    return HttpNotFound();
-            //}
             return View("info", "_Layout_riot");
         }
-
-        //[GET("{domain}/students/map")]
-        //public virtual ActionResult Map(string domain, ActivitySearchInputModel input)
-        //{
-
-        //    ViewBag.EmployeesDomain = domain;
-        //    return View();
-        //}
-
-
-        //[GET("{domain}/students")]
-        //public virtual ActionResult TenantIndex(string domain)
-        //{
-        //    return View();
-        //}
 
     }
 }

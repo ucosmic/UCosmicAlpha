@@ -83,6 +83,12 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Experts);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult Info()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Info);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public EmployeesController Actions { get { return MVC.Employees; } }
@@ -107,6 +113,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string LanguagesTable = "LanguagesTable";
             public readonly string Experts2 = "Experts2";
             public readonly string Experts = "Experts";
+            public readonly string Info = "Info";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -120,6 +127,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string LanguagesTable = "LanguagesTable";
             public const string Experts2 = "Experts2";
             public const string Experts = "Experts";
+            public const string Info = "Info";
         }
 
 
@@ -180,6 +188,14 @@ namespace UCosmic.Web.Mvc.Controllers
         public ActionParamsClass_Experts ExpertsParams { get { return s_params_Experts; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionParamsClass_Experts
+        {
+            public readonly string domain = "domain";
+        }
+        static readonly ActionParamsClass_Info s_params_Info = new ActionParamsClass_Info();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Info InfoParams { get { return s_params_Info; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Info
         {
             public readonly string domain = "domain";
         }
@@ -279,6 +295,13 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult Experts(string domain)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Experts);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Info(string domain)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Info);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
             return callInfo;
         }
