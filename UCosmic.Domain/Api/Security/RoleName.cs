@@ -33,6 +33,11 @@ namespace UCosmic
         public const string ElmahViewer = "Elmah Viewer";
         public const string EstablishmentAdministrator = "Establishment Administrator";
 
+
+        public const string InstitutionalStudentSupervisor = "Institutional Student Supervisor";
+        public const string InstitutionalStudentManager = "Institutional Student Manager";
+        
+
         //public static bool IsInAnyRole(this IPrincipal principal, string commaSeparatedRoles)
         //{
         //    if (string.IsNullOrWhiteSpace(commaSeparatedRoles))
