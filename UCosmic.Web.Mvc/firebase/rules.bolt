@@ -1,0 +1,21 @@
+isUser(est_id) {
+	auth != null && auth.role[0].name == "Institutional Student Supervisor" && auth.role[0].for_establishment == est_id
+}
+	//auth != null && auth.role[0].name == "Institutional Student Supervisor" && auth.role[0].for_establishment == est_id
+
+type Member {
+}
+
+path /Members/{est_id} is Member {
+  read(){true}
+  write(){isUser($est_id)}
+} 
+
+//path /Members {
+	//write(){isUser(this)}
+//}
+
+
+path / {
+	read(){true}
+}

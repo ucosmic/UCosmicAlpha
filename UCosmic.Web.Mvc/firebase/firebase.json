@@ -1,0 +1,21 @@
+{
+    "firebase": "ucosmic",
+    "public": "app",
+    "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**",
+        "**/layout/node_modules/**",
+        "**/obj/**",
+        "**/.git/**",
+        "**/bin/**",
+        "**/.idea/**",
+        "**/server/**",
+        "**/build_1/**",
+        "**/build/**",
+        "**/typeDiffs/**",
+        "**/bower_components_2/**",
+        "**/data/**"
+    ]
+    ,"rules": "rules.json"
+}

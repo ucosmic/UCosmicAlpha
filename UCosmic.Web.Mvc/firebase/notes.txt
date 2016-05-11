@@ -1,0 +1,15 @@
+﻿
+cd C:\Users\Tim\UCosmic\UCosmicGit\Layout3\Layout3\UCosmic.Web.Mvc\firebase
+firebase-bolt < rules.bolt > rules.json
+
+cd C:\Users\Tim\UCosmic\UCosmicGit\Layout3\Layout3\UCosmic.Web.Mvc\firebase
+firebase deploy:rules
+
+
+type Message {
+  content: String,
+  timestamp: Number,
+}
+path /messages/$message is Message {
+  read() = this.timestamp > (now - 600000);
+}
