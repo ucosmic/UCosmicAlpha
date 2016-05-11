@@ -28,7 +28,6 @@
             ucosmic.is_ie = true;
         }
         ucosmic.is_mobile = typeof window.orientation !== 'undefined' ? true : false;
-        //            ucosmic.is_mobile =  (/Mobi/.test(navigator.userAgent));
     })();
 </script>
 
@@ -36,7 +35,6 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script src="~/components_riot/bower_components/RiotControl/riotcontrol.js"></script>
 <script src="~/components_riot/bower_components/kefir/dist/kefir.min.js"></script>
-@*<script src="/lib/cta.min.js"></script>*@
 
 <script src="~/components_riot/components/utilities/closest.js"></script>
 <script src="~/components_riot/components/utilities/equal.js"></script>
@@ -49,9 +47,6 @@
 <script src="~/components_riot/components/is_loading/is_loading.js"></script>
 
 <script src="~/components_riot/components/pages/students/info/info.js"></script>
-<script src="~/components_riot/components/side_bar_filter/side_bar_filter.js"></script>
-<script src="~/components_riot/components/form_elements/drop_down/drop_down.js"></script>
-@*<script src="~/components_riot/components/lib/pouchdb-5.2.1.min.js"></script>*@
 <div class="content fixed" data-current-module="students">
     <about id="page_about" style_domain="@styleDomain" tenant_id="@tenantId" firebase_token="@ViewBag.firebase_token"></about>
 </div>
