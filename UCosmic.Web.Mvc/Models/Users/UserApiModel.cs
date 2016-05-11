@@ -27,6 +27,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
                     .ForMember(d => d.PersonId, o => o.MapFrom(s => s.Person.RevisionId))
                     .ForMember(d => d.Roles, o => o.MapFrom(s => s.Grants.Select(x => x.Role)))
+                    .ForMember(d => d.Name, o => o.MapFrom(s => s.Person.DefaultEmail))
                 ;
             }
         }
