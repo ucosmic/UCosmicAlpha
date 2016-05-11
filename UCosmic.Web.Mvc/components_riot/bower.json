@@ -29,7 +29,8 @@
     "firebase": "~2.3.1",
     "lodash": "~3.10.1",
     "RiotControl": "riotcontrol#*",
-    "kefir": "^3.2.1"
+    "kefir": "^3.2.1",
+    "sw-toolbox": "^3.1.1"
   },
   "resolutions": {
     "riot": "^2.3.18"

@@ -1,4 +1,4 @@
-C:\Users\Tim\UCosmic\UCosmicGit\Layout3\Layout3\UCosmic.Web.Mvc\components_riot
+cd C:\Users\Tim\UCosmic\UCosmicGit\Layout3\Layout3\UCosmic.Web.Mvc\components_riot
 bower update
 
 JSON.stringify(obj, null, 2);

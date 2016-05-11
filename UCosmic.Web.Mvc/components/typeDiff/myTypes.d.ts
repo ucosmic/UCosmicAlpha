@@ -14,6 +14,9 @@ interface HTMLElement {
     attached: any;
 }
 
+interface ArrayConstructor {
+    move: any;
+}
 interface HTMLElement {
     message: any;
     type: string;
