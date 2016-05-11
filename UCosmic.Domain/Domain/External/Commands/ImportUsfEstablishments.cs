@@ -345,12 +345,17 @@ namespace UCosmic.Domain.External
                             error_details = "test 5";
                             var formerContextNames = departmentById.Names.Where(x => x.IsContextName).ToArray();
                             foreach (var formerContextName in formerContextNames)
+                            {
                                 formerContextName.IsFormerName = true;
+                                formerContextName.IsContextName = false;
+                            }
 
                             var newContextName = formerContextNames.SingleOrDefault(x => x.Text == departmentData.DepartmentName);
                             if (newContextName != null)
+                            {
                                 newContextName.IsFormerName = false;
-
+                                newContextName.IsContextName = true;
+                            }
                             else
                                 departmentById.Names.Add(new EstablishmentName
                                 {
