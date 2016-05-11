@@ -240,7 +240,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         /* Returns agreement type counts for given place.*/
         [GET("agreement-count/{establishmentId?}/{placeId?}/{selectedEstablishmentId?}")]
-        [CacheHttpGet(Duration = 3600)]
+        //[CacheHttpGet(Duration = 3600)]
         public AgreementSummaryApiModel GetAgreementCount(int? establishmentId, int? placeId, int? selectedEstablishmentId)
         {
             List<AgreementSummaryItemsApiModel> returnItems = new List<AgreementSummaryItemsApiModel>();

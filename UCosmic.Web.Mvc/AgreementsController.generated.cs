@@ -59,6 +59,12 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Edit);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult Info()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Info);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public AgreementsController Actions { get { return MVC.Agreements; } }
@@ -81,6 +87,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string New = "New";
             public readonly string Edit = "Edit";
             public readonly string Settings = "Settings";
+            public readonly string Info = "Info";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -92,6 +99,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string New = "New";
             public const string Edit = "Edit";
             public const string Settings = "Settings";
+            public const string Info = "Info";
         }
 
 
@@ -118,6 +126,14 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionParamsClass_Edit
         {
             public readonly string agreementId = "agreementId";
+        }
+        static readonly ActionParamsClass_Info s_params_Info = new ActionParamsClass_Info();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Info InfoParams { get { return s_params_Info; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Info
+        {
+            public readonly string domain = "domain";
         }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -147,6 +163,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string Form = "Form";
                 public readonly string Index = "Index";
                 public readonly string Index_old = "Index_old";
+                public readonly string Info = "Info";
                 public readonly string Owners = "Owners";
                 public readonly string SearchTable = "SearchTable";
                 public readonly string Settings = "Settings";
@@ -170,6 +187,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string Form = "~/Views/Agreements/Form.cshtml";
             public readonly string Index = "~/Views/Agreements/Index.cshtml";
             public readonly string Index_old = "~/Views/Agreements/Index_old.cshtml";
+            public readonly string Info = "~/Views/Agreements/Info.cshtml";
             public readonly string Owners = "~/Views/Agreements/Owners.cshtml";
             public readonly string SearchTable = "~/Views/Agreements/SearchTable.cshtml";
             public readonly string Settings = "~/Views/Agreements/Settings.cshtml";
@@ -218,6 +236,13 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ViewResult Settings()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Settings);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Info(string domain)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Info);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
             return callInfo;
         }
 

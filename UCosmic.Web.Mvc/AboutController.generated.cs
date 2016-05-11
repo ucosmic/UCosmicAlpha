@@ -20,11 +20,182 @@ using System.Web.Mvc.Ajax;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using T4MVC;
-namespace T4MVC
+namespace UCosmic.Web.Mvc.Controllers
 {
-    public class AboutController
+    public partial class AboutController
     {
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public AboutController() { }
 
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        protected AboutController(Dummy d) { }
+
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        protected RedirectToRouteResult RedirectToAction(ActionResult result)
+        {
+            var callInfo = result.GetT4MVCResult();
+            return RedirectToRoute(callInfo.RouteValueDictionary);
+        }
+
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        protected RedirectToRouteResult RedirectToActionPermanent(ActionResult result)
+        {
+            var callInfo = result.GetT4MVCResult();
+            return RedirectToRoutePermanent(callInfo.RouteValueDictionary);
+        }
+
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult about()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.about);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult current_modules()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.current_modules);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult future_modules()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.future_modules);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult news()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.news);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult benefits()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.benefits);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult join()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.join);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult members()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.members);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult blog()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.blog);
+        }
+
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public AboutController Actions { get { return MVC.About; } }
+        [GeneratedCode("T4MVC", "2.0")]
+        public readonly string Area = "";
+        [GeneratedCode("T4MVC", "2.0")]
+        public readonly string Name = "About";
+        [GeneratedCode("T4MVC", "2.0")]
+        public const string NameConst = "About";
+
+        static readonly ActionNamesClass s_actions = new ActionNamesClass();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionNamesClass ActionNames { get { return s_actions; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionNamesClass
+        {
+            public readonly string about = "about";
+            public readonly string current_modules = "current_modules";
+            public readonly string future_modules = "future_modules";
+            public readonly string news = "news";
+            public readonly string benefits = "benefits";
+            public readonly string join = "join";
+            public readonly string members = "members";
+            public readonly string blog = "blog";
+        }
+
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionNameConstants
+        {
+            public const string about = "about";
+            public const string current_modules = "current_modules";
+            public const string future_modules = "future_modules";
+            public const string news = "news";
+            public const string benefits = "benefits";
+            public const string join = "join";
+            public const string members = "members";
+            public const string blog = "blog";
+        }
+
+
+        static readonly ActionParamsClass_about s_params_about = new ActionParamsClass_about();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_about aboutParams { get { return s_params_about; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_about
+        {
+            public readonly string domain = "domain";
+        }
+        static readonly ActionParamsClass_current_modules s_params_current_modules = new ActionParamsClass_current_modules();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_current_modules current_modulesParams { get { return s_params_current_modules; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_current_modules
+        {
+            public readonly string domain = "domain";
+        }
+        static readonly ActionParamsClass_future_modules s_params_future_modules = new ActionParamsClass_future_modules();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_future_modules future_modulesParams { get { return s_params_future_modules; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_future_modules
+        {
+            public readonly string domain = "domain";
+        }
+        static readonly ActionParamsClass_news s_params_news = new ActionParamsClass_news();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_news newsParams { get { return s_params_news; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_news
+        {
+            public readonly string domain = "domain";
+        }
+        static readonly ActionParamsClass_benefits s_params_benefits = new ActionParamsClass_benefits();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_benefits benefitsParams { get { return s_params_benefits; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_benefits
+        {
+            public readonly string domain = "domain";
+        }
+        static readonly ActionParamsClass_join s_params_join = new ActionParamsClass_join();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_join joinParams { get { return s_params_join; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_join
+        {
+            public readonly string domain = "domain";
+        }
+        static readonly ActionParamsClass_members s_params_members = new ActionParamsClass_members();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_members membersParams { get { return s_params_members; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_members
+        {
+            public readonly string domain = "domain";
+        }
+        static readonly ActionParamsClass_blog s_params_blog = new ActionParamsClass_blog();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_blog blogParams { get { return s_params_blog; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_blog
+        {
+            public readonly string domain = "domain";
+        }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewsClass Views { get { return s_views; } }
@@ -37,12 +208,88 @@ namespace T4MVC
             {
                 public readonly string _Bib = "_Bib";
                 public readonly string about = "about";
+                public readonly string benefits_fees = "benefits_fees";
+                public readonly string blog = "blog";
+                public readonly string current_modules = "current_modules";
+                public readonly string future_modules = "future_modules";
+                public readonly string join = "join";
+                public readonly string members = "members";
+                public readonly string news = "news";
             }
             public readonly string _Bib = "~/Views/About/_Bib.cshtml";
             public readonly string about = "~/Views/About/about.cshtml";
+            public readonly string benefits_fees = "~/Views/About/benefits_fees.cshtml";
+            public readonly string blog = "~/Views/About/blog.cshtml";
+            public readonly string current_modules = "~/Views/About/current_modules.cshtml";
+            public readonly string future_modules = "~/Views/About/future_modules.cshtml";
+            public readonly string join = "~/Views/About/join.cshtml";
+            public readonly string members = "~/Views/About/members.cshtml";
+            public readonly string news = "~/Views/About/news.cshtml";
         }
     }
 
+    [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+    public class T4MVC_AboutController : UCosmic.Web.Mvc.Controllers.AboutController
+    {
+        public T4MVC_AboutController() : base(Dummy.Instance) { }
+
+        public override System.Web.Mvc.ActionResult about(string domain)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.about);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult current_modules(string domain)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.current_modules);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult future_modules(string domain)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.future_modules);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult news(string domain)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.news);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult benefits(string domain)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.benefits);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult join(string domain)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.join);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult members(string domain)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.members);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult blog(string domain)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.blog);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
+            return callInfo;
+        }
+
+    }
 }
 
 #endregion T4MVC
