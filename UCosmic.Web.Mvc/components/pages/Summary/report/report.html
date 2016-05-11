@@ -81,7 +81,7 @@
                                 <template repeat="{{activityTypeCount, activityTypeCountI in activityTypeCounts}}">
                                     <div style="margin-bottom:4px;">
                                         <b>{{activityTypeCount.typeCount}}</b>
-                                        <a href="/{{style_domain}}/employees/table/?activityTypeIds={{activityTypeCount.typeId}}&placeIds={{selectedPlaceId}}&placeNames={{selectedPlaceName}}&ancestorid={{establishment_search_url}}">{{activityTypeCount.type}}</a>
+                                        <a href='/{{style_domain}}/employees/table/?activityTypeIds={{activityTypeCount.typeId}}&placeIds={{selectedPlaceId}}&placeNames={{selectedPlaceName}}&ancestorid={{establishment_search_url}}&keyword="{{establishmentSearch}}"'>{{activityTypeCount.type}}</a>
                                         <template if="{{activityTypeCount.typeCount != 1}}">
                                             activities
                                         </template>
@@ -108,7 +108,7 @@
                                 </template>
                                 <template if="{{activityTypeCounts.length != 0 && activityTypeCountsLoaded }}">
                                     <div style="margin-top:12px;">
-                                        <b>{{activity_total_activity_count}} <a href="/{{style_domain}}/employees/table/?activityTypeIds=&placeIds={{selectedPlaceId}}&placeNames={{selectedPlaceName}}&ancestorid={{establishment_search_url}}">Total</a></b>
+                                        <b>{{activity_total_activity_count}} <a href='/{{style_domain}}/employees/table/?activityTypeIds=&placeIds={{selectedPlaceId}}&placeNames={{selectedPlaceName}}&ancestorid={{establishment_search_url}}&keyword="{{establishmentSearch}}"'>Total</a></b>
                                         <template if="{{activity_total_activity_count != 1}}">
                                             activities
                                         </template>
@@ -149,10 +149,10 @@
                         <div style=" font-size:1.2em;">
                             <template if="{{degrees.degreeCount != 0 && degreeCountsLoaded}}">
                                 <template if="{{selectedCountryCode != 'any'}}">
-                                    <a href="/{{style_domain}}/employees/degrees/table/?countryCode={{selectedCountryCode}}">{{degrees.degreeCount}}</a>
+                                    <a href='/{{style_domain}}/employees/degrees/table/?countryCode={{selectedCountryCode}}&keyword="{{establishmentSearch}}"'>{{degrees.degreeCount}}</a>
                                 </template>
                                 <template if="{{selectedCountryCode == 'any'}}">
-                                    <a href="/{{style_domain}}/employees/degrees/table/">{{degrees.degreeCount}}</a>
+                                    <a href='/{{style_domain}}/employees/degrees/table/?keyword={{establishmentSearch}}'>{{degrees.degreeCount}}</a>
                                 </template>
                                 <template if="{{degrees.degreeCount != 1}}">
                                     degrees
