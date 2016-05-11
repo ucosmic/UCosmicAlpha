@@ -38,7 +38,7 @@ namespace UCosmic.Web.Mvc.Controllers
     }
     public class Firebase_roles {
         public string name {get; set;}
-        public int? for_establishment {get; set;}
+        public string for_establishment {get; set;}
     }
     public partial class IdentityController : Controller
     {
@@ -225,25 +225,15 @@ namespace UCosmic.Web.Mvc.Controllers
 
 
 
-            //var query = new RolesGrantedToUserId(user.Grants, tenancy.UserId)
-            //{
-            //    OrderBy = new Dictionary<Expression<Func<Role, object>>, OrderByDirection>
-            //    {
-            //        { x => x.Name, OrderByDirection.Ascending },
-            //    },
-            //};
-            //var entities = _queryProcessor.Execute(query);
-            //var models = Mapper.Map<RoleApiModel[]>(entities);
-
 
             var tokenGenerator = new Firebase.TokenGenerator("pXxnmMQ4YPK97bFKoN4JzGOJT40nOhM921z3JKl6");
             IList<Firebase_roles> roles = new List<Firebase_roles>();
             
             if(user.Grants.Select(x => x.Role.Name == "Institutional Student Supervisor").Count() > 1){
-                roles.Add(new Firebase_roles{name = "Institutional Student Supervisor", for_establishment = user.TenantId});
+                roles.Add(new Firebase_roles{name = "Institutional Student Supervisor", for_establishment = user.TenantId.ToString()});
             }
             if(user.Grants.Select(x => x.Role.Name == "Institutional Student Manager").Count() > 1){
-                roles.Add(new Firebase_roles{name = "Institutional Student Manager", for_establishment = user.TenantId});
+                roles.Add(new Firebase_roles { name = "Institutional Student Manager", for_establishment = user.TenantId.ToString() });
             }
 
             var authPayload = new Dictionary<string, object>()
@@ -259,8 +249,6 @@ namespace UCosmic.Web.Mvc.Controllers
 
             // write the cookie
             Response.SetCookie(cookie);
-            //Response.Firebase_token(token);
-            //ViewBag.firebase_token = token;
 
             return RedirectToAction(MVC.Tenancy.Tenant(tenancy.StyleDomain, returnUrl));
         }
@@ -301,38 +289,7 @@ namespace UCosmic.Web.Mvc.Controllers
         [NonAction]
         private ActionResult PushToSamlSsoExternal_2(Establishment establishment, string returnUrl)
         {
-            //var Url = "sign-on/alpha-proxy/{establishmentId}";
-            //var DataTokens = new RouteValueDictionary(new { area = Area });
-            //var Defaults = new RouteValueDictionary(new
-            //{
-            //    controller = Controller,
-            //    action = MVC.Identity.SignOn.ActionNames.AlphaProxy,
-            //});
-            //var Constraints = new RouteValueDictionary(new
-            //{
-            //    httpMethod = new HttpMethodConstraint("GET"),
-            //});
-
-            //var referrer = Request.Url;
-            //if (referrer == null) return new HttpStatusCodeResult(400);
-
-            //if (_services.ConfigurationManager.SamlRealServiceProviderEntityId.StartsWith("https://preview.ucosmic.com") &&
-            //    !referrer.AbsoluteUri.StartsWith("https://alpha.ucosmic.com") && !referrer.AbsoluteUri.StartsWith("https://alpha-staging.ucosmic.com"))
-            //    return new HttpStatusCodeResult(400);
-
-            //if (_services.ConfigurationManager.SamlRealServiceProviderEntityId.StartsWith("https://develop.ucosmic.com") &&
-            //    !referrer.AbsoluteUri.StartsWith("https://spike.ucosmic.com") && !referrer.AbsoluteUri.StartsWith("http://spike.ucosmic.com"))
-            //    return new HttpStatusCodeResult(400);
-
-            //var establishment = _services.QueryProcessor.Execute(
-            //    new GetEstablishmentByIdQuery(establishmentId)
-            //    {
-            //        EagerLoad = new Expression<Func<Establishment, object>>[]
-            //        {
-            //            e => e.SamlSignOn,
-            //        }
-            //    }
-            //);
+            
 
             if (establishment != null)
             {
@@ -367,30 +324,16 @@ namespace UCosmic.Web.Mvc.Controllers
                         x => x.Person.Affiliations.Select(y => y.Establishment),
                     },
             });
-            //Run_Firebase_test(_services.ConfigurationManager.SamlRealServiceProviderEntityId, "request_2");
-            //establishment.SamlSignOn.MetadataXml = establishment.SamlSignOn.MetadataXml.Replace("https://shibboleth.usf.edu/idp/profile/Shibboleth/SSO", "https://alpha-staging.ucosmic.com/sign-on/saml/2");
-            //establishment.SamlSignOn.MetadataXml = establishment.SamlSignOn.MetadataXml.Replace("https://shibboleth.usf.edu/idp/profile/SAML2/POST/SSO", "https://alpha-staging.ucosmic.com/sign-on/saml/2");
-            //establishment.SamlSignOn.MetadataXml = establishment.SamlSignOn.MetadataXml.Replace("https://shibboleth.usf.edu/idp/profile/SAML2/POST-SimpleSign/SSO", "https://alpha-staging.ucosmic.com/sign-on/saml/2");
-            //establishment.SamlSignOn.MetadataXml = establishment.SamlSignOn.MetadataXml.Replace("https://shibboleth.usf.edu/idp/profile/SAML2/Redirect/SSO", "https://alpha-staging.ucosmic.com/sign-on/saml/2");
             var tenancy = Mapper.Map<Tenancy>(user);
             _services.SamlServiceProvider.SendAuthnRequest(
                 establishment.SamlSignOn.SsoLocation,
                 establishment.SamlSignOn.SsoBinding.AsSaml2SsoBinding(),
                 //"https://preview.ucosmic.com/sign-on/saml/2",
                 "https://alpha.ucosmic.com/sign-on/saml/2",
-                //_services.ConfigurationManager.SamlRealServiceProviderEntityId,
-                //returnUrl ?? Url.Action(MVC.Tenancy.Tenant(tenancy.StyleDomain, returnUrl)),
                 "https://alpha.ucosmic.com/sign-on/saml/2/post",
                 HttpContext
             );
 
-            //_services.SamlServiceProvider.SendAuthnRequest(
-            //    establishment.SamlSignOn.SsoLocation,
-            //    establishment.SamlSignOn.SsoBinding.AsSaml2SsoBinding(),
-            //    _services.ConfigurationManager.SamlRealServiceProviderEntityId,
-            //    returnUrl ?? Url.Action(MVC.Identity.MyHome.Get()),
-            //    HttpContext
-            //);
         }
 
         [NonAction]
@@ -423,34 +366,6 @@ namespace UCosmic.Web.Mvc.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-        //[NonAction]
-        //private void PushToSamlSsoInternal(Establishment establishment, string returnUrl)
-        //{
-        //    if (establishment == null) return;
-
-        //    // update the provider metadata
-        //    _updateSamlMetadata.Handle(
-        //        new UpdateSamlSignOnMetadata
-        //        {
-        //            EstablishmentId = establishment.RevisionId,
-        //        }
-        //    );
-
-        //    // clear the email from temp data
-        //    //TempData.SigningEmailAddress(null);
-
-        //    var callbackUrl = returnUrl ?? Url.Action(MVC.MyProfile.Index());
-        //    //callbackUrl = MakeAbsoluteUrl(callbackUrl);
-
-        //    // send the authn request
-        //    _samlServiceProvider.SendAuthnRequest(
-        //        establishment.SamlSignOn.SsoLocation,
-        //        establishment.SamlSignOn.SsoBinding.AsSaml2SsoBinding(),
-        //        _configurationManager.SamlRealServiceProviderEntityId,
-        //        callbackUrl,
-        //        HttpContext
-        //    );
-        //}
 
         [NonAction]
         private string MakeAbsoluteUrl(string relativeUrl)
