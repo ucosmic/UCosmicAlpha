@@ -63,6 +63,11 @@ namespace UCosmic.Web.Mvc.Controllers
             ViewBag.EmployeesEstablishmentId = establishment.RevisionId;
             Session.LastEmployeeLens(Request);
             Session.LastActivityLens(Request);
+
+            var tenancy = Request.Tenancy() ?? new Tenancy();
+            tenancy.StyleDomain = domain;
+
+            Response.Tenancy(tenancy);
             return View();
         }
 
@@ -83,6 +88,11 @@ namespace UCosmic.Web.Mvc.Controllers
             //};
             //Mapper.Map(input, query);
             //var results = _queryProcessor.Execute(query);
+
+            var tenancy = Request.Tenancy() ?? new Tenancy();
+            tenancy.StyleDomain = domain;
+
+            Response.Tenancy(tenancy);
 
             var tenant = _queryProcessor.Execute(new EstablishmentByDomain(domain)).RevisionId as int?;
             if (input.AncestorId != null)
@@ -110,20 +120,51 @@ namespace UCosmic.Web.Mvc.Controllers
                 //}).ToArray();
                 DateTime Since;
                 DateTime Until;
-                try
+                if (input.Since == null && input.Until != null)
                 {
-                Since = Convert.ToDateTime(input.Since);
+                    input.Since = input.Until;
+                    try
+                    {
+                        Since = Convert.ToDateTime(input.Until);
+                    }
+                    catch
+                    {
+                        Since = new DateTime(int.Parse(input.Until), 1, 1);
+                    }
                 }
-                catch{
-                    Since = new DateTime(int.Parse(input.Since), 1, 1);
-                }
-                try
+                else
                 {
-                    Until = Convert.ToDateTime(input.Until);
+                    try
+                    {
+                        Since = Convert.ToDateTime(input.Since);
+                    }
+                    catch
+                    {
+                        Since = new DateTime(int.Parse(input.Since), 1, 1);
+                    }
                 }
-                catch
+                if (input.Until == null && input.Since != null)
                 {
-                    Until = new DateTime(int.Parse(input.Until), 1, 1);
+                    input.Until = input.Since;
+                    try
+                    {
+                        Until = Convert.ToDateTime(input.Since);
+                    }
+                    catch
+                    {
+                        Until = new DateTime(int.Parse(input.Since), 12, 31);
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        Until = Convert.ToDateTime(input.Until);
+                    }
+                    catch
+                    {
+                        Until = new DateTime(int.Parse(input.Until), 12, 31);
+                    }
                 }
 
                 bool include_undated;
@@ -307,6 +348,11 @@ namespace UCosmic.Web.Mvc.Controllers
             input.PageSize = 10;
             Mapper.Map(input, query);
             var results = _queryProcessor.Execute(query);
+
+            var tenancy = Request.Tenancy() ?? new Tenancy();
+            tenancy.StyleDomain = domain;
+
+            Response.Tenancy(tenancy);
             //var Output = Mapper.Map<ActivitySearchResultMapModel[]>(results);
             //var Output = Mapper.Map<ActivitySearchResultMapModel[]>(results); 
             //var query = new ActivityValuesPageBy
@@ -388,6 +434,11 @@ namespace UCosmic.Web.Mvc.Controllers
                 //AncestorId = 25,
                 EagerLoad = DegreeSearchResultProfiler.EntitiyToModel.EagerLoad,
             };
+
+            var tenancy = Request.Tenancy() ?? new Tenancy();
+            tenancy.StyleDomain = domain;
+
+            Response.Tenancy(tenancy);
             //if (input.AncestorId)
             //{
             //    query.AncestorId = input.AncestorId
@@ -434,6 +485,11 @@ namespace UCosmic.Web.Mvc.Controllers
                 //AncestorId = 25,
                 //EagerLoad = LanguageExpertiseSearchResultProfiler.EntitiyToModel.EagerLoad,
             };
+
+            var tenancy = Request.Tenancy() ?? new Tenancy();
+            tenancy.StyleDomain = domain;
+
+            Response.Tenancy(tenancy);
             //if (input.AncestorId)
             //{
             //    query.AncestorId = input.AncestorId
@@ -525,36 +581,6 @@ namespace UCosmic.Web.Mvc.Controllers
         public virtual ActionResult Info(string domain)
         {
 
-            //load filter parameter values
-            //Establishment establishment = null;
-            //StudentActivityRepository student_rep = new StudentActivityRepository();
-            //PlacesRepository places_rep = new PlacesRepository();
-
-            //var tenancy = Request.Tenancy() ?? new Tenancy();
-            //if (tenancy.TenantId.HasValue)
-            //{
-            //    establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
-            //}
-            //else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
-            //{
-            //    establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
-            //}
-
-            //if (establishment != null)
-            //{
-            //    //Load filter parameters
-            //    ViewBag.firebase_token = Request.Cookies.Get("firebase_token") != null ? Request.Cookies.Get("firebase_token").Value : null;
-            //    ViewBag.campus = establishment.Children; // list of campuses
-            //    ViewBag.continents = places_rep.getContinentList();
-            //    ViewBag.countries = places_rep.getCountryList();
-            //    ViewBag.programs = student_rep.getPrograms(establishment.OfficialName);
-            //    ViewBag.terms = student_rep.getTerms(establishment.OfficialName);
-
-            //}
-            //else
-            //{
-            //    return HttpNotFound();
-            //}
             return View("info", "_Layout_riot");
         }
     }
