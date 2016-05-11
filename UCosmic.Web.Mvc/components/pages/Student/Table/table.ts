@@ -390,15 +390,15 @@ Polymer({
 
     },
     attached: function () {
-        if (this.firebase_token) {
-            this.my_fire.authWithCustomToken(this.firebase_token, function (error, authData) {
-                if (error) {
-                    console.log("Login Failed!", error);
-                } else {
-                    console.log("Login Succeeded!", authData);
-                }
-            });
-        }
+        //if (this.firebase_token) {
+        //    this.my_fire.authWithCustomToken(this.firebase_token, function (error, authData) {
+        //        if (error) {
+        //            console.log("Login Failed!", error);
+        //        } else {
+        //            console.log("Login Succeeded!", authData);
+        //        }
+        //    });
+        //}
     }
 
     , setup_db: function(_this){
@@ -428,7 +428,7 @@ Polymer({
                     }
                 });
                 _this.columns = _this.student_table_storage.columns
-                _this.filter_table(_this);
+                _this.filter_table(_this, false);
                 //_this.setup_routing();
             } else if (!_this.mobilities && !_this.establishment_list && !_this.country_list && !_this.program_list && !_this.level_list && !_this.tags) {
                 if (_this.student_table_storage) {
@@ -449,6 +449,8 @@ Polymer({
             }
             if (_this.columns) {
                 _this.start_setup_filter();
+                _this.filter_table(_this, true);
+                //_this.load_settings_counts(_this, true);
             } else {
                 _this.load_settings_counts(_this);
             }
@@ -602,7 +604,7 @@ Polymer({
     }
 
     , start_setup_filter: _.after(8, function () {
-            this.filter_table(this);
+            this.filter_table(this, false);
     })
     , pouchDB_save: function (my_this) {
 
@@ -616,6 +618,7 @@ Polymer({
                     my_this.db.put({ _id: 'student_table', _rev: my_this._rev, data: my_this.student_table_storage }).then(function (response) {
                         my_this.db_updating = false;
                     }).catch(function (err) {
+                        my_this.db.destroy();
                         my_this.db_updating = false;
                         console.log(err);
                     });//this won't save without the correct _rev id thingy
@@ -623,6 +626,7 @@ Polymer({
                     my_this.db.put({ _id: 'student_table', data: my_this.student_table_storage }).then(function (response) {
                         my_this.db_updating = false;
                     }).catch(function (err) {
+                        my_this.db.destroy();
                         my_this.db_updating = false;
                         console.log(err);
                     });
@@ -770,7 +774,7 @@ Polymer({
         //}
     }
 
-    , load_settings_counts: _.after(2, function (my_this) {
+    , load_settings_counts: _.after(2, function (my_this, is_refreshing_data) {
         this.fire_members_settings_mobility_counts.once("value", (snapshot) => {
 
             this.count_list_original = _.map(snapshot.val(), function (value: any, index) {
@@ -784,8 +788,11 @@ Polymer({
             });
             this.count_list1 = this.count_list_original;
             this.count_list2 = this.count_list1;
+            if (is_refreshing_data) {
 
-            this.start_setup_filter();
+            } else {
+                this.start_setup_filter();
+            }
         }, function (errorObject) {
                 console.log("The read failed: " + errorObject.code);
             });
@@ -906,7 +913,7 @@ Polymer({
 
     , tags_changed: function (new_value, old_value) {
         if (old_value) {
-            this.filter_table(this);
+            this.filter_table(this, false);
         }
         this.tags_split_union();
     }
@@ -1472,7 +1479,7 @@ Polymer({
     , processing_table: false
     , last_term_tags: {}
     , last_status: ''
-    , filter_table: function (_this) {
+    , filter_table: function (_this, is_refreshing_data) {
         function add_regions(snap) {
             const new_term =
                 _.map(_.toArray(snap.val()), function (value: any, index) {
@@ -1487,7 +1494,7 @@ Polymer({
             var terms = _this.tags_split.term_tags;
             var status = _this.tags_split.status_tags.length == 1 ? _this.tags_split.status_tags[0] : 'all';
 
-            if (!_.isEqual(terms, _this.last_term_tags) || status != _this.last_status || !_this.mobilities_filtered || _this.mobilities_filtered.length == 0) {
+            if (!_.isEqual(terms, _this.last_term_tags) || status != _this.last_status || !_this.mobilities_filtered || _this.mobilities_filtered.length == 0 || is_refreshing_data) {
                 _this.last_term_tags = terms;
                 _this.last_status = status;
                 if (!_this.mobilities_filtered || _this.mobilities_filtered.length == 0) {
@@ -1495,11 +1502,13 @@ Polymer({
                 }
                 _this.data_loaded['init'].is_loaded = true;
                 _this.data_loaded_changed(_this.data_loaded);
-                _this.processing_table = true;
+                _this.processing_table = is_refreshing_data ? false : true;
                 _this.mobilities = null;
                 var how_many = _this.status != 'all' ? terms.length : terms.length * 2
                 var stop_processing_table = _.after(how_many, function () {
                     _this.processing_table = false;
+
+                    _this.pouchDB_save(_this);
                 })
                 if (!how_many) {
                     _this.processing_table = false;
@@ -1512,7 +1521,7 @@ Polymer({
                         _this.data_loaded[term.text + _this.status] = { is_loaded: false };
                         _this.data_loaded_changed(_this.data_loaded);
 
-                        if (_this.terms_statuses[_this.status + term.text]) {
+                        if (_this.terms_statuses[_this.status + term.text] && !is_refreshing_data) {
                             _this.mobilities = _.union(_this.mobilities, _this.terms_statuses[_this.status + term.text]);
                             if (!_this.mobilities_filtered || _this.mobilities_filtered.length == 0) {
                                 _this.calculate_counts(_this);
@@ -1540,7 +1549,7 @@ Polymer({
                     _.forEach(terms, function (term: any, key) {
                         _this.data_loaded[term.text + 'IN'] = { is_loaded: false };
                         _this.data_loaded_changed(_this.data_loaded);
-                        if (_this.terms_statuses['IN' + term.text]) {
+                        if (_this.terms_statuses['IN' + term.text] && !is_refreshing_data) {
                             _this.mobilities = _.union(_this.mobilities, _this.terms_statuses['IN' + term.text]);
                             if (!_this.mobilities_filtered || _this.mobilities_filtered.length == 0) {
                                 _this.calculate_counts(_this);
@@ -1566,7 +1575,7 @@ Polymer({
                     _.forEach(terms, function (term: any, key) {
                         _this.data_loaded[term.text + 'OUT'] = { is_loaded: false };
                         _this.data_loaded_changed(_this.data_loaded);
-                        if (_this.terms_statuses['OUT' + term.text]) {
+                        if (_this.terms_statuses['OUT' + term.text] && !is_refreshing_data) {
                             _this.mobilities = _.union(_this.mobilities, _this.terms_statuses['OUT' + term.text]);
                             if (!_this.mobilities_filtered || _this.mobilities_filtered.length == 0) {
                                 _this.calculate_counts(_this);
