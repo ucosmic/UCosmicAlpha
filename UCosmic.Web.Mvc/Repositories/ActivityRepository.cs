@@ -274,7 +274,7 @@ namespace UCosmic.Repositories
                     {
                         if (ascDesc.Contains("desc"))
                         {
-                            sql += " order by onGoingSort desc, endsOn desc, startsOn desc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
+                            sql += " order by onGoingSort desc, startsOn desc, endsOn desc, locationName asc, lastNameSort asc, firstNameSort asc, av.title asc";
                         }
                         else
                         {
