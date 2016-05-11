@@ -1,0 +1,28 @@
+#term_inner_container{
+    background-color: #ddd;
+    color: green;
+}
+
+#terms_available_button{
+    border-radius: 10px;  
+      display: inline-block;
+          /*z-index: 2;*/
+          float: right;
+    cursor: pointer;
+    }
+.unchecked{
+    color: black; 
+    }
+
+paper-item.term_list  {
+    border-radius: 10px;  
+    border: 1px solid black;
+    margin: 5px;
+    span {
+        width: 200px;
+    }
+    &:hover{
+        cursor:default;
+        background-color: transparent;
+    }
+}

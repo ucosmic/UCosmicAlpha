@@ -1,0 +1,60 @@
+﻿<link rel="import" href="../../../../Polymer_1x/bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../Polymer_1x/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../Polymer_1x/bower_components/neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="../../../../Polymer_1x/bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../../../../Polymer_1x/bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../../Polymer_1x/bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../../resources/icons/terms_available.html">
+
+<dom-module id="is-terms_available">
+    <link href="terms_available.css" rel="stylesheet" />
+    <template>
+
+        <paper-material elevation="2" id="terms_available_button"  on-click="toggle" style="z-index:1; cursor: pointer; background-color: #ddd;">
+            <div style="padding: 0 0 0 8px;"><span>[[text]]</span>(<span>[[terms_count]]</span>)<iron-icon icon="terms_available:view-column" class="icon_button"></iron-icon></div>
+        </paper-material>
+        <div style="height: 40px;">
+            <div style="display: inline-block; height: 0;">
+                <div class="layout vertical " id="term_container" style="text-align:left; position:relative;  bottom:30px; left: 20px; height: 0px;">
+                    <paper-material elevation="2" id="filter" style="border-radius:20px; width:350px; right: 20px; visibility:hidden;">
+                        <div class="layout vertical" id="term_inner_container" style=" padding: 20px; border-radius: 20px; max-height: 270px; overflow-y: scroll;">
+                            <div style=" overflow:visible;position: absolute; width: 310px;" class="layout horizontal end-justified" on-click="toggle">
+                                <iron-icon 
+                                           style="position:relative; top:-16px; right: 0px; border: solid 1px; border-radius: 20px; box-shadow:0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.4);" 
+                                           icon="terms_available:close" id="close_icon" class="icon_button"></iron-icon>
+                            </div>
+                            <div style="margin-top: 20px; height:inherit">
+                                <template is="dom-repeat" items="[[terms]]" as="term" id="terms">
+                                    <paper-item class="list-item term_list">
+                                        <span>[[term.text]]</span>
+                                        <div class="layout vertical">
+                                            <iron-icon icon="terms_available:arrow-drop-up" on-click="move_up" class="icon_button">
+                                            </iron-icon>
+                                            <iron-icon icon="terms_available:arrow-drop-down" on-click="move_down" class="icon_button">
+                                            </iron-icon>
+                                        </div>
+                                    </paper-item>
+                                    <!--<template is="dom-if" if="{{!term.is_shown}}">
+                                        <paper-item draggable="true" class="list-item unchecked tennant_colors_highlight">
+                                            <span>[[term.text]]</span>
+                                            <iron-icon icon="terms_available:add-circle-outline" on-click="add_term" class="icon_button">
+                                            </iron-icon>
+                                        </paper-item>
+                                    </template>-->
+                                </template>
+                                <!--<template is="dom-if" if="{{!terms_count}}">
+                No terms
+            </template>-->
+                            </div>
+                        </div>
+                    </paper-material>
+                    <div class="flex"></div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <script src="terms_available.js"></script>
+
+</dom-module>
+
+
