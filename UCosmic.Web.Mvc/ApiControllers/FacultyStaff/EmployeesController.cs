@@ -594,7 +594,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             //    TypeId = y.typeId
             //}).ToArray();
             List<ActivityYearApiCountsModel> year_counts = new List<ActivityYearApiCountsModel>();
-            int[] years = new int[6] { 2008, 2009, 2010, 2012, 2013, 2014 };
+            int[] years = new int[6] { 2009, 2010, 2011, 2012, 2013, 2014 };
             foreach (int year in years)
             {
                 year_counts.Add(new ActivityYearApiCountsModel
