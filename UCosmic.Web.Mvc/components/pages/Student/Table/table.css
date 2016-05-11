@@ -109,6 +109,9 @@ paper-item span {
   .is-page-student-table google-chart {
     width: 600px;
     height: 300px; }
+  .is-page-student-table .chart_tags {
+    margin-left: 10px;
+    font-weight: bolder; }
   .is-page-student-table .chart_counts span.chart_count_item + span.chart_count_item:before {
     content: "- "; }
   .is-page-student-table .chart_count_item span:first-child {

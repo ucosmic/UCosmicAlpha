@@ -93,6 +93,14 @@
                                 </div>
                                 <paper-dialog class="dialog_charts" modal style="width: 650px; height: 450px; max-height: 450px;" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
                                     <div style="width: 650px; height: 380px;">
+                                        <div class="chart_tags">
+                                            <template is="dom-repeat" items="[[tags]]" as="tag" index-as="tag_i">
+                                                <span class="chart_tag_item">
+                                                    <span hidden$="[[compare(tag_i, 0)]]"> - </span>
+                                                    <span>[[tag.text]]</span>
+                                                </span>
+                                            </template>
+                                        </div>
                                         <paper-dropdown-menu label="Select Chart">
                                             <paper-menu class="dropdown-content" selected="{{count_l1.selected_tab}}" on-iron-select="chart_selected">
                                                 <paper-item>Bar Chart</paper-item>
@@ -149,6 +157,14 @@
 
                                                             <paper-dialog class="dialog_charts" modal style="width: 650px; height: 450px; max-height: 450px;" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
                                                                 <div style="width: 650px; height: 380px;">
+                                                                    <div class="chart_tags">
+                                                                        <template is="dom-repeat" items="[[tags]]" as="tag" index-as="tag_i">
+                                                                            <span class="chart_tag_item">
+                                                                                <span hidden$="[[compare(tag_i, 0)]]"> - </span>
+                                                                                <span>[[tag.text]]</span>
+                                                                            </span>
+                                                                        </template>
+                                                                    </div>
                                                                     <paper-dropdown-menu label="Select Chart">
                                                                         <paper-menu class="dropdown-content" selected="{{array_l1.selected_tab}}">
                                                                             <!--<paper-item>Area Chart</paper-item>-->
