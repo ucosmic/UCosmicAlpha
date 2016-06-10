@@ -34,7 +34,7 @@
             </div>
             <is-terms_available terms="{{term_list_2}}" id="terms" style="width:230px; height: 40px; margin: 0 0 25px 0" text="Update Terms Available"></is-terms_available>
             <div class="layout horizontal">
-                <input type="file" name="file_input" id="file_input" on-change="handleFile" />
+                <input type="file" name="file_input" id="file_input" style="width:500px;" on-change="handleFile" />
                 <!--<core-ajax url="/api/studentsa"
                        params='{"Description":"test",
                        "Links": "test",
@@ -46,7 +46,7 @@
                        id="ajax_student_import">
             </core-ajax>-->
                 <!--<input type="button" name="test" id="test" on-click="{{test}}" value="test" />-->
-                <span>[[progress]]</span>
+                <div>[[progress]]</div>
             </div>
         </div>
     </template>
