@@ -36,7 +36,7 @@ self.toggle = function (event) {
 };
 
 self.get_container_width = function () {
-    self.container_width = self.title.offsetWidth + 'px';
+    self.ddl_container.style.width = self.title.offsetWidth + 'px';
 };
 self.get_list_height = function () {
     if (self.list_ul.length > 1) {
