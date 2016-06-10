@@ -13,7 +13,8 @@
             -moz-transition: opacity .25s ease-in-out;
             -webkit-transition: opacity .25s ease-in-out;
         }
-        drop_down{
+
+        drop_down {
             margin: 10px 0;
         }
     </style>
@@ -58,15 +59,15 @@
                 <div class="flex"></div>
                 <div style="height: 0;width:0;">
                     <div class="layout horizontal center" style="display: inline-block; position: relative; right: 190px; top: 55px; z-index: 2; border: solid black 1px; width:170px; padding: 5px;">
-                        <div class="layout horizontal center"  >
-                            <div style="text-align: center;"  >
+                        <div class="layout horizontal center">
+                            <div style="text-align: center;">
                                 <span riot-style="{direction == 'all' ? 'font-weight: bolder' : ''}; cursor:pointer;" onclick="{change_direction}" data-direction="all">All</span>
                             </div>
-                            <div  class="flex"></div>
-                            <div  style="text-align: center;border-right: 1px solid black;border-left: 1px solid black; padding: 0 5px;" >
+                            <div class="flex"></div>
+                            <div style="text-align: center;border-right: 1px solid black;border-left: 1px solid black; padding: 0 5px;">
                                 <span riot-style="{direction == 'out' ? 'font-weight: bolder' : ''}; cursor:pointer;" onclick="{change_direction}" data-direction="out">Outbound</span>
                             </div>
-                            <div  class="flex"></div>
+                            <div class="flex"></div>
                             <div style="text-align: center">
                                 <span riot-style="{direction == 'in' ? 'font-weight: bolder' : ''}; cursor:pointer;" onclick="{change_direction}" data-direction="in">Inbound</span>
                             </div>
@@ -78,15 +79,15 @@
         </div>
         <div class="layout vertical end center-justified">
             <side_bar_filter id="side_bar_filter" style="width: 300px; ">
-                <drop_down  id="sub_affiliations_level_1_ddl" list="{parent.sub_affiliations_level_1}" width="240px" max_height="300px" pre_scale_class="pre_scale_top_center"
-                title="sub-affiliation" background_color="white" selected_callback="{parent.sub_affiliations_level_1_selected}"
-                selected_item_id="{parent.sub_affiliations_level_1_id}" scale_type="scale_height" direction="ltr">
+                <drop_down id="sub_affiliations_level_1_ddl" list="{parent.sub_affiliations_level_1}" max_width="240px" max_height="300px" pre_scale_class="pre_scale_top_center"
+                           title="sub-affiliation" background_color="white" selected_callback="{parent.sub_affiliations_level_1_selected}"
+                           selected_item_id="{parent.sub_affiliations_level_1_id}" scale_type="scale_height" direction="ltr">
                 </drop_down>
-                <drop_down show="{parent.sub_affiliations_level_1_id}" width="240px" max_height="300px" id="sub_affiliations_level_2_ddl" list="{parent.sub_affiliations_level_2}" pre_scale_class="pre_scale_top_center"
+                <drop_down show="{parent.sub_affiliations_level_1_id}" max_width="240px" max_height="300px" id="sub_affiliations_level_2_ddl" list="{parent.sub_affiliations_level_2}" pre_scale_class="pre_scale_top_center"
                            title="sub-affiliation" background_color="white" selected_callback="{parent.sub_affiliations_level_2_selected}"
                            selected_item_id="{parent.sub_affiliations_level_2_id}" scale_type="scale_height" direction="ltr">
                 </drop_down>
-                <drop_down show="{parent.sub_affiliations_level_1_id && parent.sub_affiliations_level_2_id}" width="240px" max_height="300px" id="sub_affiliations_level_3_ddl" list="{parent.sub_affiliations_level_3}" pre_scale_class="pre_scale_top_center"
+                <drop_down show="{parent.sub_affiliations_level_1_id && parent.sub_affiliations_level_2_id}" max_width="240px" max_height="300px" id="sub_affiliations_level_3_ddl" list="{parent.sub_affiliations_level_3}" pre_scale_class="pre_scale_top_center"
                            title="sub-affiliation" background_color="white" selected_callback="{parent.sub_affiliations_level_3_selected}"
                            selected_item_id="{parent.sub_affiliations_level_3_id}" scale_type="scale_height" direction="ltr">
                 </drop_down>
@@ -97,7 +98,6 @@
     </div>
 
     <script type="es6">
-        // https://developers.google.com/chart/interactive/docs/gallery/geochart#region-geocharts
         var self = this;
         self.direction = 'all';
         self.sub_affiliations_level_1 = [];
@@ -105,23 +105,19 @@
         self.sub_affiliations_level_1_id = null;
         self.countries_data_all = [];
 
-        // ucosmic.load_tag('/components_riot/components/form_elements/drop_down/drop_down.js', document.head);
-        // ucosmic.load_tag('/components_riot/components/side_bar_filter/side_bar_filter.js', document.head);
-
-        // const load_sides_added_tag_stream = ucosmic.load_tag2('/components_riot/store/menus/menu/section/menu_item/sides_added/sides_added.js', document.head, false);
-        // const load_tags_stream = Kefir.zip([load_menu_item_tag_stream, load_expander_tag_stream, load_menu_item_option_tag_stream, load_image_slide_tag_stream,
-        //     load_menu_checkboxes_tag_stream, load_menu_drop_down_tag_stream, load_is_button_tag_stream, load_dialog_drop_down_tag_stream, load_checkboxes_tag_stream
-        //     , load_drinks_tag_stream, load_drinks_added_tag_stream, load_sides_tag_stream, load_sides_added_tag_stream, load_walmart_item_tag_stream]);
-        // load_tags_stream.onEnd(() => {
+        var config = {
+            apiKey: "AIzaSyBpzIaweLPBcKOodY8JdxDlwARwbcEvhc4",
+            authDomain: "ucosmic.firebaseapp.com",
+            databaseURL: "https://ucosmic.firebaseio.com",
+            storageBucket: "project-4691094245668174778.appspot.com",
+        };
+        firebase.initializeApp(config);
+        self.root_ref = firebase.database().ref();
 
         self.change_direction = (event, is_direction_set) => {
             self.direction = is_direction_set ? self.direction : event.target.dataset.direction;
-            // setup_map_bar(self.map_data);
             let map_data = [];
             self.term_data_all = JSON.parse(JSON.stringify(self.term_data_all_original))
-            // if(self.country_selected_index){
-            //     self.country_selected = self.map_data[self.country_selected_index + 1][0];
-            // }
             function are_equal_2(g1, g2) {
                 return g1.id === g2.id;
             }
@@ -129,9 +125,9 @@
             function are_equal(g1, g2) {
                 return g1[0] === g2[0];
             }
+
             if (self.direction === 'all') {
-                if(self.selected_sub_affiliation != parseInt(self.opts.tenant_id)){
-                    // let term_data_all_in = [], term_data_all_out = [];
+                if (self.selected_sub_affiliation != parseInt(self.opts.tenant_id)) {
                     self.term_data = [];
                     self.term_data_all.in.forEach((term) => {
                         // return true; // check all term.countries.affiliations to see if it is in the available affiliation and remove if not,
@@ -154,8 +150,6 @@
                             return [country.country_id ? self.countries[country.country_id].country : 'none', country.count]
                         })
                         map_data = array_union_concat_2(map_data, countries, are_equal);
-                        // self.term_data.push([term.id, term.count])
-                        // term_data_all_in.push(term);
                         //// then count the affiliations inside of country
                     })
                     self.term_data_all.out.forEach((term) => {
@@ -176,32 +170,21 @@
                         })
                         term.count = count
 
-                            const countries = term.countries.map((country) => {
-                                return [country.country_id ? self.countries[country.country_id].country : 'none', country.count]
-                            })
-                            map_data = array_union_concat_2(map_data, countries, are_equal);
-                        // self.term_data.push([term.id, term.count])
-                        // term_data_all_out.push(term);
-                        //// then count the affiliations inside of country
+                        const countries = term.countries.map((country) => {
+                            return [country.country_id ? self.countries[country.country_id].country : 'none', country.count]
+                        })
+                        map_data = array_union_concat_2(map_data, countries, are_equal);
                     })
-                    // term_data_all.in = term_data_all_in;
-                    // term_data_all.out = term_data_all_out;
                     self.term_data_all_union = array_union_concat(self.term_data_all.in, self.term_data_all.out, are_equal_2);
                     self.term_data = self.term_data_all_union.map((term) => {
                         return [term.id, term.count]
                     })
                     self.total_student_count = get_total_student_count(self.term_data_all, self.direction);
 
-                    // self.term_data_all.in.forEach((term) => {
-                    //     const countries = term.countries.map((country) => {
-                    //         return [country.country_id ? self.countries[country.country_id].country : 'none', country.count]
-                    //     })
-                    //     map_data = array_union_concat_2(map_data, countries, are_equal);
-                    // });
                     map_data.splice(0, 0, ['Country', 'Students'])
                     self.total_location_count = map_data.length - 1;
                     // map_data = self.map_data;
-                }else{
+                } else {
                     self.term_data_all_union = array_union_concat(self.term_data_all.in, self.term_data_all.out, are_equal_2);
                     self.term_data = self.term_data_all_union.map((term) => {
                         return [term.id, term.count]
@@ -211,7 +194,7 @@
                     map_data = self.map_data;
                 }
             } else if (self.direction === 'in') {
-                if(self.selected_sub_affiliation != parseInt(self.opts.tenant_id)){
+                if (self.selected_sub_affiliation != parseInt(self.opts.tenant_id)) {
                     self.term_data = [];
                     self.term_data_all.in.forEach((term) => {
                         let count = 0;
@@ -242,17 +225,11 @@
 
                     map_data.splice(0, 0, ['Country', 'Students'])
                     self.total_location_count = map_data.length - 1;
-                }else{
-                    // self.term_data_all_union = array_union_concat(self.term_data_all.in, self.term_data_all.out, are_equal_2);
-                    // self.term_data = self.term_data_all_union.map((term) => {
-                    //     return [term.id, term.count]
-                    // })
-                    // self.total_student_count = get_total_student_count(self.term_data_all, self.direction);
-                    // self.total_location_count = self.map_data.length - 1;
-                    // map_data = self.map_data;
+                } else {
                     function are_equal(g1, g2) {
                         return g1[0] === g2[0];
                     }
+
                     self.term_data = self.term_data_all.in.map((term) => {
                         return [term.id, term.count]
                     })
@@ -269,15 +246,10 @@
                 }
 
 
-
-
-
-
-
             } else {
 
 
-                if(self.selected_sub_affiliation != parseInt(self.opts.tenant_id)){
+                if (self.selected_sub_affiliation != parseInt(self.opts.tenant_id)) {
                     self.term_data = [];
                     self.term_data_all.out.forEach((term) => {
                         let count = 0;
@@ -308,18 +280,12 @@
 
                     map_data.splice(0, 0, ['Country', 'Students'])
                     self.total_location_count = map_data.length - 1;
-                }else{
-                    // self.term_data_all_union = array_union_concat(self.term_data_all.in, self.term_data_all.out, are_equal_2);
-                    // self.term_data = self.term_data_all_union.map((term) => {
-                    //     return [term.id, term.count]
-                    // })
-                    // self.total_student_count = get_total_student_count(self.term_data_all, self.direction);
-                    // self.total_location_count = self.map_data.length - 1;
-                    // map_data = self.map_data;
+                } else {
 
                     function are_equal(g1, g2) {
                         return g1[0] === g2[0];
                     }
+
                     self.term_data = self.term_data_all.out.map((term) => {
                         return [term.id, term.count]
                     })
@@ -336,20 +302,16 @@
                 }
 
 
-
-
-
-
             }
 
-            if(self.country_selected_index){
+            if (self.country_selected_index) {
                 const map = new google.visualization.GeoChart(self.regions_div);
                 const country_selected_student_count = map_data.find((country) => {
                     return country[0] == self.country_selected;
                 });
                 self.country_selected_student_count = country_selected_student_count ? country_selected_student_count[1] : 0;
                 setup_map_clicked(map_data, map, self.map_options);
-            }else{
+            } else {
                 setup_map_bar(map_data);
                 self.term_data.splice(0, 0, ['Term', 'Students'])
                 setup_year_chart(self.term_data);
@@ -411,7 +373,7 @@
                     if (equalityFunc(union[i], union[j])) {
                         union[i].count += union[j].count
                         union[i].affiliations = union[i].affiliations.concat(union[j].affiliations)
-                        union[i].countries =  union[i].countries.map((country) => {
+                        union[i].countries = union[i].countries.map((country) => {
                             const country_2 = union[j].countries.find((country_found) => {
                                 return country_found.country_id == country.country_id;
                             })
@@ -448,45 +410,47 @@
         }
 
         self.remove_country = () => {
-            //map.setSelection = '';
             self.country_selected = '';
             self.country_selected_index = 0;
             self.update();
             self.change_direction(null, true);
-            // setup_map_bar(self.map_data);
-            // if (self.direction === 'all') {
-            //     function are_terms_equal(g1, g2) {
-            //         return g1.id === g2.id;
-            //     }
-            //
-            //     self.term_data_all_union = array_union(self.term_data_all.in, self.term_data_all.out, are_terms_equal);
-            //     self.term_data = self.term_data_all_union.map((term) => {
-            //         return [term.id, term.count]
-            //     })
-            // } else if (self.direction === 'in') {
-            //     self.term_data = self.term_data_all.in.map((term) => {
-            //         return [term.id, term.count]
-            //     })
-            // } else {
-            //     self.term_data = self.term_data_all.out.map((term) => {
-            //         return [term.id, term.count]
-            //     })
-            // }
-            // self.term_data.splice(0, 0, ['Term', 'Students'])
-            // setup_year_chart(self.term_data);
         }
 
         const setup_year_chart = (data) => {
-            google.charts.setOnLoadCallback(init_charts);
-
-            function init_charts() {
+            // if (Object.keys(self.terms).length === data.length-1) {
 
 
-                var line_data = google.visualization.arrayToDataTable(data);
-                const line_options = {colors: ['#006747']};
-                const line_chart = new google.visualization.LineChart(self.line_chart);
-                line_chart.draw(line_data, line_options);
-            }
+                var students_year_chart = [];
+                students_year_chart[0] = data[0];
+
+
+                self.terms.forEach(term => {
+                    // data.forEach((value) => {
+                    //     if(key == value[0]){
+                    //         students_year_chart.push(value);
+                    //     }
+                    // })
+                    var temp_term = data.find((value) => {
+                        return value[0] == term;
+                    })
+
+                    if(temp_term){
+                        students_year_chart.push(temp_term)
+                    }
+                });
+                data = students_year_chart;
+
+                google.charts.setOnLoadCallback(init_charts);
+
+                function init_charts() {
+
+
+                    var line_data = google.visualization.arrayToDataTable(data);
+                    const line_options = {colors: ['#006747']};
+                    const line_chart = new google.visualization.LineChart(self.line_chart);
+                    line_chart.draw(line_data, line_options);
+                }
+            // }
         }
 
         const setup_map_clicked = (data, map, map_options) => {
@@ -574,11 +538,7 @@
                 var bar_data = google.visualization.arrayToDataTable(bar_data_pre);
 
                 var map_options = {
-                    // region: '002', // Africa
-                    // colorAxis: {colors: ['#00853f', 'black', '#e31b23']},
                     backgroundColor: '#ACCCFD',
-                    // datalessRegionColor: '#f8bbd0',
-                    // defaultColor: '#f5f5f5',
                 };
                 const bar_options = {colors: ['#006747']};
                 const map = new google.visualization.GeoChart(self.regions_div);
@@ -623,18 +583,18 @@
 
         const get_total_student_count = (term_data_all, direction) => {
             let count = 0;
-            if(direction === 'all'){
+            if (direction === 'all') {
                 term_data_all.in.forEach((term) => {
                     count += term.count;
                 })
                 term_data_all.out.forEach((term) => {
                     count += term.count;
                 })
-            }else if(direction === 'in'){
+            } else if (direction === 'in') {
                 term_data_all.in.forEach((term) => {
                     count += term.count;
                 })
-            }else{
+            } else {
                 term_data_all.out.forEach((term) => {
                     count += term.count;
                 })
@@ -651,22 +611,20 @@
             self.sub_affiliations_level_1_id = affiliation_id;
             self.selected_sub_affiliation = self.sub_affiliations_level_1[affiliation_id]._id;
             self.sub_affiliations_level_1_tenant_id = self.selected_sub_affiliation;
-            if(self.selected_sub_affiliation){
+            if (self.selected_sub_affiliation) {
                 self.selected_sub_affiliation_ancestors = [];
                 self.selected_sub_affiliation_ancestors_level_1 = [];
 
 
-
-
                 let sub_affiliations_ancestors = JSON.parse(JSON.stringify(self.sub_affiliations_ancestors))
                 self.sub_affiliations_level_2 = sub_affiliations_ancestors.filter((affiliation, index) => {
-                    if(affiliation && affiliation.ancestors.find((ancestor) => {
-                                if(ancestor == parseInt(self.selected_sub_affiliation)){
+                    if (affiliation && affiliation.ancestors.find((ancestor) => {
+                                if (ancestor == parseInt(self.selected_sub_affiliation)) {
                                     return true;
-                                }else{
+                                } else {
                                     return false;
                                 }
-                            })){
+                            })) {
                         // affiliation._id ? self.selected_sub_affiliation_ancestors_level_1.push(affiliation._id) : null;
                         return_true = affiliation.ancestors.length == 2;
 
@@ -676,23 +634,15 @@
 
                         affiliation.ancestors ? self.selected_sub_affiliation_ancestors_level_1 = self.selected_sub_affiliation_ancestors_level_1.concat(affiliation.ancestors) : null;
 
-                        if(return_true){
+                        if (return_true) {
                             indexes.push(index);
                             return true;
-                        }else{
+                        } else {
                             return false
                         }
-                    }else{
+                    } else {
                         return false;
                     }
-                    // return affiliation.ancestors.length == 2 ? affiliation.ancestors.find((ancestor) => {
-                    //     if(ancestor == parseInt(self.selected_sub_affiliation)){
-                    //         indexes.push(index);
-                    //         return true;
-                    //     }else{
-                    //         return false;
-                    //     }
-                    // }) : false
                 }).map((ancestor, index) => {
                     ancestor._id = parseInt(indexes[index]);
                     ancestor.title = self.sub_affiliations[ancestor._id].establishment;
@@ -700,9 +650,9 @@
                 })
                 self.sub_affiliations_level_2.push(self.selected_sub_affiliation);
                 self.selected_sub_affiliation_ancestors_level_1.push(self.selected_sub_affiliation);
-                self.selected_sub_affiliation_ancestors_level_1 = self.selected_sub_affiliation_ancestors_level_1.filter( onlyUnique );
+                self.selected_sub_affiliation_ancestors_level_1 = self.selected_sub_affiliation_ancestors_level_1.filter(onlyUnique);
                 self.selected_sub_affiliation_ancestors = self.selected_sub_affiliation_ancestors_level_1;
-            }else{
+            } else {
                 self.sub_affiliations_level_2_id = 0;
                 self.sub_affiliations_level_2 = [];
                 self.sub_affiliations_level_3_id = 0;
@@ -710,14 +660,9 @@
                 self.selected_sub_affiliation = self.opts.tenant_id;
                 self.selected_sub_affiliation_ancestors = [];
                 self.selected_sub_affiliation_ancestors_level_1 = [];
-                // self.side_bar_filter._tag.sub_affiliations_level_2_ddl._tag.opts.selected_item_id = self.sub_affiliations_level_2_id.toString();
-                // self.side_bar_filter._tag.sub_affiliations_level_2_ddl._tag.update();
             }
 
-            self.sub_affiliations_level_2.splice(0, 1, {title: 'Select sub-affiliation', _id: 0})
-            // self.side_bar_filter._tag.sub_affiliations_level_2_ddl._tag.opts.list = self.sub_affiliations_level_2;
-            // self.side_bar_filter._tag.sub_affiliations_level_2_ddl._tag.opts.selected_callback = self.sub_affiliations_level_2_selected;
-            // self.side_bar_filter._tag.update();
+            self.sub_affiliations_level_2.splice(0, 1, {title: '[All sub-affiliation]', _id: 0})
             self.change_direction(null, true);
             self.update();
         }
@@ -727,31 +672,31 @@
             self.sub_affiliations_level_2_id = affiliation_id;
             self.selected_sub_affiliation = self.sub_affiliations_level_2[affiliation_id]._id;
             self.sub_affiliations_level_2_tenant_id = self.selected_sub_affiliation;
-            if(self.selected_sub_affiliation){
+            if (self.selected_sub_affiliation) {
                 self.selected_sub_affiliation_ancestors = [];
                 self.selected_sub_affiliation_ancestors_level_2 = [];
                 let sub_affiliations_ancestors = JSON.parse(JSON.stringify(self.sub_affiliations_ancestors))
                 self.sub_affiliations_level_3 = sub_affiliations_ancestors.filter((affiliation, index) => {
-                    if(affiliation && affiliation.ancestors.find((ancestor) => {
-                                if(ancestor == parseInt(self.selected_sub_affiliation)){
+                    if (affiliation && affiliation.ancestors.find((ancestor) => {
+                                if (ancestor == parseInt(self.selected_sub_affiliation)) {
                                     return true;
-                                }else{
+                                } else {
                                     return false;
                                 }
-                            })){
+                            })) {
 
                         return_true = affiliation.ancestors.length == 3;
                         affiliation.ancestors.pop();
                         affiliation.ancestors.pop();
                         affiliation.ancestors ? self.selected_sub_affiliation_ancestors_level_2 = self.selected_sub_affiliation_ancestors_level_2.concat(affiliation.ancestors) : null;
 
-                        if(return_true){
+                        if (return_true) {
                             indexes.push(index);
                             return true;
-                        }else{
+                        } else {
                             return false
                         }
-                    }else{
+                    } else {
                         return false;
                     }
                 }).map((ancestor, index) => {
@@ -761,9 +706,9 @@
                 })
                 self.sub_affiliations_level_3.push(self.selected_sub_affiliation);
                 self.selected_sub_affiliation_ancestors_level_2.push(self.selected_sub_affiliation);
-                self.selected_sub_affiliation_ancestors_level_2 = self.selected_sub_affiliation_ancestors_level_2.filter( onlyUnique );
+                self.selected_sub_affiliation_ancestors_level_2 = self.selected_sub_affiliation_ancestors_level_2.filter(onlyUnique);
                 self.selected_sub_affiliation_ancestors = self.selected_sub_affiliation_ancestors_level_2;
-            }else{
+            } else {
                 self.sub_affiliations_level_3_id = 0;
                 self.sub_affiliations_level_3 = [];
                 self.selected_sub_affiliation = self.sub_affiliations_level_1_tenant_id;
@@ -771,62 +716,29 @@
                 self.selected_sub_affiliation_ancestors = self.selected_sub_affiliation_ancestors_level_1;
                 self.selected_sub_affiliation_ancestors_level_2 = [];
             }
-            self.sub_affiliations_level_3.splice(0, 2, {title: 'Select sub-affiliation', _id: 0})
+            self.sub_affiliations_level_3.splice(0, 2, {title: '[All sub-affiliation]', _id: 0})
             self.change_direction(null, true);
             self.update();
         }
 
-
-        // self.sub_affiliations_level_2_selected_old = (affiliation_id) => {
-        //     let indexes = [];
-        //     self.sub_affiliations_level_2_id = affiliation_id;
-        //     self.selected_sub_affiliation = self.sub_affiliations_level_2[affiliation_id]._id;
-        //     self.sub_affiliations_level_2_tenant_id = self.selected_sub_affiliation;
-        //     if(self.selected_sub_affiliation){
-        //         self.sub_affiliations_level_3 = self.sub_affiliations_ancestors.filter((affiliation, index) => {
-        //             return affiliation.ancestors.length == 3 ? affiliation.ancestors.find((ancestor) => {
-        //                 if(ancestor == parseInt(self.selected_sub_affiliation)){
-        //                     indexes.push(index);
-        //                     return true;
-        //                 }else{
-        //                     return false;
-        //                 }
-        //             }) : false
-        //         }).map((ancestor, index) => {
-        //             ancestor._id = parseInt(indexes[index]);
-        //             ancestor.title = self.sub_affiliations[ancestor._id].establishment;
-        //             return ancestor;
-        //         })
-        //     }else{
-        //         self.selected_sub_affiliation = self.sub_affiliations_level_1_tenant_id;
-        //         self.sub_affiliations_level_3_id = 0;
-        //         self.sub_affiliations_level_3 = [];
-        //         // self.side_bar_filter._tag.sub_affiliations_level_3_ddl._tag.opts.selected_item_id = self.sub_affiliations_level_3_id;
-        //     }
-        //     self.sub_affiliations_level_3.splice(0, 1, {title: 'Select sub-affiliation', _id: 0})
-        //     // self.side_bar_filter._tag.sub_affiliations_level_3_ddl._tag.opts.list = self.sub_affiliations_level_3;
-        //     // self.side_bar_filter._tag.sub_affiliations_level_3_ddl._tag.opts.selected_callback = self.sub_affiliations_level_3_selected;
-        //     // self.side_bar_filter._tag.update();
-        //     self.update();
-        // }
 
         self.sub_affiliations_level_3_selected = (affiliation_id) => {
             let indexes = [];
             self.sub_affiliations_level_3_id = affiliation_id;
             self.selected_sub_affiliation = self.sub_affiliations_level_3[affiliation_id]._id;
             self.sub_affiliations_level_3_tenant_id = self.selected_sub_affiliation;
-            if(self.selected_sub_affiliation){
+            if (self.selected_sub_affiliation) {
                 self.selected_sub_affiliation_ancestors = [];
                 self.selected_sub_affiliation_ancestors_level_3 = [];
                 let sub_affiliations_ancestors = JSON.parse(JSON.stringify(self.sub_affiliations_ancestors))
                 sub_affiliations_ancestors.forEach((affiliation, index) => {
-                    if(affiliation && affiliation.ancestors.find((ancestor) => {
-                                if(ancestor == parseInt(self.selected_sub_affiliation)){
+                    if (affiliation && affiliation.ancestors.find((ancestor) => {
+                                if (ancestor == parseInt(self.selected_sub_affiliation)) {
                                     return true;
-                                }else{
+                                } else {
                                     return false;
                                 }
-                            })){
+                            })) {
 
                         affiliation.ancestors.pop();
                         affiliation.ancestors.pop();
@@ -836,18 +748,13 @@
                 })
                 // self.sub_affiliations_level_4 = [self.selected_sub_affiliation];
                 self.selected_sub_affiliation_ancestors_level_3.push(self.selected_sub_affiliation);
-                self.selected_sub_affiliation_ancestors_level_3 = self.selected_sub_affiliation_ancestors_level_3.filter( onlyUnique );
+                self.selected_sub_affiliation_ancestors_level_3 = self.selected_sub_affiliation_ancestors_level_3.filter(onlyUnique);
                 self.selected_sub_affiliation_ancestors = self.selected_sub_affiliation_ancestors_level_3;
-            }else{
-                // self.sub_affiliations_level_4_id = 0;
-                // self.sub_affiliations_level_4 = [];
+            } else {
                 self.selected_sub_affiliation = self.sub_affiliations_level_2_tenant_id;
-                // self.selected_sub_affiliation = self.opts.tenant_id;
-                // self.selected_sub_affiliation_ancestors = [];
                 self.selected_sub_affiliation_ancestors = self.selected_sub_affiliation_ancestors_level_2;
                 self.selected_sub_affiliation_ancestors_level_3 = [];
             }
-            // self.sub_affiliations_level_4.splice(0, 3, {title: 'Select sub-affiliation', _id: 0})
             self.change_direction(null, true);
             self.update();
         }
@@ -857,41 +764,29 @@
 
             self.selected_sub_affiliation = self.sub_affiliations_level_3[affiliation_id]._id;
             self.selected_sub_affiliation = self.selected_sub_affiliation ? self.selected_sub_affiliation : self.sub_affiliations_level_2_tenant_id;
-            // self.sub_affiliations_level_3 = self.sub_affiliations_ancestors.filter((affiliation, index) => {
-            //     return affiliation.ancestors.length == 3 ? affiliation.ancestors.find((ancestor) => {
-            //         if(ancestor == parseInt(new_index)){
-            //             indexes.push(index);
-            //             return true;
-            //         }else{
-            //             return false;
-            //         }
-            //     }) : false
-            // }).map((ancestor, index) => {
-            //     ancestor._id = parseInt(indexes[index]);
-            //     ancestor.title = self.sub_affiliations[ancestor._id].establishment;
-            //     return ancestor;
-            // })
-
-            // self.side_bar_filter._tag.sub_affiliations_level_3_ddl._tag.opts.list = self.sub_affiliations_level_3;
-            // self.side_bar_filter._tag.sub_affiliations_level_3_ddl._tag.opts.selected_callback = self.sub_affiliations_level_3_selected;
-            // self.side_bar_filter._tag.update();
             self.update();
         }
 
         self.on('mount', function () {
+
+            // Initialize Firebase
+
             self.selected_sub_affiliation = self.opts.tenant_id;
             google.charts.load('current', {'packages': ['corechart', 'geochart', 'bar', 'line']});
 
-            const fire_ref_countries = new Firebase("https://UCosmic.firebaseio.com/Places/Countries")
+            const fire_ref_countries = self.root_ref.child('Places').child('Countries');// new Firebase("https://UCosmic.firebaseio.com/Places/Countries")
             fire_ref_countries.on("value", function (snapshot) {
                 self.countries = snapshot.val();
             });
 
-            const data_list_stream = Kefir.sequentially(0, [{url: "https://UCosmic.firebaseio.com/Members/" + self.opts.tenant_id + "/Mobilities/Counts/OUT", direction: 'out'}
-                , {url: "https://UCosmic.firebaseio.com/Members/" + self.opts.tenant_id + "/Mobilities/Counts/IN", direction: 'in'}])
+            const data_list_stream = Kefir.sequentially(0, [{tenant_id: self.opts.tenant_id, direction: 'out'}
+                , {tenant_id: self.opts.tenant_id, direction: 'in'}])
+            // const data_list_stream = Kefir.sequentially(0, [{url: "https://UCosmic.firebaseio.com/Members/" + self.opts.tenant_id + "/Mobilities/Counts/OUT", direction: 'out'}
+            //     , {url: "https://UCosmic.firebaseio.com/Members/" + self.opts.tenant_id + "/Mobilities/Counts/IN", direction: 'in'}])
             // console.log(Date.now());
             const fire_stream = data_list_stream.flatMap(function (data_url) {
-                var fire_ref = new Firebase(data_url.url);
+                // https://UCosmic.firebaseio.com/Members/" + self.opts.tenant_id + "/Mobilities/Counts/OUT
+                var fire_ref = self.root_ref.child('Members').child(parseInt(data_url.tenant_id)).child('Mobilities').child('Counts').child(data_url.direction.toUpperCase());//new Firebase(data_url.url);
                 return Kefir.stream(function (emitter) {
                     fire_ref.on("child_added", function (snapshot) {
                         emitter.emit({snapshot: snapshot, direction: data_url.direction});
@@ -949,8 +844,6 @@
                 if (my_term) {
                     term_data[index][1] += count;
                     term_data_all[direction][index - 1] = {id: term, count: count, affiliations: term_affiliations, countries: term_countries}
-                    // term_data_all[direction][index - 1] = {id: term, count: term_data[index][1], affiliations: term_affiliations, countries: term_countries}
-                    // term_data_all.push({id: term, count: term_data[index][1], affiliations: term_affiliations});
                 } else {
                     term_data.push([term, count])
                     term_data_all[direction].push({id: term, count: count, affiliations: term_affiliations, countries: term_countries});
@@ -959,42 +852,16 @@
             }
 
 
-            // function array_union_concat_3(arr1, arr2, equalityFunc) {
-            //     arr1 = JSON.parse(JSON.stringify(arr1));
-            //     arr2 = JSON.parse(JSON.stringify(arr2));
-            //     // var union = arr1.concat(arr2);
-            //     //
-            //     // for (var i = 0; i < union.length; i++) {
-            //     //     for (var j = i + 1; j < union.length; j++) {
-            //     //         if (equalityFunc(union[i], union[j])) {
-            //     //             union[i] ? null : union[i] = {affiliation: []};
-            //     //             union[i].affiliation.concat(union[j].affiliation);
-            //     //
-            //     //             union.splice(j, 1);
-            //     //             j--;
-            //     //         }
-            //     //     }
-            //     // }
-            //
-            //     arr1 = arr1.map((value, index) => {
-            //         value ? null : value = {affiliation: []};
-            //         arr2[index] && arr2[index].affiliation  ? null : arr2[index] = {affiliation: []}
-            //         value.affiliation = value.affiliation.concat(arr2[index].affiliation)
-            //         return value;
-            //     })
-            //     return arr1;
-            // }
-
             fire_stream.onValue(function (data) {
 
-                const terms_data = setup_count_arrays_terms(data.snapshot.val().countries, data.snapshot.key(), self.term_data, self.term_data_all, data.direction);
+                const terms_data = setup_count_arrays_terms(data.snapshot.val().countries, data.snapshot.key, self.term_data, self.term_data_all, data.direction);
                 self.term_data = terms_data.term_data;
                 self.term_data_all = terms_data.term_data_all;
                 self.term_data_all_original = terms_data.term_data_all;
                 self.total_student_count = get_total_student_count(self.term_data_all, self.direction);
                 setup_year_chart(self.term_data);
 
-                setup_count_arrays(data.snapshot.val().countries, data.snapshot.key());
+                setup_count_arrays(data.snapshot.val().countries, data.snapshot.key);
 
                 // I need to take data.snapshot.val().countries and use a new union concat for it, once I have that and an affiliaiton is selected
                 // countries_data_all = [];
@@ -1011,31 +878,31 @@
             });
 
 
+            var fire_ref_est = self.root_ref.child('Establishments').child('Establishments');// new Firebase("https://UCosmic.firebaseio.com/Establishments/Establishments/");
+            var fire_ref_est_ances = self.root_ref.child('Establishments').child('Establishments_Ancestors');//new Firebase("https://UCosmic.firebaseio.com/Establishments/Establishments_Ancestors/");
 
-
-            var fire_ref_est = new Firebase("https://UCosmic.firebaseio.com/Establishments/Establishments/");
-            var fire_ref_est_ances = new Firebase("https://UCosmic.firebaseio.com/Establishments/Establishments_Ancestors/");
-
+            //seting up fire ref for 3306 term with rankings, then below get the terms with rankings, then on setup line chart order them with the term rankings.
+            var fire_ref_terms = self.root_ref.child('Members').child(self.opts.tenant_id).child('Terms').child('Ranks');
 
             const sub_affiliations_level_1_get = () => {
-                if(self.sub_affiliations && self.sub_affiliations.length > 0 && self.sub_affiliations_ancestors && self.sub_affiliations_ancestors.length > 0){
+                if (self.sub_affiliations && self.sub_affiliations.length > 0 && self.sub_affiliations_ancestors && self.sub_affiliations_ancestors.length > 0) {
                     let indexes = [];
-                   self.sub_affiliations_level_1 = self.sub_affiliations_ancestors.filter((affiliation, index) => {
-                       // affiliation.establishment = affiliation.establishment.indexOf(', ') > -1 ? affiliation.establishment.substr(1, affiliation.establishment.indexOf(', ')) : affiliation.establishment;
+                    self.sub_affiliations_level_1 = self.sub_affiliations_ancestors.filter((affiliation, index) => {
+                        // affiliation.establishment = affiliation.establishment.indexOf(', ') > -1 ? affiliation.establishment.substr(1, affiliation.establishment.indexOf(', ')) : affiliation.establishment;
                         return affiliation.ancestors.length == 1 ? affiliation.ancestors.find((ancestor) => {
-                            if(ancestor == parseInt(self.opts.tenant_id)){
+                            if (ancestor == parseInt(self.opts.tenant_id)) {
                                 indexes.push(index);
                                 return true;
-                            }else{
+                            } else {
                                 return false;
                             }
                         }) : false
                     }).map((ancestor, index) => {
-                       ancestor._id = parseInt(indexes[index]);
-                       ancestor.title = self.sub_affiliations[ancestor._id].establishment;
-                       return ancestor;
-                   })
-                    self.sub_affiliations_level_1.splice(0, 1, {title: 'Select sub-affiliation', _id: 0})
+                        ancestor._id = parseInt(indexes[index]);
+                        ancestor.title = self.sub_affiliations[ancestor._id].establishment;
+                        return ancestor;
+                    })
+                    self.sub_affiliations_level_1.splice(0, 1, {title: '[All sub-affiliation]', _id: 0})
                     self.side_bar_filter._tag.sub_affiliations_level_1_ddl._tag.opts.list = self.sub_affiliations_level_1;
                     self.side_bar_filter._tag.sub_affiliations_level_1_ddl._tag.opts.selected_callback = self.sub_affiliations_level_1_selected;
                     self.update();
@@ -1052,107 +919,22 @@
                     return affiliation;
                 })
                 sub_affiliations_level_1_get();
-                // const est_ances_stream = Kefir.stream(function (emitter) {
-                //     fire_ref_est_ances.on("child_added", function (snapshot) {
-                //         emitter.emit(snapshot);
-                //     });
-                // })
-
-                // est_ances_stream.onValue(function (snapshot) {
-                //     const index = parseInt(snapshot.key());
-                //     const ancestors = snapshot.val().ancestors;
-                //     self.sub_affiliations[index].ancestors = ancestors;
-                //     let new_index = 0;
-                //     self.sub_affiliations_level_1 = self.sub_affiliations.filter((affiliation, i) => {
-                //         // if(affiliation.ancestors && affiliation.ancestors.length > 1){
-                //         //     const test = affiliation.ancestors.find((ancestor) => { return ancestor == parseInt(self.opts.tenant_id)})
-                //         //     return test;
-                //         // }else{
-                //         //     return false
-                //         // }
-                //
-                //         return affiliation.ancestors && affiliation.ancestors.length == 1 ? affiliation.ancestors.find((ancestor) => {
-                //             if(ancestor == parseInt(self.opts.tenant_id)){
-                //                 new_index = i;
-                //                 return true;
-                //             }else{
-                //                 return false;
-                //             }
-                //         }) : false
-                //     }).map((affiliation) => {
-                //         affiliation._id = new_index;
-                //         affiliation.title = affiliation.establishment;
-                //         return affiliation;
-                //     })
-                //     self.update();
-                // });
-                //one level deep should have 1 ancestor only
-                //2 levels deep should have 2 ancestors only
-                //etc
-                //so for 3306, find ones that only have 3306
-                // for tampa_id, find ones with tampa and 3306 only
             });
 
             fire_ref_est_ances.on("value", function (snapshot) {
-                const sub_affiliations = snapshot.val();
+                const sub_affiliations_ancestors = snapshot.val();
                 self.sub_affiliations_ancestors = [];
-                Object.keys(sub_affiliations).forEach(key =>self.sub_affiliations_ancestors[parseInt(key)] = sub_affiliations[key]);
+                Object.keys(sub_affiliations_ancestors).forEach(key =>self.sub_affiliations_ancestors[parseInt(key)] = sub_affiliations_ancestors[key]);
                 sub_affiliations_level_1_get();
 
-                // est_ances_stream.onValue(function (snapshot) {
-                //     const index = parseInt(snapshot.key());
-                //     const ancestors = snapshot.val().ancestors;
-                //     self.sub_affiliations[index].ancestors = ancestors;
-                //     let new_index = 0;
-                //     self.sub_affiliations_level_1 = self.sub_affiliations.filter((affiliation, i) => {
-                //         return affiliation.ancestors && affiliation.ancestors.length == 1 ? affiliation.ancestors.find((ancestor) => {
-                //             if(ancestor == parseInt(self.opts.tenant_id)){
-                //                 new_index = i;
-                //                 return true;
-                //             }else{
-                //                 return false;
-                //             }
-                //         }) : false
-                //     }).map((affiliation) => {
-                //         affiliation._id = new_index;
-                //         affiliation.title = affiliation.establishment;
-                //         return affiliation;
-                //     })
-                //     self.update();
-                // });
-                //one level deep should have 1 ancestor only
-                //2 levels deep should have 2 ancestors only
-                //etc
-                //so for 3306, find ones that only have 3306
-                // for tampa_id, find ones with tampa and 3306 only
             });
 
-
-            // var worker = new Worker('/components_riot/components/workers/firebase_sync.js');
-            //
-            // worker.addEventListener('message', function (e) {
-            //     const data = JSON.parse(e.data);
-            // }, false);
-            // //https://ucosmic.firebaseio.com/Members/3306/Mobilities/Values/OUT
-            //
-            // callback = (firebase_paths) => {
-            //     worker.postMessage(JSON.stringify({paths:firebase_paths, tenant_id: self.opts.tenant_id}));
-            //
-            //     setTimeout(function () {
-            //         let db = new PouchDB('students_' + self.opts.tenant_id);
-            //         db.allDocs({
-            //             include_docs: true
-            //         }).then(function (result) {
-            //             console.log(Date.now())
-            //         }).catch(function (err) {
-            //             console.log(err);
-            //         });
-            //         console.log(Date.now())
-            //     },30000);
-            // }
-            //
-            // get_firebase_paths(["https://UCosmic.firebaseio.com/Members/" + self.opts.tenant_id + "/Mobilities/Values/OUT"
-            //     ,"https://UCosmic.firebaseio.com/Members/" + self.opts.tenant_id + "/Mobilities/Values/IN"], callback)
+            fire_ref_terms.on("value", function (snapshot) {
+                self.terms = snapshot.val();
+            });
+            // fire_ref_terms.orderByChild("rank").on("child_added", function (snapshot) {
+            //     self.terms_2 = snapshot.val();
+            // });
 
         })
 
