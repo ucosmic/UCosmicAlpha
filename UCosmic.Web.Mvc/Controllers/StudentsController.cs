@@ -137,6 +137,7 @@ namespace UCosmic.Web.Mvc.Controllers
                     var xx = new
                     {
                         country = country.official_name,
+                        code = country.code,
                         associations = model.Where(x => x.country == country.country && x.place_type != "").ToArray()
                     };
                     try
