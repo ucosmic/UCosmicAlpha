@@ -1,8 +1,28 @@
 ﻿importScripts('/components/bower_components/sw-toolbox/sw-toolbox.js');
 
+//self.addEventListener('message', function (event) {
+//    console.log('good');
+//    event.ports[0].postMessage({ 'test': 'This is my response.' });
+//}); 
+
 self.addEventListener('message', function (event) {
-    console.log('good');
-    event.ports[0].postMessage({ 'test': 'This is my response.' });
+    //toolbox.uncache(url)
+
+    toolbox.uncache('/*');
+    //toolbox.uncache('/*', { origin: 'https://www.google.com' });
+
+
+    //toolbox.uncache('/*', { origin: 'https://api.google.com' });
+
+    //toolbox.uncache('/(.*)', { origin: 'https://www.google.com' });
+
+
+    //toolbox.uncache('/(.*)', { origin: 'https://api.google.com' });
+
+
+    //toolbox.uncache('/*', { origin: 'http://maps.googleapis.com' });
+
+    //toolbox.uncache('/(.*)', { origin: 'http://maps.googleapis.com' });
 });
 //toolbox.options.debug = true;
 

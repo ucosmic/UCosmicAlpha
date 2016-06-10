@@ -1,0 +1,4 @@
+﻿cd C:\Users\Tim\UCosmic\UCosmicGit\Layout3\Layout3\UCosmic.Web.Mvc\node_server\
+node firebase_student_aggregator.js
+
+
