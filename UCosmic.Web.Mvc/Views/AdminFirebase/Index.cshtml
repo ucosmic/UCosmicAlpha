@@ -33,7 +33,17 @@
     </form>
     <script>
         var my_fire = new Firebase("https://UCosmic.firebaseio.com/Members/");
-
+        var firebase_token = '@ViewBag.firebase_token';
+        if (firebase_token) {
+            my_fire.authWithCustomToken(firebase_token, function (error, authData) {
+                if (error) {
+                    console.log("Login Failed!", error);
+                } else {
+                    console.log("Login Succeeded!", authData);
+                    create_student_imports();
+                }
+            });
+        }
         function remove_tenant_data(event) {
             var tennant = event.target.elements.tennant;
             my_fire.child(tennant.value).child('Mobilities').remove();
