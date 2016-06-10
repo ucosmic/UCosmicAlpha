@@ -301,6 +301,15 @@ module Activities.ViewModels {
             this.$form.submit((event) => {
                 var searchOptions = this.serializeObject($('form'));
                 searchOptions.placeFilter = 'continents';
+                searchOptions.placeIds = [searchOptions.placeIds];
+                searchOptions.placeNames = [searchOptions.placeNames];
+
+                searchOptions.activityTypeIds = searchOptions.activityTypeIds.map((value, index) => {
+                    return Number(value);
+                });
+                searchOptions.placeIds = searchOptions.placeIds.map((value, index) => {
+                    return Number(value);
+                });
                 sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
                 
                 if(this.ajaxMapData){
@@ -495,9 +504,22 @@ module Activities.ViewModels {
 
                 });
             }
-            var searchOptions = this.serializeObject($('form'));
-            searchOptions.placeFilter = 'continents';
-            sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
+            var searchOptions = JSON.parse(sessionStorage.getItem('ActivitySearchOptions'));
+            if (!searchOptions) {
+
+                searchOptions = this.serializeObject($('form'));
+                searchOptions.placeFilter = 'continents';
+                searchOptions.placeIds = [searchOptions.placeIds];
+                searchOptions.placeNames = [searchOptions.placeNames];
+                searchOptions.activityTypeIds = searchOptions.activityTypeIds.map((value, index) => {
+                    return Number(value);
+                });
+                searchOptions.placeIds = searchOptions.placeIds.map((value, index) => {
+                    return Number(value);
+                });
+
+                sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
+            }
 
             //$('input[name="placeNames"]').bind("click", function () {
             //    if (this.value == "") {

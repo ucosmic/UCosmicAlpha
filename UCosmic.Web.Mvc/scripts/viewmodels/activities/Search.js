@@ -235,6 +235,14 @@ var Activities;
                 this.$form.submit(function (event) {
                     var searchOptions = _this.serializeObject($('form'));
                     searchOptions.placeFilter = 'continents';
+                    searchOptions.placeIds = [searchOptions.placeIds];
+                    searchOptions.placeNames = [searchOptions.placeNames];
+                    searchOptions.activityTypeIds = searchOptions.activityTypeIds.map(function (value, index) {
+                        return Number(value);
+                    });
+                    searchOptions.placeIds = searchOptions.placeIds.map(function (value, index) {
+                        return Number(value);
+                    });
                     sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
                     if (_this.ajaxMapData) {
                         _this.ajaxMapData.abort();
@@ -410,9 +418,20 @@ var Activities;
                         }
                     });
                 }
-                var searchOptions = this.serializeObject($('form'));
-                searchOptions.placeFilter = 'continents';
-                sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
+                var searchOptions = JSON.parse(sessionStorage.getItem('ActivitySearchOptions'));
+                if (!searchOptions) {
+                    searchOptions = this.serializeObject($('form'));
+                    searchOptions.placeFilter = 'continents';
+                    searchOptions.placeIds = [searchOptions.placeIds];
+                    searchOptions.placeNames = [searchOptions.placeNames];
+                    searchOptions.activityTypeIds = searchOptions.activityTypeIds.map(function (value, index) {
+                        return Number(value);
+                    });
+                    searchOptions.placeIds = searchOptions.placeIds.map(function (value, index) {
+                        return Number(value);
+                    });
+                    sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
+                }
             };
             Search.prototype._applySubscriptions = function () {
                 var _this = this;
