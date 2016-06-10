@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "project-4691094245668174778",
+  "private_key_id": "dd777a19cb705634d4a979f2098e2786dc8c6ec5",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCO7THF3EEHw7MK\nfV0yErEAva/mROJD3YeEbiWKDb+NylMKDnCvPxAOAZsHrJshgIIRPSrN2yczMbjd\nvurag+o5WnS2jTs1+//woGnx0V4U5PohgkxkR18oONxFkgmu6nwkk+WLt1ReQzHl\nvOirL5q5/wcxHVazp3iPIUY6OcQO6PacjQdIigHoy7j5ZqVqYXIRipZvKT65aRlO\n5/hFIkSHIouSIfvQq9J5sVO/VJzAuqufYz8VpgNDQmv0VnpUhcQB261dg564Tmyx\nJFgQGSy10yzru2gM/xeq/m5L/MqPRT1KzD50/J4Ps/oyRZGJEPxH8HDQN2dR0vIx\nS+y6ZuOhAgMBAAECggEATrfGxQHE80DOmEVpkc2HnS/b9EgWEmitXbvIgxuFV9OK\nHqzLVUm3Tu+FchmXq0D64gG9VHmSQnjtJ3wiH02uL/5o764jYV00nlPLZfr5BSsD\ntHbuGgDRIPcIIm0HVkYhL4ghUe0b03rQvYZo4veqESyrylotSW9AUBx0cFcma0sC\n24BXZnVER7pHHdmA8CIQGT/Y1ROou3k/qE7Xc54CCD+yoF5xLMwPPXUFrjvDseLF\nENGDE8Pu/DJCbhMQiTxIW+asRb6sdgLxtCdAwf4wUzLdGoEZMTs/Q9P/Z3OYYWxi\nOC9IB3RLq+ptk+u7gI2pqlwcUUyA2IZJd7cYGgNsvQKBgQDEECgPIUwnTql6e4nJ\ncrhzmYo4agebTqaM9JqPlIyddqiaLWR8aK1HY6kQ+mmea3Y3lISyaqY2/PIjEd8w\npoma7s/n2ygHlo1TOWVo0nooew871MM23yMwjOjhXTG4D01julssO3JirOEGNKAn\nbhBT8+9/1UWWAMVFH8Fs45+Z/wKBgQC6npXCNb94I251yHaWon6hJuLXTsEKkWDQ\nah1oySuwBv7nq1vU3/739S9+tlqmSmJl0Wq1y3fWqDGrY3dOBJ6xUWjAaCUIwRbT\nyMbZq8YFvpyXTCH2HIAzowd94voyARDL3WIux9boLwNtFXlyGopXNIWp4hgYIkym\nRFNfGYdCXwKBgQCorXm5Yp1A6AUY8jXd0UvtcHghBt+adzUE6eAbjOLZCeAOHOVp\nvyjs1Un76GR7vdpMAQOU9/oeLsom79ZD5dNXLwRBZiPvO1BE/IlJgGNGdnDpuadl\nit2chG5KjUIcJ1YeaZLM4CwNxswl6ZqrsZ5si95N7W9bmTgeuy5O/xotgwKBgAi3\nYX1Jr2C4Hu+nZkqQ2mNCgrPVvNR2h9QUML11L/Iv0XYWndpqf+kq7YX4lHFR5hil\nWFuXXkiLYI6FvcvKEXNsvvzFoH0xL5TCuu7tw/j+tyel6awqFp7SzYXGtTLis9sh\nwvU2ZkY/8+QDbcGzlaSPEnMl2UQ/Td8yL8awVY33AoGBAIxwxe9lrKl55fSzrY6t\nw8798bSiCXEBccAG69hR/Tfez0OUdfwreLqKgcEJIy7OXFAhmAhWzqLCjajbO3Un\n/z6UuNEuMUIO0p1fZqmINBaw64CO3eEkGWWK8IrrFg0zgiswMDXxtWQzKkTRkqD8\nOZH+LouOC3aK99SMDSlhUDCx\n-----END PRIVATE KEY-----\n",
+  "client_email": "ucosmic-firebase-admin@project-4691094245668174778.iam.gserviceaccount.com",
+  "client_id": "116043509883453113072",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ucosmic-firebase-admin%40project-4691094245668174778.iam.gserviceaccount.com"
+}
