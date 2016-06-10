@@ -10,6 +10,8 @@ namespace UCosmic.Web.Mvc.Controllers
         [CurrentModuleTab(ModuleTab.Admin)]
         public virtual ActionResult Index()
         {
+
+            ViewBag.firebase_token = Request.Cookies.Get("firebase_token") != null ? Request.Cookies.Get("firebase_token").Value : null;
             return View("index", "_Layout3");
         }
 
