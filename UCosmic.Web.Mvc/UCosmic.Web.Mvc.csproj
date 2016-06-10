@@ -141,19 +141,19 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ApplicationServer.Caching.AzureClientHelper, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.8.0.0\lib\net40-full\Microsoft.ApplicationServer.Caching.AzureClientHelper.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.9.1\lib\net40-full\Microsoft.ApplicationServer.Caching.AzureClientHelper.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ApplicationServer.Caching.AzureCommon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.8.0.0\lib\net40-full\Microsoft.ApplicationServer.Caching.AzureCommon.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.9.1\lib\net40-full\Microsoft.ApplicationServer.Caching.AzureCommon.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ApplicationServer.Caching.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.8.0.0\lib\net40-full\Microsoft.ApplicationServer.Caching.Client.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.9.1\lib\net40-full\Microsoft.ApplicationServer.Caching.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ApplicationServer.Caching.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.8.0.0\lib\net40-full\Microsoft.ApplicationServer.Caching.Core.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.9.1\lib\net40-full\Microsoft.ApplicationServer.Caching.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -186,7 +186,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.DistributedCache, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.8.0.0\lib\net40-full\Microsoft.Web.DistributedCache.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.9.1\lib\net40-full\Microsoft.Web.DistributedCache.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -204,11 +204,11 @@
       <HintPath>..\packages\WindowsAzure.Storage.4.3.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsFabric.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.8.0.0\lib\net40-full\Microsoft.WindowsFabric.Common.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.9.1\lib\net40-full\Microsoft.WindowsFabric.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsFabric.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.8.0.0\lib\net40-full\Microsoft.WindowsFabric.Data.Common.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.9.1\lib\net40-full\Microsoft.WindowsFabric.Data.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MoreLinq">
@@ -4707,7 +4707,9 @@
     <Content Include="components_riot\components\pages\about\benefits_fees\benefits_fees.tag" />
     <Content Include="components_riot\components\pages\about\blog\blog.tag" />
     <Content Include="components_riot\components\pages\about\current_modules\current_modules.js" />
-    <Content Include="components_riot\components\pages\about\current_modules\current_modules.tag" />
+    <Content Include="components_riot\components\pages\about\current_modules\current_modules.tag">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="components_riot\components\pages\about\future_modules\future_modules.js" />
     <Content Include="components_riot\components\pages\about\future_modules\future_modules.tag" />
     <Content Include="components_riot\components\pages\about\join\join.tag" />
@@ -6010,7 +6012,9 @@
     <Content Include="components_riot\components\header_toolbar\header_toolbar.tag" />
     <Content Include="components_riot\components\image_slide\image_slide.tag" />
     <Content Include="components_riot\components\is_dialog\fab_close\fab_close.tag" />
-    <Content Include="components_riot\components\is_dialog\is_dialog.tag" />
+    <Content Include="components_riot\components\is_dialog\is_dialog.tag">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="components_riot\components\is_loading\is_loading.tag" />
     <Content Include="components_riot\components\layout\layout.tag" />
     <Content Include="components_riot\components\toast\toast.tag" />
@@ -6422,6 +6426,8 @@
     <Content Include="firebase\rules.bolt" />
     <Content Include="firebase\rules.json" />
     <Content Include="firebase\firebase.json" />
+    <Content Include="downloadable\UCosmic-Consortium-Application-Form-Institution.pdf" />
+    <Content Include="downloadable\UCosmic-Consortium-Application-Form-Non-Institution.pdf" />
     <None Include="Microsoft.WindowsAzure.Caching\ClientPerfCountersInstaller.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -6446,6 +6452,7 @@
     <None Include="Microsoft.WindowsAzure.Caching\PerformanceCounters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="node_server\notes.txt" />
     <Content Include="sw.js" />
     <Content Include="node_server\aggregator.js" />
     <Content Include="node_server\firebase_establishments_ancestors.js" />

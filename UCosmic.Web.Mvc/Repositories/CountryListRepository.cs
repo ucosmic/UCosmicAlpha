@@ -15,6 +15,7 @@ namespace UCosmic.Repositories
         public int country;
         public string official_name;
         public string name;
+        public string code;
         public string place_type;
         public int id;
     }
@@ -32,7 +33,7 @@ namespace UCosmic.Repositories
 
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
             string sql = "SELECT p.[RevisionId] as country, p.[OfficialName] as official_name, " +
-				"p2.officialName as name, p2.revisionId as id,  " +
+				"p2.officialName as name, p2.revisionId as id,  gpp.countryCode as code, " +
                 "CASE WHEN p2.isregion = 1 THEN 'region' WHEN p2.iswater = 1 THEN 'water' WHEN p2.iscontinent = 1 THEN 'continent' ELSE '' End as place_type " +
                 "FROM [Places].[Place] p " +
                 "left outer join Places.GeoPlanetPlace gpp on gpp.placeId = p.revisionid " +
