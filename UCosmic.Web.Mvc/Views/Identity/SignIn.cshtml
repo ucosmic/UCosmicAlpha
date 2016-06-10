@@ -24,7 +24,7 @@
                 <div class="field">
                     @Html.CheckBoxFor(m => m.RememberMe) Remember me
                 </div>
-                <input type="submit" value="Submit" />
+    <input type="submit" value="Submit" onclick="delete_service_worker_cache()" />
             }
         </div>
     </div>
@@ -44,6 +44,30 @@
 @section scripts
 {
     <script type="text/javascript">
+
+        function delete_service_worker_cache() {
+            function sendMessage(message) {
+                // This wraps the message posting/response in a promise, which will
+                // resolve if the response doesn't contain an error, and reject with
+                // the error if it does. If you'd prefer, it's possible to call
+                // controller.postMessage() and set up the onmessage handler
+                // independently of a promise, but this is a convenient wrapper.
+                return new Promise(function (resolve, reject) {
+                    var messageChannel = new MessageChannel();
+                    messageChannel.port1.onmessage = function (event) {
+                        if (event.data.error) {
+                            reject(event.data.error);
+                        } else {
+                            resolve(event.data);
+                        }
+                    };
+
+                    // https://html.spec.whatwg.org/multipage/workers.html#dom-worker-postmessage
+                    navigator.serviceWorker.controller.postMessage(message, [messageChannel.port2]);
+                });
+            }
+            sendMessage('delete cache');
+        }
         $(function () {
             $('#sign_in_async').on('click', function () {
                 $.post(App.Routes.WebApi.Identity.signIn(), {
