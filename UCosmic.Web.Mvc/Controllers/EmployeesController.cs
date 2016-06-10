@@ -209,12 +209,13 @@ namespace UCosmic.Web.Mvc.Controllers
                     }
                     else if (input.Since != null)
                     {
-                        Output = Output.Where(x => (x.StartsOnCalc <= Since && (x.EndsOnCalc >= Since || x.onGoing))).ToList();
+                        Output = Output.Where(x => (x.StartsOnCalc <= Since  && (x.EndsOnCalc >= Since || x.onGoing))).ToList();
                     }
                     else if (input.Until != null)
                     {
                         Output = Output.Where(x => (x.StartsOnCalc <= Until && (x.EndsOnCalc >= Until || x.onGoing))).ToList();
                     }
+                    Output = Output.Where(x => ((x.EndsOnFormat != null || x.StartsOnFormat != null))).ToList();
                 }
                 //Output.for
 
