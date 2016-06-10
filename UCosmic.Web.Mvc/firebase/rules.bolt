@@ -1,5 +1,5 @@
 isUser(est_id) {
-	auth != null && auth.role[0].name == "Institutional Student Supervisor" && auth.role[0].for_establishment == est_id
+	auth != null && ((auth.role[0].name == "Institutional Student Supervisor" && auth.role[0].for_establishment == est_id) || auth.is_super == true)
 }
 	//auth != null && auth.role[0].name == "Institutional Student Supervisor" && auth.role[0].for_establishment == est_id
 
