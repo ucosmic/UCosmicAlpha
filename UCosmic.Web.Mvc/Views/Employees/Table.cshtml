@@ -45,14 +45,21 @@
             tenantId: parseInt('@ViewBag.EmployeesEstablishmentId'),
             ancestorId: parseInt('@ViewBag.AncestorId'),
         };
-        //var searchOptions = JSON.parse(sessionStorage.getItem('ActivitySearchOptions'));
-        //if (searchOptions) {
-        //    //searchOptions = settings.input;
-        //    settings.input.placeNames[0] = searchOptions.placeNames;
-        //    $.each(searchOptions.activityTypeIds, function (index, value) {
-        //        settings.input.activityTypeIds[index] = parseInt(value);
-        //    });
-        //}
+        var searchOptions = sessionStorage.getItem('ActivitySearchQueryString');
+        if (searchOptions && !location.search) {
+            location.search = searchOptions;
+            //searchOptions = settings.input;
+            //settings.input = searchOptions;
+            ////settings.input.placeNames[0] = searchOptions.placeNames;
+            ////$.each(searchOptions.activityTypeIds, function (index, value) {
+            ////    settings.input.activityTypeIds[index] = parseInt(value);
+            ////});
+            //setTimeout(function () {
+            //    viewModel._submitForm();
+            //}, 1000)
+        } else {
+            sessionStorage.setItem('ActivitySearchQueryString', location.search);
+        }
         var viewModel = new Activities.ViewModels.Search(settings);
         viewModel.applyBindings(document.getElementById('activity_search_form'));
     </script>
