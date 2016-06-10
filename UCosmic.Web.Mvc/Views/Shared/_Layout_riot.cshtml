@@ -16,7 +16,8 @@
     @RenderSection("styles", required: false)
     @*@Scripts.Render("~/bundles/modernizr")*@
     <script src="~/components_riot/bower_components/riot/riot.min.js"></script>
-    <script src="~/components_riot/bower_components/firebase/firebase.js"></script>
+    @*<script src="~/components_riot/bower_components/firebase/firebase.js"></script>*@
+    <script src="https://www.gstatic.com/firebasejs/3.0.0/firebase.js"></script>
         @Scripts.Render("~/bundles/layout3")
     @Html.MetaAcceptLanguage()
 </head>
@@ -52,7 +53,7 @@
                             var userImpersonating = Session.UserImpersonating();
                             if (userImpersonating != null)
                             {
-                                <a href="@Url.Action(MVC.Identity.UndoSignOver())" title="Sign back on as @userImpersonating.Identity.Name">Sign back</a>
+                                <a onclick="delete_service_worker_cache()"  href="@Url.Action(MVC.Identity.UndoSignOver())" title="Sign back on as @userImpersonating.Identity.Name">Sign back</a>
                             }
                             else
                             {
@@ -92,9 +93,6 @@
             </li>
             @*<li class="alumni">
                     <a href="@Url.Action(MVC.Home.Alumni())">Alumni</a>
-                </li>
-                <li class="students">
-                    <a href="@Url.Action(MVC.Home.Students())">Students</a>
                 </li>
                 <li class="reps">
                     <a href="@Url.Action(MVC.Home.Representatives())">Representatives</a>
@@ -209,28 +207,35 @@
                     <a href="http://www.github.com/ucosmic" target="_blank" title="Source code version @ViewBag.Version">Powered by UCosmic</a> | Copyright &copy; 2011-@DateTime.UtcNow.Year
                 </div>
             </nav>
-            @*<small class="powered-by">
-                    <a href="http://www.github.com/ucosmic" target="_blank" title="Source code version @ViewBag.Version">Powered by UCosmic</a> | Copyright &copy; 2011-@DateTime.UtcNow.Year
-                </small>*@
         </div>
     </footer>
     <input id="scroll_top_tracker" type="hidden" />
 
-    @*
-        for some reason, kendo web ui does not work when jQuery is minified & bundled.
-        current solution is to get jQuery separately from google's CDN and exclude it from the layout bundle.
-    *@
-    @*@if (!Html.IsOffline())
-    {
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    }
-    else
-    {
-        @Scripts.Render("~/bundles/jquery")
-    }*@
-
 
     <script type="text/javascript">
+        function delete_service_worker_cache() {
+            function sendMessage(message) {
+                // This wraps the message posting/response in a promise, which will
+                // resolve if the response doesn't contain an error, and reject with
+                // the error if it does. If you'd prefer, it's possible to call
+                // controller.postMessage() and set up the onmessage handler
+                // independently of a promise, but this is a convenient wrapper.
+                return new Promise(function (resolve, reject) {
+                    var messageChannel = new MessageChannel();
+                    messageChannel.port1.onmessage = function (event) {
+                        if (event.data.error) {
+                            reject(event.data.error);
+                        } else {
+                            resolve(event.data);
+                        }
+                    };
+
+                    // https://html.spec.whatwg.org/multipage/workers.html#dom-worker-postmessage
+                    navigator.serviceWorker.controller.postMessage(message, [messageChannel.port2]);
+                });
+            }
+            sendMessage('delete cache');
+        }
         function moduleNav(selector) {
             var current = document.querySelector('[data-current-module]').dataset.currentModule;
             var current_el = document.querySelector('nav.modules li.' + current);
@@ -287,24 +292,6 @@
 
     </script>
 
-        @*<script type="text/javascript">
-            function moduleNav(selector) {
-                $(selector).find('[data-current-module]').each(function () {
-                    var current = $(this).data('current-module');
-                    $('nav.modules li.' + current).addClass('current');
-                });
-                $('nav.modules').removeClass('hide');
-            }
-            function bibNav(selector) {
-                $(selector).find('[data-current-bib]').each(function () {
-                    var current = $(this).data('current-bib');
-                    $('nav.bib li.' + current).addClass('current');
-                });
-                $('nav.bib').removeClass('hide');
-            }
-            bibNav("body");
-            moduleNav("body");
-        </script>*@
     @RenderSection("scripts", required: false)
 
     <script>
