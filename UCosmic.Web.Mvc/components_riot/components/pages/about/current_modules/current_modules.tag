@@ -39,13 +39,42 @@
     </style>
     <div class="page_container" style="">
 
-        <h1>About UCosmic Modules</h1>
+        <h1>UCosmic Available Modules</h1>
 
         <h2>Agreements</h2>
 
         <p>
-            The UCosmic Agreement Module is
+            There are 3 components to the Agreements module:
         </p>
+        <ol style="margin: 15px; list-style-type: decimal; text-align: left">
+            <li style="margin: 5px;">
+                Saving and updating international agreements.
+                <br/> Agreements between institutions can be created, edited, deleted and have the ability to add attachments.
+
+            </li>
+            <li style="margin: 5px;">
+                Signed Contracts between Agencies and Institutions
+                <br/>The Signed Contracts between Agencies and Institutions features will be based on the
+                <a href='http://www.uc.edu/webapps/ucosmic/reps/default.aspx'>University of Cincinnati prototype</a>
+                , and are tentatively planned.
+            </li>
+            <li style="margin: 5px;">
+                Agency Commission Financial Reporting
+                <br/>The Agency Commission Financial Reporting features will be based on the
+                <a href='http://www.uc.edu/webapps/ucosmic/reps/default.aspx'>University of Cincinnati prototype</a>
+                , and are tentatively planned.
+            </li>
+            <li style="margin: 5px;">
+                Public Search for Authorized Representative Locations
+                <br/>The Public Search for Authorized Representative Locations features will be based on the
+                <a href='http://www.uc.edu/webapps/ucosmic/reps/default.aspx'>University of Cincinnati prototype</a>
+                , and are tentatively planned.
+            </li>
+            <li style="margin: 5px;">
+                Tools for Institution to Manage Agency Relationships
+                <br/>The Tools for Institution to Manage Agency Relationships features have been discussed by some consortium members, but have no prototype reference.
+            </li>
+        </ol>
 
         <h2>Faculty & Staff</h2>
 
@@ -63,6 +92,14 @@
 
         <p>
             The UCosmic Summary Module is
+        </p>
+
+        <h2>Other Features</h2>
+
+        <p>
+            Customizable home page
+
+            Alert pages
         </p>
 
     </div>
