@@ -251,8 +251,26 @@ var ViewModels;
             SearchResult.prototype.impersonate = function () {
                 var form = this._owner.impersonateForm;
                 if (form) {
-                    this._owner.impersonateUserName(this.name());
-                    $(form).submit();
+                    function sendMessage(message) {
+                        return new Promise(function (resolve, reject) {
+                            var messageChannel = new MessageChannel();
+                            messageChannel.port1.onmessage = function (event) {
+                                if (event.data.error) {
+                                    reject(event.data.error);
+                                }
+                                else {
+                                    resolve(event.data);
+                                }
+                            };
+                            navigator.serviceWorker.controller.postMessage(message, [messageChannel.port2]);
+                        });
+                    }
+                    sendMessage('delete cache');
+                    var my_this = this;
+                    setTimeout(function () {
+                        my_this._owner.impersonateUserName(my_this.email());
+                        $(form).submit();
+                    }, 500);
                 }
             };
             SearchResult.prototype.showRoleEditor = function () {

@@ -9,6 +9,7 @@ namespace UCosmic.Web.Mvc.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Email { get; set; }
         public int? PersonId { get; set; }
         public string PersonDisplayName { get; set; }
         public bool IsRegistered { get; set; }
@@ -27,6 +28,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
                     .ForMember(d => d.PersonId, o => o.MapFrom(s => s.Person.RevisionId))
                     .ForMember(d => d.Roles, o => o.MapFrom(s => s.Grants.Select(x => x.Role)))
+                    .ForMember(d => d.Email, o => o.MapFrom(s => s.Name))
                     .ForMember(d => d.Name, o => o.MapFrom(s => s.Person.DefaultEmail))
                 ;
             }
