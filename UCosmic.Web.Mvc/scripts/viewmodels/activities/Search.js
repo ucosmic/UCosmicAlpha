@@ -1,3 +1,10 @@
+var last_url = sessionStorage.getItem('last_employee_activity_table_url');
+if (location.href.indexOf('pageNumber') > -1) {
+    sessionStorage.setItem('last_employee_activity_table_url', location.href);
+}
+else if (last_url) {
+    location.href = last_url;
+}
 var Activities;
 (function (Activities) {
     var ViewModels;
