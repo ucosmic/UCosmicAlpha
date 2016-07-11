@@ -8,7 +8,7 @@
 
 var observable = require('riot-observable')
 
-var RE_ORIGIN = /^.+?\/+[^\/]+/,
+var RE_ORIGIN = /^.+?\/\/+[^\/]+/,
   EVENT_LISTENER = 'EventListener',
   REMOVE_EVENT_LISTENER = 'remove' + EVENT_LISTENER,
   ADD_EVENT_LISTENER = 'add' + EVENT_LISTENER,
@@ -102,7 +102,7 @@ function isString(str) {
  * @returns {string} path from root
  */
 function getPathFromRoot(href) {
-  return (href || loc.href || '')[REPLACE](RE_ORIGIN, '')
+  return (href || loc.href)[REPLACE](RE_ORIGIN, '')
 }
 
 /**
@@ -113,7 +113,7 @@ function getPathFromRoot(href) {
 function getPathFromBase(href) {
   return base[0] == '#'
     ? (href || loc.href || '').split(base)[1] || ''
-    : getPathFromRoot(href)[REPLACE](base, '')
+    : (loc ? getPathFromRoot(href) : href || '')[REPLACE](base, '')
 }
 
 function emit(force) {
@@ -147,6 +147,7 @@ function click(e) {
 
   var el = e.target
   while (el && el.nodeName != 'A') el = el.parentNode
+
   if (
     !el || el.nodeName != 'A' // not A tag
     || el[HAS_ATTRIBUTE]('download') // has download attr
@@ -253,10 +254,11 @@ var route = mainRouter.m.bind(mainRouter)
  */
 route.create = function() {
   var newSubRouter = new Router()
+  // assign sub-router's main method
+  var router = newSubRouter.m.bind(newSubRouter)
   // stop only this sub-router
-  newSubRouter.m.stop = newSubRouter.s.bind(newSubRouter)
-  // return sub-router's main method
-  return newSubRouter.m.bind(newSubRouter)
+  router.stop = newSubRouter.s.bind(newSubRouter)
+  return router
 }
 
 /**

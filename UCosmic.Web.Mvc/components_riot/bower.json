@@ -25,12 +25,12 @@
     "tests"
   ],
   "dependencies": {
-    "riot": "~2.2.4",
-    "firebase": "~2.3.1",
-    "lodash": "~3.10.1",
-    "RiotControl": "riotcontrol#*",
-    "kefir": "^3.2.1",
-    "sw-toolbox": "^3.1.1"
+    "riot": "~2.4.*",
+    "firebase": "3.0.*",
+    "riotcontrol": "riotcontrol#*",
+    "kefir": "~3.*",
+    "sw-toolbox": "^3.1.*",
+    "lodash": "~3.10.1"
   },
   "resolutions": {
     "riot": "^2.3.18"

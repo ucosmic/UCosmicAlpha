@@ -1,6 +1,6 @@
 {
   "name": "kefir",
-  "version": "3.2.1",
+  "version": "3.2.3",
   "homepage": "https://github.com/rpominov/kefir",
   "authors": [
     "Roman Pominov <rpominov@gmail.com>"
@@ -42,14 +42,13 @@
       ".": "transducers.js"
     }
   },
-  "_release": "3.2.1",
+  "_release": "3.2.3",
   "_resolution": {
     "type": "version",
-    "tag": "3.2.1",
-    "commit": "c31b416034ae183a1c0435ef42278fada0a55b2e"
+    "tag": "3.2.3",
+    "commit": "68704924d51089ab14a41d7104854cf8a1c100c1"
   },
-  "_source": "git://github.com/rpominov/kefir.git",
-  "_target": "^3.2.1",
-  "_originalSource": "kefir",
-  "_direct": true
+  "_source": "https://github.com/rpominov/kefir.git",
+  "_target": "~3.*",
+  "_originalSource": "kefir"
 }

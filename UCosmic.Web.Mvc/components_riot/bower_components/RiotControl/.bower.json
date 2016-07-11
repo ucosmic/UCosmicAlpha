@@ -27,8 +27,7 @@
     "branch": "master",
     "commit": "44876f3c48d97aed047249a55e5b1c9601d4b32f"
   },
-  "_source": "git://github.com/hongbinfu/RiotControl.git",
+  "_source": "https://github.com/hongbinfu/RiotControl.git",
   "_target": "*",
-  "_originalSource": "riotcontrol",
-  "_direct": true
+  "_originalSource": "riotcontrol"
 }
