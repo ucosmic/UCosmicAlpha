@@ -82,12 +82,13 @@
 
     </div>
     <script type="es6">
+        // self.is_shown = false;
         var self = this;
+        xmenu.load_tag('/components_riot/fab_close/fab_close.js', document.head);
         self.on('mount', () => {
-            ucosmic.load_tag('/components_riot/fab_close/fab_close.js', document.head);
+            self = this;
         });
         let scroll_top = 0;
-        self.is_shown = false;
         self.toggle = function () {
             "use strict";
             if (!self.opts.close_callback) {
@@ -96,14 +97,18 @@
                 self.opts.close_callback ? self.opts.close_callback(self.is_shown) : null;
                 self.is_shown = self.is_shown ? false : true;
             }
-            if (self.close && !self.is_shown) {
-                self.close();
+            if (!self.is_shown) {
+                // if (self.close && !self.is_shown) {
+                //     self.close();
+                window.removeEventListener('resize', resize.bind(self), true);
                 self.dialog_container.length > 0
                         ? self.dialog_container[0].style.visibility = 'hidden'
                         : self.dialog_container.style.visibility = 'hidden';
                 self.dialog_container_inner_content.style.overflowY = 'hidden';
                 RiotControl.trigger('dialog_toggled', -1);
             } else {
+                resize(self);
+                window.addEventListener('resize', resize.bind(self), true);
                 self.dialog_container.length > 0
                         ? self.dialog_container[0].style.visibility = 'visible'
                         : self.dialog_container.style.visibility = 'visible';
@@ -116,21 +121,38 @@
         //self.on('mount', () => {
         //    self.is_shown = self.opts.is_shown;
         //});
-        self.on('updated', () => {
-            // self.dialog_container_inner_content.clientHeight < self.dialog_container_inner_content.scrollHeight ? self.dialog_container_inner_content.style.overflowY= 'scroll' : self.dialog_container_inner_content.style.overflowY= 'visible';
-
+        resize = (test) =>{
+            "use strict";
             setTimeout(() => {
                 "use strict";
-                self.dialog_container_inner_content.style.maxHeight = '100%';
-                self.dialog_container_inner_content.style.overflowY = 'visible';
-                if (self.dialog_container_inner.clientHeight < self.dialog_container_inner_content.clientHeight) {
-                    setTimeout(() => {
-                        "use strict";
-                        self.dialog_container_inner_content.style.overflowY = 'scroll';
-                        self.dialog_container_inner_content.style.maxHeight = self.dialog_container_inner.clientHeight * .9 + 'px';
-                    }, 0);
+                test =  test && test.type != 'resize' ? test : self;
+                // self.dialog_container_inner_content.style.maxHeight = '';
+                // self.dialog_container_inner_content.style.overflowY = '';
+                // const dialog_container_inner_content_height = parseFloat(window.getComputedStyle(document.getElementById('dialog_container_inner_content'),null).getPropertyValue("height"));
+                // const dialog_container_inner_height = parseFloat(window.getComputedStyle(document.getElementById('dialog_container_inner'),null).getPropertyValue("height"));
+                if(test.dialog_container_inner_content.clientHeight != 0){
+                    if (test.dialog_container_inner.clientHeight < test.dialog_container_inner_content.clientHeight) {
+                        setTimeout(() => {
+                            "use strict";
+                            test.dialog_container_inner_content.style.overflowY = 'scroll';
+                            test.dialog_container_inner_content.style.maxHeight = test.dialog_container_inner.clientHeight * .9 + 'px';
+                        }, 0);
+                    }else{
+                        test.dialog_container_inner_content.style.maxHeight = '100%';
+                        test.dialog_container_inner_content.style.overflowY = 'visible';
+                        if(test.is_shown){
+                            resize(test);
+                        }
+                    }
+                }else if(test.is_shown){
+                    resize(test);
                 }
-            }, 500);
+            }, 250);
+        }
+
+        self.on('updated', () => {
+            // resize();
+            // self.dialog_container_inner_content.clientHeight < self.dialog_container_inner_content.scrollHeight ? self.dialog_container_inner_content.style.overflowY= 'scroll' : self.dialog_container_inner_content.style.overflowY= 'visible';
 
 
             // setTimeout(() => {
@@ -138,5 +160,6 @@
             //     self.dialog_container_inner_content.clientHeight < self.dialog_container_inner_content.scrollHeight ? self.dialog_container_inner_content.style.overflowY= 'scroll' : self.dialog_container_inner_content.style.overflowY= 'visible';
             // }, 500)
         });
+
     </script>
 </is_dialog>
