@@ -62,7 +62,7 @@ init_app();
 window.onbeforeunload = disconnect_firebase;
 function disconnect_firebase()
 {
-    Firebase.goOffline();
+    firebase.database().goOffline()
 }
 //RiotControl.on('render_app', function (){
 //    riot.update();
