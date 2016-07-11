@@ -4589,12 +4589,6 @@
     <Content Include="components\Polymer\bower_components\polymer-platform\README.md" />
     <None Include="components\Polymer\bower_components\TemplateBinding\codereview.settings" />
     <Content Include="components\utilities\xlsx.full.min.js" />
-    <Content Include="components_riot\.idea\encodings.xml" />
-    <Content Include="components_riot\.idea\misc.xml" />
-    <Content Include="components_riot\.idea\modules.xml" />
-    <Content Include="components_riot\.idea\watcherTasks.xml" />
-    <Content Include="components_riot\.idea\workspace.xml" />
-    <Content Include="components_riot\bower_components\firebase\firebase-debug.js" />
     <Content Include="components_riot\bower_components\firebase\firebase.js" />
     <Content Include="components_riot\bower_components\kefir\dist\kefir.js" />
     <Content Include="components_riot\bower_components\kefir\dist\kefir.min.js" />
@@ -4637,38 +4631,13 @@
     <Content Include="components_riot\bower_components\RiotControl\routing_demo\todo.css" />
     <Content Include="components_riot\bower_components\riot\riot+compiler.js" />
     <Content Include="components_riot\bower_components\riot\riot+compiler.min.js" />
+    <Content Include="components_riot\bower_components\riot\riot.csp.js" />
+    <Content Include="components_riot\bower_components\riot\riot.csp.min.js" />
     <Content Include="components_riot\bower_components\riot\riot.js" />
     <Content Include="components_riot\bower_components\riot\riot.min.js" />
-    <Content Include="components_riot\bower_components\sw-toolbox\companion.js" />
-    <Content Include="components_riot\bower_components\sw-toolbox\recipes\cache-expiration-options\app.js" />
-    <Content Include="components_riot\bower_components\sw-toolbox\recipes\cache-expiration-options\index.html" />
-    <Content Include="components_riot\bower_components\sw-toolbox\recipes\cache-expiration-options\service-worker.js" />
-    <Content Include="components_riot\bower_components\sw-toolbox\recipes\cache-expiration-options\styles.css" />
-    <Content Include="components_riot\bower_components\sw-toolbox\recipes\common.css" />
-    <Content Include="components_riot\bower_components\sw-toolbox\recipes\index.html" />
     <Content Include="components_riot\bower_components\sw-toolbox\sw-toolbox.js" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\browser-tests\precache\precache.js" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\arrays.js" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\custom-install.js" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\mix.js" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\non-existant-files.js" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\promise-arrays.js" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\promises.js" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\simple.js" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\browser-tests\precache\serviceworkers\single-item.js" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\data\files\text-1.txt" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\data\files\text-2.txt" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\data\files\text-3.txt" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\data\files\text-4.txt" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\data\files\text-5.txt" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\data\files\text-6.txt" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\data\files\text-7.txt" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\data\files\text-8.txt" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\data\files\text.txt" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\data\test-iframe.html" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\index.html" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\libs\helper-functions.js" />
-    <Content Include="components_riot\bower_components\sw-toolbox\test\server\index.js" />
+    <Content Include="components_riot\components\content_scroller\content_scroller.js" />
+    <Content Include="components_riot\components\content_scroller\content_scroller.min.js" />
     <Content Include="components_riot\components\content_slider\content_slider.js" />
     <Content Include="components_riot\components\content_slider\content_slider.min.js" />
     <Content Include="components_riot\components\drop_down\drop_down.js" />
@@ -5965,8 +5934,6 @@
     <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\scalar_feature.test" />
     <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\string_feature.test" />
     <Content Include="components\Polymer_1x\bower_components\prism\tests\languages\yaml\tag_feature.test" />
-    <Content Include="components_riot\.idea\.name" />
-    <Content Include="components_riot\.idea\components_riot.iml" />
     <Content Include="components_riot\bower.json" />
     <Content Include="components_riot\bower_components\firebase\.bower.json" />
     <Content Include="components_riot\bower_components\firebase\bower.json" />
@@ -6044,7 +6011,6 @@
     </Content>
     <Content Include="components_riot\bower_components\sw-toolbox\.bower.json" />
     <Content Include="components_riot\bower_components\sw-toolbox\bower.json" />
-    <Content Include="components_riot\bower_components\sw-toolbox\CONTRIBUTING.md" />
     <Content Include="components_riot\bower_components\sw-toolbox\LICENSE" />
     <Content Include="components_riot\bower_components\sw-toolbox\package.json" />
     <Content Include="components_riot\bower_components\sw-toolbox\README.md" />
@@ -6052,6 +6018,7 @@
     <Content Include="components_riot\components\is_dialog\is_dialog.min.js.map">
       <DependentUpon>is_dialog.min.js</DependentUpon>
     </Content>
+    <Content Include="components_riot\components\content_scroller\content_scroller.tag" />
     <None Include="content\kendo\2013.2.716\Black\editor.png" />
     <None Include="content\kendo\2013.2.716\Black\imagebrowser.png" />
     <None Include="content\kendo\2013.2.716\Black\loading-image.gif" />

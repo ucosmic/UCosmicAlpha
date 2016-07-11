@@ -1,31 +1,106 @@
 ﻿<nav class="bib">
     <ul class="group">
+        @*<li>
+            <a onclick="delete_service_worker_cache_2('/as/suny.edu', event)" href="#">Default style</a>
+        </li>*@
         <li>
-            <a href="@Url.Action(MVC.Tenancy.Tenant(null, Request.RawUrl))">Default style</a>
+            <a onclick="delete_service_worker_cache_2('/as22/suny.edu', event)" href="#">SUNY style</a>
         </li>
         <li>
-            <a href="@Url.Action(MVC.Tenancy.Tenant("suny.edu", Request.RawUrl))">SUNY style</a>
+            <a onclick="delete_service_worker_cache_2('/as22/uc.edu' , event)" href="#">UC style</a>
         </li>
         <li>
-            <a href="@Url.Action(MVC.Tenancy.Tenant("uc.edu", Request.RawUrl))">UC style</a>
+            <a onclick="delete_service_worker_cache_2('/as22/uwi.edu', event)" href="#">UWI style</a>
         </li>
         <li>
-            <a href="@Url.Action(MVC.Tenancy.Tenant("uwi.edu", Request.RawUrl))">UWI style</a>
+            <a onclick="delete_service_worker_cache_2('/as22/lehigh.edu', event)" href="#">Lehigh style</a>
         </li>
         <li>
-            <a href="@Url.Action(MVC.Tenancy.Tenant("lehigh.edu", Request.RawUrl))">Lehigh style</a>
+            <a onclick="delete_service_worker_cache_2('/as22/usf.edu', event)" href="#">USF style</a>
         </li>
         <li>
-            <a href="@Url.Action(MVC.Tenancy.Tenant("usf.edu", Request.RawUrl))">USF style</a>
+            <a  href="#/flashlong">Long flash</a>
         </li>
         <li>
-            <a href="#/flashlong">Long flash</a>
-        </li>
-        <li>
-            <a href="#/flashshort">Short flash</a>
+            <a  href="#/flashshort">Short flash</a>
         </li>
         <li class="current">
-            <a href="#/flashshort">Current tab</a>
+            <a  href="#/flashshort">Current tab</a>
         </li>
     </ul>
 </nav>
+<script>
+
+    //if (window.location.search.indexOf('&reload_me') > -1) {
+    //    setTimeout(function () {
+    //        window.location.href = window.location.href.replace('&reload_me', '') + '&timestamp=' + Date.now();
+    //    }, 100)
+    //} else if (window.location.search.indexOf('?reload_me') > -1) {
+    //    setTimeout(function () {
+    //        window.location.href = window.location.href.replace('?reload_me', '') + '?timestamp=' + Date.now();
+    //    }, 100)
+    //}
+
+    //function create_cookie(name, value, days) {
+    //    if (days) {
+    //        var date = new Date();
+    //        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    //        var expires = "; expires=" + date.toGMTString();
+    //    }
+    //    else var expires = "";
+    //    document.cookie = name + "=" + value + expires + "; path=/";
+    //}
+    //Tenancy = { "StyleDomain": "usf.edu", "TenantId": 3306, "PersonId": 723, "UserId": 129, "CustomProfileTitle": null }
+    function delete_service_worker_cache_2(url, event){
+        delete_service_worker_cache();
+        //create_cookie()
+        fetch(window.location.origin + url + '?timestamp=' + Date.now())
+        .then(function (response) {
+            var tenancy = response.headers.get("Tenancy");
+            //return response.formData().then(function (response) {
+            if (tenancy) {
+                document.cookie = "Tenancy=" + tenancy + "; path=/";//name + "=" + value + expires + "; path=/";
+                setTimeout(function () {
+                    //location.reload();
+                    //location.reload(true)
+                    if (window.location.href.indexOf('?') > 1) {
+                        window.location.href = window.location + '&timestamp=' + Date.now();//'&reload_me';
+                    } else {
+                        window.location.href = window.location + '?timestamp=' + Date.now();//'?reload_me';
+                    }
+                    //window.location.href = window.location.href;
+                }, 100)
+            } else {
+                setTimeout(function () {
+                    delete_service_worker_cache_2(url, event);
+                }, 500)
+            }
+            //})
+            //if (contentType && contentType.indexOf("application/json") !== -1) {
+
+            //} else {
+            //    console.log("Oops, we haven't got JSON!");
+            //}
+        })
+        //fetch(window.location.origin + url).then(function (response) {
+        //    return response.text();
+        //}).then(function (response) {
+        //    var objectURL = URL.createObjectURL(response);
+        //    myImage.src = objectURL;
+        //});
+        //fetch(myRequest).then(function (response) {
+        //    var contentType = response.headers.get("content-type");
+        //    if (contentType && contentType.indexOf("application/json") !== -1) {
+        //        return response.json().then(function (json) {
+        //            // process your JSON further
+        //        });
+        //    } else {
+        //        console.log("Oops, we haven't got JSON!");
+        //    }
+        //});
+        event.preventDefault();
+        //setTimeout(function () {
+        //    window.location = window.location.origin + url;
+        //}, 500)
+    }
+</script>
