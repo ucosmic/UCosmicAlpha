@@ -101,8 +101,8 @@ var InstitutionalAgreementEditModel = (function () {
                 .done(function (response) {
                 var dropdownlist;
                 _this.basicInfo.content(response.content);
-                _this.datesStatus.expDate(Globalize.format(new Date(response.expiresOn.substring(0, response.expiresOn.lastIndexOf("T"))), 'd'));
-                _this.datesStatus.startDate(Globalize.format(new Date(response.startsOn.substring(0, response.startsOn.lastIndexOf("T"))), 'd'));
+                _this.datesStatus.expDate(Globalize.format(new Date(response.expiresOn.replace('T', ' ')), 'd'));
+                _this.datesStatus.startDate(Globalize.format(new Date(response.startsOn.replace('T', ' ')), 'd'));
                 if (response.isAutoRenew == null) {
                     _this.datesStatus.autoRenew(2);
                 }

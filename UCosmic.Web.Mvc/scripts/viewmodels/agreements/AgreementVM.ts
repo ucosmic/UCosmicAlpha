@@ -136,8 +136,8 @@ class InstitutionalAgreementEditModel {
                         var dropdownlist;
 
                         this.basicInfo.content(response.content);
-                        this.datesStatus.expDate(Globalize.format(new Date(response.expiresOn.substring(0, response.expiresOn.lastIndexOf("T"))), 'd'));
-                        this.datesStatus.startDate(Globalize.format(new Date(response.startsOn.substring(0, response.startsOn.lastIndexOf("T"))), 'd'));
+                        this.datesStatus.expDate(Globalize.format(new Date(response.expiresOn.replace('T', ' ')), 'd'));
+                        this.datesStatus.startDate(Globalize.format(new Date(response.startsOn.replace('T', ' ')), 'd'));
                         if (response.isAutoRenew == null) {
                             this.datesStatus.autoRenew(2);
                         } else {
