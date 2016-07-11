@@ -101,6 +101,7 @@ namespace UCosmic.Repositories
                 {
                     sql += " and (av.endson <= '" + input.Until + "' or av.startson <= '" + input.Until + "')";
                 }
+                sql += " and (av.endson is not null or av.startson is not null)";
             }
             if (input.Keyword != null && input.Keyword != "")
             {
