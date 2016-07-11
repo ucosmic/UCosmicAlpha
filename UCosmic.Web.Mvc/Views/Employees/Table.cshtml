@@ -98,7 +98,7 @@
                     </label>
                 </div>
                 <div class="on-right" style="margin-top: 8px;">
-                    <a href="@Url.Action(MVC.Employees.Table(Model.Domain, null))" class="restore-underline">Reset search</a>
+                    <a href="@Url.Action(MVC.Employees.Table(Model.Domain, null))" class="restore-underline" onclick="sessionStorage.setItem('ActivitySearchOptions', null); sessionStorage.setItem('ActivitySearchQueryString', null);">Reset search</a>
                 </div>
             </div>
             <p style="font-size: 12px; display: none; margin:0px; color:grey;" data-bind="visible: pivot()==1">
@@ -607,10 +607,25 @@
                                         YYYY or M/YYYY or M/D/YYYY
                                     </div>
                                     <div style="color: #000; font-size: 13px; line-height: 13px; margin-top: 4px;">
+
                                         @{
-                                            var includeUndated = Model.Input.IncludeUndated == null ||
-                                                                 Model.Input.IncludeUndated.Value
-                                                ? "checked" : null;
+                                            var includeUndated = "";
+                                            if (Model.Input.IncludeUndated != null)
+                                            {
+                                                if (Model.Input.IncludeUndated.Value != false)
+                                                {
+                                                    includeUndated = "checked";
+                                                }
+                                                else
+                                                {
+                                                    includeUndated = null;
+                                                }
+                                            }
+                                            else
+                                            {
+
+                                                includeUndated = null;
+                                            }
                                         }
                                         <label style="cursor: pointer; vertical-align: top;">
                                             <input type="checkbox" name="includeUndated" checked="@includeUndated" value="true" style="cursor: pointer;" /> Include undated activities
@@ -640,6 +655,18 @@
                             </div>
                         </li>
                     </ul>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
