@@ -218,7 +218,8 @@
                         map_data = array_union_concat_2(map_data, countries, are_equal);
                     })
                     self.term_data_all_union = array_union_concat(self.term_data_all.in, self.term_data_all.out, are_equal_2);
-                    self.term_data = self.term_data_all_union.map((term) => {
+                    // self.term_data = self.term_data_all_union.map((term) => {
+                    self.term_data = self.term_data_all.in.map((term) => {
                         return [term.id, term.count]
                     })
                     self.total_student_count = get_total_student_count(self.term_data_all, self.direction);
@@ -273,7 +274,8 @@
                         map_data = array_union_concat_2(map_data, countries, are_equal);
                     })
                     self.term_data_all_union = array_union_concat(self.term_data_all.in, self.term_data_all.out, are_equal_2);
-                    self.term_data = self.term_data_all_union.map((term) => {
+                    // self.term_data = self.term_data_all_union.map((term) => {
+                        self.term_data = self.term_data_all.out.map((term) => {
                         return [term.id, term.count]
                     })
                     self.total_student_count = get_total_student_count(self.term_data_all, self.direction);
@@ -843,11 +845,11 @@
                 })
                 if (my_term) {
                     term_data[index][1] += count;
-                    term_data_all[direction][index - 1] = {id: term, count: count, affiliations: term_affiliations, countries: term_countries}
+                    // term_data_all[direction][index - 1] = {id: term, count: count, affiliations: term_affiliations, countries: term_countries}
                 } else {
                     term_data.push([term, count])
-                    term_data_all[direction].push({id: term, count: count, affiliations: term_affiliations, countries: term_countries});
                 }
+                term_data_all[direction].push({id: term, count: count, affiliations: term_affiliations, countries: term_countries});
                 return {term_data: term_data, term_data_all: term_data_all};
             }
 
