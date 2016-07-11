@@ -8,7 +8,24 @@
 self.addEventListener('message', function (event) {
     //toolbox.uncache(url)
 
-    toolbox.uncache('/*');
+    var x = toolbox.uncache('/*');
+
+    //x.next(function(){
+    //    alert('test');
+    //});
+    //toolbox.uncache('*')
+    toolbox.router.delete('*', toolbox.fastest);
+    toolbox.router.delete('/*', toolbox.fastest);
+
+    self.caches.keys().then(function (err) {
+        console.log(err);
+        err.forEach(function (cache) {
+            self.caches.match(cache).then(function (test) {
+                self.caches.delete(cache);
+            })
+        })
+        //your cache is now deleted
+    });
     //toolbox.uncache('/*', { origin: 'https://www.google.com' });
 
 
