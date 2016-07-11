@@ -61,12 +61,12 @@
                             }
                             else
                             {
-                                <a href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))">Sign out</a>
+                                <a onclick="delete_service_worker_cache()" href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))">Sign out</a>
                             }
                         }
                         else
                         {
-                            <a href="@Url.Action(MVC.Identity.SignIn(Request.RawUrl))">Sign in</a>
+                            <a onclick="delete_service_worker_cache()" href="@Url.Action(MVC.Identity.SignIn(Request.RawUrl))">Sign in</a>
                         }
                     </div>
                 </div>
@@ -211,7 +211,13 @@
                     }
                 </ul>
                 <div class="powered-by on-right">
-                    <a href="http://www.github.com/ucosmic" target="_blank" title="Source code version @ViewBag.Version">Powered by UCosmic</a> | Copyright &copy; 2011-@DateTime.UtcNow.Year
+                    <a href="http://www.github.com/ucosmic" target="_blank" title="Source code version @ViewBag.Version">Powered by UCosmic</a> | Copyright &copy; 2011-                    @DateTime.UtcNow.Year
+                    
+                    @if (User.Identity.Name == "")
+                    {
+                        <span>| </span>
+                        <a href="#" onclick="clear_tenant_cookie()">Clear Tennant</a>
+                    }
                 </div>
             </nav>
             @*<small class="powered-by">
@@ -252,7 +258,9 @@
                     };
 
                     // https://html.spec.whatwg.org/multipage/workers.html#dom-worker-postmessage
-                    navigator.serviceWorker.controller.postMessage(message, [messageChannel.port2]);
+                    if (navigator.serviceWorker.controller) {
+                        navigator.serviceWorker.controller.postMessage(message, [messageChannel.port1]);
+                    }
                 });
             }
             sendMessage('delete cache');
@@ -283,6 +291,31 @@
             .catch(function () {
 
             });
+        }
+        function deleteAllCookies() {
+            var cookies = document.cookie.split(";");
+
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i];
+                var eqPos = cookie.indexOf("=");
+                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            }
+        }
+
+        function clear_tenant_cookie(url, event) {
+            delete_service_worker_cache();
+            localStorage.clear();
+            sessionStorage.clear();
+            deleteAllCookies();
+            //setTimeout(function () {
+                if (window.location.href.indexOf('?') > 1) {
+                    window.location.href = window.location + '&timestamp=' + Date.now();//'&reload_me';
+                } else {
+                    window.location.href = window.location + '?timestamp=' + Date.now();//'?reload_me';
+                }
+            //}, 100)
+                event ? event.preventDefault() : null;
         }
     </script>
 
