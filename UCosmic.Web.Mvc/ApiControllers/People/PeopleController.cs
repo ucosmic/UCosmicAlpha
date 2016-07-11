@@ -60,7 +60,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("people/{personId:int}/photo")]
-        [CacheHttpGet(Duration = 3600)]
+        //[CacheHttpGet(Duration = 3600)] // if you chose the public view first, then changed the image, you don't see the update for 60 minutes
         public HttpResponseMessage GetPhoto(int personId, [FromUri] ImageResizeRequestModel model)
         {
             var person = _queryProcessor.Execute(new PersonById(personId)

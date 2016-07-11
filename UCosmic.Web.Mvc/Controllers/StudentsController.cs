@@ -156,7 +156,7 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             new Thread(() =>
             {
-                Run_Firebase_country_sync();
+                //Run_Firebase_country_sync();   ******************** disabled due to missing country data ********************
             }).Start();
             using (var client = new HttpClient())
             {
