@@ -7,7 +7,7 @@
             position: relative;
             height: 0;
             width: 0;
-            overflow: visible;
+            /*overflow: visible;*/
             z-index: 1;
         }
         ul{
@@ -70,7 +70,7 @@
                         <div show="{!selected_item}"><div>Select {opts.title}</div></div>
                         <!--<div class="{float_text: selected_item} pre_scale_bottom_center {slide_top_bottom: !selected_item}"><div>Select {opts.title}</div></div>-->
                         <!--<div style="font-weight: bold" show="{selected_item}">{selected_item.title}</div>-->
-                        <div style="font-weight: bold" show="{selected_item}">{selected_item.title}<span if="{selected_item.cost}" data-_id="{i}">&nbsp;{ucosmic.currency(selected_item.cost)}</span></div>
+                        <div style="font-weight: bold" show="{selected_item}">{selected_item.title}<span if="{selected_item.cost}" data-_id="{i}">&nbsp;{xmenu.currency(selected_item.cost)}</span></div>
                     </div>
                     <div class="flex"></div>
                     <div style="height:20px; width:40px;">
@@ -98,14 +98,14 @@
                 <!--<div style="height: 1px; background-color:black;"></div>-->
             <!--</div>-->
         </div>
-        <div id="ddl_container" riot-style=" direction: {opts.direction}; left: {opts.ddl_container_left};">
+        <div id="ddl_container" riot-style=" direction: {opts.direction}; left: {opts.ddl_container_left}; overflow:{is_shown ? 'visible': 'hidden'};">
             <!--<div id="ddl_container" riot-style="width: {container_width}; direction: {opts.direction};">-->
             <div id="list" class="{opts.pre_scale_class} {fade_in: is_shown} {fade_out: !is_shown} {scale: !is_shown && opts.scale_type != 'scale_height'}
             {scale_height: !is_shown && opts.scale_type == 'scale_height'}" >
                 <ul id="list_ul" riot-style="background-color:{opts.background_color};  max-height:{opts.max_height}; width:{opts.max_width} ">
 
                     <li class="layout horizontal start-justified highlight-text" each="{ item, i in opts.list }" onclick="{select_item}" data-_id="{i}">
-                        <span style="display: flex; white-space: normal;" data-_id="{i}">{item.title}</span><span if="{item.cost}" data-_id="{i}">&nbsp;{ucosmic.currency(item.cost)}</span>
+                        <span style="display: flex; white-space: normal;" data-_id="{i}">{item.title}</span><span if="{item.cost}" data-_id="{i}">&nbsp;{xmenu.currency(item.cost)}</span>
                     </li>
                 </ul>
             </div>
@@ -154,7 +154,7 @@
         }
 
         self.get_container_width = function(){
-            self.ddl_container.style.width = self.title.offsetWidth + 'px';
+            self.container_width = self.title.offsetWidth + 'px';
         }
         self.get_list_height = function(){
             if(self.list_ul.length > 1){
