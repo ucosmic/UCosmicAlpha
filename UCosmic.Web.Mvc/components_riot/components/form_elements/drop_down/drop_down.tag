@@ -70,7 +70,7 @@
                         <div show="{!selected_item}"><div>Select {opts.title}</div></div>
                         <!--<div class="{float_text: selected_item} pre_scale_bottom_center {slide_top_bottom: !selected_item}"><div>Select {opts.title}</div></div>-->
                         <!--<div style="font-weight: bold" show="{selected_item}">{selected_item.title}</div>-->
-                        <div style="font-weight: bold" show="{selected_item}">{selected_item.title}<span if="{selected_item.cost}" data-_id="{i}">&nbsp;{xmenu.currency(selected_item.cost)}</span></div>
+                        <div style="font-weight: bold" show="{selected_item}">{selected_item.title}<span if="{selected_item.cost}" data-_id="{i}">&nbsp;{UCosmic.currency(selected_item.cost)}</span></div>
                     </div>
                     <div class="flex"></div>
                     <div style="height:20px; width:40px;">
@@ -105,7 +105,7 @@
                 <ul id="list_ul" riot-style="background-color:{opts.background_color};  max-height:{opts.max_height}; width:{opts.max_width} ">
 
                     <li class="layout horizontal start-justified highlight-text" each="{ item, i in opts.list }" onclick="{select_item}" data-_id="{i}">
-                        <span style="display: flex; white-space: normal;" data-_id="{i}">{item.title}</span><span if="{item.cost}" data-_id="{i}">&nbsp;{xmenu.currency(item.cost)}</span>
+                        <span style="display: flex; white-space: normal;" data-_id="{i}">{item.title}</span><span if="{item.cost}" data-_id="{i}">&nbsp;{UCosmic.currency(item.cost)}</span>
                     </li>
                 </ul>
             </div>

@@ -4636,44 +4636,79 @@
     <Content Include="components_riot\bower_components\riot\riot.js" />
     <Content Include="components_riot\bower_components\riot\riot.min.js" />
     <Content Include="components_riot\bower_components\sw-toolbox\sw-toolbox.js" />
+    <Content Include="components_riot\components\content\content.tag" />
     <Content Include="components_riot\components\content_scroller\content_scroller.js" />
     <Content Include="components_riot\components\content_scroller\content_scroller.min.js" />
+    <Content Include="components_riot\components\content_scroller\content_scroller.tag" />
     <Content Include="components_riot\components\content_slider\content_slider.js" />
     <Content Include="components_riot\components\content_slider\content_slider.min.js" />
+    <Content Include="components_riot\components\content_slider\content_slider.tag" />
     <Content Include="components_riot\components\drop_down\drop_down.js" />
+    <Content Include="components_riot\components\drop_down\drop_down.tag" />
     <Content Include="components_riot\components\echo_html\echo_html.js" />
     <Content Include="components_riot\components\echo_html\echo_html.min.js" />
+    <Content Include="components_riot\components\echo_html\echo_html.tag" />
     <Content Include="components_riot\components\echo_tag\echo_tag.js" />
     <Content Include="components_riot\components\echo_tag\echo_tag.min.js" />
+    <Content Include="components_riot\components\echo_tag\echo_tag.tag" />
     <Content Include="components_riot\components\expander\expander.js" />
     <Content Include="components_riot\components\expander\expander.min.js" />
+    <Content Include="components_riot\components\expander\expander.min.js.map">
+      <DependentUpon>expander.min.js</DependentUpon>
+    </Content>
+    <Content Include="components_riot\components\expander\expander.tag" />
     <Content Include="components_riot\components\fab_close\fab_close.js" />
     <Content Include="components_riot\components\fab_close\fab_close.min.js" />
     <Content Include="components_riot\components\fab_close\fab_close.min.min.js" />
+    <Content Include="components_riot\components\fab_close\fab_close.tag" />
     <Content Include="components_riot\components\form_elements\checkboxes\checkboxes.js" />
     <Content Include="components_riot\components\form_elements\checkboxes\checkboxes.min.js" />
+    <Content Include="components_riot\components\form_elements\checkboxes\checkboxes.min.js.map">
+      <DependentUpon>checkboxes.min.js</DependentUpon>
+    </Content>
+    <Content Include="components_riot\components\form_elements\checkboxes\checkboxes.tag" />
     <Content Include="components_riot\components\form_elements\checkbox\checkbox.js" />
+    <Content Include="components_riot\components\form_elements\checkbox\checkbox.tag" />
     <Content Include="components_riot\components\form_elements\drop_down\drop_down.js" />
     <Content Include="components_riot\components\form_elements\drop_down\drop_down.min.js" />
+    <Content Include="components_riot\components\form_elements\drop_down\drop_down.min.js.map" />
+    <Content Include="components_riot\components\form_elements\drop_down\drop_down.tag" />
     <Content Include="components_riot\components\form_elements\is_button\is_button.js" />
     <Content Include="components_riot\components\form_elements\is_button\is_button.min.js" />
+    <Content Include="components_riot\components\form_elements\is_button\is_button.tag" />
     <Content Include="components_riot\components\form_elements\multi_textbox\multi_textbox.js" />
     <Content Include="components_riot\components\form_elements\multi_textbox\multi_textbox.min.js" />
+    <Content Include="components_riot\components\form_elements\multi_textbox\multi_textbox.tag" />
     <Content Include="components_riot\components\form_elements\textbox\textbox.js" />
     <Content Include="components_riot\components\form_elements\textbox\textbox.min.js" />
+    <Content Include="components_riot\components\form_elements\textbox\textbox.tag" />
     <Content Include="components_riot\components\header\header.js" />
+    <Content Include="components_riot\components\header\header.tag" />
     <Content Include="components_riot\components\header_toolbar\header_toolbar.js" />
+    <Content Include="components_riot\components\header_toolbar\header_toolbar.tag" />
     <Content Include="components_riot\components\image_slide\image_slide.js" />
+    <Content Include="components_riot\components\image_slide\image_slide.tag" />
     <Content Include="components_riot\components\is_dialog\fab_close\fab_close.js" />
+    <Content Include="components_riot\components\is_dialog\fab_close\fab_close.tag" />
     <Content Include="components_riot\components\is_dialog\is_dialog.js" />
     <Content Include="components_riot\components\is_dialog\is_dialog.min.js" />
+    <Content Include="components_riot\components\is_dialog\is_dialog.min.js.map">
+      <DependentUpon>is_dialog.min.js</DependentUpon>
+    </Content>
+    <Content Include="components_riot\components\is_dialog\is_dialog.tag">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="components_riot\components\is_loading\is_loading.js" />
     <Content Include="components_riot\components\is_loading\is_loading.min.js" />
+    <Content Include="components_riot\components\is_loading\is_loading.tag" />
     <Content Include="components_riot\components\layout\layout.js" />
+    <Content Include="components_riot\components\layout\layout.tag" />
     <Content Include="components_riot\components\lib\pouchdb-5.2.1.min.js" />
     <Content Include="components_riot\components\pages\about\about\about.js" />
     <Content Include="components_riot\components\pages\about\about\about.tag" />
+    <Content Include="components_riot\components\pages\about\benefits_fees\benefits_fees.js" />
     <Content Include="components_riot\components\pages\about\benefits_fees\benefits_fees.tag" />
+    <Content Include="components_riot\components\pages\about\blog\blog.js" />
     <Content Include="components_riot\components\pages\about\blog\blog.tag" />
     <Content Include="components_riot\components\pages\about\current_modules\current_modules.js" />
     <Content Include="components_riot\components\pages\about\current_modules\current_modules.tag">
@@ -4681,8 +4716,11 @@
     </Content>
     <Content Include="components_riot\components\pages\about\future_modules\future_modules.js" />
     <Content Include="components_riot\components\pages\about\future_modules\future_modules.tag" />
+    <Content Include="components_riot\components\pages\about\join\join.js" />
     <Content Include="components_riot\components\pages\about\join\join.tag" />
+    <Content Include="components_riot\components\pages\about\members\members.js" />
     <Content Include="components_riot\components\pages\about\members\members.tag" />
+    <Content Include="components_riot\components\pages\about\news\news.js" />
     <Content Include="components_riot\components\pages\about\news\news.tag" />
     <Content Include="components_riot\components\pages\agreements\info\info.js" />
     <Content Include="components_riot\components\pages\agreements\info\info.tag" />
@@ -4698,14 +4736,23 @@
     </Content>
     <Content Include="components_riot\components\pages\summary\info\info.js" />
     <Content Include="components_riot\components\pages\summary\info\info.tag" />
+    <Content Include="components_riot\components\pic\pic.js" />
+    <Content Include="components_riot\components\pic\pic.min.js" />
     <Content Include="components_riot\components\side_bar_filter\side_bar_filter.js" />
+    <Content Include="components_riot\components\side_bar_filter\side_bar_filter.tag" />
     <Content Include="components_riot\components\stores\app_store.js" />
     <Content Include="components_riot\components\stores\app_store.min.js" />
     <Content Include="components_riot\components\toast\toast.js" />
     <Content Include="components_riot\components\toast\toast.min.js" />
+    <Content Include="components_riot\components\toast\toast.min.js.map">
+      <DependentUpon>toast.min.js</DependentUpon>
+    </Content>
+    <Content Include="components_riot\components\toast\toast.tag" />
     <Content Include="components_riot\components\utilities\add_style.js" />
     <Content Include="components_riot\components\utilities\add_style.min.js" />
+    <Content Include="components_riot\components\utilities\add_style.min.js.map" />
     <Content Include="components_riot\components\utilities\closest.js" />
+    <Content Include="components_riot\components\utilities\closest.js.map" />
     <Content Include="components_riot\components\utilities\closest.min.js" />
     <Content Include="components_riot\components\utilities\el_relative_to_el.js" />
     <Content Include="components_riot\components\utilities\el_relative_to_el.min.js" />
@@ -4717,8 +4764,10 @@
     <Content Include="components_riot\components\utilities\load_tag_3.min.js" />
     <Content Include="components_riot\components\utilities\mount_riot.js" />
     <Content Include="components_riot\components\utilities\mount_riot.min.js" />
+    <Content Include="components_riot\components\utilities\mount_riot.min.js.map" />
     <Content Include="components_riot\components\utilities\navigation.js" />
     <Content Include="components_riot\components\utilities\navigation.min.js" />
+    <Content Include="components_riot\components\utilities\navigation.min.js.map" />
     <Content Include="components_riot\components\utilities\navigation_2.js" />
     <Content Include="components_riot\components\utilities\one_page_scroll.js" />
     <Content Include="components_riot\components\utilities\one_page_scroll.min.js" />
@@ -4739,6 +4788,8 @@
     <Content Include="components_riot\components\utilities\tags_loaded.min.js.map">
       <DependentUpon>tags_loaded.min.js</DependentUpon>
     </Content>
+    <Content Include="components_riot\components\utilities\trkr.js" />
+    <Content Include="components_riot\components\utilities\trkr.min.js" />
     <Content Include="components_riot\components\utilities\uniq_id.js" />
     <Content Include="components_riot\components\utilities\uniq_id.min.js" />
     <Content Include="components_riot\components\workers\firebase_sync.js" />
@@ -5962,52 +6013,14 @@
     <Content Include="components_riot\bower_components\RiotControl\routing_demo\item-detail.tag" />
     <Content Include="components_riot\bower_components\riot\.bower.json" />
     <Content Include="components_riot\bower_components\riot\bower.json" />
-    <Content Include="components_riot\components\content\content.tag" />
-    <Content Include="components_riot\components\drop_down\drop_down.tag" />
-    <Content Include="components_riot\components\echo_html\echo_html.tag" />
-    <Content Include="components_riot\components\echo_tag\echo_tag.tag" />
-    <Content Include="components_riot\components\expander\expander.tag" />
-    <Content Include="components_riot\components\fab_close\fab_close.tag" />
-    <Content Include="components_riot\components\form_elements\checkboxes\checkboxes.tag" />
-    <Content Include="components_riot\components\form_elements\checkbox\checkbox.tag" />
-    <Content Include="components_riot\components\form_elements\drop_down\drop_down.min.js.map" />
-    <Content Include="components_riot\components\form_elements\drop_down\drop_down.tag" />
-    <Content Include="components_riot\components\form_elements\is_button\is_button.tag" />
-    <Content Include="components_riot\components\form_elements\multi_textbox\multi_textbox.tag" />
-    <Content Include="components_riot\components\form_elements\textbox\textbox.tag" />
-    <Content Include="components_riot\components\header\header.tag" />
-    <Content Include="components_riot\components\header_toolbar\header_toolbar.tag" />
-    <Content Include="components_riot\components\image_slide\image_slide.tag" />
-    <Content Include="components_riot\components\is_dialog\fab_close\fab_close.tag" />
-    <Content Include="components_riot\components\is_dialog\is_dialog.tag">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="components_riot\components\is_loading\is_loading.tag" />
-    <Content Include="components_riot\components\layout\layout.tag" />
-    <Content Include="components_riot\components\toast\toast.tag" />
-    <Content Include="components_riot\components\utilities\add_style.min.js.map" />
-    <Content Include="components_riot\components\utilities\closest.js.map" />
-    <Content Include="components_riot\components\utilities\mount_riot.min.js.map" />
-    <Content Include="components_riot\components\utilities\navigation.min.js.map" />
     <Content Include="components_riot\styles\animations.css.map" />
     <Content Include="components_riot\styles\animations.scss" />
     <Content Include="components_riot\styles\index.css.map" />
     <Content Include="components_riot\styles\index.scss" />
     <Content Include="components_riot\styles\mixins.css.map" />
     <Content Include="components_riot\styles\mixins.scss" />
-    <Content Include="components_riot\components\side_bar_filter\side_bar_filter.tag" />
-    <Content Include="components_riot\components\content_slider\content_slider.tag" />
     <Content Include="components\Polymer_1x\bower_components\prism\components\prism-vim.min.js.map">
       <DependentUpon>prism-vim.min.js</DependentUpon>
-    </Content>
-    <Content Include="components_riot\components\expander\expander.min.js.map">
-      <DependentUpon>expander.min.js</DependentUpon>
-    </Content>
-    <Content Include="components_riot\components\form_elements\checkboxes\checkboxes.min.js.map">
-      <DependentUpon>checkboxes.min.js</DependentUpon>
-    </Content>
-    <Content Include="components_riot\components\toast\toast.min.js.map">
-      <DependentUpon>toast.min.js</DependentUpon>
     </Content>
     <Content Include="components_riot\bower_components\sw-toolbox\.bower.json" />
     <Content Include="components_riot\bower_components\sw-toolbox\bower.json" />
@@ -6015,10 +6028,7 @@
     <Content Include="components_riot\bower_components\sw-toolbox\package.json" />
     <Content Include="components_riot\bower_components\sw-toolbox\README.md" />
     <Content Include="components_riot\bower_components\sw-toolbox\sw-toolbox.map.json" />
-    <Content Include="components_riot\components\is_dialog\is_dialog.min.js.map">
-      <DependentUpon>is_dialog.min.js</DependentUpon>
-    </Content>
-    <Content Include="components_riot\components\content_scroller\content_scroller.tag" />
+    <Content Include="components_riot\components\pic\pic.tag" />
     <None Include="content\kendo\2013.2.716\Black\editor.png" />
     <None Include="content\kendo\2013.2.716\Black\imagebrowser.png" />
     <None Include="content\kendo\2013.2.716\Black\loading-image.gif" />

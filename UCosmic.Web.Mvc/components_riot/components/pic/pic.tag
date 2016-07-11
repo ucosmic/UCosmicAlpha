@@ -16,7 +16,7 @@
         "use strict";
         var self = this;
         self.calc_img_src = (image) => {
-            return image.indexOf('http') > -1 ? image : '/resources/images/profiles/'+xmenu.store+'/menu/'+image;
+            return image.indexOf('http') > -1 ? image : '/resources/images/profiles/'+UCosmic.store+'/menu/'+image;
         }
         self.on('mount', () => {
 

@@ -2,7 +2,7 @@ riot.tag2('pic', '<div class="flex layout horizontal center center-justified"> <
 "use strict";
 var self = this;
 self.calc_img_src = function (image) {
-    return image.indexOf('http') > -1 ? image : '/resources/images/profiles/' + xmenu.store + '/menu/' + image;
+    return image.indexOf('http') > -1 ? image : '/resources/images/profiles/' + UCosmic.store + '/menu/' + image;
 };
 self.on('mount', function () {});
 });

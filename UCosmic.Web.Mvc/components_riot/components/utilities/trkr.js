@@ -14,7 +14,7 @@ var start_trkr = function () {
     function successFunction(position) {
         var lat = position.coords.latitude;
         var lng = position.coords.longitude;
-        xmenu.fire_ref.child('Analytics').child(utc).child(unique_user).child(unique_session).child('Geo').push({lat: lat, lng: lng, time: firebase.database.ServerValue.TIMESTAMP}, function (error) {
+        UCosmic.fire_ref.child('Analytics').child(utc).child(unique_user).child(unique_session).child('Geo').push({lat: lat, lng: lng, time: firebase.database.ServerValue.TIMESTAMP}, function (error) {
         })
 
     }
@@ -24,32 +24,32 @@ var start_trkr = function () {
 
     function trk_user(unique_user){
 
-        xmenu.fire_ref.child('Analytics').child(utc).child(unique_user).child(unique_session).child('user_agent').set({agent: navigator.userAgent, time: firebase.database.ServerValue.TIMESTAMP}, function (error) {
+        UCosmic.fire_ref.child('Analytics').child(utc).child(unique_user).child(unique_session).child('user_agent').set({agent: navigator.userAgent, time: firebase.database.ServerValue.TIMESTAMP}, function (error) {
         });
 
-        xmenu.fire_ref.child('Analytics').child('users').child(unique_user).child(unique_session).child('time').child('enter_time').set({time: firebase.database.ServerValue.TIMESTAMP}, function (error) {
+        UCosmic.fire_ref.child('Analytics').child('users').child(unique_user).child(unique_session).child('time').child('enter_time').set({time: firebase.database.ServerValue.TIMESTAMP}, function (error) {
         })
-        xmenu.fire_ref.child('Analytics').child(utc).child(unique_user).child(unique_session).child('time').child('enter_time').set({time: firebase.database.ServerValue.TIMESTAMP}, function (error) {
+        UCosmic.fire_ref.child('Analytics').child(utc).child(unique_user).child(unique_session).child('time').child('enter_time').set({time: firebase.database.ServerValue.TIMESTAMP}, function (error) {
         })
         window.onbeforeunload = function (e) {
-            xmenu.fire_ref.child('Analytics').child('users').child(unique_user).child(unique_session).child('time').child('exit_time').set({time: firebase.database.ServerValue.TIMESTAMP}, function (error) {
+            UCosmic.fire_ref.child('Analytics').child('users').child(unique_user).child(unique_session).child('time').child('exit_time').set({time: firebase.database.ServerValue.TIMESTAMP}, function (error) {
             })
-            xmenu.fire_ref.child('Analytics').child(utc).child(unique_user).child(unique_session).child('time').child('exit_time').set({time: firebase.database.ServerValue.TIMESTAMP}, function (error) {
+            UCosmic.fire_ref.child('Analytics').child(utc).child(unique_user).child(unique_session).child('time').child('exit_time').set({time: firebase.database.ServerValue.TIMESTAMP}, function (error) {
             })
         };
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
         }
 
-        if(xmenu && xmenu.last_page){
+        if(xmenu && UCosmic.last_page){
 
-            xmenu.fire_ref.child('Analytics').child(utc).child(unique_user).child(unique_session).child('page').push({page: xmenu.last_page, time: firebase.database.ServerValue.TIMESTAMP}, function (error) {
+            UCosmic.fire_ref.child('Analytics').child(utc).child(unique_user).child(unique_session).child('page').push({page: UCosmic.last_page, time: firebase.database.ServerValue.TIMESTAMP}, function (error) {
             })
         }
 
         RiotControl.on('page_changed', function(current_page, last_page) {
 
-            xmenu.fire_ref.child('Analytics').child(utc).child(unique_user).child(unique_session).child('page').push({page: current_page, time: firebase.database.ServerValue.TIMESTAMP}, function (error) {
+            UCosmic.fire_ref.child('Analytics').child(utc).child(unique_user).child(unique_session).child('page').push({page: current_page, time: firebase.database.ServerValue.TIMESTAMP}, function (error) {
             })
         });
         var dragTarget = document.querySelector('#draggable');
@@ -74,7 +74,7 @@ var start_trkr = function () {
                         (doc && doc.scrollTop || body && body.scrollTop || 0) -
                         (doc && doc.clientTop || body && body.clientTop || 0 );
                 }
-                xmenu.fire_ref.child('Analytics').child(utc).child(unique_user).child(unique_session).child('mouse').child('move').push({x: event.pageX, y: event.pageY, time: firebase.database.ServerValue.TIMESTAMP}, function (error) {
+                UCosmic.fire_ref.child('Analytics').child(utc).child(unique_user).child(unique_session).child('mouse').child('move').push({x: event.pageX, y: event.pageY, time: firebase.database.ServerValue.TIMESTAMP}, function (error) {
                 })
             });
         }
@@ -85,7 +85,7 @@ var start_trkr = function () {
             var parent_id = (event.target && event.target.parentElement && event.target.parentElement.id) ? event.target.parentElement.id : 'none';
             var parent_parent_id = (event.target && event.target.parentElement && event.target.parentElement.parentElement && event.target.parentElement.parentElement.id) ? event.target.parentElement.id : 'none';
 
-            xmenu.fire_ref.child('Analytics').child(utc).child(unique_user).child(unique_session).child('mouse').child('click').push(
+            UCosmic.fire_ref.child('Analytics').child(utc).child(unique_user).child(unique_session).child('mouse').child('click').push(
                 {
                     target_id:target_id,
                     parent_id: parent_id,
@@ -99,7 +99,7 @@ var start_trkr = function () {
 
     if(window.location.href.includes('localhost')){
         return;
-    } else if (firebase && Kefir && xmenu.fire_ref) {
+    } else if (firebase && Kefir && UCosmic.fire_ref) {
 
 
         trk_user(unique_user);

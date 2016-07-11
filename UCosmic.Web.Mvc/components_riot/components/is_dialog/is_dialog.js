@@ -2,7 +2,7 @@ riot.tag2('is_dialog', '<div id="dialog_container" class="layout vertical center
 var _this = this;
 
 var self = this;
-xmenu.load_tag('/components_riot/fab_close/fab_close.js', document.head);
+UCosmic.load_tag('/components_riot/fab_close/fab_close.js', document.head);
 self.on('mount', function () {
     self = _this;
 });

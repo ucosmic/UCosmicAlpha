@@ -31,7 +31,7 @@
         <div class="flex"></div>
         <div id="message" class=" layout horizontal start start-justified pre_scale_bottom_right {fade_in: is_shown} {fade_out: !is_shown} {scale: !is_shown}"
             riot-style="background-color:{color}; color:{forecolor}; margin: 20px;">
-            <div class="flex layout vertical center center-justified self-stretch" style="padding: 5px 45px 5px 5px;"><div>{message}</div></div>
+            <div class="layout vertical center center-justified self-stretch" style="padding: 5px 45px 5px 5px;"><div>{message}</div></div>
             <fab_close onclick="{close}" style=" width: inherit;  position: relative;  left: 20px; height: 35px;"></fab_close>
         </div>
     </div>
@@ -39,7 +39,7 @@
         "use strict";
         var self = this;
         self.is_shown = false;
-        ucosmic.load_tag('/components_riot/fab_close/fab_close.js', document.head);
+        UCosmic.load_tag('/components_riot/fab_close/fab_close.js', document.head);
         let my_interval;
         self.toggle = function(message, color, forecolor, timeout){
             "use strict";
