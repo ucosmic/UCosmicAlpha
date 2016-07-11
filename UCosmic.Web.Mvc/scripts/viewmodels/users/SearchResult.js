@@ -262,7 +262,9 @@ var ViewModels;
                                     resolve(event.data);
                                 }
                             };
-                            navigator.serviceWorker.controller.postMessage(message, [messageChannel.port2]);
+                            if (navigator.serviceWorker.controller) {
+                                navigator.serviceWorker.controller.postMessage(message, [messageChannel.port1]);
+                            }
                         });
                     }
                     sendMessage('delete cache');

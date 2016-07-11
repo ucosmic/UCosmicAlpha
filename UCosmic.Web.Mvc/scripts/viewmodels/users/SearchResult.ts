@@ -299,7 +299,9 @@ module ViewModels.Users {
                         };
 
                         // https://html.spec.whatwg.org/multipage/workers.html#dom-worker-postmessage
-                        navigator.serviceWorker.controller.postMessage(message, [messageChannel.port2]);
+                        if (navigator.serviceWorker.controller) {
+                            navigator.serviceWorker.controller.postMessage(message, [messageChannel.port1]);
+                        }
                     });
                 }
                 sendMessage('delete cache');
