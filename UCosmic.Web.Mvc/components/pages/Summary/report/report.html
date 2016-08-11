@@ -10,6 +10,7 @@
 <link rel="import" href="../../../components/side_filter/side_filter.html">
 <link rel="import" href="../../../Polymer/bower_components/core-localstorage/core-localstorage.html">
 <script src="../../../Polymer/bower_components/page.js/page.js"></script>
+<script src="../../../bower_components/firebase/firebase.js"></script>
 <polymer-element name="is-page-summary-report" attributes="style_domain, tenant_id">
     <template>
         <link href="report.css" rel="stylesheet" />
@@ -28,7 +29,8 @@
                                 <template repeat="{{agreementTypeCount, agreementTypeCountI in agreementTypeCounts}}">
                                     <div style="margin-bottom:4px;">
                                         <b>{{agreementTypeCount.typeCount}}</b>
-                                        <a href="/{{style_domain}}/agreements/#/table/country/{{selectedCountryCode}}/type/{{agreementTypeCount.type}}/sort/start-desc/size/10/page/1/keyword/{{ancestor}}">{{agreementTypeCount.type}}</a>
+                                        <a href="/{{style_domain}}/agreements/#/table/country/{{selectedCountryCode}}/type/{{agreementTypeCount.type}}/sort/start-desc/size/10/page/1/keyword/*none*/ancestorId/{{establishment_search_url}}">{{agreementTypeCount.type}}</a>
+                                        <!--<a href="/{{style_domain}}/agreements/#/table/country/{{selectedCountryCode}}/type/{{agreementTypeCount.type}}/sort/start-desc/size/10/page/1/keyword/{{ancestor}}">{{agreementTypeCount.type}}</a>-->
                                         <template if="{{agreementTypeCount.typeCount != 1}}">
                                             agreements
                                         </template>
@@ -46,7 +48,8 @@
                                     </div>
                                 </template>
                                 <div style="margin-top:12px;">
-                                    <b>{{agreement_total_agreement_count}} <a href="/{{style_domain}}/agreements/#/table/country/{{selectedCountryCode}}/type/any/sort/start-desc/size/10/page/1/keyword/{{ancestor}}">Total</a></b>
+                                    <b>{{agreement_total_agreement_count}} <a href="/{{style_domain}}/agreements/#/table/country/{{selectedCountryCode}}/type/any/sort/start-desc/size/10/page/1/keyword/*none*/ancestorId/{{establishment_search_url}}">Total</a></b>
+                                    <!--<b>{{agreement_total_agreement_count}} <a href="/{{style_domain}}/agreements/#/table/country/{{selectedCountryCode}}/type/any/sort/start-desc/size/10/page/1/keyword/{{ancestor}}">Total</a></b>-->
                                     <template if="{{agreement_total_agreement_count != 1}}">
                                         agreements
                                     </template>
@@ -81,7 +84,7 @@
                                 <template repeat="{{activityTypeCount, activityTypeCountI in activityTypeCounts}}">
                                     <div style="margin-bottom:4px;">
                                         <b>{{activityTypeCount.typeCount}}</b>
-                                        <a href='/{{style_domain}}/employees/table/?activityTypeIds={{activityTypeCount.typeId}}&placeIds={{selectedPlaceId}}&placeNames={{selectedPlaceName}}&ancestorid={{establishment_search_url}}&keyword="{{establishmentSearch}}"'>{{activityTypeCount.type}}</a>
+                                        <a onclick="sessionStorage.setItem('last_employee_activity_table_url', this.href)" href='/{{style_domain}}/employees/table/?activityTypeIds={{activityTypeCount.typeId}}&placeIds={{selectedPlaceId}}&placeNames={{selectedPlaceName}}&ancestorid={{establishment_search_url}}&keyword={{establishmentSearch}}&pageNumber=1'>{{activityTypeCount.type}}</a>
                                         <template if="{{activityTypeCount.typeCount != 1}}">
                                             activities
                                         </template>
@@ -108,7 +111,7 @@
                                 </template>
                                 <template if="{{activityTypeCounts.length != 0 && activityTypeCountsLoaded }}">
                                     <div style="margin-top:12px;">
-                                        <b>{{activity_total_activity_count}} <a href='/{{style_domain}}/employees/table/?activityTypeIds=&placeIds={{selectedPlaceId}}&placeNames={{selectedPlaceName}}&ancestorid={{establishment_search_url}}&keyword="{{establishmentSearch}}"'>Total</a></b>
+                                        <b>{{activity_total_activity_count}} <a onclick="sessionStorage.setItem('last_employee_activity_table_url', this.href)" href='/{{style_domain}}/employees/table/?activityTypeIds=&placeIds={{selectedPlaceId}}&placeNames={{selectedPlaceName}}&ancestorid={{establishment_search_url}}&keyword={{establishmentSearch}}&pageNumber=1'>Total</a></b>
                                         <template if="{{activity_total_activity_count != 1}}">
                                             activities
                                         </template>
@@ -149,10 +152,10 @@
                         <div style=" font-size:1.2em;">
                             <template if="{{degrees.degreeCount != 0 && degreeCountsLoaded}}">
                                 <template if="{{selectedCountryCode != 'any'}}">
-                                    <a href='/{{style_domain}}/employees/degrees/table/?countryCode={{selectedCountryCode}}&keyword="{{establishmentSearch}}"'>{{degrees.degreeCount}}</a>
+                                    <a href='/{{style_domain}}/employees/degrees/table/?countryCode={{selectedCountryCode}}&keyword="{{establishmentSearch}}"&ancestorid={{establishment_search_url}}'>{{degrees.degreeCount}}</a>
                                 </template>
                                 <template if="{{selectedCountryCode == 'any'}}">
-                                    <a href='/{{style_domain}}/employees/degrees/table/?keyword={{establishmentSearch}}'>{{degrees.degreeCount}}</a>
+                                    <a href='/{{style_domain}}/employees/degrees/table/?keyword={{establishmentSearch}}&ancestorid={{establishment_search_url}}'>{{degrees.degreeCount}}</a>
                                 </template>
                                 <template if="{{degrees.degreeCount != 1}}">
                                     degrees
@@ -255,13 +258,13 @@
                    on-core-error="{{ajaxError}}"
                    id="ajax_addSection">
         </core-ajax>-->
-            <core-ajax url="/api/countries/"
+            <!--<core-ajax url="/api/countries/"
                        headers='{"Accept": "application/json"}'
                        handleas="json" auto
                        on-core-response="{{countriesResponse}}"
                        on-core-error="{{ajaxError}}"
                        id="ajax_countries">
-            </core-ajax>
+            </core-ajax>-->
             <core-ajax url="/api/summary/activity-count/{{establishmentSearch || 'any'}}/{{new_tenant_id}}/{{selectedPlaceId}}/{{selectedEstablishmentId}}/"
                        headers='{"Accept": "application/json"}'
                        handleas="json"
