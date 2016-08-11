@@ -15,9 +15,9 @@
       </option>
       <option name="outputFromStdout" value="false" />
       <option name="program" value="$USER_HOME$/AppData/Roaming/npm/node_modules/riot/node_modules/.bin/riot.cmd" />
-      <option name="scopeName" value="Project Files" />
+      <option name="scopeName" value="riot" />
       <option name="trackOnlyRoot" value="false" />
-      <option name="workingDir" value="C:\Users\Tim\UCosmic\UCosmicGit\Layout3\Layout3\UCosmic.Web.Mvc\components_riot\components" />
+      <option name="workingDir" value="C:\Users\Tim\UCosmic\UCosmicGit\Layout3\Layout3\UCosmic.Web.Mvc\components_riot\app\components" />
       <envs />
     </TaskOptions>
   </component>
