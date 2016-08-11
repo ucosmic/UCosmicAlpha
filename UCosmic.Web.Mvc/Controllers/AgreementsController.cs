@@ -99,6 +99,8 @@ namespace UCosmic.Web.Mvc.Controllers
             var visibility = _queryProcessor.Execute(new MyAgreementsVisibility(User, domain));
             ViewBag.AgreementsVisibility = visibility;
             ViewBag.AgreementsDomain = domain;
+
+            ViewBag.EmployeesEstablishmentId = _queryProcessor.Execute(new EstablishmentByDomain(domain)).RevisionId as int?;
             return View(MVC.Agreements.Views.SearchTable);
         }
 
