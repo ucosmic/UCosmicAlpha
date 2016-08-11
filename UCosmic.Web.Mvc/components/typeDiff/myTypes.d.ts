@@ -16,6 +16,7 @@ interface HTMLElement {
 
 interface ArrayConstructor {
     move: any;
+    from: any;
 }
 interface HTMLElement {
     message: any;
@@ -43,6 +44,11 @@ interface Window {
     chrome: string;
     mozIndexedDB: any;
     webkitIndexedDB: any;
+}
+
+
+interface Object {
+    assign: any;
 }
 
 declare module _ {

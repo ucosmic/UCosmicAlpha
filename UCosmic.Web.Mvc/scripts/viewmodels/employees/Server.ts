@@ -7,27 +7,14 @@
         if (data) settings.data = data;
         $.ajax(settings)
             .done((response: ApiModels.EmployeesPlaceApiModel[]): void => {
-                promise.resolve(response);
-            })
+            promise.resolve(response);
+        })
             .fail((xhr: JQueryXHR): void => {
-                promise.reject(xhr);
-            });
+            promise.reject(xhr);
+        });
         return promise;
-    }
+    } 
 
-    export function GetActivityCounts(tenantId: any, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.EmployeeActivityCounts> {
-        var promise: JQueryDeferred<ApiModels.EmployeeActivityCounts> = $.Deferred(); 
-        settings = settings || {};
-        settings.url = Routes.Api.Employees.Activities.counts(tenantId);
-        $.ajax(settings)
-            .done((response: ApiModels.EmployeeActivityCounts): void => {
-                promise.resolve(response);
-            })
-            .fail((xhr: JQueryXHR): void => {
-                promise.reject(xhr);
-            });
-        return promise;
-    }
 
     export function GetSettingsByPerson(personId: number = 0, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.EmployeeSettings> {
         var promise: JQueryDeferred<ApiModels.EmployeeSettings> = $.Deferred();
@@ -35,12 +22,12 @@
         settings.url = Routes.Api.Employees.Settings.byPerson(personId);
         $.ajax(settings)
             .done((response: ApiModels.EmployeeSettings): void => {
-                promise.resolve(response);
-            })
+            promise.resolve(response);
+        })
             .fail((xhr: JQueryXHR): void => {
-                if (xhr.status === 404) promise.resolve(null);
-                else promise.reject(xhr);
-            });
+            if (xhr.status === 404) promise.resolve(null);
+            else promise.reject(xhr);
+        });
         return promise;
-    }
+    } 
 }

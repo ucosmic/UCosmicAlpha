@@ -106,7 +106,7 @@ function start() {
     tenant_list.forEach(function (tennant) {
         //var term_list_ref = rootRef.child('Members').child(tennant).child('term_list');
         var term_list = ['Fall 2010', 'Fall 2011', 'Fall 2012', 'Fall 2013', 'Fall 2014'
-            , 'Spring 2011', 'Spring 2012', 'Spring 2013', 'Spring 2014', 'Spring 2015'
+            , 'Spring 2011', 'Spring 2012', 'Spring 2013', 'Spring 2014', 'Spring 2015',
             , 'Summer 2011', 'Summer 2012', 'Summer 2013', 'Summer 2014', 'Summer 2015']
 
 

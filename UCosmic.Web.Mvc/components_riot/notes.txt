@@ -1,6 +1,15 @@
 cd C:\Users\Tim\UCosmic\UCosmicGit\Layout3\Layout3\UCosmic.Web.Mvc\components_riot
 bower update
 
+cd C:\Users\Tim\UCosmic\UCosmicGit\Layout3\Layout3\UCosmic.Web.Mvc\components_riot
+firebase logout
+firebase login
+
+firebase deploy
+
+firebase database:remove /Members/3306/Mobilities/Counts/IN --project project-4691094245668174778
+
+
 JSON.stringify(obj, null, 2);
 
 
