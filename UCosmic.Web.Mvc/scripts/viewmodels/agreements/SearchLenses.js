@@ -12,10 +12,24 @@ var Agreements;
                     sessionStorage.setItem(SearchLenses.LensSessionKey, _this.lens());
                 }).extend({ throttle: 0, });
                 this.isTableLens = ko.computed(function () {
-                    return _this.lens() == 'table';
+                    if (_this.lens() == 'table') {
+                        $(".search_table").addClass("current");
+                        $(".search_map").removeClass("current");
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
                 });
                 this.isMapLens = ko.computed(function () {
-                    return _this.lens() == 'map';
+                    if (_this.lens() == 'map') {
+                        $(".search_map").addClass("current");
+                        $(".search_table").removeClass("current");
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
                 });
                 this.sammy = Sammy();
                 this._hasMapBeenResizedOnce = false;

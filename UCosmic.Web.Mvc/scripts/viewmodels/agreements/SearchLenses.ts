@@ -82,11 +82,23 @@ module Agreements.ViewModels {
         //#region Lensing Computeds
 
         isTableLens: KnockoutComputed<boolean> = ko.computed((): boolean => {
-            return this.lens() == 'table';
+            if (this.lens() == 'table'){
+                $(".search_table").addClass("current");
+                $(".search_map").removeClass("current");
+                return true;
+            } else {
+                return false;
+            } 
         });
 
         isMapLens: KnockoutComputed<boolean> = ko.computed((): boolean => {
-            return this.lens() == 'map';
+            if (this.lens() == 'map') {
+                $(".search_map").addClass("current");
+                $(".search_table").removeClass("current");
+                return true;
+            } else {
+                return false;
+            } 
         });
 
         //#endregion
