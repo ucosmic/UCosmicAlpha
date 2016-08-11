@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using MoreLinq;
 using System.Net.Http;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
@@ -446,13 +447,25 @@ namespace UCosmic.Web.Mvc.Controllers
             //}
             Mapper.Map(input, query);
             var results = _queryProcessor.Execute(query);
+            DegreesRepository degreesRepository = new DegreesRepository();
+            var tenant = _queryProcessor.Execute(new EstablishmentByDomain(domain)).RevisionId;
+            var degree_query_summary = degreesRepository.DegreeSearchResultSummary(input, tenant);
+            var degree_summary = new DegreeSearchSummary
+            {
+                Country_Count = degree_query_summary.DistinctBy(x => x.country_id).Count(),
+                People_Count = degree_query_summary.DistinctBy(x => x.person_id).Count(),
+                Institution_Count = degree_query_summary.DistinctBy(x => x.establishment_id).Count()
+            };
             var model = new DegreeSearchModel
             {
                 Domain = domain,
                 Input = input,
                 //Output = myOutput.InjectFrom(results),
                 Output = Mapper.Map<PageOfDegreeSearchResultModel>(results),
+                Summary = degree_summary
             };
+
+            //model.Summary = model.Output.Items.
 
             using (var http = new HttpClient())
             {
