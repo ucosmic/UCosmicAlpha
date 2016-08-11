@@ -13,11 +13,12 @@ namespace UCosmic.Repositories
     public class SummaryRepository : ISummaryRepository
     {
 
-        public IList<ActivitySummaryApiQueryResultModel> ActivitySummaryByEstablishment_Place(int? EstablishmentId, int? PlaceId, int? selectedEstablishmentId, string selectedEstablishment)
+        public IList<ActivitySummaryApiQueryResultModel> ActivitySummaryByEstablishment(int? EstablishmentId, int? selectedEstablishmentId, string selectedEstablishment)
         {
 
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
-            string sql = "select distinct aa.revisionid as id, pp.officialname, eat.type, eat.id as type_id, people.revisionid as person_id  FROM [ActivitiesV2].[ActivityLocation] al" +
+            string sql = "select distinct aa.revisionid as id, pp.officialname, eat.type, eat.id as type_id, people.revisionid as person_id  " +
+                  ", pp.revisionId as place_id, atag.DomainKey as activity_tag_domain_key, atag.DomainType as activity_tag_domain_type FROM [ActivitiesV2].[ActivityLocation] al " +
                   " inner join [ActivitiesV2].[ActivityValues] av on al.activityValuesId=av.revisionid" +
                   " left outer join [ActivitiesV2].[ActivityTag] atag on atag.activityValuesId=av.revisionid " +
                   " inner join Places.place pp on al.placeId=pp.revisionid" +
@@ -29,10 +30,6 @@ namespace UCosmic.Repositories
                   " left outer join employees.employeeactivitytype eat on eat.establishmentId=iu.tenantId and eat.id = at.typeId" +
                   " left outer join establishments.establishmentNode een on pa.establishmentid=een.offspringId" +
                   " where (pa.establishmentid=" + EstablishmentId + " or een.AncestorId=" + EstablishmentId + ") and aa.mode='public' and av.mode='public' and aa.EditSourceId is null";
-            if (PlaceId > 0)
-            {
-                sql += " and (pp.revisionid=" + PlaceId + "or (atag.DomainType = 'Place' and atag.DomainKey = " + PlaceId + "))";
-            }
             if (selectedEstablishmentId > 0)
             {
                 sql += " and ((atag.DomainType = 'Establishment' and atag.DomainKey = " + selectedEstablishmentId + ") or av.title like '%" + selectedEstablishment + "%' or av.contentsearchable like '%" + selectedEstablishment + "%')";
@@ -42,6 +39,52 @@ namespace UCosmic.Repositories
 
             return activitySummary;
         }
+
+        public IList<SummaryPlacesApiQueryResultModel> SummaryByPlace(int? placeId)
+        {
+
+            SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
+            string sql = "select distinct pp2.revisionid as place_id " +
+                "FROM Places.place pp  " +
+                "inner join [Places].GeoPlanetPlace gpp on gpp.placeId=pp.revisionid " +
+                "left outer join [Places].GeoPlanetPlaceBelongTo gppbt on gppbt.belongToWoeId=gpp.woeId " +
+                "inner join [Places].GeoPlanetPlace gpp2 on gpp2.woeId=gppbt.placeWoeId " +
+                "inner join Places.place pp2 on gpp2.placeId=pp2.revisionid and pp2.iscountry=1 " +
+                "where (pp.revisionId=" + placeId + ")";
+
+            IList<SummaryPlacesApiQueryResultModel> placesSummary = connectionFactory.SelectList<SummaryPlacesApiQueryResultModel>(DB.UCosmic, sql);
+
+            return placesSummary;
+        }
+        //public IList<ActivitySummaryApiQueryResultModel> ActivitySummaryByEstablishment_Place(int? EstablishmentId, int? PlaceId, int? selectedEstablishmentId, string selectedEstablishment)
+        //{
+
+        //    SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
+        //    string sql = "select distinct aa.revisionid as id, pp.officialname, eat.type, eat.id as type_id, people.revisionid as person_id  FROM [ActivitiesV2].[ActivityLocation] al" +
+        //          " inner join [ActivitiesV2].[ActivityValues] av on al.activityValuesId=av.revisionid" +
+        //          " left outer join [ActivitiesV2].[ActivityTag] atag on atag.activityValuesId=av.revisionid " +
+        //          " inner join Places.place pp on al.placeId=pp.revisionid" +
+        //          " inner join [ActivitiesV2].[Activity] aa on av.activityId=aa.revisionid" +
+        //          " inner join [People].Person people on aa.personId=people.revisionid" +
+        //          " left outer join people.affiliation pa on pa.personId=people.revisionid" +
+        //          " inner join [identity].[user] iu on iu.personId=people.revisionid" +
+        //          " left outer join [ActivitiesV2].[ActivityType] at on at.activityValuesId=av.revisionid" +
+        //          " left outer join employees.employeeactivitytype eat on eat.establishmentId=iu.tenantId and eat.id = at.typeId" +
+        //          " left outer join establishments.establishmentNode een on pa.establishmentid=een.offspringId" +
+        //          " where (pa.establishmentid=" + EstablishmentId + " or een.AncestorId=" + EstablishmentId + ") and aa.mode='public' and av.mode='public' and aa.EditSourceId is null";
+        //    if (PlaceId > 0)
+        //    {
+        //        sql += " and (pp.revisionid=" + PlaceId + "or (atag.DomainType = 'Place' and atag.DomainKey = " + PlaceId + "))";
+        //    }
+        //    if (selectedEstablishmentId > 0)
+        //    {
+        //        sql += " and ((atag.DomainType = 'Establishment' and atag.DomainKey = " + selectedEstablishmentId + ") or av.title like '%" + selectedEstablishment + "%' or av.contentsearchable like '%" + selectedEstablishment + "%')";
+        //    }
+
+        //    IList<ActivitySummaryApiQueryResultModel> activitySummary = connectionFactory.SelectList<ActivitySummaryApiQueryResultModel>(DB.UCosmic, sql);
+
+        //    return activitySummary;
+        //}
         public IList<ActivityMapSummaryApiQueryResultModel> ActivityMapSummaryByEstablishment_Place(int? EstablishmentId, int? PlaceId)
         {
 
@@ -89,25 +132,10 @@ namespace UCosmic.Repositories
             return activitySummary;
         }
 
-        public IList<AgreementSummaryApiQueryResultModel> AgreementSummaryByEstablishment_Place(int? EstablishmentId, int? PlaceId, int? selectedEstablishmentId)
+        public IList<AgreementSummaryApiQueryResultModel> AgreementSummaryByEstablishment(int? EstablishmentId, int? selectedEstablishmentId)
         {
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
-            //string sql = "SELECT Distinct  aa.[Id] ,aa.[Type], pp.OfficialName, aap3.id as id2, aa2.[Type] as type2 " +
-            //  "FROM establishments.establishmentNode een2 " +
-            //  "left outer join [agreements].[agreementParticipant] aap on aap.establishmentId = een2.ancestorId and aap.isowner=1 " +
-            //  "left outer join [Agreements].[Agreement] aa on aa.id = aap.agreementId " +
-            //  //"left outer join [agreements].[agreementParticipant] aap2 on aa.id = aap2.agreementId and aap2.isowner = 0 " +
-            //  //"left outer join establishments.establishment ee on ee.revisionId = aap2.establishmentId " +
-            //  //"left outer join establishments.establishmentNode een on aap2.establishmentid=een.offspringId " +
-            //    //"left outer join establishments.establishmentNode een2 on aap.establishmentid=een2.ancestorId  " +
-            //    "left outer join [agreements].[agreementParticipant] aap3 on aap3.establishmentid = een2.offspringid and aap3.isowner=1 " +
-            //    "left outer join [Agreements].[Agreement] aa2 on aa2.id = aap3.agreementId  " +
-            //  "left outer join establishments.establishmentLocation eel on eel.revisionId = aap.establishmentId or eel.revisionId = aap3.establishmentId " +
-            //  "left outer join establishments.establishmentLocationInPlace eelip on eelip.establishmentLocationId = eel.revisionId " +
-            //  "left outer join places.place pp on pp.revisionid = eelip.placeId and pp.iscountry = 1 " +
-            //  " where (een2.ancestorId=" + EstablishmentId + ")"; //+ " or een.AncestorId=" + EstablishmentId + ")";
-            ////" where pp.officialName is not NULL  and (aap.establishmentid=" + EstablishmentId + ")"; //+ " or een.AncestorId=" + EstablishmentId + ")";
-            string sql = "SELECT Distinct  aa.[Id] ,aa.[Type], pp.OfficialName " +
+            string sql = "SELECT Distinct  aa.[Id] ,aa.[Type], pp.OfficialName, pp.revisionid as place_id  " +
                 "FROM establishments.establishment ee " +
                 "left outer join establishments.establishmentNode een on een.ancestorid = ee.revisionid " +
                 "inner join [agreements].[agreementParticipant] aap on (ee.revisionid = aap.establishmentid and aap.isowner=1 )  " +
@@ -119,17 +147,17 @@ namespace UCosmic.Repositories
                 "left outer join places.place pp on pp.revisionid = eelip.placeId and pp.iscountry = 1   " +
                 "where (ee.revisionid=" + EstablishmentId + ") ";
 
-            if (PlaceId > 0)
-            {
-                sql += " and pp.revisionid=" + PlaceId;
-            }
+            //if (PlaceId > 0)
+            //{
+            //    sql += " and pp.revisionid=" + PlaceId;
+            //}
             if (selectedEstablishmentId > 0)
             {
                 sql += " and aap2.establishmentId=" + selectedEstablishmentId;
             }
 
             sql += " union  " +
-                "SELECT Distinct    aa2.id , aa2.[Type],pp.OfficialName " +
+                "SELECT Distinct    aa2.id , aa2.[Type],pp.OfficialName, pp.revisionid as place_id  " +
                 "FROM establishments.establishment ee " +
                 "left outer join establishments.establishmentNode een2 on een2.ancestorid = ee.revisionid " +
                 "left outer join [agreements].[agreementParticipant] aap3 on aap3.establishmentid = een2.offspringid and aap3.isowner=1  " +
@@ -139,10 +167,10 @@ namespace UCosmic.Repositories
                 "left outer join establishments.establishmentLocationInPlace eelip on eelip.establishmentLocationId = eel.revisionId  " +
                 "left outer join places.place pp on pp.revisionid = eelip.placeId and pp.iscountry = 1   " +
                 "where ( een2.ancestorId=" + EstablishmentId + " and aa2.id is not NULL)";
-            if (PlaceId > 0)
-            {
-                sql += " and pp.revisionid=" + PlaceId;
-            }
+            //if (PlaceId > 0)
+            //{
+            //    sql += " and pp.revisionid=" + PlaceId;
+            //}
             if (selectedEstablishmentId > 0)
             {
                 sql += " and aap2.establishmentId=" + selectedEstablishmentId;
@@ -208,13 +236,13 @@ namespace UCosmic.Repositories
             return agreementSummary;
         }
 
-        public IList<DegreeSummaryApiQueryResultModel> DegreeSummaryByEstablishment_Place(int? EstablishmentId, int? PlaceId, int? selectedEstablishmentId)
+        public IList<DegreeSummaryApiQueryResultModel> DegreeSummaryByEstablishment(int? EstablishmentId, int? selectedEstablishmentId)
         {
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
             string sql = "SELECT  distinct  d.[RevisionId] as degreeId " +
               ",d.[PersonId] as personId " +
               ",d.institutionId as establishmentId " +
-              ",gpp.countryCode , elip.placeId " +
+              ",gpp.countryCode , elip.placeId as place_id " +
               "FROM [Employees].[Degree] d " +
                 //"inner join [establishments].establishment ee on ee.revisionId = d.institutionId  " +
                 //"inner join establishments.establishmentlocation el on ee.revisionId = el.revisionId  " +
@@ -227,10 +255,10 @@ namespace UCosmic.Repositories
               "left outer join establishments.establishmentNode een on pa.establishmentid=een.offspringId " +
                 //"inner join [identity].[user] iu on iu.personId=people.revisionid " + // degrees is off because of this, but may need fixed in Degress page by terms -same in map degree count below
                "where (pa.establishmentid=" + EstablishmentId + " or een.AncestorId= " + EstablishmentId + ")";
-            if (PlaceId > 0)
-            {
-                sql += " and (gpp.placeId=" + PlaceId + " or gpp2.placeId=" + PlaceId + ")";
-            }
+            //if (PlaceId > 0)
+            //{
+            //    sql += " and (gpp.placeId=" + PlaceId + " or gpp2.placeId=" + PlaceId + ")";
+            //}
             if (selectedEstablishmentId > 0)
             {
                 sql += " and d.institutionId=" + selectedEstablishmentId;
