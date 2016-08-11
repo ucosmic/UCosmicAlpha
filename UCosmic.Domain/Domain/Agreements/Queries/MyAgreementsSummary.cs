@@ -7,7 +7,7 @@ namespace UCosmic.Domain.Agreements
 {
     public class MyAgreementsSummary : IDefineQuery<AgreementsSummary>
     {
-        public MyAgreementsSummary(IPrincipal principal, string domain, string countryCode, string typeCode, string keyword, string continentCode)
+        public MyAgreementsSummary(IPrincipal principal, string domain, string countryCode, string typeCode, string keyword, string continentCode, int ancestorId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
@@ -16,10 +16,11 @@ namespace UCosmic.Domain.Agreements
             TypeCode = typeCode;
             Keyword = keyword;
             ContinentCode = continentCode;
+            AncestorId = ancestorId;
         }
 
         public MyAgreementsSummary(IPrincipal principal, int establishmentId)
-            : this(principal, null, null, null, null, null)
+            : this(principal, null, null, null, null, null, 0)
         {
             EstablishmentId = establishmentId;
         }
@@ -28,6 +29,7 @@ namespace UCosmic.Domain.Agreements
         public string Domain { get; private set; }
         public string CountryCode { get; private set; }
         public string ContinentCode { get; private set; }
+        public int AncestorId { get; private set; }
         public string TypeCode { get; private set; }
         public string Keyword { get; set; }
         public int? EstablishmentId { get; private set; }
@@ -99,6 +101,10 @@ namespace UCosmic.Domain.Agreements
                 );
             }
 
+            if (query.AncestorId != 0)
+            {
+                queryable = queryable.Where(x => x.Participants.Any(y => y.EstablishmentId == query.AncestorId) || x.Participants.Any(y => y.Establishment.Ancestors.Any(z => z.AncestorId == query.AncestorId)));
+            }
 
             queryable = queryable.VisibleTo(query.Principal, _queryProcessor);
 
