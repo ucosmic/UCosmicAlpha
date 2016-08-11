@@ -379,6 +379,13 @@
         placeData: any = $.Deferred();
         placeDataOriginal: any = $.Deferred();
 
+        wait_for_repaint = () => {
+
+            setTimeout(() => {
+            this.geoChartSpinner.stop();
+        }, 0);
+        }
+
         private _loadPlaceData() {
             // calling .ready() on placeData invokes this
             
@@ -401,7 +408,9 @@
                 .fail(function (xhr) {
             })
                 .always(() => {
-                this.geoChartSpinner.stop();
+
+                //window.requestAnimationFrame(this.wait_for_repaint);
+
             });
         }
         private _reloadPlaceData() {
@@ -442,7 +451,7 @@
                 .fail(function (xhr) {
             })
                 .always(() => {
-                this.geoChartSpinner.stop();
+                //window.requestAnimationFrame(this.wait_for_repaint);
             });
         }
 
@@ -853,7 +862,9 @@
                 // do not count the agnostic place
                 if (!dataPoint.id) return;
                 var total = isPivotPeople ? dataPoint.peopleCount : dataPoint.count;
-                this._geoChartDataTable.addRow([dataPoint.name, total]);
+                if (dataPoint.name != 'Global') {// global is not shown on map, but is brought down in data.
+                    this._geoChartDataTable.addRow([dataPoint.name, total]);
+                }
             });
             this.geoChart.draw(this._geoChartDataTable, this._getGeoChartOptions(optionOverrides))
                 .then((): void => {
@@ -861,7 +872,8 @@
                 //this._applyPlaceOverlayTotals(this.placeDataOriginal.cached); 
                 this._applyPlaceOverlayTotals(places.counts); 
                 this._createOverlayTooltips();
-            });
+                    });
+
         }
         private _drawGeoChart(places): void {
             // the data may not yet be loaded, and if not, going to redraw after it is loaded
@@ -1053,6 +1065,11 @@
             });
             var dataView = new google.visualization.DataView(this._activityTypeChartDataTable);
             dataView.setColumns([0, 1, 1, 2]);
+
+            //google.visualization.events.addListener(this.activityTypeChart, 'ready', function () {
+
+                window.requestAnimationFrame(this.wait_for_repaint);
+            //});
             this.activityTypeChart.draw(dataView, this._getActivityTypeChartOptions())
                 .then((): void => {
             });

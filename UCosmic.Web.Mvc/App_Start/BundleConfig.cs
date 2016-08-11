@@ -243,8 +243,8 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/google/ColumnChart.js",
                 "~/scripts/google/LineChart.js",
                 "~/scripts/viewmodels/establishments/Server.js",
-                "~/scripts/viewmodels/employees/Server.js",
-                "~/scripts/viewmodels/employees/Summary.js"));
+                "~/scripts/viewmodels/activities/Summary_Server.js",
+                "~/scripts/viewmodels/activities/Summary.js"));
             bundles.Add(new ScriptBundle("~/bundles/people/profileEditor").Include(
                 "~/scripts/viewmodels/people/affiliationsEditor.js",
                 "~/scripts/viewmodels/people/personalInfoEditor.js"));

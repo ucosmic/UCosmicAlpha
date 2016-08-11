@@ -95,6 +95,11 @@ var Employees;
                 this.hasPlaceData = ko.observable(false);
                 this.placeData = $.Deferred();
                 this.placeDataOriginal = $.Deferred();
+                this.wait_for_repaint = function () {
+                    setTimeout(function () {
+                        _this.geoChartSpinner.stop();
+                    }, 0);
+                };
                 this.hasTenancyData = ko.observable(false);
                 this.isCreatingSelectEstablishments = false;
                 this.tenancyData = new App.DataCacher(function () {
@@ -355,7 +360,7 @@ var Employees;
                     .fail(function (xhr) {
                 })
                     .always(function () {
-                    _this.geoChartSpinner.stop();
+                    //window.requestAnimationFrame(this.wait_for_repaint);
                 });
             };
             Summary.prototype._reloadPlaceData = function () {
@@ -385,7 +390,6 @@ var Employees;
                     .fail(function (xhr) {
                 })
                     .always(function () {
-                    _this.geoChartSpinner.stop();
                 });
             };
             Summary.prototype._getPlaceById = function (placeId) {
@@ -635,7 +639,9 @@ var Employees;
                     if (!dataPoint.id)
                         return;
                     var total = isPivotPeople ? dataPoint.peopleCount : dataPoint.count;
-                    _this._geoChartDataTable.addRow([dataPoint.name, total]);
+                    if (dataPoint.name != 'Global') {
+                        _this._geoChartDataTable.addRow([dataPoint.name, total]);
+                    }
                 });
                 this.geoChart.draw(this._geoChartDataTable, this._getGeoChartOptions(optionOverrides))
                     .then(function () {
@@ -799,6 +805,7 @@ var Employees;
                 });
                 var dataView = new google.visualization.DataView(this._activityTypeChartDataTable);
                 dataView.setColumns([0, 1, 1, 2]);
+                window.requestAnimationFrame(this.wait_for_repaint);
                 this.activityTypeChart.draw(dataView, this._getActivityTypeChartOptions())
                     .then(function () {
                 });
