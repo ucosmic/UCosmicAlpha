@@ -10,15 +10,18 @@ namespace UCosmic.Domain.Agreements
 {
     public class PartnerPlacesByOwnerDomain : BaseEntitiesQuery<Place>, IDefineQuery<AgreementPartnerPlaceResult[]>
     {
-        public PartnerPlacesByOwnerDomain(IPrincipal principal, string ownerDomain)
+        public PartnerPlacesByOwnerDomain(IPrincipal principal, string ownerDomain, int ancestorId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
             OwnerDomain = ownerDomain;
+            AncestorId = ancestorId;
         }
 
         public IPrincipal Principal { get; private set; }
-        public string OwnerDomain { get; private set; }
+        public string OwnerDomain { get; private set; }        
+        public int AncestorId { get; private set; }
+
         public PlaceGroup? GroupBy { get; set; }
     }
 
@@ -63,6 +66,11 @@ namespace UCosmic.Domain.Agreements
                 .ByOwnerDomain(query.OwnerDomain)
                 .VisibleTo(query.Principal, _queryProcessor)
             ;
+
+            if (query.AncestorId != 0)
+            {
+                agreements = agreements.Where(x => x.Participants.Any(y => y.EstablishmentId == query.AncestorId) || x.Participants.Any(y => y.Establishment.Ancestors.Any(z => z.AncestorId == query.AncestorId)));
+            }
 
             // set up data for grouping and counting
             var agreementIdPartnerIds = agreements.ToDictionary(x => x.Id,
@@ -176,6 +184,8 @@ namespace UCosmic.Domain.Agreements
                     });
                 partnerPlaces = partnerPlaces.Concat(zeroContinents).ToArray();
             }
+
+
 
             return partnerPlaces;
         }
