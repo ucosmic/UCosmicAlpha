@@ -11,6 +11,13 @@ namespace UCosmic.Web.Mvc.Models
         public string type { get; set; }
         public int type_id { get; set; }
         public int person_id { get; set; }
+        public int place_id { get; set; }
+        public string activity_tag_domain_type { get; set; }
+        public int? activity_tag_domain_key { get; set; }
+    }
+    public class SummaryPlacesApiQueryResultModel
+    {
+        public int place_id { get; set; }
     }
     public class ActivitySummaryApiModel
     {

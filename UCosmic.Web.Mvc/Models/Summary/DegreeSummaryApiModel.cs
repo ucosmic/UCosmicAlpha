@@ -9,7 +9,7 @@ namespace UCosmic.Web.Mvc.Models
         public string personId { get; set; }
         public string establishmentId { get; set; }
         public string countryCode { get; set; }
-        //public string placeId { get; set; }
+        public int place_id { get; set; }
     }
     public class DegreeSummaryApiModel
     {

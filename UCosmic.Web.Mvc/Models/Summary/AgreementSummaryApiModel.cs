@@ -11,6 +11,7 @@ namespace UCosmic.Web.Mvc.Models
         public string officialName { get; set; }
         public string type { get; set; }
         public string type2 { get; set; }
+        public int place_id { get; set; }
     }
 
     public class AgreementSummaryApiModel
