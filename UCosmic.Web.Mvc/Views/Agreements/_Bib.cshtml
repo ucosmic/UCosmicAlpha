@@ -4,8 +4,11 @@
     var hasStyleDomain = !string.IsNullOrWhiteSpace(styleDomain);
 }
 <ul class="group">
-    <li class="search">
-        <a href="@Url.Action(hasStyleDomain ? MVC.Agreements.TenantIndex(styleDomain) : MVC.Agreements.Index())">Search</a>
+    <li class="search_table" >
+        <a  href="@Url.Action(hasStyleDomain ? MVC.Agreements.TenantIndex(styleDomain) : MVC.Agreements.Index())#/table/">Table</a>
+    </li>
+    <li class="search_map" >
+        <a  href="@Url.Action(hasStyleDomain ? MVC.Agreements.TenantIndex(styleDomain) : MVC.Agreements.Index())#/map/">Map</a>
     </li>
     @if (User.IsInAnyRole(RoleName.AgreementManagers))
     {
@@ -45,4 +48,6 @@
             <a href="@Url.Action(MVC.Agreements.Settings())">Settings</a>
         </li>
     }
+    
+
 </ul>

@@ -29,6 +29,8 @@
 
     <script src="~/scripts/google/Map.js"></script>
 
+    <script src="~/scripts/app/DataCacher.js"></script>
+
     <script src="~/scripts/viewmodels/places/Utils.js"></script>
 
     <script src="~/scripts/viewmodels/agreements/SearchTable.js"></script>
@@ -37,30 +39,36 @@
 
     <script src="~/scripts/viewmodels/agreements/SearchLenses.js"></script>
 
+<script>
+    @{ Html.RenderPartial(MVC.JavaScriptRoutes.Views.Establishments); }
+</script>
+
+<script src="~/scripts/viewmodels/establishments/Server.js"></script>
+
     <script type="text/javascript">
-        //var viewModel = new Agreements.ViewModels.SearchTable({
-        //    element: $('[data-current-module=agreements]')[0],
-        //    domain: '@ViewBag.AgreementsDomain',
-        //    visibility: '@ViewBag.AgreementsVisibility',
-        //    route: 'table',
-        //    //activationRoute: 'table',
+    //var viewModel = new Agreements.ViewModels.SearchTable({
+    //    element: $('[data-current-module=agreements]')[0],
+    //    domain: '@ViewBag.AgreementsDomain',
+    //    visibility: '@ViewBag.AgreementsVisibility',
+    //    route: 'table',
+    //    //activationRoute: 'table',
         //    detailUrl: '@ViewBag.DetailUrl'
         //});
         //ko.applyBindings(viewModel, viewModel.settings.element);
-
+        var ttw = { tenantId: parseInt('@ViewBag.EmployeesEstablishmentId') };
         var viewModel = new Agreements.ViewModels.SearchLenses({
             element: $('[data-current-module=agreements]')[0],
             domain: '@ViewBag.AgreementsDomain',
-            visibility: '@ViewBag.AgreementsVisibility',
-            route: '',
-            //activationRoute: 'table',
-            detailUrl: '@ViewBag.DetailUrl',
-            partnerPlacesApi: '@ViewBag.PartnerPlacesApi'.format('@ViewBag.AgreementsDomain', '{0}'),
-            partnersApi: '@ViewBag.PartnersApi'.format('@ViewBag.AgreementsDomain', '{0}'),
-            graphicsCircleApi: '@ViewBag.GraphicsCircleApi',
-            summaryApi: '@ViewBag.SummaryApi'.format('@ViewBag.AgreementsDomain'),
-        });
-        ko.applyBindings(viewModel, viewModel.settings.element);
+        visibility: '@ViewBag.AgreementsVisibility',
+        route: '',
+        //activationRoute: 'table',
+        detailUrl: '@ViewBag.DetailUrl',
+        partnerPlacesApi: '@ViewBag.PartnerPlacesApi'.format('@ViewBag.AgreementsDomain', '{0}') + '/{1}',
+        partnersApi: '@ViewBag.PartnersApi'.format('@ViewBag.AgreementsDomain', '{0}'),
+        graphicsCircleApi: '@ViewBag.GraphicsCircleApi',
+        summaryApi: '@ViewBag.SummaryApi'.format('@ViewBag.AgreementsDomain'),
+    });
+    ko.applyBindings(viewModel, viewModel.settings.element);
     </script>
 
 }
@@ -201,6 +209,8 @@
                                     <option value="country-desc">Sort by country Z-A</option>
                                     <option value="partner-asc">Sort by partner A-Z</option>
                                     <option value="partner-desc">Sort by partner Z-A</option>
+                                    <option value="sub_affiliation-asc">Sort by sub-affiliation A-Z</option>
+                                    <option value="sub_affiliation-desc">Sort by sub-affiliation Z-A</option>
                                 </select>
                             </div>
                             <div class="field"
@@ -373,53 +383,106 @@
             <div data-fixed-scroll="content">
                 <nav class="side">
                     <ul class="top">
+                        <li class="static square-bottom" style="margin-bottom: 0;">
+                            <div class="group">
+                                <div class="on-left"></div>
+                            </div>
+                            <div class="group no-link" style="margin-left: 15px;">
+                                <span class="text">
+                                </span>
+                            </div>
+                        </li>
                         <li class="static square-bottom">
-                            <div class="group no-link">
-                                <div class="arrow"></div>
-                                <span class="text">Filter options</span>
-                            </div>
-                            @*}*@
-                            <div class="content" data-bind="visible: isTableLens, with: table" style="display: none;">
+                            <div class="content">
                                 <div class="field">
-                                    <select class="side" data-bind="value: countryCode, options: countryOptions, optionsText: 'name', optionsValue: 'code'">
-                                        <option value="any">[Loading...]</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="content" data-bind="visible: isTableLens, with: table" style="display: none;">
-                                <div class="field">
-                                    <select class="side" data-bind="value: typeCode, options: typeOptions, optionsText: 'name', optionsValue: 'code'">
-                                        <option value="any">[Loading...]</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="content" data-bind="visible: isMapLens, with: map">
-                                <div class="field">
-                                    <select class="side" data-bind="value: continentCode, options: continentOptions, optionsText: 'name', optionsValue: 'code', event: { change: continentSelected }">
-                                        <option value="any">[Loading...]</option>
-                                    </select>
-                                </div>
-                                <div class="field">
-                                    <select class="side" data-bind="value: countryCode, options: countryOptions, optionsText: 'name', optionsValue: 'code', event: { change: countrySelected }">
-                                        <option value="any">[Loading...]</option>
-                                    </select>
-                                </div>
-                                <div class="field">
-                                    <select class="side" data-bind="value: typeCode, options: typeOptions, optionsText: 'name', optionsValue: 'code'">
-                                        <option value="any">[Loading...]</option>
-                                    </select>
-                                </div>
-                                <div class="field">
-                                    <label style="vertical-align: middle;">
-                                        <input type="checkbox" value="_blank" data-bind="checked: detailPreferenceChecked" style="vertical-align: middle;" />
-                                        <span style="color: #000; font-size: 14px; vertical-align: middle;">Open details in a new tab</span>
-                                    </label>
+                                    <div id="campusSelect" data-bind="visible: isTableLens, with: table">
+                                        <ul data-bind="foreach: affiliations()">
+                                            <li style="margin-bottom: 4px;display: none" data-bind="visible: $parent.hasEstablishmentSelects()">
+                                                <div>
+                                                    <select class="campusSelect" data-bind="options: options, value: value,
+                                                            optionsText: 'text', optionsValue: 'value', jQuery: '$select',
+                                                            attr: { id: 'campusSelect' + $index() }"
+                                                            style="padding: 1px; margin: initial; height: auto; width: 100%; font-size: 14px;">
+                                                        <option>[Loading...]</option>
+                                                    </select>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <span data-bind="visible: !hasEstablishmentSelects()">Loading...</span>
+                                        <input type="hidden" data-bind="value: selectedEstablishment" name="ancestorid" />
+                                    </div>
+                                    <div id="campusSelect2" data-bind="visible: isMapLens, with: map">
+                                        <ul data-bind="foreach: affiliations()">
+                                            <li style="margin-bottom: 4px;display: none" data-bind="visible: $parent.hasEstablishmentSelects()">
+                                                <div>
+                                                    <select class="campusSelect" data-bind="options: options, value: value,
+                                                            optionsText: 'text', optionsValue: 'value', jQuery: '$select',
+                                                            attr: { id: 'campusSelect' + $index() }"
+                                                            style="padding: 1px; margin: initial; height: auto; width: 100%; font-size: 14px;">
+                                                        <option>[Loading...]</option>
+                                                    </select>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <span data-bind="visible: !hasEstablishmentSelects()">Loading...</span>
+                                        <input type="hidden" data-bind="value: selectedEstablishment" name="ancestorid" />
+                                    </div>
                                 </div>
                             </div>
                         </li>
                     </ul>
+                    <ul class="middle">
+                        <li class="static square-bottom " style="margin-bottom: 0;">
+                            <div class="group">
+                                <div class="on-left"></div>
+                            </div>
+                        @*<ul class="middle">
+    <li class="static square-bottom">
+        <div class="group">
+            <div class="arrow"></div>
+            <span class="text">Filter options</span>
+        </div>*@
+                <div class="content" data-bind="visible: isTableLens, with: table" style="display: none;">
+                    <div class="field">
+                        <select class="side" data-bind="value: countryCode, options: countryOptions, optionsText: 'name', optionsValue: 'code'">
+                            <option value="any">[Loading...]</option>
+                        </select>
+                    </div>
+                </div>
+                        <div class="content" data-bind="visible: isTableLens, with: table" style="display: none;">
+                            <div class="field">
+                                <select class="side" data-bind="value: typeCode, options: typeOptions, optionsText: 'name', optionsValue: 'code'">
+                                    <option value="any">[Loading...]</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="content" data-bind="visible: isMapLens, with: map">
+                            <div class="field">
+                                <select class="side" data-bind="value: continentCode, options: continentOptions, optionsText: 'name', optionsValue: 'code', event: { change: continentSelected }">
+                                    <option value="any">[Loading...]</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <select class="side" data-bind="value: countryCode, options: countryOptions, optionsText: 'name', optionsValue: 'code', event: { change: countrySelected }">
+                                    <option value="any">[Loading...]</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <select class="side" data-bind="value: typeCode, options: typeOptions, optionsText: 'name', optionsValue: 'code'">
+                                    <option value="any">[Loading...]</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label style="vertical-align: middle;">
+                                    <input type="checkbox" value="_blank" data-bind="checked: detailPreferenceChecked" style="vertical-align: middle;" />
+                                    <span style="color: #000; font-size: 14px; vertical-align: middle;">Open details in a new tab</span>
+                                </label>
+                            </div>
+                        </div>
+                        </li>
+                    </ul>
                     <ul class="bottom">
-                        <li data-bind="css: { current: isTableLens }">
+                        @*<li data-bind="css: { current: isTableLens }">
                             <a href="#/table/" class="group" data-bind="click: viewTable">
                                 <div class="arrow"></div>
                                 <span class="text">Table</span>
@@ -430,7 +493,7 @@
                                 <div class="arrow"></div>
                                 <span class="text">Map</span>
                             </a>
-                        </li>
+                        </li>*@
                         <li class="">
                             <a class="group" target="_blank" href="@Url.HttpRouteUrl(null, new
                                 {
@@ -443,7 +506,7 @@
                                     orderBy = "country-asc",
                                 })">
                                 <div class="arrow"></div>
-                                <span class="text">Download Spreadsheet</span>
+                                <span class="text" style="border-radius: 0 0 8px 8px;">Download Spreadsheet</span>
                             </a>
                         </li>
                     </ul>
