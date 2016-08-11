@@ -34,7 +34,7 @@ Polymer('is-page-summary-report', {
         _.insert = function (arr, index, item) {
             arr.splice(index, 0, item);
         };//this should be as a global _ function somewhere
-        
+        this.get_countries();
     },
     domReady: function () {
     },
@@ -161,7 +161,37 @@ Polymer('is-page-summary-report', {
     establishmentSearchChanged: function (oldValue: string, newValue) {
         this.establishment_search_url = newValue ? "\"" + newValue + "\"" : ""; 
     },
-    activitiesResponse: function (response) {
+    get_countries: function () {
+
+        var config = {
+            apiKey: "AIzaSyBpzIaweLPBcKOodY8JdxDlwARwbcEvhc4",
+            authDomain: "ucosmic.firebaseapp.com",
+            databaseURL: "https://ucosmic.firebaseio.com",
+            storageBucket: "project-4691094245668174778.appspot.com",
+        };
+        firebase.initializeApp(config);
+        var root_ref = firebase.database().ref();
+        const fire_ref_countries = root_ref.child('Places').child('Countries');// new Firebase("https://UCosmic.firebaseio.com/Places/Countries")
+        fire_ref_countries.on("value", (snapshot) => {
+            var associations = []
+            var country_list = _.map(snapshot.val(), function (value: any, index) {
+                if (value) {
+                    var object = { _id: index, text: value.country, associations: value.associations }
+                    if (value.associations) {
+                        value.associations.forEach(function (association, index_2) {
+                            associations.push({ _id: association.id, text: association.name });
+                        })
+                    }
+                    return object;
+                }
+            })
+            this.region_list = _.uniq(associations, 'text');
+
+            this.countries_original = country_list.concat(this.region_list);
+            this.setup_routing();
+        });
+    }
+    , activitiesResponse: function (response) {
         this.isAjaxing = false;
         this.activityTypeCountsLoaded = true;
 
@@ -236,27 +266,27 @@ Polymer('is-page-summary-report', {
             console.log(response.detail.response.error)
         }
     },
-    countriesResponse: function (response) {
-        this.isAjaxing = false;
+    //countriesResponse: function (response) {
+    //    this.isAjaxing = false;
 
-        if (!response.detail.response.error) {
-            _.insert(response.detail.response, 8, { code: 'AQ', id: 17, name: 'Antarctica' })//hack alert
+    //    if (!response.detail.response.error) {
+    //        _.insert(response.detail.response, 8, { code: 'AQ', id: 17, name: 'Antarctica' })//hack alert
 
-            response.detail.response.unshift({ id: 0, name: '[clear]' })
-            this.countries_original = response.detail.response.map(function (country) {
-                country._id = country.id;
-                country.text = country.name;
-                delete country.id, delete country.name, delete country.continentId, delete country.continentCode, delete country.continentName, delete country.center, delete country.box;
-                return country;
-            })
-            //this.countries_original = this.countries;
-            this.setup_routing();
-        } else {
+    //        response.detail.response.unshift({ id: 0, name: '[clear]' })
+    //        this.countries_original = response.detail.response.map(function (country) {
+    //            country._id = country.id;
+    //            country.text = country.name;
+    //            delete country.id, delete country.name, delete country.continentId, delete country.continentCode, delete country.continentName, delete country.center, delete country.box;
+    //            return country;
+    //        })
+    //        //this.countries_original = this.countries;
+    //        this.setup_routing();
+    //    } else {
 
-            console.log(response.detail.response.error)
-        }
+    //        console.log(response.detail.response.error)
+    //    }
 
-    },
+    //},
     establishmentResponse: function (response) {
         this.isAjaxing = false;
 

@@ -31,6 +31,7 @@ Polymer('is-page-summary-report', {
         _.insert = function (arr, index, item) {
             arr.splice(index, 0, item);
         };
+        this.get_countries();
     },
     domReady: function () {
     },
@@ -142,6 +143,35 @@ Polymer('is-page-summary-report', {
     establishmentSearchChanged: function (oldValue, newValue) {
         this.establishment_search_url = newValue ? "\"" + newValue + "\"" : "";
     },
+    get_countries: function () {
+        var _this = this;
+        var config = {
+            apiKey: "AIzaSyBpzIaweLPBcKOodY8JdxDlwARwbcEvhc4",
+            authDomain: "ucosmic.firebaseapp.com",
+            databaseURL: "https://ucosmic.firebaseio.com",
+            storageBucket: "project-4691094245668174778.appspot.com",
+        };
+        firebase.initializeApp(config);
+        var root_ref = firebase.database().ref();
+        var fire_ref_countries = root_ref.child('Places').child('Countries');
+        fire_ref_countries.on("value", function (snapshot) {
+            var associations = [];
+            var country_list = _.map(snapshot.val(), function (value, index) {
+                if (value) {
+                    var object = { _id: index, text: value.country, associations: value.associations };
+                    if (value.associations) {
+                        value.associations.forEach(function (association, index_2) {
+                            associations.push({ _id: association.id, text: association.name });
+                        });
+                    }
+                    return object;
+                }
+            });
+            _this.region_list = _.uniq(associations, 'text');
+            _this.countries_original = country_list.concat(_this.region_list);
+            _this.setup_routing();
+        });
+    },
     activitiesResponse: function (response) {
         this.isAjaxing = false;
         this.activityTypeCountsLoaded = true;
@@ -200,23 +230,6 @@ Polymer('is-page-summary-report', {
         this.expertiseCountLoaded = true;
         if (!response.detail.response.error) {
             this.expertises = response.detail.response[0];
-        }
-        else {
-            console.log(response.detail.response.error);
-        }
-    },
-    countriesResponse: function (response) {
-        this.isAjaxing = false;
-        if (!response.detail.response.error) {
-            _.insert(response.detail.response, 8, { code: 'AQ', id: 17, name: 'Antarctica' });
-            response.detail.response.unshift({ id: 0, name: '[clear]' });
-            this.countries_original = response.detail.response.map(function (country) {
-                country._id = country.id;
-                country.text = country.name;
-                delete country.id, delete country.name, delete country.continentId, delete country.continentCode, delete country.continentName, delete country.center, delete country.box;
-                return country;
-            });
-            this.setup_routing();
         }
         else {
             console.log(response.detail.response.error);
