@@ -83,6 +83,7 @@
                                         <span>- <span>@Model.Output.LastNumber</span></span>
                                     }
                                     of <span>@Model.Output.ItemTotal</span>
+                                    <span> degrees</span>
                                 </strong>
                                 @if (Model != null && Model.Output != null && Model.Output.PageCount > 0)
                                 {
@@ -103,6 +104,45 @@
                                         of <span>@Model.Output.PageCount</span>)
                                     </span>
                                 }
+                            </div>
+                            <div>
+                                <strong>
+                                    earned by
+                                    @if (Model != null && Model.Summary.People_Count > 1)
+                                    {
+                                        <span> @Model.Summary.People_Count</span>
+                                        <span> people</span>
+                                    }
+                                    else if (Model != null && Model.Summary.People_Count == 1)
+                                    {
+                                        <span> 1</span>
+                                        <span> person</span>
+                                    }
+                                    <span> from</span>
+                                    @if (Model != null && Model.Summary.Institution_Count > 1)
+                                    {
+                                        <span> @Model.Summary.Institution_Count</span>
+                                        <span> institutions</span>
+                                    }
+                                    else if (Model != null && Model.Summary.Institution_Count == 1)
+                                    {
+                                        <span> 1</span>
+                                        <span> institution</span>
+                                    }
+
+                                    <span> in</span>
+                                    @if (Model != null && Model.Summary.Country_Count > 1)
+                                    {
+                                        <span> @Model.Summary.Country_Count</span>
+                                        <span> countries.</span>
+                                    }
+                                    else if (Model != null && Model.Summary.Country_Count == 1)
+                                    {
+                                        <span> 1</span>
+                                        <span> country.</span>
+                                    }
+                                </strong>
+
                             </div>
                             @* PREV & NEXT PAGER BUTTONS *@
                             <div style="margin: 5px 0 0 0; width:180px; float:left;" class="field" data-bind="with: pager.input">
