@@ -6,6 +6,12 @@ var Agreements;
             function SearchMap(settings) {
                 var _this = this;
                 this.settings = settings;
+                this.hasTenancyData = ko.observable(false);
+                this.hasEstablishmentSelects = ko.observable(false);
+                this.selectedTenant = ko.observable(ttw.tenantId);
+                this.selectedEstablishment = ko.observable(ttw.ancestorId);
+                this.tenantOptions = ko.observableArray();
+                this.affiliations = ko.mapping.fromJS([]);
                 this.zoom = ko.observable(parseInt(sessionStorage.getItem(SearchMap.ZoomSessionKey)) || 1);
                 this.lat = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LatSessionKey)) || SearchMap.defaultMapCenter.lat());
                 this.lng = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LngSessionKey)) || SearchMap.defaultMapCenter.lng());
@@ -16,12 +22,15 @@ var Agreements;
                 });
                 this.continentCode = ko.observable(sessionStorage.getItem(SearchMap.ContinentSessionKey) || 'any');
                 this.countryCode = ko.observable(sessionStorage.getItem(SearchMap.CountrySessionKey) || 'any');
+                this.ancestorId = ko.observable(parseInt(sessionStorage.getItem(SearchMap.AncestorIdSessionKey)) || 0);
                 this.placeId = ko.observable(parseInt(sessionStorage.getItem(SearchMap.PlaceIdSessionKey) || 0));
                 this.typeCode = ko.observable(sessionStorage.getItem(SearchMap.TypeSessionKey) || 'any');
                 this.initSessionTypeCode = sessionStorage.getItem(SearchMap.TypeSessionKey) || 'any';
                 this._inputChanged = ko.computed(function () {
                     if (_this.countryCode() == undefined)
                         _this.countryCode('any');
+                    if (_this.ancestorId() == undefined)
+                        _this.ancestorId(0);
                     if (_this.continentCode() == undefined)
                         _this.continentCode('any');
                     if (_this.typeCode() == undefined)
@@ -31,6 +40,7 @@ var Agreements;
                     }
                     sessionStorage.setItem(SearchMap.ContinentSessionKey, _this.continentCode());
                     sessionStorage.setItem(SearchMap.CountrySessionKey, _this.countryCode());
+                    sessionStorage.setItem(SearchMap.AncestorIdSessionKey, _this.ancestorId().toString());
                     sessionStorage.setItem(SearchMap.TypeSessionKey, _this.typeCode());
                     sessionStorage.setItem(SearchMap.PlaceIdSessionKey, _this.placeId().toString());
                     sessionStorage.setItem(SearchMap.ZoomSessionKey, _this.zoom().toString());
@@ -38,6 +48,29 @@ var Agreements;
                     sessionStorage.setItem(SearchMap.LngSessionKey, _this.lng().toString());
                     sessionStorage.setItem(SearchMap.DetailPrefSessionKey, _this.detailPreference() || '');
                 }).extend({ throttle: 0, });
+                this.rootEstablishment = 0;
+                this.isCreatingSelectEstablishments = false;
+                this.tenancyData = new App.DataCacher(function () {
+                    return _this._loadTenancyData();
+                });
+                this._selectedTenantChanged = ko.computed(function () {
+                    var hasTenancyData = _this.hasTenancyData();
+                    var selectedTenant = _this.selectedTenant();
+                    if (_this.selectedTenant()) {
+                        ttw.tenantId = _this.selectedTenant();
+                    }
+                    var establishmentId = _this.ancestorId();
+                    if (!hasTenancyData || !selectedTenant || selectedTenant == establishmentId)
+                        return;
+                    _this.ancestorId(selectedTenant);
+                    _this._continentsResponse = undefined;
+                    _this._map.triggerResize();
+                    _this._load();
+                    _this._loadSummary('any');
+                });
+                this.establishmentData = new App.DataCacher(function () {
+                    return _this._loadEstablishmentData();
+                });
                 this._map = new App.GoogleMaps.Map('google_map_canvas', {
                     center: new google.maps.LatLng(this.lat(), this.lng()),
                     zoom: this.zoom(),
@@ -67,8 +100,8 @@ var Agreements;
                     return _this._computeContinentOptions();
                 });
                 this.typeOptions = ko.observableArray([{ code: 'any', name: '[Loading...]' }]);
-                this.routeFormat = '#/{0}/continent/{7}/country/{1}/type/{2}/place/{3}/zoom/{4}/latitude/{5}/longitude/{6}/'
-                    .format(this.settings.route).replace('{7}', '{0}');
+                this.routeFormat = '#/{0}/continent/{8}/country/{1}/type/{2}/place/{3}/zoom/{4}/latitude/{5}/longitude/{6}/ancestorId/{7}'
+                    .format(this.settings.route).replace('{8}', '{0}');
                 this._isActivated = ko.observable(false);
                 this.loadViewport = 0;
                 this._route = ko.computed(function () {
@@ -99,6 +132,8 @@ var Agreements;
                 this._loadAgreementTypes();
                 this.sammy = this.settings.sammy || Sammy();
                 this._runSammy();
+                this.rootEstablishment = ttw.tenantId;
+                this._loadTenancyData();
                 this._map.ready().done(function () {
                     _this._map.onIdle(function () {
                         var idles = _this._map.idles();
@@ -117,6 +152,136 @@ var Agreements;
                     });
                 });
             }
+            SearchMap.prototype._createEstablishmentSelects = function (response) {
+                this.ancestorId();
+                if (this.selectedTenant() == 0) {
+                    this.selectedTenant(this.ancestorId());
+                }
+                var parentId = this.selectedTenant();
+                if (!parentId) {
+                    parentId = ttw.tenantId;
+                }
+                var previousParentId = 0;
+                this.isCreatingSelectEstablishments = true;
+                this.affiliations.removeAll();
+                while (true) {
+                    response.map(function (x, index, array) {
+                        x.officialName = x.contextName ? x.contextName : x.officialName && x.officialName.indexOf(',') > -1 ? x.officialName.substring(0, x.officialName.indexOf(',')) : x.officialName;
+                        return x;
+                    });
+                    var options = Enumerable.From(response)
+                        .Where("x => x.parentId==" + parentId)
+                        .OrderBy(function (x) {
+                        return x.rank;
+                    })
+                        .ThenBy(function (x) {
+                        return x.contextName || x.officialName;
+                    })
+                        .Select("x =>  {value: x.id, text: x.officialName}").ToArray();
+                    if (options.length > 0) {
+                        options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
+                        this.affiliations.unshift(ko.mapping.fromJS([{ options: options, value: previousParentId.toString() }])()[0]);
+                    }
+                    previousParentId = parentId;
+                    var parentCheck = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
+                    if (parentCheck[0] != undefined) {
+                        parentId = parentCheck[0].parentId;
+                    }
+                    else {
+                        this.isCreatingSelectEstablishments = false;
+                        this.hasEstablishmentSelects(true);
+                        return;
+                    }
+                }
+            };
+            SearchMap.prototype._loadEstablishmentData = function () {
+                var _this = this;
+                var promise = $.Deferred();
+                this.mainCampus = this.rootEstablishment;
+                if (!this.mainCampus) {
+                    this.mainCampus = this.selectedTenant();
+                    if (!this.mainCampus) {
+                        this.mainCampus = ttw.tenantId;
+                    }
+                }
+                var temp = sessionStorage.getItem('campuses' + this.mainCampus);
+                if (temp) {
+                    var response = $.parseJSON(temp);
+                    this._createEstablishmentSelects(response);
+                }
+                else {
+                    var settings = settings || {};
+                    settings.url = '/api/establishments/' + this.mainCampus + '/offspring';
+                    $.ajax(settings)
+                        .done(function (response) {
+                        promise.resolve(response);
+                        sessionStorage.setItem('campuses' + _this.mainCampus, JSON.stringify(response));
+                        _this._createEstablishmentSelects(response);
+                    })
+                        .fail(function (xhr) {
+                        promise.reject(xhr);
+                    });
+                }
+                return promise;
+            };
+            SearchMap.prototype._loadTenancyData = function () {
+                var _this = this;
+                var deferred = $.Deferred();
+                $.when(Establishments.Servers.Single(ttw.tenantId), Establishments.Servers.GetChildren(ttw.tenantId))
+                    .done(function (parentData, childData) {
+                    childData = childData || [];
+                    var tenants = Enumerable.From(childData)
+                        .OrderBy(function (x) {
+                        return x.rank;
+                    }).ToArray();
+                    tenants.unshift(parentData);
+                    _this.tenantOptions([]);
+                    if (childData.length) {
+                        var options = Enumerable.From(tenants)
+                            .Select(function (x) {
+                            var option = {
+                                value: x.id,
+                                text: x.contextName || x.officialName,
+                            };
+                            return option;
+                        }).ToArray();
+                        _this.tenantOptions(options);
+                    }
+                    deferred.resolve(tenants);
+                    _this.establishmentData.ready();
+                    var myThis = _this;
+                    _this.selectedTenant(_this.ancestorId());
+                    _this.selectedTenant.subscribe(function (newValue) {
+                        _this.selectedEstablishment(_this.selectedTenant());
+                    });
+                    $("#campusSelect2").on("change", "select", function () {
+                        if (myThis.isCreatingSelectEstablishments == false) {
+                            if (this.value != '') {
+                                myThis.selectedTenant(this.value);
+                                myThis._loadEstablishmentData();
+                            }
+                            else {
+                                var prevCampusSelect = $(this).parent().parent().prev().find("select");
+                                if (prevCampusSelect.length) {
+                                    myThis.selectedTenant(prevCampusSelect.val());
+                                    myThis._loadEstablishmentData();
+                                }
+                                else {
+                                    myThis.selectedTenant(myThis.rootEstablishment);
+                                    myThis._loadEstablishmentData();
+                                }
+                            }
+                        }
+                    });
+                    if (childData.length)
+                        _this.hasTenancyData(true);
+                })
+                    .fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
+                    deferred.reject();
+                });
+                return deferred.promise();
+            };
             SearchMap.prototype.triggerMapResize = function () {
                 return this._map.triggerResize();
             };
@@ -130,7 +295,8 @@ var Agreements;
                 if (typeCode) {
                     var keyword = "!none!";
                     var countryCode = 'any';
-                    url = url += "Table/" + countryCode + "/" + typeCode + "/" + keyword;
+                    var ancestorId = this.ancestorId() ? this.ancestorId() : 0;
+                    url = url += "Table/" + countryCode + "/" + typeCode + "/" + keyword + "/" + ancestorId;
                 }
                 $.get(url)
                     .done(function (response) {
@@ -140,10 +306,12 @@ var Agreements;
             SearchMap.prototype.clearFilter = function () {
                 if (this.placeId())
                     this.placeId(0);
-                else if (this.countryCode() != 'any')
+                if (this.countryCode() != 'any')
                     this.countryCode('any');
-                else if (this.continentCode() != 'any')
+                if (this.continentCode() != 'any')
                     this.continentCode('any');
+                if (this.ancestorId() != 0)
+                    this.ancestorId(0);
             };
             SearchMap.prototype._computeCountryOptions = function () {
                 var options = [{
@@ -245,13 +413,13 @@ var Agreements;
             };
             SearchMap.prototype._runSammy = function () {
                 var viewModel = this;
-                var beforeRegex = new RegExp('\\{0}'.format(this.routeFormat.format('(.*)', '(.*)', '(.*)', '(.*)', '(.*)', '(.*)')
+                var beforeRegex = new RegExp('\\{0}'.format(this.routeFormat.format('(.*)', '(.*)', '(.*)', '(.*)', '(.*)', '(.*)', '(.*)')
                     .replace(/\//g, '\\/')));
                 this.sammy.before(beforeRegex, function () {
                     var e = this;
                     return viewModel._onBeforeRoute(e);
                 });
-                this.sammy.get(this.routeFormat.format(':continent', ':country', ':type', ':place', ':zoom', ':lat', ':lng'), function () {
+                this.sammy.get(this.routeFormat.format(':continent', ':country', ':type', ':place', ':zoom', ':lat', ':lng', ':ancestorId'), function () {
                     var e = this;
                     viewModel._onRoute(e);
                 });
@@ -309,8 +477,10 @@ var Agreements;
                 var zoom = e.params['zoom'];
                 var lat = e.params['lat'];
                 var lng = e.params['lng'];
+                var ancestorId = e.params['ancestorId'];
                 this.continentCode(continent);
                 this.countryCode(country);
+                this.ancestorId(ancestorId);
                 this.typeCode(type);
                 this.placeId(parseInt(placeId));
                 this.zoom(parseInt(zoom));
@@ -337,13 +507,14 @@ var Agreements;
             SearchMap.prototype._computeRoute = function () {
                 var continentCode = this.continentCode();
                 var countryCode = this.countryCode();
+                var ancestorId = this.ancestorId();
                 var typeCode = this.typeCode();
                 var placeId = this.placeId();
                 var zoom = this.zoom();
                 var lat = this.lat();
                 var lng = this.lng();
                 this.routeChanged = true;
-                var route = this.routeFormat.format(continentCode, countryCode, typeCode, placeId, zoom, lat, lng);
+                var route = this.routeFormat.format(continentCode, countryCode, typeCode, placeId, zoom, lat, lng, ancestorId);
                 return route;
             };
             SearchMap.prototype.setLocation = function () {
@@ -356,6 +527,7 @@ var Agreements;
                 var scope = {
                     continentCode: this.continentCode(),
                     countryCode: this.countryCode(),
+                    ancestorId: this.ancestorId(),
                     typeCode: this.typeCode(),
                     placeId: this.placeId(),
                 };
@@ -371,6 +543,7 @@ var Agreements;
                 var thisScope = this._currentScope();
                 if (!lastScope || lastScope.countryCode != thisScope.countryCode ||
                     lastScope.continentCode != thisScope.continentCode ||
+                    lastScope.ancestorId != thisScope.ancestorId ||
                     (!isNaN(lastScope.placeId) && lastScope.placeId != thisScope.placeId) || lastScope.typeCode != thisScope.typeCode) {
                     this._scopeHistory.push(thisScope);
                     $.when(this._map.ready()).then(function () {
@@ -417,6 +590,7 @@ var Agreements;
                     var placeType = '';
                     var continentCode = this.continentCode();
                     var countryCode = this.countryCode();
+                    var ancestorId = this.ancestorId();
                     var typeCode = this.typeCode();
                     if (continentCode == 'any' && countryCode == 'any') {
                         placeType = 'continents';
@@ -461,7 +635,7 @@ var Agreements;
                 else if ((placeType == 'continents' && !this._continentsResponse) ||
                     (placeType == 'countries' && !this._countriesResponse) ||
                     (!placeType && !this._placesResponse)) {
-                    $.get(this.settings.partnerPlacesApi.format(placeType))
+                    $.get(this.settings.partnerPlacesApi.format(placeType, this.ancestorId()))
                         .done(function (response) {
                         if (placeType == 'continents') {
                             _this._continentsResponse = ko.observableArray(response);
@@ -795,10 +969,10 @@ var Agreements;
                 if (this.loadViewport < 0)
                     this.loadViewport = 0;
             };
-            SearchMap.prototype._loadStatus = function (countryCode, continentCode, typeCode) {
+            SearchMap.prototype._loadStatus = function (countryCode, continentCode, typeCode, ancestorId) {
                 var _this = this;
                 var url = this.settings.summaryApi, lastStatusRequestedCountLocal;
-                url = url += "Map/" + countryCode + "/" + typeCode + "/" + continentCode;
+                url = url += "Map/" + countryCode + "/" + typeCode + "/" + continentCode + "/" + ancestorId;
                 this.status.agreementCount('?');
                 this.status.partnerCount('?');
                 this.lastStatusRequestedCount += 1;
@@ -816,7 +990,7 @@ var Agreements;
                 });
             };
             SearchMap.prototype._updateStatus = function (placeType, places) {
-                this._loadStatus(this.countryCode(), this.continentCode(), this.typeCode());
+                this._loadStatus(this.countryCode(), this.continentCode(), this.typeCode(), this.ancestorId());
                 if (placeType == 'countries') {
                     var continentCode = this.continentCode();
                     if (continentCode == 'none') {
@@ -1019,6 +1193,7 @@ var Agreements;
             SearchMap.defaultMapCenter = new google.maps.LatLng(0, 17);
             SearchMap.ContinentSessionKey = 'AgreementSearchContinent';
             SearchMap.CountrySessionKey = 'AgreementSearchCountry2';
+            SearchMap.AncestorIdSessionKey = 'AncestorIdSearchCountry2';
             SearchMap.TypeSessionKey = 'AgreementTypeSearchCountry2';
             SearchMap.PlaceIdSessionKey = 'AgreementMapSearchPlaceId';
             SearchMap.ZoomSessionKey = 'AgreementSearchZoom';

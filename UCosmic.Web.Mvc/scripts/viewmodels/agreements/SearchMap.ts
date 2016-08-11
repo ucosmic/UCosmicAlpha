@@ -16,11 +16,19 @@ module Agreements.ViewModels {
     export interface SearchMapScope {
         continentCode: string;
         countryCode: string;
+        ancestorId: number;
         typeCode: string;
         placeId: number;
     }
 
     export class SearchMap {
+        hasTenancyData = ko.observable<boolean>(false);
+        hasEstablishmentSelects = ko.observable<boolean>(false);
+        selectedTenant = ko.observable<number>(ttw.tenantId);
+        selectedEstablishment = ko.observable<number>(ttw.ancestorId);
+        tenantOptions = ko.observableArray<App.ApiModels.SelectOption<number>>();
+        affiliations = ko.mapping.fromJS([]);
+        mainCampus: number;
         //#region Search Filter Inputs
 
 
@@ -45,6 +53,7 @@ module Agreements.ViewModels {
 
         static ContinentSessionKey = 'AgreementSearchContinent';
         static CountrySessionKey = 'AgreementSearchCountry2';
+        static AncestorIdSessionKey = 'AncestorIdSearchCountry2';
         static TypeSessionKey = 'AgreementTypeSearchCountry2';
         static PlaceIdSessionKey = 'AgreementMapSearchPlaceId';
         static ZoomSessionKey = 'AgreementSearchZoom';
@@ -57,6 +66,8 @@ module Agreements.ViewModels {
             sessionStorage.getItem(SearchMap.ContinentSessionKey) || 'any');
         countryCode: KnockoutObservable<string> = ko.observable(
             sessionStorage.getItem(SearchMap.CountrySessionKey) || 'any');
+        ancestorId: KnockoutObservable<number> = ko.observable(
+            parseInt(sessionStorage.getItem(SearchMap.AncestorIdSessionKey)) || 0);
         placeId: KnockoutObservable<number> = ko.observable(
             parseInt(sessionStorage.getItem(SearchMap.PlaceIdSessionKey) || 0));
         typeCode: KnockoutObservable<string> = ko.observable(
@@ -67,6 +78,7 @@ module Agreements.ViewModels {
         private _inputChanged: KnockoutComputed<void> = ko.computed((): void => {
 
             if (this.countryCode() == undefined) this.countryCode('any');
+            if (this.ancestorId() == undefined) this.ancestorId(0);
             if (this.continentCode() == undefined) this.continentCode('any');
             if (this.typeCode() == undefined) this.typeCode('any');
             if (this.typeCode() != 'any' && this.typeCode() != undefined) {
@@ -75,6 +87,7 @@ module Agreements.ViewModels {
 
             sessionStorage.setItem(SearchMap.ContinentSessionKey, this.continentCode());
             sessionStorage.setItem(SearchMap.CountrySessionKey, this.countryCode());
+            sessionStorage.setItem(SearchMap.AncestorIdSessionKey, this.ancestorId().toString());
             sessionStorage.setItem(SearchMap.TypeSessionKey, this.typeCode());
             sessionStorage.setItem(SearchMap.PlaceIdSessionKey, this.placeId().toString());
             sessionStorage.setItem(SearchMap.ZoomSessionKey, this.zoom().toString());
@@ -92,6 +105,8 @@ module Agreements.ViewModels {
             this._loadAgreementTypes();
             this.sammy = this.settings.sammy || Sammy();
             this._runSammy();
+            this.rootEstablishment = ttw.tenantId;//this.establishmentId();//settings.tenantId;
+            this._loadTenancyData();
 
             this._map.ready().done((): void => {
                 this._map.onIdle((): void => {
@@ -110,6 +125,184 @@ module Agreements.ViewModels {
                     }, 1000);
                 });
             });
+        }
+
+        //#endregion
+
+        //#region Tenancy
+        rootEstablishment = 0;
+        //selectedTenant = ko.observable<number>(ttw.tenantId);
+        isCreatingSelectEstablishments = false;
+
+        tenancyData: App.DataCacher<Establishments.ApiModels.ScalarEstablishment[]> = new App.DataCacher(
+            (): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> => {
+                return this._loadTenancyData();
+            });
+
+        private _selectedTenantChanged = ko.computed((): void => {
+            //var areBindingsApplied = this.areBindingsApplied();
+            var hasTenancyData = this.hasTenancyData();
+            var selectedTenant = this.selectedTenant();
+            if (this.selectedTenant()) {
+                ttw.tenantId = this.selectedTenant();
+            }
+            var establishmentId = this.ancestorId();
+            if (!hasTenancyData || !selectedTenant || selectedTenant == establishmentId)
+                return;
+
+            this.ancestorId(selectedTenant);
+            this._continentsResponse = undefined;
+            this._map.triggerResize();
+            this._load();
+            this._loadSummary('any');
+            //this._reloadPlaceData(); //**************************************************here************
+
+        });
+
+
+        private _createEstablishmentSelects(response): void {
+            <number>this.ancestorId()
+            if (this.selectedTenant() == 0) {
+                this.selectedTenant(this.ancestorId())
+            }
+            var parentId = this.selectedTenant();
+            if (!parentId) {
+                parentId = ttw.tenantId;
+            }
+            var previousParentId = 0;
+            this.isCreatingSelectEstablishments = true;
+            this.affiliations.removeAll();
+            while (true) {
+
+                response.map(function (x, index, array) {
+                    x.officialName = x.contextName ? x.contextName : x.officialName && x.officialName.indexOf(',') > -1 ? x.officialName.substring(0, x.officialName.indexOf(',')) : x.officialName;
+                    return x;
+                });
+
+                var options: any = Enumerable.From(response)
+                    .Where("x => x.parentId==" + parentId)
+                    .OrderBy(function (x: Establishments.ApiModels.ScalarEstablishment): number {
+                    return x.rank; // sort by rank, then by name
+                })
+                    .ThenBy(function (x: Establishments.ApiModels.ScalarEstablishment): string {
+                    return x.contextName || x.officialName;
+                })
+                    .Select("x =>  {value: x.id, text: x.officialName}").ToArray();
+
+
+                if (options.length > 0) {
+                    options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
+                    this.affiliations.unshift(ko.mapping.fromJS([{ options: options, value: previousParentId.toString() }])()[0]);
+                }
+                previousParentId = parentId;
+                var parentCheck = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
+                if (parentCheck[0] != undefined) {
+                    parentId = parentCheck[0].parentId;
+                } else {
+                    this.isCreatingSelectEstablishments = false;
+                    this.hasEstablishmentSelects(true);
+                    return;
+                }
+            }
+
+        }
+
+        private _loadEstablishmentData(): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> {
+            var promise: JQueryDeferred<Establishments.ApiModels.ScalarEstablishment[]> = $.Deferred();
+            this.mainCampus = this.rootEstablishment;// this.selectedTenant(); 
+            if (!this.mainCampus) {
+                this.mainCampus = this.selectedTenant();
+                if (!this.mainCampus) {
+                    this.mainCampus = ttw.tenantId;
+                }
+            }
+
+            var temp = sessionStorage.getItem('campuses' + this.mainCampus);
+            if (temp) {
+                var response = $.parseJSON(temp);
+                this._createEstablishmentSelects(response);
+            } else {
+
+                var settings = settings || {};
+                settings.url = '/api/establishments/' + this.mainCampus + '/offspring';
+                $.ajax(settings)
+                    .done((response: ApiModels.ScalarEstablishment[]): void => {
+                    promise.resolve(response);
+                    sessionStorage.setItem('campuses' + this.mainCampus, JSON.stringify(response));
+                    this._createEstablishmentSelects(response);
+                })
+                    .fail((xhr: JQueryXHR): void => {
+                    promise.reject(xhr);
+                });
+            }
+
+            return promise;
+        }
+
+        establishmentData = new App.DataCacher<Establishments.ApiModels.ScalarEstablishment[]>(
+            (): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> => {
+                return this._loadEstablishmentData();
+            });
+
+        private _loadTenancyData(): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> {
+            // calling .ready() on tenancyData invokes this
+            var deferred: JQueryDeferred<Establishments.ApiModels.ScalarEstablishment[]> = $.Deferred();
+            $.when(Establishments.Servers.Single(ttw.tenantId), Establishments.Servers.GetChildren(ttw.tenantId))
+                .done((parentData: Establishments.ApiModels.ScalarEstablishment, childData: Establishments.ApiModels.ScalarEstablishment[]): void => {
+                childData = childData || [];
+                var tenants = Enumerable.From(childData)
+                    .OrderBy(function (x: Establishments.ApiModels.ScalarEstablishment): number {
+                    return x.rank;
+                }).ToArray();
+                tenants.unshift(parentData);
+
+                this.tenantOptions([]);
+                if (childData.length) {
+                    var options = Enumerable.From(tenants)
+                        .Select(function (x: Establishments.ApiModels.ScalarEstablishment): App.ApiModels.SelectOption<number> {
+                        var option: App.ApiModels.SelectOption<number> = {
+                            value: x.id,
+                            text: x.contextName || x.officialName,
+                        };
+                        return option;
+                    }).ToArray();
+                    this.tenantOptions(options);
+                }
+
+                deferred.resolve(tenants);
+
+                this.establishmentData.ready();
+
+                var myThis = this;
+                this.selectedTenant(<number>this.ancestorId());
+                this.selectedTenant.subscribe((newValue: number): void => {
+                    this.selectedEstablishment(this.selectedTenant());
+                });
+                $("#campusSelect2").on("change", "select", function () {
+                    if (myThis.isCreatingSelectEstablishments == false) {
+                        if (this.value != '') {
+                            myThis.selectedTenant(this.value);
+                            myThis._loadEstablishmentData();
+                        } else {
+                            var prevCampusSelect = $(this).parent().parent().prev().find("select");
+                            if (prevCampusSelect.length) {
+                                myThis.selectedTenant(prevCampusSelect.val());
+                                myThis._loadEstablishmentData();
+                            } else {
+                                myThis.selectedTenant(myThis.rootEstablishment);
+                                myThis._loadEstablishmentData();
+                            }
+                        }
+                    }
+                })
+                if (childData.length) this.hasTenancyData(true);
+
+            })
+                .fail((xhr: JQueryXHR): void => {
+                App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
+                deferred.reject();
+            })
+            return deferred.promise();
         }
 
         //#endregion
@@ -159,7 +352,8 @@ module Agreements.ViewModels {
             if (typeCode) {
                 var keyword = "!none!";
                 var countryCode = 'any';
-                url = url += "Table/" + countryCode + "/" + typeCode + "/" + keyword
+                var ancestorId = this.ancestorId() ? this.ancestorId() : 0;
+                url = url += "Table/" + countryCode + "/" + typeCode + "/" + keyword + "/" + ancestorId
             }
             $.get(url)
                 .done((response: ApiModels.Summary): void => {
@@ -168,8 +362,9 @@ module Agreements.ViewModels {
         }
         clearFilter(): void {
             if (this.placeId()) this.placeId(0);
-            else if (this.countryCode() != 'any') this.countryCode('any');
-            else if (this.continentCode() != 'any') this.continentCode('any');
+            if (this.countryCode() != 'any') this.countryCode('any');
+            if (this.continentCode() != 'any') this.continentCode('any');
+            if (this.ancestorId() != 0) this.ancestorId(0);
         }
 
         //#endregion
@@ -330,8 +525,8 @@ module Agreements.ViewModels {
         //#region Sammy Routing
 
         sammy: Sammy.Application;
-        routeFormat: string = '#/{0}/continent/{7}/country/{1}/type/{2}/place/{3}/zoom/{4}/latitude/{5}/longitude/{6}/'
-            .format(this.settings.route).replace('{7}', '{0}');
+        routeFormat: string = '#/{0}/continent/{8}/country/{1}/type/{2}/place/{3}/zoom/{4}/latitude/{5}/longitude/{6}/ancestorId/{7}'
+            .format(this.settings.route).replace('{8}', '{0}');
         routeChanged: boolean;
         private _isActivated: KnockoutObservable<boolean> = ko.observable(false);
 
@@ -341,7 +536,7 @@ module Agreements.ViewModels {
 
             // sammy will run the first route that it matches
             var beforeRegex = new RegExp('\\{0}'.format(
-                this.routeFormat.format('(.*)', '(.*)', '(.*)', '(.*)', '(.*)', '(.*)')
+                this.routeFormat.format('(.*)', '(.*)', '(.*)', '(.*)', '(.*)', '(.*)', '(.*)')
                     .replace(/\//g, '\\/')));
             this.sammy.before(
                 beforeRegex,
@@ -352,7 +547,7 @@ module Agreements.ViewModels {
 
             // do this when we already have hashtag parameters in the page
             this.sammy.get(
-                this.routeFormat.format(':continent', ':country', ':type', ':place', ':zoom', ':lat', ':lng'),
+                this.routeFormat.format(':continent', ':country', ':type', ':place', ':zoom', ':lat', ':lng', ':ancestorId'),
                 function (): void {
                     var e: Sammy.EventContext = this;
                     viewModel._onRoute(e);
@@ -419,9 +614,11 @@ module Agreements.ViewModels {
             var zoom: string = e.params['zoom'];
             var lat: string = e.params['lat'];
             var lng: string = e.params['lng'];
+            var ancestorId: number = e.params['ancestorId'];
 
             this.continentCode(continent);
             this.countryCode(country);
+            this.ancestorId(ancestorId);
             this.typeCode(type);
             this.placeId(parseInt(placeId));
             this.zoom(parseInt(zoom));
@@ -454,13 +651,14 @@ module Agreements.ViewModels {
             // build what the route should be, based on current filter inputs
             var continentCode = this.continentCode();
             var countryCode = this.countryCode();
+            var ancestorId = this.ancestorId();
             var typeCode = this.typeCode();
             var placeId = this.placeId();
             var zoom = this.zoom();
             var lat = this.lat();
             var lng = this.lng();
             this.routeChanged = true;
-            var route = this.routeFormat.format(continentCode, countryCode, typeCode, placeId, zoom, lat, lng);
+            var route = this.routeFormat.format(continentCode, countryCode, typeCode, placeId, zoom, lat, lng, ancestorId);
             return route;
         }
 
@@ -485,6 +683,7 @@ module Agreements.ViewModels {
             var scope: SearchMapScope = {
                 continentCode: this.continentCode(),
                 countryCode: this.countryCode(),
+                ancestorId: this.ancestorId(),
                 typeCode: this.typeCode(),
                 placeId: this.placeId(),
             };
@@ -505,6 +704,7 @@ module Agreements.ViewModels {
 
             if (!lastScope || lastScope.countryCode != thisScope.countryCode ||
                 lastScope.continentCode != thisScope.continentCode ||
+                lastScope.ancestorId != thisScope.ancestorId ||
                 (!isNaN(lastScope.placeId) && lastScope.placeId != thisScope.placeId) || lastScope.typeCode != thisScope.typeCode) {
                 //if (lastScope && lastScope.typeCode != thisScope.typeCode) {
                 //    this._continentsResponse = undefined;
@@ -582,6 +782,7 @@ module Agreements.ViewModels {
                 var placeType = '';
                 var continentCode = this.continentCode();
                 var countryCode = this.countryCode();
+                var ancestorId = this.ancestorId();
                 var typeCode = this.typeCode();
                 if (continentCode == 'any' && countryCode == 'any') {
                     placeType = 'continents';
@@ -630,7 +831,10 @@ module Agreements.ViewModels {
                 (placeType == 'countries' && !this._countriesResponse) ||
                 (!placeType && !this._placesResponse)) {
 
-                $.get(this.settings.partnerPlacesApi.format(placeType))
+                //if (this.ancestorId() != 0) {
+                //    //this.settings.partnerPlacesApi += "/" + this.ancestorId();
+                //}
+                $.get(this.settings.partnerPlacesApi.format(placeType, this.ancestorId()))
                     .done((response: ApiModels.PlaceWithAgreements[]): void => {
                     if (placeType == 'continents') {
                         this._continentsResponse = ko.observableArray(response);
@@ -858,7 +1062,9 @@ module Agreements.ViewModels {
                 var agreementIds = Enumerable.From(singleMarkers)
                     .Select(function (x: google.maps.Marker): number {
                     return parseInt(x.get('ucosmic_agreement_id'));
-                }).ToArray();
+                    }).ToArray();
+
+
                 // TODO: this is not dry
                 $.get(this.settings.partnersApi, { agreementIds: agreementIds, })
                     .done((response: ApiModels.Participant[]): void => {
@@ -996,9 +1202,9 @@ module Agreements.ViewModels {
         }
 
         lastStatusRequestedCount: number = 0;
-        private _loadStatus(countryCode?: string, continentCode?: string, typeCode?: string): void {
+        private _loadStatus(countryCode?: string, continentCode?: string, typeCode?: string, ancestorId?: number): void {
             var url = this.settings.summaryApi, lastStatusRequestedCountLocal;
-            url = url += "Map/" + countryCode + "/" + typeCode + "/" + continentCode
+            url = url += "Map/" + countryCode + "/" + typeCode + "/" + continentCode + "/" + ancestorId
             this.status.agreementCount('?');
             this.status.partnerCount('?');
             this.lastStatusRequestedCount += 1;
@@ -1018,7 +1224,7 @@ module Agreements.ViewModels {
 
         private _updateStatus(placeType: string, places: ApiModels.PlaceWithAgreements[]) {
 
-            this._loadStatus(this.countryCode(), this.continentCode(), this.typeCode());
+            this._loadStatus(this.countryCode(), this.continentCode(), this.typeCode(), this.ancestorId());
             if (placeType == 'countries') {
                 var continentCode = this.continentCode();
                 if (continentCode == 'none') {
