@@ -1,2 +1,0 @@
-riot.tag2('info', '<div class="page_container" style=""> </div>', 'info img.logo,[riot-tag="info"] img.logo,[data-is="info"] img.logo{ margin: 20px 0 0; } info .home_page_container,[riot-tag="info"] .home_page_container,[data-is="info"] .home_page_container{ width: 100%; text-align: center; max-width: 1000px; margin: 20px auto 100px auto; } @media (max-width: 500px) { info .benefits_section .home_icon,[riot-tag="info"] .benefits_section .home_icon,[data-is="info"] .benefits_section .home_icon{ width: 75px; height: 75px; } }', '', function(opts) {
-});
