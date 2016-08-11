@@ -514,8 +514,8 @@ Polymer('is-page-summary-map', {
             })
             element.country_name = country_name;
             element.content = "<b>" + event.feature.getProperty('name') + "</b><br /><a on-click={{click_link}} href='/summary/report/#!/" + event.feature.getProperty('iso_a2') + "'>Total: " + event.feature.getProperty('total_count') + "</a>"
-            + "<br /><a on-click={{click_link}} href='/" + this.style_domain + "/agreements/#/table/country/" + event.feature.getProperty('iso_a2') + "/type/any/sort/start-desc/size/10/page/1/'>Agreements: " + event.feature.getProperty('agreement_count') + "</a>"
-            + "<br /><a on-click={{click_link}} href='/" + this.style_domain + "/employees/table/?placeIds=" + country.id + "&placeNames=" + country.name + "'>Activities: " + event.feature.getProperty('activity_count') + "</a>"
+            + "<br /><a on-click={{click_link}} href='/" + this.style_domain + "/agreements/#/table/country/" + event.feature.getProperty('iso_a2') + "/type/any/sort/start-desc/size/10/page/1/keyword/*none*/ancestorId/" + this.new_tenant_id + "'>Agreements: " + event.feature.getProperty('agreement_count') + "</a>"
+            + "<br /><a on-click={{click_link}} href='/" + this.style_domain + "/employees/table/?placeIds=" + country.id + "&placeNames=" + country.name + "&ancestorId=" + this.new_tenant_id + "'>Activities: " + event.feature.getProperty('activity_count') + "</a>"
             + "<br /><a on-click={{click_link}} href='/" + this.style_domain + "/employees/degrees/table/?countryCode=" + event.feature.getProperty('iso_a2') + "'>Degrees: " + event.feature.getProperty('degree_count') + "</a>";
 
             this.countries_showing_details = _.union(this.countries_showing_details, [event.feature.getProperty('name')]);
