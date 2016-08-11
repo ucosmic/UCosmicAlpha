@@ -7,17 +7,40 @@
 }
 
 <ul class="group">
-    <li class="@(Model.Activities ? "current" : null)">
-        @{
-            var activitiesHref = Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index());
-            var lastActivitiesLens = Session.LastActivityLens();
-            if (lastActivitiesLens != null && lastActivitiesLens.StartsWith(string.Format("/{0}/", styleDomain)))
-            {
-                activitiesHref = lastActivitiesLens;
-            }
+    @{
+        var activitiesHref = Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index());
+        var lastActivitiesLens = Session.LastActivityLens();
+        if(Model.Activities && lastActivitiesLens.Contains("table")){
+            lastActivitiesLens = "table";
+        }else if(Model.Activities && lastActivitiesLens.Contains("map")){
+            lastActivitiesLens = "map";
         }
-        <a href="@activitiesHref">Activities</a>
+        else if (Model.Activities)
+        {
+            lastActivitiesLens = "snapshot";
+        }
+    }
+    @*<li class="@(Model.Activities ? "current" : null)">
+            @{
+                var activitiesHref = Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index());
+                var lastActivitiesLens = Session.LastActivityLens();
+                if (lastActivitiesLens != null && lastActivitiesLens.StartsWith(string.Format("/{0}/", styleDomain)))
+                {
+                    activitiesHref = lastActivitiesLens;
+                }
+            }
+            <a href="@activitiesHref">Activities</a>
+        </li>*@
+    <li class="@(lastActivitiesLens == "snapshot" ? "current" : null)">
+        <a href="@Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index())">Activities Snapshot</a>
     </li>
+    <li class="@(lastActivitiesLens == "table" ? "current" : null)">
+        <a href="@Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index())table">Activities Table</a>
+    </li>
+    <li class="@(lastActivitiesLens == "map" ? "current" : null)">
+        <a href="@Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index())map">Activities Map</a>
+    </li>
+
     <li class="@(Model.FindAnExpert ? "current" : null)">
         <a href="@Url.Action(hasStyleDomain ? MVC.Employees.Experts(styleDomain) : MVC.Employees.Index())">Find an Expert</a>
     </li>
