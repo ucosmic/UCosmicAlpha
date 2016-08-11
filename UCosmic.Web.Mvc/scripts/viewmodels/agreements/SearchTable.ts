@@ -13,6 +13,7 @@ module Agreements.ViewModels {
 
     export interface SearchTableInput {
         keyword: string;
+        ancestorId: number;
         countryCode: string;
         typeCode: string;
         pageSize: number;
@@ -21,11 +22,20 @@ module Agreements.ViewModels {
     }
 
     export class SearchTable {
+        hasTenancyData = ko.observable<boolean>(false);
+        hasEstablishmentSelects = ko.observable<boolean>(false);
+        selectedTenant = ko.observable<number>(ttw.tenantId);
+        selectedEstablishment = ko.observable<number>(ttw.ancestorId);
+        tenantOptions = ko.observableArray<App.ApiModels.SelectOption<number>>();
+        affiliations = ko.mapping.fromJS([]);
+        mainCampus: number;
         //#region Search Filter Inputs
 
         // throttle keyword to reduce number API requests
         keyword = ko.observable<string>(
             sessionStorage.getItem(SearchTable.KeywordSessionKey) || '');
+        ancestorId = ko.observable<number>(
+            parseInt(sessionStorage.getItem(SearchTable.AncestorIdSessionKey)) || 0);
         keywordThrottled = ko.computed<string>(this.keyword)
             .extend({ throttle: 400 });
 
@@ -54,22 +64,196 @@ module Agreements.ViewModels {
             partnerCount: ko.observable('?'),
             countryCount: ko.observable('?'),
         };
-        private _loadSummary(countryCode?: string, typeCode?: string, keyword?: string): void {
+        private _loadSummary(countryCode?: string, typeCode?: string, keyword?: string, ancestorId?: number): void {
             var url = this.settings.summaryApi;
             if (countryCode) {
                 if(keyword == null || keyword == ""){
                     keyword = "!none!";
                 }
-                url = url += "Table/" + countryCode + "/" + typeCode + "/" + keyword
+                url = url += "Table/" + countryCode + "/" + typeCode + "/" + keyword + "/" + ancestorId
             }
             $.get(url)
                 .done((response: ApiModels.Summary): void => {
                     ko.mapping.fromJS(response, {}, this.summary);
                 });
         }
+        //#region Tenancy
+        rootEstablishment = 0;
+        //selectedTenant = ko.observable<number>(ttw.tenantId);
+        isCreatingSelectEstablishments = false;
+
+        tenancyData: App.DataCacher<Establishments.ApiModels.ScalarEstablishment[]> = new App.DataCacher(
+            (): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> => {
+                return this._loadTenancyData();
+            });
+
+        private _selectedTenantChanged = ko.computed((): void => {
+            //var areBindingsApplied = this.areBindingsApplied();
+            var hasTenancyData = this.hasTenancyData();
+            var selectedTenant = this.selectedTenant();
+            if (this.selectedTenant()) {
+                ttw.tenantId = this.selectedTenant();
+            }
+            var establishmentId = this.ancestorId();
+            if (!hasTenancyData || !selectedTenant || selectedTenant == establishmentId)
+                return;
+
+            this.ancestorId(selectedTenant);
+            //this._reloadPlaceData(); //**************************************************here************
+
+        });
+
+
+        private _createEstablishmentSelects(response): void {
+            <number>this.ancestorId()
+            if (this.selectedTenant() == 0) {
+                this.selectedTenant(this.ancestorId())
+            }
+            var parentId = this.selectedTenant();
+            if (!parentId) {
+                parentId = ttw.tenantId;
+            }
+            var previousParentId = 0;
+            this.isCreatingSelectEstablishments = true;
+            this.affiliations.removeAll();
+            while (true) {
+
+                response.map(function (x, index, array) {
+                    x.officialName = x.contextName ? x.contextName : x.officialName && x.officialName.indexOf(',') > -1 ? x.officialName.substring(0, x.officialName.indexOf(',')) : x.officialName;
+                    return x;
+                });
+
+                var options: any = Enumerable.From(response)
+                    .Where("x => x.parentId==" + parentId)
+                    .OrderBy(function (x: Establishments.ApiModels.ScalarEstablishment): number {
+                    return x.rank; // sort by rank, then by name
+                })
+                    .ThenBy(function (x: Establishments.ApiModels.ScalarEstablishment): string {
+                    return x.contextName || x.officialName;
+                })
+                    .Select("x =>  {value: x.id, text: x.officialName}").ToArray();
+
+
+                if (options.length > 0) {
+                    options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
+                    this.affiliations.unshift(ko.mapping.fromJS([{ options: options, value: previousParentId.toString() }])()[0]);
+                }
+                previousParentId = parentId;
+                var parentCheck = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
+                if (parentCheck[0] != undefined) {
+                    parentId = parentCheck[0].parentId;
+                } else {
+                    this.isCreatingSelectEstablishments = false;
+                    this.hasEstablishmentSelects(true);
+                    return;
+                }
+            }
+
+        }
+
+        private _loadEstablishmentData(): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> {
+            var promise: JQueryDeferred<Establishments.ApiModels.ScalarEstablishment[]> = $.Deferred();
+            this.mainCampus = this.rootEstablishment;// this.selectedTenant(); 
+            if (!this.mainCampus) {
+                this.mainCampus = this.selectedTenant();
+                if (!this.mainCampus) {
+                    this.mainCampus = ttw.tenantId;
+                }
+            }
+
+            var temp = sessionStorage.getItem('campuses' + this.mainCampus);
+            if (temp) {
+                var response = $.parseJSON(temp);
+                this._createEstablishmentSelects(response);
+            } else {
+
+                var settings = settings || {};
+                settings.url = '/api/establishments/' + this.mainCampus + '/offspring';
+                $.ajax(settings)
+                    .done((response: ApiModels.ScalarEstablishment[]): void => {
+                    promise.resolve(response);
+                    sessionStorage.setItem('campuses' + this.mainCampus, JSON.stringify(response));
+                    this._createEstablishmentSelects(response);
+                })
+                    .fail((xhr: JQueryXHR): void => {
+                    promise.reject(xhr);
+                });
+            }
+
+            return promise;
+        }
+
+        establishmentData = new App.DataCacher<Establishments.ApiModels.ScalarEstablishment[]>(
+            (): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> => {
+                return this._loadEstablishmentData();
+            });
+
+        private _loadTenancyData(): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> {
+            // calling .ready() on tenancyData invokes this
+            var deferred: JQueryDeferred<Establishments.ApiModels.ScalarEstablishment[]> = $.Deferred();
+            $.when(Establishments.Servers.Single(ttw.tenantId), Establishments.Servers.GetChildren(ttw.tenantId))
+                .done((parentData: Establishments.ApiModels.ScalarEstablishment, childData: Establishments.ApiModels.ScalarEstablishment[]): void => {
+                childData = childData || [];
+                var tenants = Enumerable.From(childData)
+                    .OrderBy(function (x: Establishments.ApiModels.ScalarEstablishment): number {
+                    return x.rank;
+                }).ToArray();
+                tenants.unshift(parentData);
+
+                this.tenantOptions([]);
+                if (childData.length) {
+                    var options = Enumerable.From(tenants)
+                        .Select(function (x: Establishments.ApiModels.ScalarEstablishment): App.ApiModels.SelectOption<number> {
+                        var option: App.ApiModels.SelectOption<number> = {
+                            value: x.id,
+                            text: x.contextName || x.officialName,
+                        };
+                        return option;
+                    }).ToArray();
+                    this.tenantOptions(options);
+                }
+
+                deferred.resolve(tenants);
+
+                this.establishmentData.ready();
+
+                var myThis = this;
+                this.selectedTenant(<number>this.ancestorId());
+                this.selectedTenant.subscribe((newValue: number): void => {
+                    this.selectedEstablishment(this.selectedTenant());
+                });
+                $("#campusSelect").on("change", "select", function () {
+                    if (myThis.isCreatingSelectEstablishments == false) {
+                        if (this.value != '') {
+                            myThis.selectedTenant(this.value);
+                            myThis._loadEstablishmentData();
+                        } else {
+                            var prevCampusSelect = $(this).parent().parent().prev().find("select");
+                            if (prevCampusSelect.length) {
+                                myThis.selectedTenant(prevCampusSelect.val());
+                                myThis._loadEstablishmentData();
+                            } else {
+                                myThis.selectedTenant(myThis.rootEstablishment);
+                                myThis._loadEstablishmentData();
+                            }
+                        }
+                    }
+                })
+                if (childData.length) this.hasTenancyData(true);
+
+            })
+                .fail((xhr: JQueryXHR): void => {
+                App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
+                deferred.reject();
+            })
+            return deferred.promise();
+        }
+
+        //#endregion
         //#region Search Filter Input sessionStorage
 
         static KeywordSessionKey = 'AgreementSearchKeyword2';
+        static AncestorIdSessionKey = 'AgreementSearchancestorId2';
         static PageSizeSessionKey = 'AgreementSearchPageSize2';
         static OrderBySessionKey = 'AgreementSearchOrderBy2';
         static CountrySessionKey = 'AgreementSearchCountry2';
@@ -85,6 +269,7 @@ module Agreements.ViewModels {
 
             sessionStorage.setItem(SearchTable.KeywordSessionKey, this.keyword() || '');
             sessionStorage.setItem(SearchTable.CountrySessionKey, this.countryCode());
+            sessionStorage.setItem(SearchTable.AncestorIdSessionKey, this.ancestorId().toString());
             sessionStorage.setItem(SearchTable.TypeSessionKey, this.typeCode());
             sessionStorage.setItem(SearchTable.PageNumberSessionKey, this.pager.input.pageNumberText());
             sessionStorage.setItem(SearchTable.PageSizeSessionKey, this.pager.input.pageSizeText());
@@ -103,6 +288,9 @@ module Agreements.ViewModels {
                 sessionStorage.setItem("agreementSaved", "no");
                 App.flasher.flash("Agreement deleted");
             }
+
+            this.rootEstablishment = ttw.tenantId;//this.establishmentId();//settings.tenantId;
+            this._loadTenancyData();
         }
 
         ////#endregion
@@ -193,6 +381,7 @@ module Agreements.ViewModels {
         private _filterChanged = ko.computed((): void => {
             var keyword = this.keywordThrottled();
             var pageSize = this.pager.input.pageSize();
+            var ancestorId = this.ancestorId();
             var countryCode = this.countryCode();
             var typeCode = this.typeCode();
             //alert('filter changed');
@@ -203,8 +392,8 @@ module Agreements.ViewModels {
         //#region Sammy Routing
 
         sammy: Sammy.Application;
-        routeFormat: string = '#/{0}/country/{6}/type/{1}/sort/{2}/size/{3}/page/{4}/keyword/{5}'
-            .format(this.settings.route).replace('{6}', '{0}');
+        routeFormat: string = '#/{0}/country/{7}/type/{1}/sort/{2}/size/{3}/page/{4}/keyword/{5}/ancestorId/{6}'
+            .format(this.settings.route).replace('{7}', '{0}');
         private _isActivated: KnockoutObservable<boolean> = ko.observable(false);
 
         private _runSammy(): void {
@@ -213,7 +402,7 @@ module Agreements.ViewModels {
 
             // sammy will run the first route that it matches
             var beforeRegex = new RegExp('\\{0}'.format(
-                this.routeFormat.format('(.*)', '(.*)', '(.*)', '(.*)', '(.*)', '(.*)').replace(/\//g, '\\/')));
+                this.routeFormat.format('(.*)', '(.*)', '(.*)', '(.*)', '(.*)', '(.*)', '(.*)').replace(/\//g, '\\/')));
             this.sammy.before(
                 beforeRegex,
                 function (): boolean {
@@ -223,7 +412,7 @@ module Agreements.ViewModels {
 
             // do this when we already have hashtag parameters in the page
             this.sammy.get(
-                this.routeFormat.format(':country', ':type', ':sort', ':size', ':number', ':keyword'),
+                this.routeFormat.format(':country', ':type', ':sort', ':size', ':number', ':keyword', ':ancestorId'),
                 function (): void {
                     var e: Sammy.EventContext = this;
                     viewModel._onRoute(e);
@@ -251,6 +440,7 @@ module Agreements.ViewModels {
             var size = e.params['size'];
             var page = e.params['number'];
             var keyword = e.params['keyword'];
+            var ancestorId = e.params['ancestorId'];
 
             // this will always run when the route is first activated, either explicitly from the URL
             // or after hitting the activation route pattern
@@ -265,6 +455,7 @@ module Agreements.ViewModels {
             //    this.keyword(keyword);
             //} 
             this.countryCode(country);
+            this.ancestorId(ancestorId);
             this.typeCode(type);
             this.orderBy(sort);
             this.pager.input.pageSizeText(size);
@@ -295,8 +486,9 @@ module Agreements.ViewModels {
             var pageSize = this.pager.input.pageSize();
             var pageNumber = this.pager.input.pageNumber();
             var keyword = this.keyword();
+            var ancestorId = this.ancestorId();
             var route = this.routeFormat.format(countryCode, typeCode,
-                orderBy, pageSize, pageNumber, keyword);
+                orderBy, pageSize, pageNumber, keyword, ancestorId);
             return route;
         }
 
@@ -325,6 +517,7 @@ module Agreements.ViewModels {
                 countryCode: this.countryCode(),
                 typeCode: this.typeCode(),
                 orderBy: this.orderBy(),
+                ancestorId: this.ancestorId(),
                 pageSize: this.pager.input.pageSize(),
                 pageNumber: this.pager.input.pageNumber(),
             };
@@ -371,7 +564,7 @@ module Agreements.ViewModels {
             if (this.$results) { // just give results less opacity, do not fade out entirely
                 this.$results.fadeTo(200, 0.5);
             }
-            this._loadSummary(lastRequest.countryCode, lastRequest.typeCode, lastRequest.keyword);
+            this._loadSummary(lastRequest.countryCode, lastRequest.typeCode, lastRequest.keyword, lastRequest.ancestorId);
             $.get(App.Routes.WebApi.Agreements.Search.get(this.settings.domain), lastRequest)
                 .done((response: App.PageOf<any>): void => {
                     // need to make sure the current inputs still match the request
@@ -442,6 +635,7 @@ module Agreements.ViewModels {
                 && first.typeCode === second.typeCode
                 && first.orderBy === second.orderBy
                 && first.pageSize === second.pageSize
+                && first.ancestorId === second.ancestorId
             ;
             if (!ignorePageNumber)
                 aligned = aligned && first.pageNumber === second.pageNumber;
