@@ -332,6 +332,11 @@ Polymer({
             notify: true,
             value: false
         }
+        , is_animating: {
+            type: Boolean,
+            notify: true,
+            value: true
+        }
         , mobilities_filtered: {
             type: Array,
             notify: true,
@@ -1007,6 +1012,7 @@ Polymer({
             setTimeout(() => {
                 tag.show_all = false;
                 this.count_list1 = JSON.parse(JSON.stringify(this.count_list1));
+                //Object.assign(this.count_list1, this.count_list1);
                 setTimeout(() => {
                     target.toggle();
                     this.is_processing = false;
@@ -1018,6 +1024,7 @@ Polymer({
             setTimeout(() => {
                 tag.show_all = true;
                 this.count_list1 = JSON.parse(JSON.stringify(this.count_list1));
+                //Object.assign(this.count_list1, this.count_list1);
                 setTimeout(() => {
                     target.toggle();
                     this.is_processing = false;
@@ -1157,6 +1164,7 @@ Polymer({
                         tag.is_clicked = false;
                         tag.is_expanded = false;
                         this['count_list' + index] = JSON.parse(JSON.stringify(this['count_list' + index]));
+                        //Object.assign(this['count_list' + index], this['count_list' + index]);
                     }, 500);
 
                 } else {
@@ -1167,6 +1175,7 @@ Polymer({
                     tag.is_clicked = true;
                     tag.is_expanded = true;
                     this['count_list' + index] = JSON.parse(JSON.stringify(this['count_list' + index]));
+                    //Object.assign(this['count_list' + index], this['count_list' + index]);
                     setTimeout(() => {
                         this.closest_utility().find_closest(event.target, '#collapse_outer' + event.model.__data__.__key__).opened = true;
                         this.is_processing = false;
@@ -1192,6 +1201,7 @@ Polymer({
                     tag.is_clicked = false;
                     tag.is_expanded = false;
                     event.model.dataHost.items = JSON.parse(JSON.stringify(event.model.dataHost.items));
+                    //Object.assign(this['count_list' + index], this['count_list' + index]);
                 }, 500);
 
             } else {
@@ -1311,7 +1321,10 @@ Polymer({
     }
 //, get_count: function (...count: string[]) {
     , get_count: function (count) {
-        var my_array = JSON.parse(JSON.stringify(this.mobilities_filtered));
+        var my_array = Array.from(this.mobilities_filtered);
+        //var my_array = this.mobilities_filtered;
+        //this.mobilities_filtered ? Object.assign(my_array, this.mobilities_filtered) : my_array = [];
+        //var my_array = JSON.parse(JSON.stringify(this.mobilities_filtered));
         var my_list = [];
         //_.forEach(count, (value, index) => {
         const value = this.get_count_name(count);
@@ -1473,6 +1486,7 @@ Polymer({
                 return obj.is_shown;
             })
             this.count_list2 = this.count_list1;
+            //Object.assign(this.mobilities_filtered, this.mobilities_filtered);
             this.mobilities_filtered = JSON.parse(JSON.stringify(this.mobilities_filtered));
         }
     }
@@ -1480,6 +1494,21 @@ Polymer({
     , last_term_tags: {}
     , last_status: ''
     , filter_table: function (_this, is_refreshing_data) {
+        if (_this.is_animating) {
+            _this.is_processing = true;
+            //let after_animation = function () {
+            //    _this.is_animating = false;
+            //    _this.filter_table(_this, is_refreshing_data);
+            //    _this.is_animating = true;
+            //}.bind(_this, is_refreshing_data)
+            //window.requestAnimationFrame(after_animation);
+            setTimeout(() => {
+                _this.is_animating = false;
+                _this.filter_table(_this, is_refreshing_data);
+                _this.is_animating = true;
+            }, 0);
+            return;
+        }
         function add_regions(snap) {
             const new_term =
                 _.map(_.toArray(snap.val()), function (value: any, index) {
@@ -1611,6 +1640,7 @@ Polymer({
                 _this.filter_table(_this);
             }, 100);
         }
+        this.is_processing = false;
 
     }
 

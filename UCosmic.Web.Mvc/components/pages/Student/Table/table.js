@@ -330,6 +330,11 @@ Polymer({
             notify: true,
             value: false
         },
+        is_animating: {
+            type: Boolean,
+            notify: true,
+            value: true
+        },
         mobilities_filtered: {
             type: Array,
             notify: true,
@@ -1114,7 +1119,7 @@ Polymer({
         }
     },
     get_count: function (count) {
-        var my_array = JSON.parse(JSON.stringify(this.mobilities_filtered));
+        var my_array = Array.from(this.mobilities_filtered);
         var my_list = [];
         var value = this.get_count_name(count);
         _.remove(my_array, function (value2, index) {
@@ -1260,6 +1265,15 @@ Polymer({
     last_term_tags: {},
     last_status: '',
     filter_table: function (_this, is_refreshing_data) {
+        if (_this.is_animating) {
+            _this.is_processing = true;
+            setTimeout(function () {
+                _this.is_animating = false;
+                _this.filter_table(_this, is_refreshing_data);
+                _this.is_animating = true;
+            }, 0);
+            return;
+        }
         function add_regions(snap) {
             var new_term = _.map(_.toArray(snap.val()), function (value, index) {
                 var country = _this.country_list[parseInt(value.country)];
@@ -1384,6 +1398,7 @@ Polymer({
                 _this.filter_table(_this);
             }, 100);
         }
+        this.is_processing = false;
     },
     leave_affiliation_search: function (event, detail, sender) {
         var _this = this;
