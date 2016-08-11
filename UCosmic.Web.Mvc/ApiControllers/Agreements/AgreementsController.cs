@@ -100,17 +100,17 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return visibility.AsSentenceFragment();
         }
 
-        [GET("{domain}/agreements/summaryTable/{countryCode}/{typeCode}/{keyword}")]
-        public AgreementsSummary GetSummaryTable(string domain, string countryCode, string typeCode, string keyword)
+        [GET("{domain}/agreements/summaryTable/{countryCode}/{typeCode}/{keyword}/{ancestorId}")]
+        public AgreementsSummary GetSummaryTable(string domain, string countryCode, string typeCode, string keyword, int ancestorId)
         {
-            var query = new MyAgreementsSummary(User, domain, countryCode, typeCode, keyword, null);
+            var query = new MyAgreementsSummary(User, domain, countryCode, typeCode, keyword, null, ancestorId);
             var summary = _queryProcessor.Execute(query);
             return summary;
         }
-        [GET("{domain}/agreements/summaryMap/{countryCode}/{typeCode}/{continentCode}")]
-        public AgreementsSummary GetSummaryMap(string domain, string countryCode, string typeCode, string continentCode)
+        [GET("{domain}/agreements/summaryMap/{countryCode}/{typeCode}/{continentCode}/{ancestorId}")]
+        public AgreementsSummary GetSummaryMap(string domain, string countryCode, string typeCode, string continentCode, int ancestorId)
         {
-            var query = new MyAgreementsSummary(User, domain, countryCode, typeCode,null, continentCode);
+            var query = new MyAgreementsSummary(User, domain, countryCode, typeCode,null, continentCode, ancestorId);
             var summary = _queryProcessor.Execute(query);
             return summary;
         }
@@ -119,7 +119,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public AgreementsSummary GetSummary(string domain)
         {
             
-            var query = new MyAgreementsSummary(User, domain, "", "", "", "");
+            var query = new MyAgreementsSummary(User, domain, "", "", "", "", 0);
             var summary = _queryProcessor.Execute(query);
             return summary;
         }
