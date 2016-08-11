@@ -9,6 +9,7 @@ using AutoMapper;
 using UCosmic.Domain.Agreements;
 using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
+using UCosmic.Repositories;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
@@ -61,10 +62,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [GET("{domain}/partners/places/{placeType?}")]
-        public IEnumerable<AgreementPlaceApiModel> GetPartnerPlaces(string domain, string placeType = null)
+        [GET("{domain}/partners/places/{placeType?}/{ancestorId?}")]
+        public IEnumerable<AgreementPlaceApiModel> GetPartnerPlaces(string domain, string placeType = null, int ancestorId = 0)
         {
-            var query = new PartnerPlacesByOwnerDomain(User, domain)
+
+            //if (ancestorId != 0)
+            //{
+            //    EstablishmentListRepository establishmentListRepository = new EstablishmentListRepository();
+
+            //    var establishment = establishmentListRepository.Establishment_By_Id(ancestorId);
+            //    domain = establishment.Domain;
+            //}
+            
+
+            var query = new PartnerPlacesByOwnerDomain(User, domain, ancestorId)
             {
                 EagerLoad = new Expression<Func<Place, object>>[]
                 {
