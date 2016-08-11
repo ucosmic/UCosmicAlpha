@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Linq;
+using MoreLinq;
 using AutoMapper;
 using UCosmic.Domain.Agreements;
 
@@ -15,6 +16,7 @@ namespace UCosmic.Web.Mvc.Models
         public string TypeCode { get; set; }
         public string OrderBy { get; set; }
         public string Accept { get; set; }
+        public int AncestorId { get; set; }
     }
 
     public static class AgreementSearchInputProfiler
@@ -64,7 +66,7 @@ namespace UCosmic.Web.Mvc.Models
                             var column = columnAndDirection[0];
                             var direction = "desc".Equals(columnAndDirection[1], StringComparison.OrdinalIgnoreCase)
                                 ? OrderByDirection.Descending : OrderByDirection.Ascending;
-
+                            //column = "sub-affiliation";
                             switch (column.ToLower())
                             {
                                 case "start":
@@ -107,7 +109,6 @@ namespace UCosmic.Web.Mvc.Models
                                 case "country":
                                     // put agreements without partners or without known partner countries at the bottom
                                     orderBy.Add(x => x.Participants.Any(y => !y.IsOwner && y.Establishment.Location.Places.Any(z => z.IsCountry)), OrderByDirection.Descending);
-
                                     // ordering by partner country, first narrow to partner participants
                                     orderBy.Add(x => x.Participants.Where(y => !y.IsOwner)
                                         // of those, get a list of the partner country names
@@ -115,6 +116,35 @@ namespace UCosmic.Web.Mvc.Models
                                         // sort the country names alphabetically A-Z then take the first
                                         .OrderBy(y => y).FirstOrDefault(), direction);
 
+                                    break;
+                                case "sub_affiliation":
+                                    
+                                    orderBy.Add(x => x.Participants.Where(y => y.IsOwner).FirstOrDefault(y => y.Establishment.Ancestors.Any() != null 
+                                        ? y.Establishment.Ancestors.Max(z => z.Separation) == (x.Participants.Where(z => z.IsOwner).Max(z => z.Establishment.Ancestors.Any() != null ? y.Establishment.Ancestors.Max(zz => zz.Separation) : 0)) 
+                                        : 0 == (x.Participants.Where(z => z.IsOwner).Max(z => z.Establishment.Ancestors.Any() != null ? y.Establishment.Ancestors.Max(zz => zz.Separation) : 0))).Establishment.OfficialName, direction);
+
+                                    //int max = orderBy.Add(x => x.Max(x => x.Participants.Where(y => y.IsOwner).Max(y => y.Establishment.Ancestors.Any() != null ? y.Establishment.Ancestors.Max(z => z.Separation) : 0));
+                                    //queryable = queryable.OrderByDescending(x => x.Participants.Where(y => y.IsOwner).FirstOrDefault(y => y.Establishment.Ancestors.Any() != null ? y.Establishment.Ancestors.Max(z => z.Separation) == max : 0 == max).Establishment.OfficialName);
+
+                                    //orderBy.Add(x => x.Participants.Any(y => y.IsOwner)
+                                    //    ? x.Participants.Where(y => y.IsOwner).MaxBy(y => y.Establishment.Ancestors != null ? y.Establishment.Ancestors.MaxBy(z => z.Separation).Separation : 0).Establishment.OfficialName
+                                    //    //? x.Participants.Where(y => y.IsOwner && y.Establishment.Ancestors. y.Establishment.Ancestors.MaxBy(z => z.Separation)).Establishment.OfficialName
+                                    //    : x.Participants.FirstOrDefault(y => y.IsOwner).Establishment.OfficialName, direction);
+                                         
+                                    //orderBy.Add(x => x.Participants.Any(y => y.Establishment.Ancestors.Any(x => x.), direction == OrderByDirection.Ascending ? OrderByDirection.Descending : OrderByDirection.Ascending);
+                                    //orderBy.Add(x => x.Participants.Any(y => !y.IsOwner)
+                                    //    ? x.Participants.FirstOrDefault(y => !y.IsOwner).Establishment.Names.Any(y => !y.IsFormerName && y.TranslationToLanguage != null
+                                    //        && y.TranslationToLanguage.TwoLetterIsoCode.Equals(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase))
+                                    //        ? x.Participants.FirstOrDefault(y => !y.IsOwner).Establishment.Names.FirstOrDefault(y => !y.IsFormerName && y.TranslationToLanguage != null
+                                    //            && y.TranslationToLanguage.TwoLetterIsoCode.Equals(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase)).Text
+                                    //        : x.Participants.FirstOrDefault(y => !y.IsOwner).Establishment.Names.Any(y => !y.IsFormerName && y.TranslationToLanguage != null
+                                    //            && y.TranslationToLanguage.TwoLetterIsoCode.Equals("en", StringComparison.OrdinalIgnoreCase))
+                                    //            ? x.Participants.FirstOrDefault(y => !y.IsOwner).Establishment.Names.FirstOrDefault(y => !y.IsFormerName && y.TranslationToLanguage != null
+                                    //                && y.TranslationToLanguage.TwoLetterIsoCode.Equals("en", StringComparison.OrdinalIgnoreCase)).Text
+                                    //            : x.Participants.FirstOrDefault(y => !y.IsOwner).Establishment.OfficialName
+                                    //    : null
+
+                                    //    , direction);
                                     break;
                             }
                         }
