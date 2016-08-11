@@ -1,0 +1,2 @@
+change the 192.168.1.57 to whatever you need in order to get vs to run the project.
+C:\Users\{users_name}\Documents\IISExpress\config\applicationhost.config
