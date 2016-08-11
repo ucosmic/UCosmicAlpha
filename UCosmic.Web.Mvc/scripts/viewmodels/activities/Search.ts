@@ -68,17 +68,11 @@ module Activities.ViewModels {
 
 
         constructor(public settings: SearchSettings) {
-            //window.sessionStorage.setItem("test", JSON.stringify(this.settings.output));
-            
-            //if (searchOptions) {
-            //    sessionStorage.setItem(SearchMap.SearchOptions, JSON.stringify(searchOptions));
-            //}
             this.pager.apply(this.settings.output);
             this._loadTenancyData();
 
         }
         MapDataIsLoading = ko.observable<boolean>(false);
-        //MapDataIsLoading = ko.observable<boolean>(true);
         ajaxMapData;
         private _ConstructMapData() {
             var stringActivityMapData;
@@ -101,7 +95,7 @@ module Activities.ViewModels {
                 if (this.settings.input.keyword) {
                     url += '&keyword=' + keyword;
                 }
-                settings.url = url;//'/api/usf.edu/employees/map/?pivot=1&keyword=&ancestorid=3306&placeNames=&placeIds=&activityTypeIds=2&activityTypeIds=3&activityTypeIds=5&activityTypeIds=1&activityTypeIds=4&Since=&Until=&includeUndated=true&includeUndated=false';
+                settings.url = url;
                 //check with ancestorid - use output.input.anc...
 
                 this.ajaxMapData = $.ajax(settings)
@@ -112,7 +106,7 @@ module Activities.ViewModels {
                         this.MapDataIsLoading(false);
                     })
                     .fail((xhr: JQueryXHR): void => {
-                        //promise.reject(xhr);
+
                     });
             }else{
                 this.MapDataIsLoading(false);
@@ -161,43 +155,11 @@ module Activities.ViewModels {
                     return;
                 }
             }
-            //while (true) {
-            //    var options: any = Enumerable.From(response)
-            //        .Where("x => x.parentId==" + parentId)
-            //        .Select("x =>  {value: x.id, text: x.officialName}")
-            //        .OrderBy(function (x: Establishments.ApiModels.ScalarEstablishment): number {
-            //            return x.rank; // sort by rank, then by name
-            //        })
-            //        .ThenBy(function (x: Establishments.ApiModels.ScalarEstablishment): string {
-            //            return x.contextName || x.officialName;
-            //        }).ToArray();
-
-            //    for (var i = 0; i < options.length; i++) {
-            //        if (options[i].text.indexOf(',') > 0) {
-            //            options[i].text = options[i].text.substring(0, options[i].text.indexOf(','))
-            //            }
-            //    }
-
-            //    if (options.length > 0) {
-            //        options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
-            //        this.affiliations.unshift(ko.mapping.fromJS([{ options: options, value: previousParentId.toString() }])()[0]);
-            //    }
-            //    previousParentId = parentId;
-            //    var parentCheck = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
-            //    if (parentCheck[0] != undefined) {
-            //        parentId = parentCheck[0].parentId;
-            //    } else {
-            //        this.hasEstablishmentSelects(true);
-            //        return;
-            //    }
-            //}
 
         }
 
         private _loadEstablishmentData(): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> {
             var promise: JQueryDeferred<Establishments.ApiModels.ScalarEstablishment[]> = $.Deferred();
-            //var mainCampus = this.settings.tenantId;
-
             if (!this.mainCampus) {
                 this.mainCampus = this.settings.tenantId;
             }
@@ -206,7 +168,6 @@ module Activities.ViewModels {
             if (temp) {
                 var response = $.parseJSON(temp);
                 this._createEstablishmentSelects(response);
-                //this._ConstructMapData();
             } else {
 
                 var settings = settings || {};
@@ -217,7 +178,6 @@ module Activities.ViewModels {
                         sessionStorage.setItem('campuses' + this.mainCampus, JSON.stringify(response));
 
                         this._createEstablishmentSelects(response);
-                        //this._ConstructMapData();
 
                     })
                     .fail((xhr: JQueryXHR): void => {
@@ -274,12 +234,10 @@ module Activities.ViewModels {
                         
                         myThis._submitForm()
                     })
-                    //deferred.resolve(tenants);
                     if (childData.length) this.hasTenancyData(true);
                 })
                 .fail((xhr: JQueryXHR): void => {
                     App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
-                    //deferred.reject();
                 })
 
         }
@@ -314,12 +272,20 @@ module Activities.ViewModels {
                 searchOptions.placeIds = [searchOptions.placeIds];
                 searchOptions.placeNames = [searchOptions.placeNames];
 
-                searchOptions.activityTypeIds = searchOptions.activityTypeIds.map((value, index) => {
-                    return Number(value);
-                });
-                searchOptions.placeIds = searchOptions.placeIds.map((value, index) => {
-                    return Number(value);
-                });
+                if (typeof searchOptions.activityTypeIds == 'string') {
+                    searchOptions.activityTypeIds = [searchOptions.activityTypeIds];
+                } else {
+                    searchOptions.activityTypeIds = searchOptions.activityTypeIds.map((value, index) => {
+                        return Number(value);
+                    });
+                }
+                if (typeof searchOptions.placeIds == 'string'){
+                    searchOptions.placeIds = [searchOptions.placeIds];
+                } else {
+                    searchOptions.placeIds = searchOptions.placeIds.map((value, index) => {
+                        return Number(value);
+                    });
+                }
                 sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
                 
                 if(this.ajaxMapData){
@@ -339,12 +305,6 @@ module Activities.ViewModels {
         stopAutocompleteInfiniteLoop: boolean;
         private _applyKendo(): void {
             //#region DatePickers
-            //if (this.settings.input.placeNames) {
-            //    this.settings.input.placeNames.forEach((value) => {
-            //        this.placeNames(this.placeNames() + value);
-            //    });
-            //}
-            //this.placeNames = this.settings.input.placeNames;
             var kendoSince = this.$since.data('kendoDatePicker');
             kendoSince.element.val(this.settings.input.since);
             var kendoUntil = this.$until.data('kendoDatePicker');
@@ -389,7 +349,6 @@ module Activities.ViewModels {
                     widget.value('');
                     this.$placeIds.val('');
                     if (this.settings.input.placeIds && this.settings.input.placeIds.length) {
-                        //this._submitForm(); // this makes changing location searches annoying
                     } else {
                         widget.setDataSource(emptyDataSource);
                     }
@@ -452,9 +411,6 @@ module Activities.ViewModels {
                         }
                     }
                 },
-                //open: (e: kendo.ui.ComboBoxEvent): boolean => {
-                //    return false;
-                //},
                 dataBound: (e: kendo.ui.ComboBoxEvent): void => {
                     if (!this.stopAutocompleteInfiniteLoop){
 
@@ -501,7 +457,6 @@ module Activities.ViewModels {
             });
             var comboBox: kendo.ui.ComboBox = this.$location.data('kendoComboBox');
             comboBox.list.addClass('k-ucosmic');
-            //this.$placeIds.val(this.settings.input.placeIds);
             if(this.settings.input.placeIds){
                 $.each(this.settings.input.placeIds, function (index, value) {
                     if (index > 0) {
@@ -521,32 +476,24 @@ module Activities.ViewModels {
                 searchOptions.placeFilter = 'continents';
                 searchOptions.placeIds = [searchOptions.placeIds];
                 searchOptions.placeNames = [searchOptions.placeNames];
-                searchOptions.activityTypeIds = searchOptions.activityTypeIds.map((value, index) => {
-                    return Number(value);
-                });
-                searchOptions.placeIds = searchOptions.placeIds.map((value, index) => {
-                    return Number(value);
-                });
+                if (typeof searchOptions.activityTypeIds == 'string') {
+                    searchOptions.activityTypeIds = [searchOptions.activityTypeIds];
+                } else {
+                    searchOptions.activityTypeIds = searchOptions.activityTypeIds.map((value, index) => {
+                        return Number(value);
+                    });
+                }
+                if (typeof searchOptions.placeIds == 'string') {
+                    searchOptions.placeIds = [searchOptions.placeIds];
+                } else {
+                    searchOptions.placeIds = searchOptions.placeIds.map((value, index) => {
+                        return Number(value);
+                    });
+                }
 
                 sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
             }
 
-            //$('input[name="placeNames"]').bind("click", function () {
-            //    if (this.value == "") {
-            //        myThis._submitForm();
-            //    }
-            //})
-            //comboBox.bind("change keyup input", function () {
-            //    if (this.value == "") {
-            //        myThis._submitForm();
-            //    }
-            //});
-            
-            //this.placeNames.subscribe((newValue: string): void => {
-            //    if (newValue == "") {
-            //        this._submitForm();
-            //    }
-            //});
             //#endregion
         }
 
@@ -559,14 +506,10 @@ module Activities.ViewModels {
                 $('input[name="placeNames"]').bind("change keyup input", function () {
                     if (this.value == "") {
                         $('input[name="placeIds"]')[0].value = '';
-                        //myThis._submitForm();
                     }
                 });
                 $('input[name="placeIds"]').bind("change keyup input", function () {
-                    //if (this.value == "") {
-                        //$('input[name="placeIds"]')[0].value = '';
                         myThis._submitForm();
-                    //}
                 });
             }, 500);
             

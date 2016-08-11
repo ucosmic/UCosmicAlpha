@@ -26,7 +26,6 @@ var Activities;
         ViewModels.ActivityTypeSearchCheckBox = ActivityTypeSearchCheckBox;
         var Search = (function () {
             function Search(settings) {
-                //window.sessionStorage.setItem("test", JSON.stringify(this.settings.output));
                 var _this = this;
                 this.settings = settings;
                 this.orderBy = ko.observable(this.settings.input.orderBy);
@@ -244,12 +243,22 @@ var Activities;
                     searchOptions.placeFilter = 'continents';
                     searchOptions.placeIds = [searchOptions.placeIds];
                     searchOptions.placeNames = [searchOptions.placeNames];
-                    searchOptions.activityTypeIds = searchOptions.activityTypeIds.map(function (value, index) {
-                        return Number(value);
-                    });
-                    searchOptions.placeIds = searchOptions.placeIds.map(function (value, index) {
-                        return Number(value);
-                    });
+                    if (typeof searchOptions.activityTypeIds == 'string') {
+                        searchOptions.activityTypeIds = [searchOptions.activityTypeIds];
+                    }
+                    else {
+                        searchOptions.activityTypeIds = searchOptions.activityTypeIds.map(function (value, index) {
+                            return Number(value);
+                        });
+                    }
+                    if (typeof searchOptions.placeIds == 'string') {
+                        searchOptions.placeIds = [searchOptions.placeIds];
+                    }
+                    else {
+                        searchOptions.placeIds = searchOptions.placeIds.map(function (value, index) {
+                            return Number(value);
+                        });
+                    }
                     sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
                     if (_this.ajaxMapData) {
                         _this.ajaxMapData.abort();
@@ -431,12 +440,22 @@ var Activities;
                     searchOptions.placeFilter = 'continents';
                     searchOptions.placeIds = [searchOptions.placeIds];
                     searchOptions.placeNames = [searchOptions.placeNames];
-                    searchOptions.activityTypeIds = searchOptions.activityTypeIds.map(function (value, index) {
-                        return Number(value);
-                    });
-                    searchOptions.placeIds = searchOptions.placeIds.map(function (value, index) {
-                        return Number(value);
-                    });
+                    if (typeof searchOptions.activityTypeIds == 'string') {
+                        searchOptions.activityTypeIds = [searchOptions.activityTypeIds];
+                    }
+                    else {
+                        searchOptions.activityTypeIds = searchOptions.activityTypeIds.map(function (value, index) {
+                            return Number(value);
+                        });
+                    }
+                    if (typeof searchOptions.placeIds == 'string') {
+                        searchOptions.placeIds = [searchOptions.placeIds];
+                    }
+                    else {
+                        searchOptions.placeIds = searchOptions.placeIds.map(function (value, index) {
+                            return Number(value);
+                        });
+                    }
                     sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
                 }
             };
