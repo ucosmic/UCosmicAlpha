@@ -17,6 +17,7 @@ namespace UCosmic.Web.Mvc.Models
         public string OfficialName { get; set; }
         public string ContextName { get; set; }
         public bool IsUnverified { get; set; }
+        //public string Domain { get; set; }
     }
 
     public static class EstablishmentApiScalarProfiler
@@ -31,6 +32,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.TypeId, o => o.MapFrom(s => s.Type.RevisionId))
                     .ForMember(d => d.CeebCode, o => o.MapFrom(s => s.CollegeBoardDesignatedIndicator))
                     .ForMember(d => d.Rank, o => o.MapFrom(s => s.VerticalRank))
+                    //.ForMember(d => d.Domain, o => o.MapFrom(s => new Uri(s.WebsiteUrl).Host.ToString()))
                     .ForMember(d => d.ContextName, o => o.MapFrom(s =>
                         s.Names.Any(x => x.IsContextName && !x.IsFormerName) ? s.Names.FirstOrDefault(x => x.IsContextName && !x.IsFormerName).Text : null))
                 ;

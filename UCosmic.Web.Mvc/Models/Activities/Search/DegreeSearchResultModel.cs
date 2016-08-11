@@ -19,6 +19,7 @@ namespace UCosmic.Web.Mvc.Models
         public string CountryName { get; set; }
         public DegreeSearchResultOwnerModel Owner { get; set; }
         public DegreeSearchResultEstablishmentModel AlmaMater { get; set; }
+        //public DegreeSearchSummary Summary { get; set; }
 
         public class DegreeSearchResultOwnerModel
         {
@@ -33,6 +34,12 @@ namespace UCosmic.Web.Mvc.Models
             public string TranslatedName { get; set; }
             public string OfficialName { get; set; }
         }
+        //public class DegreeSearchResultSummary
+        //{
+        //    public int People_Count { get; set; }
+        //    public int Institution_Count { get; set; }
+        //    public int Country_Count { get; set; }
+        //}
     }
 
     public class PageOfDegreeSearchResultModel : PageOf<DegreeSearchResultModel>
@@ -65,6 +72,13 @@ namespace UCosmic.Web.Mvc.Models
                         }
                         return "[Unknown]";
                     }))
+                //    new DegreeSearchSummary()
+                //{
+                //    People_Count = results.DistinctBy(x => x.PersonId).Count(),
+                //    Institution_Count = results.DistinctBy(x => x.InstitutionId).Count(),
+                //    Country_Count = model.Output.Items.DistinctBy(x => x.CountryName).Count()
+                //};
+                    //.ForMember(d => d.Summary.)
                 ;
             }
         }
