@@ -17,6 +17,7 @@ using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Places;
 using UCosmic.Repositories;
 using UCosmic.Web.Mvc.Models;
+using System.Web;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
@@ -43,9 +44,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             ActivitySummaryApiModel returnModel = new ActivitySummaryApiModel();
             IList<ActivitySummaryTypesApiModel> typesModel = new List<ActivitySummaryTypesApiModel>();
-            IList<ActivitySummaryApiQueryResultModel> model = new List<ActivitySummaryApiQueryResultModel>();
-            //IList<ActivityTypesApiReturn> establishmentTypes = new List<ActivityTypesApiReturn>();
-
+            //IList<ActivitySummaryApiQueryResultModel> model = new List<ActivitySummaryApiQueryResultModel>();
+            IList<ActivitySummaryApiQueryResultModel> model = HttpContext.Current.Session["session_activities_summary" + establishmentId + selectedEstablishment + selectedEstablishmentId] as IList<ActivitySummaryApiQueryResultModel>;
+            IList<SummaryPlacesApiQueryResultModel> places = HttpContext.Current.Session["session_places_summary" + placeId] as IList<SummaryPlacesApiQueryResultModel>;
+            //IList<SummaryPlacesApiQueryResultModel> places = new List<SummaryPlacesApiQueryResultModel>();
             var tenancy = Request.Tenancy();
 
             if (!(establishmentId.HasValue && (establishmentId.Value != 0)))
@@ -66,10 +68,24 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 {
                     SummaryRepository summaryRepository = new SummaryRepository();
                     EmployeeActivityTypesRepository employeeActivityTypesRepository = new EmployeeActivityTypesRepository();
-                    model = summaryRepository.ActivitySummaryByEstablishment_Place(establishmentId, placeId, selectedEstablishmentId, selectedEstablishment);
-                    //var modelDistinct = model.DistinctBy(x => x.id);
+                    if (model == null)
+                    {
+                        model = summaryRepository.ActivitySummaryByEstablishment(establishmentId, selectedEstablishmentId, selectedEstablishment);
+                        HttpContext.Current.Session.Add("session_activities_summary" + establishmentId + selectedEstablishment + selectedEstablishmentId, model);
+                    }
+
+                    if (places == null && placeId != 0)
+                    {
+                        places = summaryRepository.SummaryByPlace(placeId);
+                        SummaryPlacesApiQueryResultModel place = new SummaryPlacesApiQueryResultModel();
+                        place.place_id = (int)placeId;
+                        places.Add(place);
+                        if (places.Count() != 0)
+                        {
+                            model = model.Where(t2 => places.Any(t1 => t2.place_id == t1.place_id)).ToList();
+                        }
+                    }
                     var modelDistinct = model.DistinctBy(x => new { x.id, x.type });
-                    //establishmentTypes = employeeActivityTypesRepository.EmployeeActivityTypes_By_establishmentId(establishmentId);
                     var establishmentTypes = modelDistinct.DistinctBy(x => x.type);
                     var locationDistinct = model.DistinctBy(x => x.officialName);
                     var personDistinct = model.DistinctBy(x => x.person_id);
@@ -98,7 +114,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             IList<ActivityMapSummaryApiModel> returnModel = new List<ActivityMapSummaryApiModel>();
             IList<ActivityMapSummaryApiQueryResultModel> model = new List<ActivityMapSummaryApiQueryResultModel>();
-            //IList<ActivityTypesApiReturn> establishmentTypes = new List<ActivityTypesApiReturn>();
 
             var tenancy = Request.Tenancy();
 
@@ -121,14 +136,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     SummaryRepository summaryRepository = new SummaryRepository();
                     EmployeeActivityTypesRepository employeeActivityTypesRepository = new EmployeeActivityTypesRepository();
                     model = summaryRepository.ActivityMapSummaryByEstablishment_Place(establishmentId, placeId);
-                    //var modelDistinct = model.DistinctBy(x => x.id);
-
                     var modelDistinct = model.DistinctBy(x => new { x.id, x.countryCode });
-                    //establishmentTypes = employeeActivityTypesRepository.EmployeeActivityTypes_By_establishmentId(establishmentId);
                     var locations = modelDistinct.DistinctBy(x => x.countryCode);
                     foreach (var location in locations)
                     {
-                        //var locationCount = modelDistinct.Where(x => x.type == type.type).Count();
                         var locationCount = model.Where(x => x.officialName == location.officialName).Count();
                         returnModel.Add(new ActivityMapSummaryApiModel { LocationCount = locationCount, CountryCode = location.countryCode});
                     }
@@ -146,6 +157,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             IList<DegreeSummaryApiModel> returnModel = new List<DegreeSummaryApiModel>();
             IList<DegreeSummaryApiQueryResultModel> model = new List<DegreeSummaryApiQueryResultModel>();
+            IList<SummaryPlacesApiQueryResultModel> places = HttpContext.Current.Session["session_places_summary" + placeId] as IList<SummaryPlacesApiQueryResultModel>;
 
             var tenancy = Request.Tenancy();
 
@@ -166,8 +178,22 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 if (placeId.HasValue)
                 {
                     SummaryRepository summaryRepository = new SummaryRepository();
+                    model = summaryRepository.DegreeSummaryByEstablishment(establishmentId, selectedEstablishmentId);
+                    if (places == null && placeId != 0)
+                    {
+                        places = summaryRepository.SummaryByPlace(placeId);
+                        SummaryPlacesApiQueryResultModel place = new SummaryPlacesApiQueryResultModel();
+                        place.place_id = (int)placeId;
+                        places.Add(place);
+                        if (places.Count() != 0)
+                        {
+                            model = model.Where(t2 => places.Any(t1 => t2.place_id == t1.place_id)).ToList();
+                        }
+                    }
 
-                    model = summaryRepository.DegreeSummaryByEstablishment_Place(establishmentId, placeId, selectedEstablishmentId);
+
+
+
                     var modelDistinct = model.DistinctBy(x => new { x.degreeId });
                     var modelDistinct2 = model.DistinctBy(x => x.degreeId);
 
@@ -204,32 +230,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             if (establishmentId != null)
             {
-                //if (placeId.HasValue)
-                //{
-                //    SummaryRepository summaryRepository = new SummaryRepository();
-
-                //    model = summaryRepository.DegreeSummaryByEstablishment_Place(establishmentId, placeId);
-                //    var modelDistinct = model.DistinctBy(x => new { x.degreeId });
-
-                //    var degreeCount = modelDistinct.ToList().Count();
-                //    var establishmentCount = modelDistinct.DistinctBy(x => x.establishmentId).ToList().Count();
-                //    var personCount = modelDistinct.DistinctBy(x => x.personId).ToList().Count();
-                //    returnModel.Add(new DegreeSummaryApiModel { DegreeCount = degreeCount, EstablishmentCount = establishmentCount, PersonCount = personCount });
-                //}
                 if (placeId.HasValue)
                 {
                     SummaryRepository summaryRepository = new SummaryRepository();
-                    //DegreeTypesRepository employeeDegreeTypesRepository = new DegreeTypesRepository();
                     model = summaryRepository.DegreeMapSummaryByEstablishment_Place(establishmentId, placeId);
-                    //var modelDistinct = model.DistinctBy(x => x.id);
-
-                    //var modelDistinct = model.DistinctBy(x => new { x.id });
                     var modelDistinct = model.DistinctBy(x => new { x.id, x.countryCode });
-                    //establishmentTypes = employeeDegreeTypesRepository.EmployeeDegreeTypes_By_establishmentId(establishmentId);
                     var locations = modelDistinct.DistinctBy(x => x.countryCode);
                     foreach (var location in locations)
                     {
-                        //var locationCount = modelDistinct.Where(x => x.type == type.type).Count();
                         var locationCount = modelDistinct.Where(x => x.countryCode == location.countryCode).Count();
                         returnModel.Add(new DegreeMapSummaryApiModel { LocationCount = locationCount, CountryCode = location.countryCode });
                     }
@@ -240,13 +248,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         /* Returns agreement type counts for given place.*/
         [GET("agreement-count/{establishmentId?}/{placeId?}/{selectedEstablishmentId?}")]
-        //[CacheHttpGet(Duration = 3600)]
+        [CacheHttpGet(Duration = 3600)]
         public AgreementSummaryApiModel GetAgreementCount(int? establishmentId, int? placeId, int? selectedEstablishmentId)
         {
             List<AgreementSummaryItemsApiModel> returnItems = new List<AgreementSummaryItemsApiModel>();
             AgreementSummaryApiModel returnModel = new AgreementSummaryApiModel();
             IList<AgreementSummaryApiQueryResultModel> model = new List<AgreementSummaryApiQueryResultModel>();
-            //IList<AgreementTypesApiReturn> agreementTypes = new List<AgreementTypesApiReturn>();
+            IList<SummaryPlacesApiQueryResultModel> places = HttpContext.Current.Session["session_places_summary" + placeId] as IList<SummaryPlacesApiQueryResultModel>;
             var tenancy = Request.Tenancy();
 
             if (!(establishmentId.HasValue && (establishmentId.Value != 0)))
@@ -267,27 +275,27 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 {
                     SummaryRepository summaryRepository = new SummaryRepository();
                     AgreementTypesRepository AgreementTypesRepository = new AgreementTypesRepository();
-                    model = summaryRepository.AgreementSummaryByEstablishment_Place(establishmentId, placeId, selectedEstablishmentId);
-                    //var test2 = model.DistinctBy(x => new { x.id, x.type });
-                    //var test = model.DistinctBy(x => new { x.id2, x.type2 });
-                    //var new_model = test.Concat(test2);
-                    //var test3 = model.DistinctBy(x => new { x.id });
-                    //var test4 = model.DistinctBy(x => new { x.id2 });
-                    //var test5 = model.DistinctBy(x => new { x.id });
-                    //var test6 = model.DistinctBy(x => new { x.id2 });
-                    //var test7 = test5.DistinctBy(x => new { x.type });
-                    //var test8 = test6.DistinctBy(x => new { x.type2 });
-                    var modelDistinct = model.DistinctBy(x => new { x.id, x.type });// test.Concat(test2);// new_model.DistinctBy(x => new { x.id, x.type });
+                    model = summaryRepository.AgreementSummaryByEstablishment(establishmentId, selectedEstablishmentId);
+                    if (places == null && placeId != 0)
+                    {
+                        places = summaryRepository.SummaryByPlace(placeId);
+                        SummaryPlacesApiQueryResultModel place = new SummaryPlacesApiQueryResultModel();
+                        place.place_id = (int)placeId;
+                        places.Add(place);
+                        if (places.Count() != 0)
+                        {
+                            model = model.Where(t2 => places.Any(t1 => t2.place_id == t1.place_id)).ToList();
+                        }
+                    }
+                    var modelDistinct = model.DistinctBy(x => new { x.id, x.type });
                     var locationDistinct = model.Where(x => x.officialName != null).DistinctBy(x => x.officialName);
                     returnModel.TypeCount = modelDistinct.Count();
                     returnModel.LocationCount = locationDistinct.Count();
 
-                    //agreementTypes = AgreementTypesRepository.AgreementTypes_By_establishmentId(establishmentId);
                     var agreementTypes = modelDistinct.DistinctBy(x => x.type);
                     foreach (var type in agreementTypes)
                     {
                         var typeCount = modelDistinct.Where(x => x.type == type.type).Count();
-                        //var locationCount = locationDistinct.Where(x => x.type == type.type).Count();
                         var locationCount = model.Where(x => x.officialName != null).Where(x => x.type == type.type).DistinctBy(x => x.officialName).Count();
                         returnItems.Add(new AgreementSummaryItemsApiModel { LocationCount = locationCount, TypeCount = typeCount, Type = type.type, TypeId = type.id });
                     }
@@ -297,14 +305,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return returnModel;
         }
 
-        /* Returns agreement type counts for given place.*/
         [GET("agreement-map-count/{establishmentId?}/{placeId?}")]
         [CacheHttpGet(Duration = 3600)]
         public List<AgreementMapSummaryApiModel> GetAgreementMapCount(int? establishmentId, int? placeId)
         {
             IList<AgreementMapSummaryApiModel> returnModel = new List<AgreementMapSummaryApiModel>();
             IList<AgreementMapSummaryApiQueryResultModel> model = new List<AgreementMapSummaryApiQueryResultModel>();
-            //IList<AgreementMapTypesApiReturn> agreementTypes = new List<AgreementMapTypesApiReturn>();
 
             var tenancy = Request.Tenancy();
 
@@ -322,34 +328,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             if (establishmentId != null)
             {
-                //if (placeId.HasValue)
-                //{
-                //    SummaryRepository summaryRepository = new SummaryRepository();
-                //    AgreementMapTypesRepository AgreementMapTypesRepository = new AgreementMapTypesRepository();
-                //    model = summaryRepository.AgreementMapSummaryByEstablishment_Place(establishmentId, placeId, selectedEstablishmentId);
-                //    var modelDistinct = model.DistinctBy(x => new { x.id, x.type });
-                //    //agreementTypes = AgreementMapTypesRepository.AgreementMapTypes_By_establishmentId(establishmentId);
-                //    var agreementTypes = modelDistinct.DistinctBy(x => x.type);
-                //    foreach (var type in agreementTypes)
-                //    {
-                //        var typeCount = modelDistinct.Where(x => x.type == type.type).Count();
-                //        var locationCount = model.Where(x => x.type == type.type).Count();
-                //        returnModel.Add(new AgreementMapSummaryApiModel { LocationCount = locationCount, CountryCode = location.countryCode, officialName = location.officialName });
-                //    }
-                //}
                 if (placeId.HasValue)
                 {
                     SummaryRepository summaryRepository = new SummaryRepository();
                     AgreementTypesRepository employeeAgreementTypesRepository = new AgreementTypesRepository();
                     model = summaryRepository.AgreementMapSummaryByEstablishment_Place(establishmentId, placeId);
-                    //var modelDistinct = model.DistinctBy(x => x.id);
 
                     var modelDistinct = model.DistinctBy(x => new { x.id, x.officialName });
-                    //establishmentTypes = employeeAgreementTypesRepository.EmployeeAgreementTypes_By_establishmentId(establishmentId);
                     var locations = modelDistinct.DistinctBy(x => x.officialName);
                     foreach (var location in locations)
                     {
-                        //var locationCount = modelDistinct.Where(x => x.type == type.type).Count();
                         var locationCount = model.Where(x => x.officialName == location.officialName).Count();
                         returnModel.Add(new AgreementMapSummaryApiModel { LocationCount = locationCount, CountryCode = location.countryCode });
                     }
