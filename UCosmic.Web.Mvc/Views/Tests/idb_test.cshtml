@@ -1,0 +1,38 @@
+﻿@using UCosmic.Web.Mvc.Models
+@{
+    ViewBag.Title = "Student Mobility Snapshot";
+    var tenancy = Request.Tenancy();
+    var styleDomain = tenancy != null ? tenancy.StyleDomain : "default";
+    var tenantId = tenancy != null ? tenancy.TenantId : 0;
+    var hasStyleDomain = !string.IsNullOrWhiteSpace(styleDomain) && !"default".Equals(styleDomain, StringComparison.OrdinalIgnoreCase);
+    bool isLocal = HttpContext.Current.Request.IsLocal;
+}
+@section bib
+{
+    <nav class="bib" data-current-bib="map">
+        @Html.Partial(MVC.Students.Views._Bib, new StudentsBibNavModel { })
+    </nav>
+}
+@section styles
+{
+    }
+@if (isLocal)
+{
+
+    @*<script id="activities_worker" src="/components_riot/app/workers/activities_filter.js" type="javascript/woker"></script>*@
+    <script src="/components_riot/app/components/pages/tests/idb_test/idb_test.js"></script>
+
+}
+@if (!isLocal)
+{
+
+    @*<script id="activities_worker" src="https://ucosmic.firebaseapp.com/workers/activities_filter.js" type="javascript/woker"></script>*@
+    <script src="https://ucosmic.firebaseapp.com/components/pages/tests/idb_test/idb_test.js"></script>
+}
+    <div class="content fixed" data-current-module="students">
+        <idb_test id="idb_test" style_domain="@styleDomain" tenant_id="@tenantId" firebase_token="@ViewBag.firebase_token"></idb_test>
+    </div>
+    <script>
+
+        riot.mount('*') // Kickoff the Riot app.
+    </script>
