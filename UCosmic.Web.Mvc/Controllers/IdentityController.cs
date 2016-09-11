@@ -489,7 +489,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var x = response.Content.ReadAsStringAsync().Result;
-                    x = x;
+                    //x = x;
                 }
                 else
                 {

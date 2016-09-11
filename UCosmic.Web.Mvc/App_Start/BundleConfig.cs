@@ -45,11 +45,16 @@ namespace UCosmic.Web.Mvc
 
             // bundles for layout (all pages)
             bundles.Add(new ScriptBundle("~/bundles/layout2").Include(
-                "~/components/polymer/bower_components/lodash/lodash.min.js",
-                "~/components/polymer/bower_components/webcomponentsjs/webcomponents.js"));
+                //"~/components/polymer/bower_components/lodash/lodash.js",
+                //"~/components/polymer/bower_components/webcomponentsjs/webcomponents.js"
+                ));
             bundles.Add(new ScriptBundle("~/bundles/layout3").Include(
-                "~/components/polymer_1x/bower_components/lodash/lodash.min.js",
-                "~/components/polymer_1x/bower_components/webcomponentsjs/webcomponents-lite.min.js"));
+                //"~/components/lib/lodash.js",
+                ////"~/components/polymer_1x/bower_components/firebase/firebase.js",
+                //"~/components/polymer_1x/bower_components/rxjs/dist/rx.all.js",
+                //"~/components/polymer_1x/bower_components/webcomponentsjs/webcomponents.js"
+                ));
+
 
             // bundles for layout (all pages)
             bundles.Add(new ScriptBundle("~/bundles/layout").Include(
@@ -74,7 +79,9 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/app/Routes.js",
                 "~/scripts/app/Flasher.js",
                 "~/scripts/app/Spinner.js",
-                "~/scripts/oss/moment.js"));
+                "~/scripts/oss/moment.js"
+                
+                ));
 
             // establishment search page
             bundles.Add(new ScriptBundle("~/bundles/establishments").Include(
