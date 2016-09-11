@@ -45,6 +45,7 @@ public static class MVC
     public static UCosmic.Web.Mvc.Controllers.StudentsController Students = new UCosmic.Web.Mvc.Controllers.T4MVC_StudentsController();
     public static UCosmic.Web.Mvc.Controllers.SummaryController Summary = new UCosmic.Web.Mvc.Controllers.T4MVC_SummaryController();
     public static UCosmic.Web.Mvc.Controllers.TenancyController Tenancy = new UCosmic.Web.Mvc.Controllers.T4MVC_TenancyController();
+    public static UCosmic.Web.Mvc.Controllers.TestsController Tests = new UCosmic.Web.Mvc.Controllers.T4MVC_TestsController();
     public static UCosmic.Web.Mvc.Controllers.UsersController Users = new UCosmic.Web.Mvc.Controllers.T4MVC_UsersController();
     public static T4MVC.SharedController Shared = new T4MVC.SharedController();
 }
@@ -2872,6 +2873,12 @@ namespace Links
                 public static readonly string Server_ts = Url("Server.ts");
                 public static readonly string Server_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Server.min.js") ? Url("Server.min.js") : Url("Server.js");
                               
+                public static readonly string Summary_ts = Url("Summary.ts");
+                public static readonly string Summary_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Summary.min.js") ? Url("Summary.min.js") : Url("Summary.js");
+                              
+                public static readonly string Summary_Server_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Summary_Server.min.js") ? Url("Summary_Server.min.js") : Url("Summary_Server.js");
+                              
+                public static readonly string Summary_Server_ts = Url("Summary_Server.ts");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -2967,13 +2974,10 @@ namespace Links
                               
                 public static readonly string Models_d_ts = Url("Models.d.ts");
                 public static readonly string Routes_d_ts = Url("Routes.d.ts");
-                public static readonly string Server_ts = Url("Server.ts");
                 public static readonly string Server_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Server.min.js") ? Url("Server.min.js") : Url("Server.js");
                               
+                public static readonly string Server_ts = Url("Server.ts");
                 public static readonly string ServerApiModel_d_ts = Url("ServerApiModel.d.ts");
-                public static readonly string Summary_ts = Url("Summary.ts");
-                public static readonly string Summary_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Summary.min.js") ? Url("Summary.min.js") : Url("Summary.js");
-                              
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3572,6 +3576,7 @@ namespace Links
                     public static readonly string summary_scss = Url("summary.scss");
                     public static readonly string summary_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/summary.min.css") ? Url("summary.min.css") : Url("summary.css");
                          
+                    public static readonly string summary_min_css = Url("summary.min.css");
                 }
             
                 public static readonly string maps_scss = Url("maps.scss");
