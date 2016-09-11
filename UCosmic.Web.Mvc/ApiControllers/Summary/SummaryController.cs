@@ -39,7 +39,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         
         /* Returns activity type counts for given place.*/
         [GET("activity-count/{selectedEstablishment}/{establishmentId?}/{placeId?}/{selectedEstablishmentId?}")]
-        [CacheHttpGet(Duration = 3600)]
+        //[CacheHttpGet(Duration = 3600)]
         public ActivitySummaryApiModel GetActivityCount(string selectedEstablishment, int? establishmentId, int? placeId, int? selectedEstablishmentId)
         {
             ActivitySummaryApiModel returnModel = new ActivitySummaryApiModel();
@@ -95,7 +95,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     foreach (var type in establishmentTypes)
                     {
                         var typeCount = modelDistinct.Where(x => x.type == type.type).Count();
-                        var locationCount = modelDistinct.Where(x => x.type == type.type).DistinctBy(x => x.officialName).Count();
+                        var locationCount = model.Where(x => x.type == type.type).DistinctBy(x => x.officialName).Count();
                         var personCount = modelDistinct.Where(x => x.type == type.type).DistinctBy(x => x.person_id).Count();
                         typesModel.Add(new ActivitySummaryTypesApiModel { LocationCount = locationCount, TypeCount = typeCount, Type = type.type, TypeId = type.type_id, PersonCount = personCount });
                     }

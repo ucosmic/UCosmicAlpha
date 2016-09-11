@@ -287,7 +287,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             return Output;
         }
-        //[CacheHttpGet(Duration = 3600)]
+        [CacheHttpGet(Duration = 3600)]
         [GET("{domain}/employees/continents")]
         public ActivitySearchResultPlacesCounted[] GetMapContinent(string domain, [FromUri] ActivitySearchInputModel input)
         {

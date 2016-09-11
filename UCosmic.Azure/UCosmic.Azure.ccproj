@@ -86,6 +86,7 @@
     <PublishProfile Include="Profiles\UCosmicPlaygroundStaging5.azurePubxml" />
     <PublishProfile Include="Profiles\UCosmicPlaygroundStaging6.azurePubxml" />
     <PublishProfile Include="Profiles\UCosmicPlaygroundStaging7.azurePubxml" />
+    <PublishProfile Include="Profiles\UCosmicPlaygroundStaging8.azurePubxml" />
   </ItemGroup>
   <ItemGroup>
     <DiagnosticsConfiguration Include="WorkerRoleContent\diagnostics.wadcfgx" />
