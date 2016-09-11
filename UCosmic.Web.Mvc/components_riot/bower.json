@@ -1,7 +1,7 @@
 {
   "name": "UCosmic",
   "authors": [
-    "timbow574521 <admin@ucosmic.com>"
+    "timbow574521 <admin@ttw.com>"
   ],
   "description": "International engagement",
   "main": "index.html",
@@ -15,7 +15,7 @@
     "college"
   ],
   "license": "MIT",
-  "homepage": "alpha.ucosmic.com",
+  "homepage": "alpha.ttw.com",
   "private": true,
   "ignore": [
     "**/.*",
@@ -30,7 +30,8 @@
     "riotcontrol": "riotcontrol#*",
     "kefir": "~3.*",
     "sw-toolbox": "^3.1.*",
-    "lodash": "~3.10.1"
+    "lodash": "~3.10.1",
+    "thenby": "^1.1.3"
   },
   "resolutions": {
     "riot": "^2.3.18"

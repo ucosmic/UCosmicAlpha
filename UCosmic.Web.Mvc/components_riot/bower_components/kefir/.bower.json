@@ -1,0 +1,54 @@
+{
+  "name": "kefir",
+  "version": "3.5.1",
+  "homepage": "https://github.com/rpominov/kefir",
+  "authors": [
+    "Roman Pominov <rpominov@gmail.com>"
+  ],
+  "description": "Reactive Programming library for JavaScript inspired by Bacon.js and RxJS with focus on high performance and low memory usage",
+  "main": "dist/kefir.js",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "frp",
+    "bacon",
+    "bacon.js",
+    "kefir",
+    "kefir.js",
+    "functional",
+    "reactive",
+    "stream",
+    "streams",
+    "EventStream",
+    "Rx",
+    "RxJs",
+    "Observable"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**",
+    "!dist/**",
+    "!LICENSE.txt"
+  ],
+  "devDependencies": {
+    "jquery": "2.1.4",
+    "transducers-js": "0.4.174"
+  },
+  "exportsOverride": {
+    "transducers-js": {
+      ".": "transducers.js"
+    }
+  },
+  "_release": "3.5.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "3.5.1",
+    "commit": "ffc6c0bd35013f0ab4af10829002febdd27eef76"
+  },
+  "_source": "https://github.com/rpominov/kefir.git",
+  "_target": "~3.*",
+  "_originalSource": "kefir"
+}

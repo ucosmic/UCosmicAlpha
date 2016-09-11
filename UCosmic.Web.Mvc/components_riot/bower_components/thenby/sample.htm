@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script>
+        // pasted in:
+        var firstBy=function(){function n(n,t){if("function"!=typeof n){var r=n;n=function(n,t){return n[r]<t[r]?-1:n[r]>t[r]?1:0}}return-1===t?function(t,r){return-n(t,r)}:n}function t(t,u){return t=n(t,u),t.thenBy=r,t}function r(r,u){var f=this;return r=n(r,u),t(function(n,t){return f(n,t)||r(n,t)})}return t}();
+
+        // sample:
+        var data = [
+            { id: 7, name:  "Amsterdam", population: 750000, country: "Netherlands" },
+            { id: 12, name: "The Hague", population: 450000, country: "Netherlands" },
+            { id: 43, name: "Rotterdam", population: 600000, country: "Netherlands" },
+            { id: 5, name:  "Berlin", population: 3000000, country: "Germany" },
+            { id: 42, name: "Düsseldorf", population: 550000, country: "Germany" },
+            { id: 44, name: "Stuttgard", population: 600000, country: "Germany" },
+        ];
+        function output() {
+            for (var i = 0; i < data.length; i++) {
+                document.write(data[i].name + "<br/>");
+            }
+            document.write("<br/>");
+        }
+        output();
+
+        // first by country, then by pop, should give Düsseldorf first, Amsterdam last
+        var s = firstBy(function (v1, v2) { return v1.country < v2.country ? -1 : (v1.country > v2.country ? 1 : 0); })
+                 .thenBy(function (v1, v2) { return v1.population - v2.population; });
+        data.sort(s);
+        output();
+        // first by length of name, should give Stuttgard just after Rotterdam (same length, same pop)
+        s = firstBy(function (v1, v2) { return v1.name.length - v2.name.length; })
+                 .thenBy(function (v1, v2) { return v1.population - v2.population; })
+                 .thenBy(function (v1, v2) { return v1.id - v2.id; });
+        data.sort(s);
+        output();
+
+
+
+    </script>
+</head>
+<body>
+</body>
+</html>
