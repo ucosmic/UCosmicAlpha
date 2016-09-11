@@ -40,6 +40,21 @@ var Activities;
                 this.establishmentData = new App.DataCacher(function () {
                     return _this._loadEstablishmentData();
                 });
+                this.location_callback = function (id, text) {
+                    _this.$placeIds.val(id);
+                    _this.placeNames(text);
+                    _this.$placeNames.val(text);
+                    if (text) {
+                        _this.searchMap.continentCode('all');
+                    }
+                    else {
+                        _this.searchMap.continentCode('any');
+                        _this.searchMap.placeType('continents');
+                        _this.$placeFilter.val("continents");
+                        _this.searchMap._receivePlaces('continents');
+                    }
+                    _this._submitForm();
+                };
                 this.keyword = ko.observable("");
                 this.since = ko.observable("");
                 this.until = ko.observable("");
@@ -81,6 +96,8 @@ var Activities;
                         this.includeUndated("");
                     }
                 }
+                var location_list = document.getElementById('location_list');
+                searchOptions && searchOptions.placeIds ? location_list._tag.set_selected_id(searchOptions.placeIds) : null;
                 this.keyword(this.settings.input.keyword);
                 this.since(this.settings.input.since);
                 this.until(this.settings.input.until);
@@ -296,99 +313,6 @@ var Activities;
                         return;
                     }
                 };
-                this.$location.kendoComboBox({
-                    suggest: true,
-                    animation: false,
-                    height: 420,
-                    dataTextField: 'officialName',
-                    dataValueField: 'placeId',
-                    filter: 'contains',
-                    dataSource: hasPlace ? serverDataSource : emptyDataSource,
-                    select: function (e) {
-                        var dataItem = e.sender.dataItem(e.item.index());
-                        if (dataItem.placeId == -1) {
-                            _this.placeNames("");
-                            e.sender.value('');
-                            e.sender.input.val('');
-                            _this.$placeIds.val('');
-                            e.preventDefault();
-                            _this._submitForm();
-                            return;
-                        }
-                        if (dataItem.officialName == emptyDataItem.officialName) {
-                            _this.$placeIds.val('');
-                            e.preventDefault();
-                            return;
-                        }
-                        if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length ||
-                            _this.settings.input.placeIds[0] != dataItem.placeId) {
-                            e.sender.input.val(dataItem.officialName);
-                            _this.$location.val(dataItem.officialName);
-                            _this.$placeIds.val(dataItem.placeId);
-                            _this.placeNames(dataItem.officialName);
-                            _this._submitForm();
-                        }
-                    },
-                    change: function (e) {
-                        var dataItem = e.sender.dataItem(e.sender.select());
-                        if (!dataItem) {
-                            _this.$placeIds.val('');
-                            e.sender.value('');
-                            checkDataSource(e.sender);
-                        }
-                        else {
-                            e.sender.input.val(dataItem.officialName);
-                            _this.$location.val(dataItem.officialName);
-                            _this.$placeIds.val(dataItem.placeId);
-                            if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length ||
-                                _this.settings.input.placeIds[0] != dataItem.placeId) {
-                                _this._submitForm();
-                            }
-                        }
-                    },
-                    dataBound: function (e) {
-                        if (!_this.stopAutocompleteInfiniteLoop) {
-                            var widget = e.sender;
-                            var input = widget.input;
-                            var inputVal = $.trim(input.val());
-                            if (!inputInitialized) {
-                                input.attr('name', 'placeNames');
-                                _this.$location.attr('name', '');
-                                input.on('keydown', function () {
-                                    setTimeout(function () { checkDataSource(widget); }, 0);
-                                });
-                                if (hasPlace && inputVal) {
-                                    widget.search(inputVal);
-                                    widget.close();
-                                }
-                                inputInitialized = true;
-                            }
-                            else if (hasPlace) {
-                                widget.select(function (dataItem) {
-                                    return dataItem.placeId == this.settings.input.placeIds[0];
-                                });
-                                widget.close();
-                                input.blur();
-                                hasPlace = false;
-                            }
-                            var value = e.sender.value();
-                            if (value) {
-                                var dataSource = e.sender.dataSource;
-                                var data = dataSource.data();
-                                var hasClearer = Enumerable.From(data).Any(function (x) { return x.placeId == -1; });
-                                if (!hasClearer) {
-                                    dataSource.add({ officialName: '[Clear current selection]', placeId: -1 });
-                                    _this.stopAutocompleteInfiniteLoop = true;
-                                }
-                            }
-                        }
-                        else {
-                            _this.stopAutocompleteInfiniteLoop = false;
-                        }
-                    }
-                });
-                var comboBox = this.$location.data('kendoComboBox');
-                comboBox.list.addClass('k-ucosmic');
                 this.$placeFilter.val("continents");
             };
             MapSearch.prototype._applySubscriptions = function () {

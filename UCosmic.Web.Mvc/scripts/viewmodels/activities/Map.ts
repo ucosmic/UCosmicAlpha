@@ -141,7 +141,6 @@ module Activities.ViewModels {
         }
         placeFilter = ko.observable<string>();
         private _ConstructMapData(input?) {
-
             var searchOptions = sessionStorage.getItem(SearchMap.SearchOptions);
 
             var continentsData;
@@ -174,6 +173,9 @@ module Activities.ViewModels {
 
             } else if (!placeFilter && this.continentCode() != 'any' && this.continentCode() != 'WATER') {
                 placeFilter = 'countries'
+                input.placeFilter = placeFilter;
+            } else if (this.continentCode() == 'all') {
+                placeFilter = 'all'
                 input.placeFilter = placeFilter;
             } else {
                 placeFilter = 'continents'
@@ -683,10 +685,12 @@ module Activities.ViewModels {
         private _load(placeType): void {
             var continentCode = this.continentCode();
             var countryCode = this.countryCode();
-            if (continentCode != 'any' && continentCode != 'WATER') {
+            if (continentCode != 'any' && continentCode != 'WATER' && continentCode != 'all') {
                 placeType = 'countries';
             } else if (continentCode == 'WATER') {
                 placeType = 'waters';
+            } else if(continentCode == 'all') {
+                placeType = 'all';
             }
             //if (this.parentObject.placeNames() != '') {
             //    placeType = 'countries';
@@ -738,6 +742,17 @@ module Activities.ViewModels {
                     setTimeout(() => { this._receivePlaces(placeType) }, 50);
                     return;
                 }
+            } else if (placeType == 'all') {
+                if (this._countriesResponse()) {
+                    this.parentObject.loadingSpinner.start
+                    places = this._countriesResponse();
+                } else {
+                    this.parentObject.loadingSpinner.start();
+                    setTimeout(() => {
+                        this._receivePlaces(placeType)
+                    }, 50);
+                    return;
+                }
             } else {
                 if (this._continentsResponse()) {
                     this.parentObject.loadingSpinner.start
@@ -769,7 +784,7 @@ module Activities.ViewModels {
             $.each(places, function (index, place) {
                 count += place.count;
             });
-            if (placeType != 'countries' || this.continentCode() == 'any') {
+            if (placeType != 'countries' || this.continentCode() == 'any' || this.continentCode() == 'all') {
                 var places2: any = this._continentsResponse();
                 peopleCount = places2[0].peopleCountTotal;
             } else {

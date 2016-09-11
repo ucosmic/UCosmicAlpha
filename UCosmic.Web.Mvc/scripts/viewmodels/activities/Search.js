@@ -1,10 +1,14 @@
 var last_url = sessionStorage.getItem('last_employee_activity_table_url');
-if (location.href.indexOf('pageNumber') > -1) {
+if (location.href.indexOf('pageSize') > -1) {
     sessionStorage.setItem('last_employee_activity_table_url', location.href);
 }
 else if (last_url) {
     location.href = last_url;
 }
+var activities;
+var time_to_check = 60 * 60 * 1000 * 24;
+time_to_check = 60000;
+var delay = 5000;
 var Activities;
 (function (Activities) {
     var ViewModels;
@@ -45,6 +49,12 @@ var Activities;
                 this.establishmentData = new App.DataCacher(function () {
                     return _this._loadEstablishmentData();
                 });
+                this.location_callback = function (id) {
+                    _this.$placeIds.val(id);
+                    var page_number_el = document.getElementById('Output_PageNumber');
+                    page_number_el ? page_number_el.selectedIndex = 0 : null;
+                    _this._submitForm();
+                };
                 this.activityTypeCheckBoxes = ko.observableArray(Enumerable.From(this.settings.activityTypes)
                     .Select(function (x) {
                     return new ActivityTypeSearchCheckBox(x, _this.settings);
@@ -331,109 +341,6 @@ var Activities;
                         return;
                     }
                 };
-                this.$location.kendoComboBox({
-                    suggest: true,
-                    animation: false,
-                    height: 420,
-                    dataTextField: 'officialName',
-                    dataValueField: 'placeId',
-                    filter: 'contains',
-                    dataSource: hasPlace ? serverDataSource : emptyDataSource,
-                    select: function (e) {
-                        $('.eraseMe').remove();
-                        var dataItem = e.sender.dataItem(e.item.index());
-                        if (dataItem.placeId == -1) {
-                            e.sender.value('');
-                            e.sender.input.val('');
-                            _this.$placeIds.val('');
-                            e.preventDefault();
-                            _this._submitForm();
-                            return;
-                        }
-                        if (dataItem.officialName == emptyDataItem.officialName) {
-                            _this.$placeIds.val('');
-                            e.preventDefault();
-                            return;
-                        }
-                        if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length ||
-                            _this.settings.input.placeIds[0] != dataItem.placeId) {
-                            e.sender.input.val(dataItem.officialName);
-                            _this.$location.val(dataItem.officialName);
-                            _this.$placeIds.val(dataItem.placeId);
-                            _this._submitForm();
-                        }
-                    },
-                    change: function (e) {
-                        var dataItem = e.sender.dataItem(e.sender.select());
-                        if (!dataItem) {
-                            _this.$placeIds.val('');
-                            e.sender.value('');
-                            checkDataSource(e.sender);
-                        }
-                        else {
-                            e.sender.input.val(dataItem.officialName);
-                            _this.$location.val(dataItem.officialName);
-                            _this.$placeIds.val(dataItem.placeId);
-                            if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length ||
-                                _this.settings.input.placeIds[0] != dataItem.placeId) {
-                                _this._submitForm();
-                            }
-                        }
-                    },
-                    dataBound: function (e) {
-                        if (!_this.stopAutocompleteInfiniteLoop) {
-                            var widget = e.sender;
-                            var input = widget.input;
-                            var inputVal = $.trim(input.val());
-                            if (!inputInitialized) {
-                                input.attr('name', 'placeNames');
-                                _this.$location.attr('name', '');
-                                input.on('keydown', function () {
-                                    setTimeout(function () { checkDataSource(widget); }, 0);
-                                });
-                                if (hasPlace && inputVal) {
-                                    widget.search(inputVal);
-                                    widget.close();
-                                }
-                                inputInitialized = true;
-                            }
-                            else if (hasPlace) {
-                                widget.select(function (dataItem) {
-                                    return dataItem.placeId == this.settings.input.placeIds[0];
-                                });
-                                widget.close();
-                                input.blur();
-                                hasPlace = false;
-                            }
-                            var value = e.sender.value();
-                            if (value) {
-                                var dataSource = e.sender.dataSource;
-                                var data = dataSource.data();
-                                var hasClearer = Enumerable.From(data).Any(function (x) { return x.placeId == -1; });
-                                if (!hasClearer) {
-                                    dataSource.add({ officialName: '[Clear current selection]', placeId: -1 });
-                                    _this.stopAutocompleteInfiniteLoop = true;
-                                }
-                            }
-                        }
-                        else {
-                            _this.stopAutocompleteInfiniteLoop = false;
-                        }
-                    }
-                });
-                var comboBox = this.$location.data('kendoComboBox');
-                comboBox.list.addClass('k-ucosmic');
-                if (this.settings.input.placeIds) {
-                    $.each(this.settings.input.placeIds, function (index, value) {
-                        if (index > 0) {
-                            $('<input />').attr('type', 'hidden')
-                                .attr('name', "placeIds")
-                                .attr('value', value)
-                                .addClass('eraseMe')
-                                .appendTo('form');
-                        }
-                    });
-                }
                 var searchOptions = JSON.parse(sessionStorage.getItem('ActivitySearchOptions'));
                 if (!searchOptions) {
                     searchOptions = this.serializeObject($('form'));

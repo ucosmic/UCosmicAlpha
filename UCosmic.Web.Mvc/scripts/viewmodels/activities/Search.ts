@@ -1,10 +1,20 @@
 
 var last_url = sessionStorage.getItem('last_employee_activity_table_url');
-if (location.href.indexOf('pageNumber') > -1) {
+if (location.href.indexOf('pageSize') > -1) {
     sessionStorage.setItem('last_employee_activity_table_url', location.href);
 } else if (last_url) {
     location.href = last_url;
 }
+
+
+let activities;
+
+let time_to_check = 60 * 60 * 1000 * 24; //24hours
+time_to_check = 60000; //60 seconds
+let delay = 5000;
+//ttw.data_access("/api/tests/idb_test/" + 3306 + "/", null, null, 'GET', true, time_to_check, delay).then((value) => {
+//    activities = JSON.parse(value.data);
+//}); 
 
 module Activities.ViewModels {
 
@@ -302,6 +312,38 @@ module Activities.ViewModels {
                 this.loadingSpinner.start();
             });
         }
+
+        location_callback = (id) => {
+            this.$placeIds.val(id);
+            var page_number_el: any = document.getElementById('Output_PageNumber');
+            page_number_el ? page_number_el.selectedIndex = 0 : null;
+            //this.$location.val(text);
+            this._submitForm();
+            //var dataItem = e.sender.dataItem(e.item.index());
+
+            //if (dataItem.placeId == -1) {
+            //    e.sender.value('');
+            //    e.sender.input.val('');
+            //    this.$placeIds.val('');
+            //    e.preventDefault();
+            //    this._submitForm();
+            //    return;
+            //}
+
+            //if (dataItem.officialName == emptyDataItem.officialName) {
+            //    this.$placeIds.val('');
+            //    e.preventDefault();
+            //    return;
+            //}
+
+            //if (!this.settings.input.placeIds || !this.settings.input.placeIds.length ||
+            //    this.settings.input.placeIds[0] != dataItem.placeId) {
+            //    e.sender.input.val(dataItem.officialName);
+            //    this.$location.val(dataItem.officialName);
+            //    this.$placeIds.val(dataItem.placeId);
+            //    this._submitForm();
+            //}
+        }
         stopAutocompleteInfiniteLoop: boolean;
         private _applyKendo(): void {
             //#region DatePickers
@@ -360,115 +402,115 @@ module Activities.ViewModels {
                     return;
                 }
             }
-            this.$location.kendoComboBox({
-                suggest: true,
-                animation: false,
-                height: 420,
-                dataTextField: 'officialName',
-                dataValueField: 'placeId',
-                filter: 'contains',
-                dataSource: hasPlace ? serverDataSource : emptyDataSource,
-                select: (e: kendo.ui.ComboBoxSelectEvent): void => {
-                    $('.eraseMe').remove();
-                    var dataItem = e.sender.dataItem(e.item.index());
+            //this.$location.kendoComboBox({
+            //    suggest: true,
+            //    animation: false,
+            //    height: 420,
+            //    dataTextField: 'officialName',
+            //    dataValueField: 'placeId',
+            //    filter: 'contains',
+            //    dataSource: hasPlace ? serverDataSource : emptyDataSource,
+            //    select: (e: kendo.ui.ComboBoxSelectEvent): void => {
+            //        $('.eraseMe').remove();
+            //        var dataItem = e.sender.dataItem(e.item.index());
 
-                    if (dataItem.placeId == -1) {
-                        e.sender.value('');
-                        e.sender.input.val('');
-                        this.$placeIds.val('');
-                        e.preventDefault();
-                        this._submitForm();
-                        return;
-                    }
+            //        if (dataItem.placeId == -1) {
+            //            e.sender.value('');
+            //            e.sender.input.val('');
+            //            this.$placeIds.val('');
+            //            e.preventDefault();
+            //            this._submitForm();
+            //            return;
+            //        }
 
-                    if (dataItem.officialName == emptyDataItem.officialName) {
-                        this.$placeIds.val('');
-                        e.preventDefault();
-                        return;
-                    }
+            //        if (dataItem.officialName == emptyDataItem.officialName) {
+            //            this.$placeIds.val('');
+            //            e.preventDefault();
+            //            return;
+            //        }
 
-                    if (!this.settings.input.placeIds || !this.settings.input.placeIds.length ||
-                        this.settings.input.placeIds[0] != dataItem.placeId) {
-                        e.sender.input.val(dataItem.officialName);
-                        this.$location.val(dataItem.officialName);
-                        this.$placeIds.val(dataItem.placeId);
-                        this._submitForm();
-                    }
-                },
-                change: (e: kendo.ui.ComboBoxEvent): void => {
-                    var dataItem = e.sender.dataItem(e.sender.select());
-                    if (!dataItem) {
-                        this.$placeIds.val('');
-                        e.sender.value('');
-                        checkDataSource(e.sender);
-                    } else {
-                        e.sender.input.val(dataItem.officialName);
-                        this.$location.val(dataItem.officialName);
-                        this.$placeIds.val(dataItem.placeId);
-                        if (!this.settings.input.placeIds || !this.settings.input.placeIds.length ||
-                            this.settings.input.placeIds[0] != dataItem.placeId) {
-                            this._submitForm();
-                        }
-                    }
-                },
-                dataBound: (e: kendo.ui.ComboBoxEvent): void => {
-                    if (!this.stopAutocompleteInfiniteLoop){
+            //        if (!this.settings.input.placeIds || !this.settings.input.placeIds.length ||
+            //            this.settings.input.placeIds[0] != dataItem.placeId) {
+            //            e.sender.input.val(dataItem.officialName);
+            //            this.$location.val(dataItem.officialName);
+            //            this.$placeIds.val(dataItem.placeId);
+            //            this._submitForm();
+            //        }
+            //    },
+            //    change: (e: kendo.ui.ComboBoxEvent): void => {
+            //        var dataItem = e.sender.dataItem(e.sender.select());
+            //        if (!dataItem) {
+            //            this.$placeIds.val('');
+            //            e.sender.value('');
+            //            checkDataSource(e.sender);
+            //        } else {
+            //            e.sender.input.val(dataItem.officialName);
+            //            this.$location.val(dataItem.officialName);
+            //            this.$placeIds.val(dataItem.placeId);
+            //            if (!this.settings.input.placeIds || !this.settings.input.placeIds.length ||
+            //                this.settings.input.placeIds[0] != dataItem.placeId) {
+            //                this._submitForm();
+            //            }
+            //        }
+            //    },
+            //    dataBound: (e: kendo.ui.ComboBoxEvent): void => {
+            //        if (!this.stopAutocompleteInfiniteLoop){
 
-                        var widget = e.sender;
-                        var input = widget.input;
-                        var inputVal = $.trim(input.val());
+            //            var widget = e.sender;
+            //            var input = widget.input;
+            //            var inputVal = $.trim(input.val());
 
-                        if (!inputInitialized) {
-                            input.attr('name', 'placeNames');
-                            this.$location.attr('name', '');
-                            input.on('keydown', (): void => {
-                                setTimeout((): void => { checkDataSource(widget); }, 0);
-                            });
-                            if (hasPlace && inputVal) {
-                                widget.search(inputVal);
-                                widget.close();
-                            }
-                            inputInitialized = true;
-                        }
-                        else if (hasPlace) {
-                            widget.select(function (dataItem: any): boolean {
-                                return dataItem.placeId == this.settings.input.placeIds[0];
-                            });
-                            widget.close();
-                            input.blur();
-                            hasPlace = false;
-                        }
+            //            if (!inputInitialized) {
+            //                input.attr('name', 'placeNames');
+            //                this.$location.attr('name', '');
+            //                input.on('keydown', (): void => {
+            //                    setTimeout((): void => { checkDataSource(widget); }, 0);
+            //                });
+            //                if (hasPlace && inputVal) {
+            //                    widget.search(inputVal);
+            //                    widget.close();
+            //                }
+            //                inputInitialized = true;
+            //            }
+            //            else if (hasPlace) {
+            //                widget.select(function (dataItem: any): boolean {
+            //                    return dataItem.placeId == this.settings.input.placeIds[0];
+            //                });
+            //                widget.close();
+            //                input.blur();
+            //                hasPlace = false;
+            //            }
 
-                        var value = e.sender.value();
-                        if (value) {
-                            var dataSource = e.sender.dataSource;
-                            var data = dataSource.data();
-                            var hasClearer = Enumerable.From(data).Any(function (x: any): boolean {return x.placeId == -1 });
-                            if (!hasClearer) {
-                                dataSource.add({ officialName: '[Clear current selection]', placeId: -1 })
-                                this.stopAutocompleteInfiniteLoop = true;
-                            }
-                        }
-                    }else{
-                        this.stopAutocompleteInfiniteLoop = false;
-                    }
+            //            var value = e.sender.value();
+            //            if (value) {
+            //                var dataSource = e.sender.dataSource;
+            //                var data = dataSource.data();
+            //                var hasClearer = Enumerable.From(data).Any(function (x: any): boolean {return x.placeId == -1 });
+            //                if (!hasClearer) {
+            //                    dataSource.add({ officialName: '[Clear current selection]', placeId: -1 })
+            //                    this.stopAutocompleteInfiniteLoop = true;
+            //                }
+            //            }
+            //        }else{
+            //            this.stopAutocompleteInfiniteLoop = false;
+            //        }
 
-                }
-            });
-            var comboBox: kendo.ui.ComboBox = this.$location.data('kendoComboBox');
-            comboBox.list.addClass('k-ucosmic');
-            if(this.settings.input.placeIds){
-                $.each(this.settings.input.placeIds, function (index, value) {
-                    if (index > 0) {
-                        $('<input />').attr('type', 'hidden')
-                            .attr('name', "placeIds")
-                            .attr('value', value)
-                            .addClass('eraseMe')
-                            .appendTo('form');
-                    }
+            //    }
+            //});
+            //var comboBox: kendo.ui.ComboBox = this.$location.data('kendoComboBox');
+            //comboBox.list.addClass('k-ucosmic');
+            //if(this.settings.input.placeIds){
+            //    $.each(this.settings.input.placeIds, function (index, value) {
+            //        if (index > 0) {
+            //            $('<input />').attr('type', 'hidden')
+            //                .attr('name', "placeIds")
+            //                .attr('value', value)
+            //                .addClass('eraseMe')
+            //                .appendTo('form');
+            //        }
 
-                });
-            }
+            //    });
+            //}
             var searchOptions = JSON.parse(sessionStorage.getItem('ActivitySearchOptions'));
             if (!searchOptions) {
 

@@ -171,6 +171,10 @@ var Activities;
                     placeFilter = 'countries';
                     input.placeFilter = placeFilter;
                 }
+                else if (this.continentCode() == 'all') {
+                    placeFilter = 'all';
+                    input.placeFilter = placeFilter;
+                }
                 else {
                     placeFilter = 'continents';
                     input.placeFilter = placeFilter;
@@ -563,11 +567,14 @@ var Activities;
             SearchMap.prototype._load = function (placeType) {
                 var continentCode = this.continentCode();
                 var countryCode = this.countryCode();
-                if (continentCode != 'any' && continentCode != 'WATER') {
+                if (continentCode != 'any' && continentCode != 'WATER' && continentCode != 'all') {
                     placeType = 'countries';
                 }
                 else if (continentCode == 'WATER') {
                     placeType = 'waters';
+                }
+                else if (continentCode == 'all') {
+                    placeType = 'all';
                 }
                 this.placeType(placeType);
                 this._receivePlaces(placeType);
@@ -613,6 +620,19 @@ var Activities;
                         return;
                     }
                 }
+                else if (placeType == 'all') {
+                    if (this._countriesResponse()) {
+                        this.parentObject.loadingSpinner.start;
+                        places = this._countriesResponse();
+                    }
+                    else {
+                        this.parentObject.loadingSpinner.start();
+                        setTimeout(function () {
+                            _this._receivePlaces(placeType);
+                        }, 50);
+                        return;
+                    }
+                }
                 else {
                     if (this._continentsResponse()) {
                         this.parentObject.loadingSpinner.start;
@@ -644,7 +664,7 @@ var Activities;
                 $.each(places, function (index, place) {
                     count += place.count;
                 });
-                if (placeType != 'countries' || this.continentCode() == 'any') {
+                if (placeType != 'countries' || this.continentCode() == 'any' || this.continentCode() == 'all') {
                     var places2 = this._continentsResponse();
                     peopleCount = places2[0].peopleCountTotal;
                 }
