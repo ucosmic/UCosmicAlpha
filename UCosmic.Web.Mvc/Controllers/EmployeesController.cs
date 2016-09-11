@@ -17,6 +17,8 @@ using UCosmic.Domain.LanguageExpertises;
 using UCosmic.Repositories;
 using UCosmic.Web.Mvc.Models;
 using WebApiContrib.Messages;
+using UCosmic.Web.Mvc.Models.Places;
+using UCosmic.Repositories;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -76,19 +78,31 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("{domain}/employees/table")]
         public virtual ActionResult Table(string domain, ActivitySearchInputModel input)
         {
-            //input.AncestorId = null;
-            //var query = new ActivityValuesPageBy
+
+
+
+            //IList<CountryListAllApiReturn> model = new List<CountryListAllApiReturn>();
+
+            //CountryListAllRepository countryListRepository = new CountryListAllRepository();
+
+            //IList<CountryListAllApiReturn> countries_return = HttpContext.Session["session_snapshot_output"] as IList<CountryListAllApiReturn>;
+            //if (countries_return == null)
             //{
-            //    EagerLoad = new Expression<Func<ActivityValues, object>>[]
+            //    countries_return = countryListRepository.Country_List_All();
+            //}
+
+            //var countries = countries_return.DistinctBy2(d => new { d.official_name }).ToList();
+            // List<country_list_item> country_list = new List<country_list_item>();
+            //    foreach (CountryListAllApiReturn country in countries) // Loop through List with foreach.
             //    {
-            //        x => x.Activity.Person,
-            //        x => x.Activity.Person.Affiliations,
-            //        x => x.Activity.Person.Affiliations.Select(y => y.Establishment),
-            //        x => x.Activity.Person.Affiliations.Select(y => y.Establishment.Ancestors),
+            //        country_list.Add(new country_list_item{
+            //            country = country.official_name,
+            //            code = country.code,
+            //            id = country.country,
+            //            associations = countries_return.Where(x => x.country == country.country && x.place_type != "").ToList<CountryListAllApiReturn>()
+            //        });
             //    }
-            //};
-            //Mapper.Map(input, query);
-            //var results = _queryProcessor.Execute(query);
+
 
             var tenancy = Request.Tenancy() ?? new Tenancy();
             tenancy.StyleDomain = domain;
@@ -104,21 +118,6 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 ActivityRepository activityMapCountRepository = new ActivityRepository();
                 var Output = ActivityRepository.ActivitiesPageBy(input, tenant);
-
-                //var peopleCount = Output.DistinctBy(x => new { x.personId }).Count();
-
-                //var places = Output.DistinctBy(x => new { x.id }).
-
-                //add continents only on zoomed
-                //var grouped = Output.GroupBy(g => g.locationName).Select(g => new ActivitySearchResultModel
-                //{
-                //    ActivityId = g.
-                //    Name = g.First().name,
-                //    Id = g.First().id,
-                //    Code = g.First().code,
-                //    Center = g.First().center,
-                //    BoundingBox = null,
-                //}).ToArray();
                 DateTime Since;
                 DateTime Until;
                 if (input.Since == null && input.Until != null)
@@ -218,7 +217,41 @@ namespace UCosmic.Web.Mvc.Controllers
                     }
                     Output = Output.Where(x => ((x.EndsOnFormat != null || x.StartsOnFormat != null))).ToList();
                 }
-                //Output.for
+
+
+                //if (input.PlaceIds.Length > 0)
+                //{
+                //    foreach (var placeId in input.PlaceIds.Select((x, i) => new { Value = x, Index = i }))
+                //    {
+                //        var alskdf = country_list.Where(y => y.associations.FirstOrDefault(z => z.id == placeId.Value).name == "Latin America");
+                //        Output = Output.Where(x => (country_list.FirstOrDefault(y => y.id == placeId.Value) != null ? x.locationName == country_list.FirstOrDefault(y => y.id == placeId.Value).country : false)
+                //            || (country_list.Where(y => y.country == x.locationName) != null ? (country_list.Where(y => y.country == x.locationName).FirstOrDefault(z => z.associations.FirstOrDefault(zz => zz.id == placeId.Value) != null) != null) : false)).ToList();// y.associations.FirstOrDefault(z => z.id == placeId.Value).name == x.locationName) != null)).ToList();
+                //    }
+                //}
+
+
+
+                if (input.PlaceIds != null && input.PlaceIds.Length > 0 && input.PlaceIds[0] > 0)
+                {
+                    foreach (var placeId in input.PlaceIds.Select((x, i) => new { Value = x, Index = i }))
+                    {
+                        SummaryRepository summaryRepository = new SummaryRepository();
+                        IList<SummaryPlacesApiQueryResultModel> places = summaryRepository.SummaryByPlace(placeId.Value);
+
+                        if (places != null || placeId.Value != 0)
+                        {
+                            SummaryPlacesApiQueryResultModel place = new SummaryPlacesApiQueryResultModel();
+                            place.place_id = (int)placeId.Value;
+                            places.Add(place);
+                            if (places.Count() != 0)
+                            {
+                                Output = Output.Where(t2 => places.Any(t1 => t2.place_id == t1.place_id)).ToList();
+                            }
+                        }
+                    }
+                }
+
+
 
                 var results = Output.GroupBy(g => g.id).Select(x => new ActivitySearchResultModel
                 {

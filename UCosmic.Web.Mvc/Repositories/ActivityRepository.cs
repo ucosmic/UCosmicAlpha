@@ -17,38 +17,38 @@ namespace UCosmic.Repositories
     {
         private static string AddSqlFilter(string sql, ActivitySearchInputModel input)
         {
-            if (input.PlaceIds != null && input.PlaceIds.Length > 0 && input.PlaceIds[0] != 0)
-            {
-                sql += " and (";
-                foreach (var placeId in input.PlaceIds.Select((x, i) => new { Value = x, Index = i }))
-                {
-                    if (placeId.Index > 0)
-                    {
-                        sql += " or al.placeId=" + placeId.Value + " or pp2.revisionid=" + placeId.Value;
-                    }
-                    else
-                    {
-                        sql += " al.placeId=" + placeId.Value + " or pp2.revisionid=" + placeId.Value;
-                    }
-                }
-                sql += ")";
-            }
-            if (input.PlaceNames != null && input.PlaceNames.Length > 0 && input.PlaceNames[0] != null && input.PlaceNames[0].Length > 0)
-            {
-                sql += " and (";
-                foreach (var placeName in input.PlaceNames.Select((x, i) => new { Value = x, Index = i }))
-                {
-                    if (placeName.Index > 0)
-                    {
-                        sql += " or pp1.officialname='" + placeName.Value + "' or pp2.officialname='" + placeName.Value + "'";
-                    }
-                    else
-                    {
-                        sql += " pp1.officialname='" + placeName.Value + "' or pp2.officialname='" + placeName.Value + "'";
-                    }
-                }
-                sql += ")";
-            }
+            //if (input.PlaceIds != null && input.PlaceIds.Length > 0 && input.PlaceIds[0] != 0)
+            //{
+            //    sql += " and (";
+            //    foreach (var placeId in input.PlaceIds.Select((x, i) => new { Value = x, Index = i }))
+            //    {
+            //        if (placeId.Index > 0)
+            //        {
+            //            sql += " or al.placeId=" + placeId.Value;// +" or pp2.revisionid=" + placeId.Value;
+            //        }
+            //        else
+            //        {
+            //            sql += " al.placeId=" + placeId.Value;// +" or pp2.revisionid=" + placeId.Value;
+            //        }
+            //    }
+            //    sql += ")";
+            //}
+            //if (input.PlaceNames != null && input.PlaceNames.Length > 0 && input.PlaceNames[0] != null && input.PlaceNames[0].Length > 0)
+            //{
+            //    sql += " and (";
+            //    foreach (var placeName in input.PlaceNames.Select((x, i) => new { Value = x, Index = i }))
+            //    {
+            //        if (placeName.Index > 0)
+            //        {
+            //            sql += " or pp1.officialname='" + placeName.Value + "' or pp2.officialname='" + placeName.Value + "'";
+            //        }
+            //        else
+            //        {
+            //            sql += " pp1.officialname='" + placeName.Value + "' or pp2.officialname='" + placeName.Value + "'";
+            //        }
+            //    }
+            //    sql += ")";
+            //}
             if (input.Keyword != null && input.Keyword != "")
             {
                 List<string> keywords;
@@ -83,7 +83,7 @@ namespace UCosmic.Repositories
                         {
                             sql += " " + or + "(";
                         }
-                        sql += "( pp1.officialname " + not + "='" + keywordValue + "' " + or + " (pp2.officialname " + not + "='" + keywordValue + "' or pp2.officialname is null)";
+                        sql += "( pp1.officialname " + not + "='" + keywordValue + "' ";// +or + " (pp2.officialname " + not + "='" + keywordValue + "' or pp2.officialname is null)";
                         sql += " " + or + " (people.displayname not like '%" + keywordValue + "%' or people.displayname is null)";
                         sql += " " + or + " (people.firstname not like '%" + keywordValue + "%' or people.firstname is null)";
                         sql += " " + or + " (people.lastname not like '%" + keywordValue + "%' or people.lastname is null)";
@@ -104,7 +104,7 @@ namespace UCosmic.Repositories
                             sql += " and (";
                         }
 
-                        sql += "( pp1.officialname " + not + "='" + keywordValue + "' " + or + " pp2.officialname " + not + "='" + keywordValue + "'";
+                        sql += "( pp1.officialname " + not + "='" + keywordValue + "' ";// +or + " pp2.officialname " + not + "='" + keywordValue + "'";
                         sql += " " + or + " (people.displayname like '%" + keywordValue + "%')";
                         sql += " " + or + " (people.firstname like '%" + keywordValue + "%')";
                         sql += " " + or + " (people.lastname like '%" + keywordValue + "%')";
@@ -124,7 +124,7 @@ namespace UCosmic.Repositories
         public static IList<ActivityQueryResultModel> ActivitiesPageBy(ActivitySearchInputModel input, int? ancestorId)
         {
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
-            string sql = "select distinct aa.revisionid as id,  people.revisionId as personId, av.title, startsOn, endsOn," +
+            string sql = "select distinct aa.revisionid as id,  people.revisionId as personId, av.title, startsOn, endsOn, al.placeId as place_id, " +
                   " CASE WHEN endsOn is not null THEN endsOn When ongoing = 1 then '2999-01-01 00:00:00.000' When startsOn is not null then startsOn ELSE '1901-01-01 00:00:00.000' End as endsOnCalc, " +
                 //" CASE When startsOn is not null THEN startsOn when endsOn is not null then endsOn ELSE '2999-01-01 00:00:00.000' End as startsOn, " +
                   " CASE When startsOn is not null THEN startsOn ELSE '1901-01-01 00:00:00.000' End as startsOnCalc, " +
@@ -150,14 +150,14 @@ namespace UCosmic.Repositories
                 //" left outer join Places.place pp2 on pp1.parentid=pp2.revisionid" +
                   " inner join [ActivitiesV2].[Activity] aa on av.activityId=aa.revisionid" +
                   " inner join [People].Person people on aa.personId=people.revisionid" +
-                  " left outer join people.affiliation pa on pa.personId=people.revisionid" +
-                  " left outer join establishments.establishmentNode een on pa.establishmentid=een.offspringId" +
+                  " inner join people.affiliation pa on pa.personId=people.revisionid" +
+                  " inner join establishments.establishmentNode een on pa.establishmentid=een.offspringId" +
                   " inner join [identity].[user] iu on iu.personId=people.revisionid" +
                   " left outer join Places.geonamestoponym gnt on gnt.placeId=pp1.revisionid" +
-                  " left outer join Places.GeoPlanetPlace gpp on gpp.placeId=pp1.revisionid " +
-                  " left outer join Places.GeoPlanetPlaceBelongTo gppbt on gppbt.placeWoeId=gpp.woeid" +
-                  " left outer join Places.GeoPlanetPlace gpp2 on gppbt.BelongToWoeId=gpp2.woeid" +
-                  " left outer join Places.place pp2 on gpp2.placeId=pp2.revisionid " +
+                  //" left outer join Places.GeoPlanetPlace gpp on gpp.placeId=pp1.revisionid " +
+                  //" left outer join Places.GeoPlanetPlaceBelongTo gppbt on gppbt.placeWoeId=gpp.woeid" +
+                  //" left outer join Places.GeoPlanetPlace gpp2 on gppbt.BelongToWoeId=gpp2.woeid" +
+                  //" left outer join Places.place pp2 on gpp2.placeId=pp2.revisionid " +
                   " where (pa.establishmentid=" + ancestorId + " or een.AncestorId=" + ancestorId + ") and aa.mode='public' and av.mode='public' and aa.EditSourceId is null";
             //ActivityMapCountRepository activityMapCountRepository = new ActivityMapCountRepository();
             //int endPosition = 10;

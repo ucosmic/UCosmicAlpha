@@ -6,6 +6,7 @@ namespace UCosmic.Web.Mvc.Models
     {
         public int id { get; set; }
         public int personId { get; set; }
+        public int place_id { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string displayName { get; set; }
