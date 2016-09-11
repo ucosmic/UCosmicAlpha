@@ -1,0 +1,63 @@
+﻿
+<script src="https://ucosmic.firebaseapp.com/bower_components/riot/riot.min.js"></script>
+<script src="https://ucosmic.firebaseapp.com/bower_components/firebase/firebase.js"></script>
+@{
+    bool isLocal = HttpContext.Current.Request.IsLocal;   
+}
+@if (isLocal)
+{
+    <link rel="stylesheet" type="text/css" href="/components_riot/app/styles/index.css" />
+}
+@if (!isLocal)
+{
+    <link rel="stylesheet" type="text/css" href="https://ucosmic.firebaseapp.com/styles/index.css" />
+}
+@if (isLocal)
+    {
+    <script src="/components_riot/app/components/form_elements/auto_drop_down/auto_drop_down.js"></script>
+    <script src="/components_riot/app/components/form_elements/textbox/textbox.js"></script>
+    <script src="/components_riot/app/components/utilities/closest.js"></script>
+    <script src="/components_riot/app/components/is_loading/is_loading.js"></script>
+    }
+@if (!isLocal)
+{
+    <script src="https://ucosmic.firebaseapp.com/components/utilities/closest.js"></script>
+        <script src="https://ucosmic.firebaseapp.com/components/form_elements/auto_drop_down/auto_drop_down.js"></script>
+    <script src="https://ucosmic.firebaseapp.com/components/form_elements/textbox/textbox.js"></script>
+    <script src="https://ucosmic.firebaseapp.com/components/is_loading/is_loading.js"></script>
+}
+<script src="~/components/lib/lodash.min.js"></script>
+<script>
+    riot.mount('*');
+    var config = {
+        apiKey: "AIzaSyBpzIaweLPBcKOodY8JdxDlwARwbcEvhc4",
+        authDomain: "ucosmic.firebaseapp.com",
+        databaseURL: "https://ucosmic.firebaseio.com",
+        storageBucket: "project-4691094245668174778.appspot.com",
+    };
+    firebase.initializeApp(config);
+    var root_ref = firebase.database().ref(), region_list, location_list;
+    const fire_ref_countries = root_ref.child('Places').child('Countries');// new Firebase("https://UCosmic.firebaseio.com/Places/Countries")
+    fire_ref_countries.once("value", function(snapshot) {
+        var associations = []
+        var country_list = _.map(snapshot.val(), function (value, index) {
+            if (value) {
+                var object = { _id: index, text: value.country, associations: value.associations }
+                if (value.associations) {
+                    value.associations.forEach(function (association, index_2) {
+                        associations.push({ _id: association.id, text: association.name });
+                    })
+                }
+                return object;
+            }
+        })
+        region_list = _.uniqBy(associations, 'text');
+
+        location_list = _.orderBy(_.map(country_list.concat(region_list), function(value, index){
+            return { _id: value._id, title: value.text };
+        }), ['title'], ['asc']);
+        //location_list = _.orderBy(location_list, ['title'], ['asc'])
+        document.getElementById('location_list')._tag.update_original_list(location_list);
+    });
+
+</script>
