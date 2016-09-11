@@ -62,6 +62,19 @@ namespace T4MVC
             public readonly string _UserVoiceLink = "~/Views/Shared/_UserVoiceLink.cshtml";
             public readonly string _UserVoiceScript = "~/Views/Shared/_UserVoiceScript.cshtml";
             public readonly string Error = "~/Views/Shared/Error.cshtml";
+            static readonly _ComponentsClass s_Components = new _ComponentsClass();
+            public _ComponentsClass Components { get { return s_Components; } }
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public partial class _ComponentsClass
+            {
+                static readonly _ViewNamesClass s_ViewNames = new _ViewNamesClass();
+                public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
+                public class _ViewNamesClass
+                {
+                    public readonly string auto_drop_down_country = "auto_drop_down_country";
+                }
+                public readonly string auto_drop_down_country = "~/Views/Shared/Components/auto_drop_down_country.cshtml";
+            }
             static readonly _EditorTemplatesClass s_EditorTemplates = new _EditorTemplatesClass();
             public _EditorTemplatesClass EditorTemplates { get { return s_EditorTemplates; } }
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
