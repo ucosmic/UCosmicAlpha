@@ -55,7 +55,7 @@
         //    detailUrl: '@ViewBag.DetailUrl'
         //});
         //ko.applyBindings(viewModel, viewModel.settings.element);
-        var ttw = { tenantId: parseInt('@ViewBag.EmployeesEstablishmentId') };
+        ttw.tenantId = parseInt('@ViewBag.EmployeesEstablishmentId');
         var viewModel = new Agreements.ViewModels.SearchLenses({
             element: $('[data-current-module=agreements]')[0],
             domain: '@ViewBag.AgreementsDomain',

@@ -527,14 +527,20 @@
                         </li>
                         <li class="static">
                             <div class="content">
+
+                                <auto_drop_down id="location_list" max_width="240px" max_height="300px" pre_scale_class="pre_scale_top_center"
+                                                title="[Filter by Location]" background_color="white" selected_callback="viewModel.location_callback"
+                                                scale_type="scale_height" direction="ltr" selected_item_id="@(Model.Input.PlaceIds != null && Model.Input.PlaceIds.Any() ? Model.Input.PlaceIds.First() : -1)">
+
+                                </auto_drop_down>
+                                <input name="placeIds" type="hidden" data-bind="jQuery: '$placeIds'"
+                                       value="@(Model.Input.PlaceIds != null && Model.Input.PlaceIds.Any() ? Model.Input.PlaceIds.First() : (int?)null)" />
                                 @* LOCATION AUTOCOMPLETE *@
-                                <div class="location combobox field">
+                                @*<div class="location combobox field">
                                     <input name="placeNames" type="text" placeholder="[Filter by location]" data-bind="jQuery: '$location'"
                                            value="@(Model.Input.PlaceNames != null && Model.Input.PlaceNames.Any() ? Model.Input.PlaceNames.First() : "")"
                                            class="side" />
-                                    <input name="placeIds" type="hidden" data-bind="jQuery: '$placeIds'"
-                                           value="@(Model.Input.PlaceIds != null && Model.Input.PlaceIds.Any() ? Model.Input.PlaceIds.First() : (int?)null)" />
-                                </div>
+                                </div>*@
 
                                 @* ACTIVITY TYPE CHECKBOXES *@
                                 @if (Model.ActivityTypes != null && Model.ActivityTypes.Any())
@@ -657,55 +663,9 @@
                     </ul>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    @*<ul class="bottom">
-                        <li>
-                            <a href="@Url.Action(MVC.Employees.TenantIndex(Model.Domain))" class="group">
-                                <span class="arrow"></span>
-                                <span class="text">Global Snapshot</span>
-                            </a>
-                        </li>
-                        <li class="current">
-                            <a class="group">
-                                <span class="arrow"></span>
-                                <span class="text">Advanced Search (Table)</span>
-                            </a>
-                        </li>
-                        <li>
-                            @{
-                                var mapUrl = Url.Action(MVC.Employees.Map());
-                                if (Request.QueryString != null && !string.IsNullOrWhiteSpace(Request.QueryString.ToString()))
-                                {
-                                    mapUrl = string.Format("{0}?{1}", mapUrl, Request.QueryString);
-                                }
-                            }
-                            <a style=" display: none;" href="@mapUrl" class="group" data-bind="visible: !MapDataIsLoading()">
-                                <span class="arrow"></span>
-                                <span class="text">Advanced Search (Map)</span>
-                            </a>
-                            <a class="group" style="cursor: not-allowed" data-bind="visible: MapDataIsLoading">
-                                <span class="arrow"></span>
-                                <span class="text">
-                                    <img src="~/images/icons/spinner/spinner-20-grey.gif" alt="" />
-                                    <strong title="This can take a few minutes.">Loading Search (Map)...</strong>
-                                </span>
-                            </a>
-                        </li>
-                    </ul>*@
                 </nav>
             </div>
         </aside>
     </form>
 </div>
+@Html.Partial(MVC.Shared.Views.Components.auto_drop_down_country, new EmployeesBibNavModel { Activities = true })

@@ -177,7 +177,7 @@
             </table>
             <!-- ko stopBinding: true -->
             <div id="searchMap" style="margin: 0 0 8px 0;">
-                <div data-bind="visible: continentCode() != 'any' || countryCode() != 'any'" style="line-height: 16px;">
+                <div data-bind="visible: (continentCode() != 'any' || countryCode() != 'any') && continentCode() != 'all'" style="line-height: 16px;">
                     <span style="display: inline-block; background-color: #ddd; padding: 4px 8px; border-radius: 4px; border: solid 1px #999;">
                         <strong data-bind="text: continentName" style="">?</strong>
                         <img src="~/images/icons/closer/closer-16-dark.png" title="Remove this search filter" alt="Remove this search filter"
@@ -279,13 +279,22 @@
                         <li class="static ">
                             <div class="content">
                                 @* LOCATION AUTOCOMPLETE *@
-                                <div class="location combobox field">
+                                <auto_drop_down id="location_list" max_width="240px" max_height="300px" pre_scale_class="pre_scale_top_center"
+                                                title="[Filter by Location]" background_color="white" selected_callback="viewModel.location_callback"
+                                                scale_type="scale_height" direction="ltr" >
+
+                                </auto_drop_down>
+                                <input name="placeIds" type="hidden" data-bind="jQuery: '$placeIds'"
+                                       value="@(Model.Input.PlaceIds != null && Model.Input.PlaceIds.Any() ? Model.Input.PlaceIds.First() : (int?)null)" />
+                                <input name="placeNames" type="hidden" data-bind="jQuery: '$placeNames'"
+                                       value="@(Model.Input.PlaceNames != null && Model.Input.PlaceNames.Any() ? Model.Input.PlaceNames.First() : "")" />
+                                @*<div class="location combobox field">
                                     <input name="placeNames" type="text" placeholder="[Filter by location]" data-bind="jQuery: '$location', value: placeNames"
                                            value="@(Model.Input.PlaceNames != null && Model.Input.PlaceNames.Any() ? Model.Input.PlaceNames.First() : "")"
                                            class="side" />
                                     <input name="placeIds" type="hidden" data-bind="jQuery: '$placeIds'"
                                            value="@(Model.Input.PlaceIds != null && Model.Input.PlaceIds.Any() ? Model.Input.PlaceIds.First() : (int?)null)" />
-                                </div>
+                                </div>*@
                                 @* CONTINENTS, WATERS, AND COUNTRIES *@
                                 <input name="placeFilter" type="hidden" data-bind="jQuery: '$placeFilter', value: placeFilter"
                                        value=""
@@ -430,3 +439,4 @@
         </aside>
     </form>
 </div>
+@Html.Partial(MVC.Shared.Views.Components.auto_drop_down_country, new EmployeesBibNavModel { Activities = true })
