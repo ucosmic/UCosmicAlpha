@@ -24,6 +24,50 @@
     <link rel="import" href="~/components/Polymer/bower_components/core-ajax/core-ajax.html" />
     <link rel="import" href="~/components/utilities/Notification/notification.html" />
     @Html.MetaAcceptLanguage()
+    @{bool isLocal = HttpContext.Current.Request.IsLocal;}
+    @if (isLocal)
+    {
+        @*<script src="/components_riot/app/bower_components/riotcontrol/riotcontrol.js"></script>*@
+        <script src="/components_riot/app/bower_components/kefir/dist/kefir.min.js"></script>
+        @*<script src="/lib/cta.min.js"></script>*@
+        <script src="/components_riot/app/components/utilities/globals.js"></script>
+        <script src="/components_riot/app/components/utilities/data_access_all.js"></script>
+
+        @*<script src="/components_riot/app/components/utilities/closest.js"></script>
+            <script src="/components_riot/app/components/utilities/equal.js"></script>
+            <script src="/components_riot/app/components/utilities/add_style.js"></script>
+            <script src="/components_riot/app/components/utilities/load_tag_3.js"></script>
+            <script src="/components_riot/app/components/utilities/uniq_id.js"></script>
+            <script src="/components_riot/app/components/utilities/tags_loaded.js"></script>
+
+            <script src="/components_riot/app/components/stores/app_store.js"></script>
+            <script src="/components_riot/app/components/is_loading/is_loading.js"></script>*@
+
+        @*<script src="/components_riot/app/components/pages/tests/idb_test/idb_test.js"></script>*@
+
+        <script src="/components_riot/app/lib/idb-keyval.js"></script>
+    }
+    @if (!isLocal)
+    {
+        @*<script src="https://ucosmic.firebaseapp.com/bower_components/riotcontrol/riotcontrol.js"></script>*@
+        <script src="https://ucosmic.firebaseapp.com/bower_components/kefir/dist/kefir.min.js"></script>
+        @*<script src="/lib/cta.min.js"></script>*@
+
+        <script src="https://ucosmic.firebaseapp.com/components/utilities/globals.js"></script>
+        <script src="https://ucosmic.firebaseapp.com/components/utilities/data_access_all.js"></script>
+        @*<script src="https://ucosmic.firebaseapp.com/components/utilities/closest.js"></script>
+            <script src="https://ucosmic.firebaseapp.com/components/utilities/equal.js"></script>
+            <script src="https://ucosmic.firebaseapp.com/components/utilities/add_style.js"></script>
+            <script src="https://ucosmic.firebaseapp.com/components/utilities/load_tag_3.js"></script>
+            <script src="https://ucosmic.firebaseapp.com/components/utilities/uniq_id.js"></script>
+            <script src="https://ucosmic.firebaseapp.com/components/utilities/tags_loaded.js"></script>
+
+            <script src="https://ucosmic.firebaseapp.com/components/stores/app_store.js"></script>
+            <script src="https://ucosmic.firebaseapp.com/components/is_loading/is_loading.js"></script>
+
+            <script src="https://ucosmic.firebaseapp.com/components/pages/tests/idb_test/idb_test.js"></script>*@
+        <script src="https://ucosmic.firebaseapp.com/lib/idb-keyval.js"></script>
+    }
 </head>
 <body>
     <nav class="my">

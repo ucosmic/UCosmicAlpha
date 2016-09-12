@@ -1,8 +1,8 @@
 ﻿@if (Request.IsSecureConnection || string.Equals(Request.Headers["X-Forwarded-Proto"], "https", StringComparison.OrdinalIgnoreCase))
 {
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.12&sensor=false&libraries=visualization" type="text/javascript"> </script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.12&sensor=false&libraries=visualization&key=AIzaSyDxThwv2R2eKTH_c9O8fxksZ7fI8XTfgXs" type="text/javascript"> </script>
 }
 else
 {
-    <script src="http://maps.googleapis.com/maps/api/js?v=3.12&sensor=false&libraries=visualization" type="text/javascript"> </script>
+    <script src="http://maps.googleapis.com/maps/api/js?v=3.12&sensor=false&libraries=visualization&key=AIzaSyDxThwv2R2eKTH_c9O8fxksZ7fI8XTfgXs" type="text/javascript"> </script>
 }
