@@ -5,6 +5,7 @@ using System.Linq;
 using Dapper;
 using UCosmic.Interfaces;
 using System.Configuration;
+using System.Threading.Tasks;
 
 namespace UCosmic.Factories
 {
@@ -60,6 +61,21 @@ namespace UCosmic.Factories
         {
             var connection = GetConnection(database);
             return SelectList<x>(connection, sql);
+        }
+        public async Task<IList<x>> SelectList2<x>(IDbConnection connection, string sql)
+        {
+            connection.Open();
+            //IList<x> result = connection.Query<x>(sql).ToList();
+            var query_results = await connection.QueryAsync<x>(sql);
+            IList<x> result = query_results.ToList();
+            
+            connection.Close();
+            return result;
+        }
+        public async Task<IList<x>> SelectList2<x>(DB database, string sql)
+        {
+            var connection = GetConnection(database);
+            return await SelectList2<x>(connection, sql);
         }
 
 		public void Execute(IDbConnection connection, string sql, object parameters)
