@@ -36,7 +36,7 @@ namespace UCosmic.Repositories
             }
             if (input.CountryCode != null)
             {
-                sql += " and gpp.countryCode=" + input.CountryCode;
+                sql += " and gpp.countryCode='" + input.CountryCode + "' ";
             }
             if (input.Keyword != null)
             {

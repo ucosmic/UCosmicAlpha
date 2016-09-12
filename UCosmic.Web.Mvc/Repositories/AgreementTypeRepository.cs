@@ -23,7 +23,7 @@ namespace UCosmic.Repositories
 
 
             SqlConnectionFactory connectionFactory = new SqlConnectionFactory();
-            const string sql = "SELECT TOP 1000 aastv.text as Code" +
+            const string sql = "SELECT  aastv.text as Code" +
                 " ,[ForEstablishmentId], aastv.text as Name" +
                 " FROM [Agreements].[AgreementSettings] aas" +
                 " inner join [Agreements].[AgreementSettingsTypeValue] aastv on aas.revisionId = aastv.configurationId" +
