@@ -1,0 +1,123 @@
+﻿
+@mixin myTransparency($percent){
+    -moz-opacity:$percent;
+    opacity: $percent;
+}
+
+@mixin vertical-align {
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+@mixin myBorder-radius($radius)
+{
+    border-radius: $radius;
+    -moz-border-radius: $radius;
+    -webkit-border-radius: $radius;
+}
+
+@mixin myTransform($value)
+{
+    transform: translate3d($value);
+    -moz-transform: translate3d($value);
+    -webkit-transform: translate3d($value);
+}
+
+@mixin myBox-shadow($Shadow2)
+{
+    -webkit-box-shadow: $Shadow2;
+    -moz-box-shadow: $Shadow2;
+    box-shadow: $Shadow2;
+}
+
+@mixin myBackgroundGradient($navUlBackground3, $navUlBackground2)
+{
+    background: -webkit-gradient(linear, left top, left bottom, from($navUlBackground3), to($navUlBackground2));
+    background: -moz-linear-gradient(top,  $navUlBackground3, $navUlBackground2);
+    background: linear-gradient(0deg, $navUlBackground3,  $navUlBackground2);
+}
+@mixin myBackgroundGradientImportant($navUlBackground3, $navUlBackground2)
+{
+    background-color: $navUlBackground2!important;
+    background: -webkit-gradient(linear, left top, left bottom, from($navUlBackground3), to($navUlBackground2))!important;
+    background: -moz-linear-gradient(top,  $navUlBackground3, $navUlBackground2)!important;
+    background: linear-gradient(0deg, $navUlBackground3,  $navUlBackground2)!important;
+}
+
+@mixin myTranslateZ()
+{
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+}
+
+@mixin myTranslateY($Y)
+{
+    transform: translateY($Y);
+    -webkit-transform: translateY($Y);
+    -moz-transform: translateY($Y);
+}
+
+
+
+@mixin flex-direction($value: row) {
+    @if $value == row-reverse {
+        -webkit-box-direction: reverse;
+        -webkit-box-orient: horizontal;
+    } @else if $value == column {
+        -webkit-box-direction: normal;
+        -webkit-box-orient: vertical;
+    } @else if $value == column-reverse {
+        -webkit-box-direction: reverse;
+        -webkit-box-orient: vertical;
+    } @else {
+        -webkit-box-direction: normal;
+        -webkit-box-orient: horizontal;
+    }
+    -webkit-flex-direction: $value;
+    -moz-flex-direction: $value;
+    -ms-flex-direction: $value;
+    flex-direction: $value;
+}
+/* make keyframes that tell the start state and the end state of our object */
+@-webkit-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@-moz-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+@-webkit-keyframes fadeOut { from { opacity:1; } to { opacity:0; } }
+@-moz-keyframes fadeOut { from { opacity:1; } to { opacity:0; } }
+@keyframes fadeOut { from { opacity:1; } to { opacity:0; } }
+
+@mixin fadeIn($speed: 500ms) {
+    opacity:0;  /* make things invisible upon start */
+    -webkit-animation:fadeIn ease-in 1;  /* call our keyframe named fadeIn, use animattion ease-in and repeat it only 1 time */
+    -moz-animation:fadeIn ease-in 1;
+    animation:fadeIn ease-in 1;
+
+    -webkit-animation-fill-mode:forwards;  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+    -moz-animation-fill-mode:forwards;
+    animation-fill-mode:forwards;
+
+    -webkit-animation-duration:$speed;
+    -moz-animation-duration:$speed;
+    animation-duration:$speed;
+}
+
+@mixin fadeOut($speed: 500ms) {
+    opacity:1;  /* make things invisible upon start */
+    -webkit-animation:fadeOut ease-in 1;  /* call our keyframe named fadeOut, use animattion ease-in and repeat it only 1 time */
+    -moz-animation:fadeOut ease-in 1;
+    animation:fadeOut ease-in 1;
+
+    -webkit-animation-fill-mode:forwards;  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+    -moz-animation-fill-mode:forwards;
+    animation-fill-mode:forwards;
+
+    -webkit-animation-duration:$speed;
+    -moz-animation-duration:$speed;
+    animation-duration:$speed;
+}
+
