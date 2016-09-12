@@ -1,16 +1,23 @@
-cd C:\Users\Tim\UCosmic\UCosmicGit\Layout3\Layout3\UCosmic.Web.Mvc\components_riot
+cd C:\Users\Tim\UCosmic\UCosmicGit\Layout3\Layout3\ucosmic.Web.Mvc\components_riot
 bower update
 
-cd C:\Users\Tim\UCosmic\UCosmicGit\Layout3\Layout3\UCosmic.Web.Mvc\components_riot
+cd C:\Users\Tim\UCosmic\UCosmicGit\Layout3\Layout3\ucosmic.Web.Mvc\components_riot
 firebase logout
 firebase login
 
+cd C:\Users\Tim\UCosmic\UCosmicGit\Layout3\Layout3\ucosmic.Web.Mvc\components_riot
 firebase deploy
 
 firebase database:remove /Members/3306/Mobilities/Counts/IN --project project-4691094245668174778
 
+firebase database:remove /Members/3306/Mobilities/ --project project-4691094245668174778
+
 
 JSON.stringify(obj, null, 2);
+
+
+*************for the activities I am going to have to get them chunk by chunk client side, not server side - possibly server side async???****************************
+
 
 
 group mobilities by status -> term -> country

@@ -9,7 +9,8 @@ var FirebaseAggregator = require('./aggregator');
 var rootUrl = 'https://UCosmic.firebaseio.com/';
 //var rootRef = new Firebase(rootUrl);
 //var tenant_list_ref = rootRef.child('tenant_list');
-var tenant_list = [3306, 1, 66];
+var tenant_list = [3306];
+//var tenant_list = [3306, 1, 66];
 
 //var FirebaseTokenGenerator = require("firebase-token-generator");
 //var tokenGenerator = new FirebaseTokenGenerator("pXxnmMQ4YPK97bFKoN4JzGOJT40nOhM921z3JKl6");
@@ -96,7 +97,7 @@ function start() {
             setTimeout(function () {
                 term_list.pop();
                 term_count(term_list[term_list.length - 1], term_list, tennant)
-            }, 300000)
+            }, 360000)
         }
 
     }
@@ -105,9 +106,9 @@ function start() {
 
     tenant_list.forEach(function (tennant) {
         //var term_list_ref = rootRef.child('Members').child(tennant).child('term_list');
-        var term_list = ['Fall 2010', 'Fall 2011', 'Fall 2012', 'Fall 2013', 'Fall 2014'
-            , 'Spring 2011', 'Spring 2012', 'Spring 2013', 'Spring 2014', 'Spring 2015',
-            , 'Summer 2011', 'Summer 2012', 'Summer 2013', 'Summer 2014', 'Summer 2015']
+        var term_list = ['Fall 2010', 'Fall 2011', 'Fall 2012', 'Fall 2013', 'Fall 2014', 'Fall 2015'
+            , 'Spring 2010', 'Spring 2011', 'Spring 2012', 'Spring 2013', 'Spring 2014', 'Spring 2015', 'Spring 2016'
+            , 'Summer 2010', 'Summer 2011', 'Summer 2012', 'Summer 2013', 'Summer 2014', 'Summer 2015']
 
 
         //var term_list_out_ref = rootRef.child('Members').child(tennant).child('term_list');
