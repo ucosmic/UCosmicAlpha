@@ -322,7 +322,7 @@ var Agreements;
                 var keyword = e.params['keyword'];
                 var ancestorId = e.params['ancestorId'];
                 if (keyword == '*none*') {
-                    this.keyword("");
+                    window.location.replace(window.location.href.replace('*none*', ''));
                 }
                 else {
                     this.keyword(keyword);

@@ -447,7 +447,8 @@ module Agreements.ViewModels {
             // it will also run when users page back & forward through the history
             // keyword is not stored as part of the route or history
             if(keyword == '*none*'){
-                this.keyword("");
+                //this.keyword("");
+                window.location.replace(window.location.href.replace('*none*', ''));
             } else {
                 this.keyword(keyword);
             }
